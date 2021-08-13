@@ -1,2 +1,2 @@
 # oopnet
-Refactoring oopnet from scratch
+Refactoring oopnet from scratch.
