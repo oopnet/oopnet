@@ -1,0 +1,8 @@
+bokeh
+matplotlib
+networkx
+numpy
+pandas
+seaborn
+traits
+xarray
