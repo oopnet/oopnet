@@ -1,58 +1,17 @@
-from traits.api import HasStrictTraits, Str, Function, Int
+from typing import Callable, Optional
+from dataclasses import dataclass
 
 
-class ReaderDecorator(HasStrictTraits):
+@dataclass
+class ReaderDecorator:
     """
     Class for saving the reader function properties in a proper way with the decorators
     """
 
-    __sectionname = Str
-    __functionname = Str
-    __priority = Int
-    __readerfunction = Function
-
-    @property
-    def sectionname(self):
-        return self.__sectionname
-
-    @sectionname.setter
-    def sectionname(self, value):
-        self.__sectionname = value
-
-    @property
-    def functionname(self):
-        return self.__functionname
-
-    @functionname.setter
-    def functionname(self, value):
-        self.__functionname = value
-
-    @property
-    def priority(self):
-        return self.__priority
-
-    @priority.setter
-    def priority(self, value):
-        self.__priority = value
-
-    @property
-    def readerfunction(self):
-        return self.__readerfunction
-
-    @readerfunction.setter
-    def readerfunction(self, value):
-        self.__readerfunction = value
-
-    def __init__(self, sectionname=None, functionname=None, priority=None, readerfunction=None):
-        super(ReaderDecorator, self).__init__()
-        if sectionname is not None:
-            self.__sectionname = sectionname
-        if functionname is not None:
-            self.__functionname = functionname
-        if priority is not None:
-            self.__priority = priority
-        if readerfunction is not None:
-            self.__readerfunction = readerfunction
+    sectionname: Optional[str] = None
+    functionname: Optional[str] = None
+    priority: Optional[int] = None
+    readerfunction: Optional[Callable] = None
 
 
 def make_registering_decorator_factory(foreign_decorator_factory):

@@ -87,6 +87,16 @@ def read_options(network, block):
             o.tolerance = float(vals[1])
         elif vals[0] == 'MAP':
             o.map = vals[1]
+        elif vals[0] == 'DEMAND' and vals[1].upper() == 'MODEL':
+            o.demandmodel = vals[2]
+        elif vals[0] == 'MINIMUM' and vals[1].upper() == 'PRESSURE':
+            o.minimumpressure = float(vals[2])
+        elif vals[0] == 'REQUIRED' and vals[1].upper() == 'PRESSURE':
+            o.requiredpressure = float(vals[2])
+        elif vals[0] == 'PRESSURE' and vals[1].upper() == 'EXPONENT':
+            o.pressureexponent = float(vals[2])
+        if not o.demandmodel:
+            o.demandmodel = 'DDA'
 
 
 @section_reader('TIMES', 3)

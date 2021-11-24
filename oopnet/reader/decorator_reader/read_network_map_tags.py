@@ -1,11 +1,12 @@
 from .decorators import section_reader
+from ...utils.getters.get_by_id import get_node
 
 
 @section_reader('COORDINATES', 4)
 def read_coordinates(network, block):
     for vals in block:
         vals = vals['values']
-        j = network.networkhash['node'][vals[0]]
+        j = get_node(network, vals[0])
         if len(vals) > 1:
             j.xcoordinate = float(vals[1])
         if len(vals) > 2:

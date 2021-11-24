@@ -4,6 +4,7 @@ import datetime
 import pandas as pd
 from traits.api import HasStrictTraits
 
+
 def str2hms(timestring):
     vals = timestring.split(':')
     hours = int(vals[0])

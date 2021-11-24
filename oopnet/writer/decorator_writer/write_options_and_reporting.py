@@ -84,6 +84,11 @@ def write_options(network, fid):
             print('TOLERANCE', str(o.tolerance).replace('e', 'E'), file=fid)
         if o.map is not None:
             print('MAP', o.map, file=fid)
+        if o.demandmodel == 'PDA':
+            print('DEMAND MODEL', 'PDA', file=fid)
+            print('MINIMUM PRESSURE', o.minimumpressure, file=fid)
+            print('REQUIRED PRESSURE', o.requiredpressure, file=fid)
+            print('PRESSURE EXPONENT', o.pressureexponent, file=fid)
     print('\n', end=' ', file=fid)
 
 

@@ -181,3 +181,11 @@ def get_links(network):
     if network.valves:
         objects += network.valves
     return objects
+
+
+def get_pumps(network):
+    return network.pumps
+
+
+def get_valves(network):
+    return network.valves

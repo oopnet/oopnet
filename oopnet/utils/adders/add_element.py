@@ -1,4 +1,13 @@
+from oopnet.utils.getters.element_lists import get_pipe_ids
+
 from ...elements.network_components import *
+
+
+class ComponentExistsException(Exception):
+    def __init__(self, id, message=None):
+        if not message:
+            self.message = f'A component with the ID "{id}" already exists in the network.'
+        super().__init__(message=self.message)
 
 
 def add_pattern(network, pattern):
@@ -8,54 +17,25 @@ def add_pattern(network, pattern):
         network.patterns = [pattern]
 
 
-def add_junction(network, id, xcoordinate=0.0, ycoordinate=0.0, elevation=0.0, initialquality=0.0,
-                sourcequality=0.0, sourcetype=None, strength=0.0, sourcepattern=None, emittercoefficient=0.0,
-                demandpattern=None, demand=None, comment=None):
+def add_junction(network, **kwargs):
     '''
     This function adds a Junction to an OOPNET network.
 
     :param network: OOPNET network object
     :param id: ID of the Junction
     '''
-    j = None
-    if network.junctions:
-        try:
-            j = network.networkhash['node'][id]
-        except:
-            pass
-    if not j:
-        if comment:
-            j = Junction(id=id, comment=comment)
-        else:
-            j = Junction(id=id)
-    if xcoordinate:
-        j.xcoordinate = xcoordinate
-    if ycoordinate:
-        j.ycoordinate = ycoordinate
-    if elevation:
-        j.elevation = elevation
-    if initialquality:
-        j.initialquality = initialquality
-    if sourcequality:
-        j.sourcequality = sourcequality
-    if sourcetype:
-        j.sourcetype = sourcetype
-    if strength:
-        j.strength = strength
-    if sourcepattern:
-        j.sourcepattern = sourcepattern
-    if emittercoefficient:
-        j.emittercoefficient = emittercoefficient
-    if demandpattern:
-        j.demandpattern = demandpattern
-    if demand:
-        j.demand = demand
+    pid = kwargs['id']
 
-    if network.junctions is None:
-        network.junctions = [j]
-    else:
-        network.junctions.append(j)
-    network.networkhash['node'][id] = j
+    if 'comment' not in kwargs.keys():
+        kwargs['comment'] = None
+    if 'tag' not in kwargs.keys():
+        kwargs['tag'] = None
+
+    if pid in get_pipe_ids(network):
+        raise ComponentExistsException(pid)
+
+    j = Junction(**kwargs)
+    network.junctions.append(j)
 
 
 def add_reservoir(network, id, xcoordinate=0.0, ycoordinate=0.0, elevation=0.0, initialquality=0.0,
@@ -108,10 +88,7 @@ def add_reservoir(network, id, xcoordinate=0.0, ycoordinate=0.0, elevation=0.0, 
     network.networkhash['node'][id] = r
 
 
-def add_tank(network, id, xcoordinate=0.0, ycoordinate=0.0, elevation=0.0, initialquality=0.0,
-            sourcequality=0.0, sourcetype=None, strength=0.0, sourcepattern=None, compartmentvolume=0.0,
-            initlevel=0.5, maxlevel=1.0, minlevel=0.0, minvolume=0.0, mixingmodel=None, reactiontank=0.0,
-            volumecurve=None, comment=None):
+def add_tank(network, **kwargs):
     '''
     This function adds a Tank to an OOPNET network.
 

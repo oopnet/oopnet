@@ -8,6 +8,8 @@ class PoulakisEnhancedPDADeepcopyTest(unittest.TestCase):
         self.model = PoulakisEnhancedPDAModel()
         self.old_network = self.model.network
         self.new_network = self.model.network.__deepcopy__()
+        # from copy import deepcopy
+        # self.new_network = deepcopy(self.model.network)
 
     def test_junction(self):       
         junction_old = get_junction(self.old_network, 'J-02')

@@ -54,23 +54,6 @@ def read(filename):
         if f.sectionname in list(blocks.keys()):
             f.readerfunction(network, blocks[f.sectionname])
 
-    # Sorting the network elements by name to guarantee same sorting everytime the read function is called
-    if network.junctions:
-        network.junctions.sort(key=lambda x: x.id)
-    if network.reservoirs:
-        network.reservoirs.sort(key=lambda x: x.id)
-    if network.tanks:
-        network.tanks.sort(key=lambda x: x.id)
-    if network.pipes:
-        network.pipes.sort(key=lambda x: x.id)
-    if network.pumps:
-        network.pumps.sort(key=lambda x: x.id)
-    if network.valves:
-        network.valves.sort(key=lambda x: x.id)
-
-    # Generating a graph object in the network
-    # Graph(network)
-
     # set network report if there exists no report section in the input file
     if not network.report:
         network.report = Report()

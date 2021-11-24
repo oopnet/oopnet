@@ -1,10 +1,11 @@
 import pandas as pd
 from oopnet.utils.getters.element_lists import get_links, get_link_ids, get_pipes, get_pipe_ids, get_nodes, \
-    get_node_ids, get_junction_ids, get_junctions
+    get_node_ids, get_junction_ids, get_junctions, get_valve_ids, get_valves
 
 """
 Functions for getting network properties as pandas dataframes
 """
+
 
 # Links:
 def get_startnodes(network):
@@ -41,8 +42,7 @@ def get_startendnodes(network):
     """
     s1 = get_startnodes(network)
     s2 = get_endnodes(network)
-    series = pd.concat([s1, s2], axis=1)
-    return series
+    return pd.concat([s1, s2], axis=1)
 
 
 def get_startendcoordinates(network):
@@ -57,11 +57,10 @@ def get_startendcoordinates(network):
     sy = [x.ycoordinate for x in se['startnodes']]
     ex = [x.xcoordinate for x in se['endnodes']]
     ey = [x.ycoordinate for x in se['endnodes']]
-    df = pd.DataFrame(index=ids, data={'start x-coordinate': sx,
+    return pd.DataFrame(index=ids, data={'start x-coordinate': sx,
                                        'start y-coordinate': sy,
                                        'end x-coordinate': ex,
                                        'end y-coordinate': ey})
-    return df
 
 
 def get_intialstatus(network):
@@ -103,6 +102,30 @@ def get_setting(network):
     return series
 
 
+def get_link_center_coordinates(network):
+    """
+    Get the center coordinates of all links in the network as a pandas Dataframe
+    :param network: OOPNET network object
+    :return: coordinates as pandas.Dataframe
+    """
+    x = [(x.startnode.xcoordinate + x.endnode.xcoordinate) / 2 for x in get_links(network)]
+    y = [(x.startnode.ycoordinate + x.endnode.ycoordinate) / 2 for x in get_links(network)]
+    return pd.DataFrame(index=get_link_ids(network), data={'center x-coordinate': x, 'center y-coordinate': y})
+
+
+def get_link_comment(network):
+    """
+    Get all comments of all links in the network as a pandas series
+    :param network: OOPNET network object
+    :return: comments as pandas.Series
+    """
+    values = [x.comment for x in get_links(network)]
+    names = get_link_ids(network)
+    series = pd.Series(data=values, index=names)
+    series.name = 'link comment'
+    return series
+
+
 # Pipes
 def get_length(network):
     """
@@ -124,12 +147,19 @@ def get_diameter(network):
     :param network: OOPNET network object
     :return: diameter as pandas.Series
     """
-    values = [x.diameter for x in get_pipes(network)]
-    names = get_pipe_ids(network)
-    series = pd.Series(data=values, index=names)
+    ids = []
+    diameters = []
+    if network.pipes:
+        ids.extend(get_pipe_ids(network))
+        diameters.extend([x.diameter for x in get_pipes(network)])
+    if network.valves:
+        ids.extend(get_valve_ids(network))
+        diameters.extend([x.diameter for x in get_valves(network)])
+    series = pd.Series(data=diameters, index=ids)
     series.name = 'pipe diameters'
     series.units = 'mm'
     return series
+
 
 def get_roughness(network):
     """
@@ -141,10 +171,7 @@ def get_roughness(network):
     names = get_pipe_ids(network)
     series = pd.Series(data=values, index=names)
     series.name = 'pipe roughness'
-    if network.options.headloss == 'D-W':
-        series.units = 'mm'
-    else:
-        series.units = '1'
+    series.units = 'mm' if network.options.headloss == 'D-W' else '1'
     return series
 
 
@@ -192,6 +219,7 @@ def get_ycoordinate(network):
     series.units = '1'
     return series
 
+
 def get_coordinates(network):
     """
     Get all x and y coordinate values of all nodes in the network as a pandas series
@@ -233,15 +261,14 @@ def get_basedemand(network):
     return series
 
 
-# if __name__ == '__main__':
-#
-#     net = Read(os.path.join('..', '..', '..', 'examples', 'data', 'C-town.inp'))
-#     df = get_coordinates(net)
-#     df = df - df.mean()
-#
-#     df =  -np.abs(df.sum(axis=1))
-#     # df = (df - df.mean()).sum(axis=1)
-#     # print df
-#     Plot(net, nodes=df, colormap='viridis')
-#     Show()
-#
+def get_node_comment(network):
+    """
+    Get all comments of all nodes in the network as a pandas series
+    :param network: OOPNET network object
+    :return: comments as pandas.Series
+    """
+    values = [x.comment for x in get_nodes(network)]
+    names = get_node_ids(network)
+    series = pd.Series(data=values, index=names)
+    series.name = 'node comment'
+    return series

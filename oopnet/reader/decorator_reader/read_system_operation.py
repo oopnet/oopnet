@@ -1,17 +1,19 @@
 import datetime
 from .decorators import section_reader
 from ...elements.system_operation import Curve, Pattern, Energy, Control, Controlcondition, Action, Rule, Condition
+from ...utils.getters.get_by_id import get_curve, get_pump, get_pattern, get_link, get_node, get_junction
+from ...utils.getters.element_lists import get_link_ids, get_node_ids
 
 
 @section_reader('CURVES', 0)
 def read_curves(network, block):
     for vals in block:
         vals = vals['values']
-        if vals[0] in list(network.networkhash['curve'].keys()):
-            c = network.networkhash['curve'][vals[0]]
-        else:
-            c = Curve(id=vals[0])
-            network.networkhash['curve'][vals[0]] = c
+
+
+
+        c = Curve(id=vals[0])
+
         if len(vals) > 1:
             m = float(vals[1])
             if c.xvalues is None:
@@ -28,11 +30,7 @@ def read_curves(network, block):
                 c.yvalues = list(c.yvalues).append(m)
             else:
                 c.yvalues.append(m)
-        if network.curves is None:
-            network.curves = [c]
-        else:
-            if c not in network.curves:
-                network.curves.append(c)
+        network.curves.append(c)
 
 
 @section_reader('PATTERNS', 0)
@@ -40,11 +38,9 @@ def read_patterns(network, block):
     for vals in block:
         m = None
         vals = vals['values']
-        if vals[0] in list(network.networkhash['pattern'].keys()):
-            p = network.networkhash['pattern'][vals[0]]
-        else:
-            p = Pattern(id=vals[0])
-            network.networkhash['pattern'][vals[0]] = p
+
+        p = Pattern(id=vals[0])
+
         if len(vals) == 2:
             m = float(vals[1])
         elif len(vals) > 2:
@@ -85,12 +81,12 @@ def read_energy(network, block):
                 e.value = float(vals[2])
         elif vals[0].upper() == 'PUMP':
             e.keyword = 'PUMP'
-            e.pumpid = network.networkhash['link'][vals[1]]
+            e.pumpid = get_pump(network, vals[1])
             e.parameter = vals[2].upper()
             if e.parameter == 'PATTERN':
-                e.value = network.networkhash['pattern'][vals[3]]
+                e.value = get_pattern(network, vals[3])
             elif e.parameter.startswith('EFFIC'):
-                e.value = network.networkhash['curve'][vals[3]]
+                e.value = get_curve(network, vals[3])
             else:
                 e.value = float(vals[3])
         elif vals[0].upper() == 'DEMAND' and vals[1].upper() == 'CHARGE':
@@ -106,7 +102,7 @@ def read_energy(network, block):
 def read_status(network, block):
     for vals in block:
         vals = vals['values']
-        l = network.networkhash['link'][vals[0]]
+        l = get_link(network, vals[0])
         try:
             l.setting = float(vals[1])
         except:
@@ -119,11 +115,14 @@ def read_controls(network, block):
         vals = vals['values']
         condition = Controlcondition()
         if vals[2].upper() == 'OPEN' or vals[2].upper() == 'CLOSED':
-            action = Action(object=network.networkhash['link'][vals[1]], value=vals[2].upper())
+            l = get_link(network, vals[1])
+            action = Action(object=l, value=vals[2].upper())
         else:
-            action = Action(object=network.networkhash['link'][vals[1]], value=float(vals[2]))
+            l = get_link(network, vals[1])
+            action = Action(object=l, value=float(vals[2]))
         if vals[3].upper() == 'IF':
-            condition = Controlcondition(object=network.networkhash['node'][vals[5]], relation=vals[6].upper(),
+            n = get_node(network, vals[1])
+            condition = Controlcondition(object=n, relation=vals[6].upper(),
                                          value=float(vals[7]))
         elif vals[3].upper() == 'AT':
             if vals[4].upper() == 'TIME':
@@ -165,16 +164,18 @@ def read_rules(network, block):
                 r.priority = float(vals[1])
             else:
                 ac = Condition(logical=vals[0].upper())
-                if vals[2] in list(network.networkhash['link'].keys()):
-                    ac.object = network.networkhash['link'][vals[2]]
+                if vals[2] in get_link_ids(network):
+                    l = get_link(network, vals[2])
+                    ac.object = l
                     ac.attribute = vals[3].upper()
                     ac.relation = vals[4].upper()
                     try:
                         ac.value = float(vals[5])
                     except:
                         ac.value = vals[5].upper()
-                elif vals[2] in list(network.networkhash['node'].keys()):
-                    ac.object = network.networkhash['node'][vals[2]]
+                elif vals[2] in get_node_ids(network):
+                    n = get_node(network, vals[2])
+                    ac.object = n
                     ac.attribute = vals[3].upper()
                     ac.relation = vals[4].upper()
                     try:
@@ -218,7 +219,7 @@ def read_rules(network, block):
 def read_demands(network, block):
     for vals in block:
         vals = vals['values']
-        j = network.networkhash['node'][vals[0]]
+        j = get_junction(network, vals[0])
         if len(vals) > 1:
             if j.demand:
                 j.demand = float(vals[1])
@@ -230,7 +231,7 @@ def read_demands(network, block):
             elif isinstance(j.demand, list):
                 j.demand.append(float(vals[1]))
         if len(vals) > 2:
-            p = network.networkhash['pattern'][vals[2]]
+            p = get_pattern(network, vals[2])
             if j.demandpattern is None:
                 j.demandpattern = p
             elif isinstance(j.demandpattern, Pattern):

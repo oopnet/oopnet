@@ -1,6 +1,7 @@
 __author__ = 'davidsteffelbauer'
 from oopnet.utils.getters.property_getters import get_length
 
+
 def elevation(report):
     """
     Function for getting the elevations from a simulation report object

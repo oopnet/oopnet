@@ -1,4 +1,6 @@
 # Retrieve a specific instance of an object contained in the network with a specific id
+
+
 def get_junction(network, id):
     """
     This function returns a specific Junction from the network with a specific id
@@ -7,7 +9,7 @@ def get_junction(network, id):
     :param id: id of the Junction
     :return: Junction with property id
     """
-    return next(filter(lambda x: x.id == id, network.junctions))
+    return network.junctions.binary_search(id)
 
 
 def get_tank(network, id):
@@ -18,7 +20,7 @@ def get_tank(network, id):
     :param id: id of the Tank
     :return: Tank with property id
     """
-    return next(filter(lambda x: x.id == id, network.tanks))
+    return network.tanks.binary_search(id)
 
 
 def get_reservoir(network, id):
@@ -26,10 +28,10 @@ def get_reservoir(network, id):
     This function returns a specific Reservoir from the network with a specific id
 
     :param network: OOPNET network object
-    :param id: id of the Resercvoir
+    :param id: id of the Reservoir
     :return: Reservoir with property id
     """
-    return next(filter(lambda x: x.id == id, network.reservoirs))
+    return network.reservoirs.binary_search(id)
 
 
 def get_pipe(network, id):
@@ -40,7 +42,7 @@ def get_pipe(network, id):
     :param id: id of the Pipe
     :return: Pipe with property id
     """
-    return next(filter(lambda x: x.id == id, network.pipes))
+    return network.pipes.binary_search(id)
 
 
 def get_pump(network, id):
@@ -51,7 +53,7 @@ def get_pump(network, id):
     :param id: id of the Pump
     :return: Pump with property id
     """
-    return next(filter(lambda x: x.id == id, network.pumps))
+    return network.pumps.binary_search(id)
 
 
 def get_valve(network, id):
@@ -62,7 +64,7 @@ def get_valve(network, id):
     :param id: id of the Valve
     :return: Valve with property id
     """
-    return next(filter(lambda x: x.id == id, network.valves))
+    return network.valves.binary_search(id)
 
 
 def get_curve(network, id):
@@ -73,7 +75,7 @@ def get_curve(network, id):
     :param id: id of the Curve
     :return: Curve with property id
     """
-    return next(filter(lambda x: x.id == id, network.curves))
+    return network.curves.binary_search(id)
 
 
 def get_pattern(network, id):
@@ -84,7 +86,7 @@ def get_pattern(network, id):
     :param id: id of the Pattern
     :return: Pattern with property id
     """
-    return next(filter(lambda x: x.id == id, network.patterns))
+    return network.patterns.binary_search(id)
 
 
 def get_rule(network, id):
@@ -95,7 +97,7 @@ def get_rule(network, id):
     :param id: id of the Rule
     :return: Rule with property id
     """
-    return next(filter(lambda x: x.id == id, network.rules))
+    return network.rules.binary_search(id)
 
 
 def get_node(network, id):
@@ -106,19 +108,7 @@ def get_node(network, id):
     :param id: id of the Node
     :return: Node with property id
     """
-    result = None
-    if network.junctions:
-        if id in [x.id for x in network.junctions]:
-            result = get_junction(network, id)
-    if network.tanks:
-        if not result:
-            if id in [x.id for x in network.tanks]:
-                result = get_tank(network, id)
-    if network.reservoirs:
-        if not result:
-            if id in [x.id for x in network.reservoirs]:
-                result = get_reservoir(network, id)
-    return result
+    return network.nodes.binary_search(id)
 
 
 def get_link(network, id):
@@ -129,16 +119,4 @@ def get_link(network, id):
     :param id: id of the Link
     :return: Link with property id
     """
-    result = None
-    if network.pipes:
-        if id in [x.id for x in network.pipes]:
-            result = get_pipe(network, id)
-    if network.pumps:
-        if not result:
-            if id in [x.id for x in network.pumps]:
-                result = get_pump(network, id)
-    if network.valves:
-        if not result:
-            if id in [x.id for x in network.valves]:
-                result = get_valve(network, id)
-    return result
+    return network.links.binary_search(id)
