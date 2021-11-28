@@ -1,17 +1,14 @@
 import unittest
 
-from oopnet.utils.getters.element_lists import get_pumps, get_valves
+from oopnet.elements.network_components import Junction, Tank, Reservoir, Pipe, Pump, Valve, Node, Link
+from oopnet.utils.getters import *
 
-from oopnet.utils.getters.get_by_id import get_junction, get_tank, get_node, get_link
-
-from testing.base_cases import PoulakisEnhancedPDAModel
-from oopnet.elements.network_components import *
-from oopnet.utils.getters.element_lists import *
+from testing.base import SimpleModel
 
 
-class PoulakisEnhancedPDAListTest(unittest.TestCase):
+class SimpleListTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.model = PoulakisEnhancedPDAModel()
+        self.model = SimpleModel()
 
     def test_get_junction_ids(self):
         jids = get_junction_ids(self.model.network)
@@ -93,7 +90,6 @@ class PoulakisEnhancedPDAListTest(unittest.TestCase):
     def test_get_link_ids(self):
         lids = get_link_ids(self.model.network)
         self.assertEqual(self.model.n_links, len(lids))
-        self.assertEqual(self.model.n_links, len(set(lids)))
         self.assertIsInstance(lids, list)
 
         for lid in lids:
@@ -104,7 +100,6 @@ class PoulakisEnhancedPDAListTest(unittest.TestCase):
     def test_get_junctions(self):
         junctions = get_junctions(self.model.network)
         self.assertEqual(self.model.n_junctions, len(junctions))
-        self.assertEqual(self.model.n_junctions, len(set(junctions)))
         self.assertIsInstance(list(junctions), list)
 
         for junction in junctions:
@@ -113,7 +108,6 @@ class PoulakisEnhancedPDAListTest(unittest.TestCase):
     def test_get_tanks(self):
         tanks = get_tanks(self.model.network)
         self.assertEqual(self.model.n_tanks, len(tanks))
-        self.assertEqual(self.model.n_tanks, len(set(tanks)))
         self.assertIsInstance(list(tanks), list)
 
         for tank in tanks:
@@ -122,7 +116,6 @@ class PoulakisEnhancedPDAListTest(unittest.TestCase):
     def test_get_reservoirs(self):
         reservoirs = get_reservoirs(self.model.network)
         self.assertEqual(self.model.n_reservoirs, len(reservoirs))
-        self.assertEqual(self.model.n_reservoirs, len(set(reservoirs)))
         self.assertIsInstance(list(reservoirs), list)
 
         for reservoir in reservoirs:
@@ -131,7 +124,6 @@ class PoulakisEnhancedPDAListTest(unittest.TestCase):
     def test_get_nodes(self):
         nodes = get_nodes(self.model.network)
         self.assertEqual(self.model.n_nodes, len(nodes))
-        self.assertEqual(self.model.n_nodes, len(set(nodes)))
         self.assertIsInstance(list(nodes), list)
 
         for node in nodes:
@@ -140,7 +132,6 @@ class PoulakisEnhancedPDAListTest(unittest.TestCase):
     def test_get_pipes(self):
         pipes = get_pipes(self.model.network)
         self.assertEqual(self.model.n_pipes, len(pipes))
-        self.assertEqual(self.model.n_pipes, len(set(pipes)))
         self.assertIsInstance(list(pipes), list)
 
         for pipe in pipes:
@@ -149,7 +140,6 @@ class PoulakisEnhancedPDAListTest(unittest.TestCase):
     def test_get_pumps(self):
         pumps = get_pumps(self.model.network)
         self.assertEqual(self.model.n_pumps, len(pumps))
-        self.assertEqual(self.model.n_pumps, len(set(pumps)))
         self.assertIsInstance(list(pumps), list)
 
         for pump in pumps:
@@ -158,7 +148,6 @@ class PoulakisEnhancedPDAListTest(unittest.TestCase):
     def test_get_valves(self):
         valves = get_valves(self.model.network)
         self.assertEqual(self.model.n_valves, len(valves))
-        self.assertEqual(self.model.n_valves, len(set(valves)))
         self.assertIsInstance(list(valves), list)
 
         for valve in valves:
@@ -167,7 +156,6 @@ class PoulakisEnhancedPDAListTest(unittest.TestCase):
     def test_get_links(self):
         links = get_links(self.model.network)
         self.assertEqual(self.model.n_links, len(links))
-        self.assertEqual(self.model.n_links, len(set(links)))
         self.assertIsInstance(list(links), list)
 
         for link in links:

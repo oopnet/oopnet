@@ -1,12 +1,15 @@
 import unittest
-from testing.base_cases import PoulakisEnhancedPDAModel
-from oopnet.elements.network_components import *
-from oopnet.utils.getters.get_by_id import *
+
+from oopnet.elements.system_operation import Curve
+from oopnet.utils.getters import *
+from oopnet.elements.network_components import Junction, Tank, Reservoir, Pipe, Pump, Valve, Node, Link
+
+from testing.base import SimpleModel
 
 
-class PoulakisEnhancedPDAElementGetterTest(unittest.TestCase):
+class SimpleElementGetterTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.model = PoulakisEnhancedPDAModel()
+        self.model = SimpleModel()
 
     def test_get_junction(self):
         for junction in self.model.network.junctions:
@@ -79,6 +82,7 @@ class PoulakisEnhancedPDAElementGetterTest(unittest.TestCase):
 
     def test_get_rule(self):
         pass
+
 
 if __name__ == '__main__':
     unittest.main()
