@@ -1,6 +1,8 @@
-from oopnet.api import *
 import os
+
 import networkx as nx
+
+from oopnet.api import *
 
 # Read file into OOPNET
 filename = os.path.join('data', 'anytown.inp')
@@ -43,6 +45,6 @@ df = pd.DataFrame(paths)
 
 # Plot shortest paths between all nodes
 f, ax = plt.subplots()
+# todo: fix
 sns.heatmap(df, square=True, xticklabels=5, yticklabels=5, linewidths=.5)
 Show()
-

@@ -1,7 +1,9 @@
+import os
+
+import networkx as nx
+
 from oopnet.api import *
 from oopnet.graph.graph import edgeresult2pandas
-import os
-import networkx as nx
 
 filename = os.path.join('..', 'examples', 'data', 'anytown.inp')
 

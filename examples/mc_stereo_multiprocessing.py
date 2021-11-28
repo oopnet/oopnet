@@ -1,8 +1,13 @@
-from oopnet.api import *
 from multiprocessing import Pool
 import os
+from typing import Optional
 
-def roll_the_dice(network=None):
+from oopnet.api import *
+from oopnet.elements.network import Network
+
+# todo: fix
+
+def roll_the_dice(network: Optional[Network] = None):
     cnet = Copy(network)
     for j in cnet.junctions:
         j.demand += np.random.normal(0.0, 1.0)
@@ -11,7 +16,6 @@ def roll_the_dice(network=None):
 
 
 if __name__ == '__main__':
-
     pool = Pool()
     filename = os.path.join('data', 'Poulakis.inp')
 

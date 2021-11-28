@@ -1,7 +1,10 @@
-from oopnet.api import *
 import os
+
 import networkx as nx
 
+from oopnet.api import *
+
+# todo: fix
 filename = os.path.join('..', 'examples', 'data', 'C-town.inp')
 
 net = Read(filename)

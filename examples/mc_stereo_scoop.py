@@ -1,8 +1,13 @@
-from oopnet.api import *
-from scoop import futures
+from typing import Optional
 import os
 
-def roll_the_dice(network=None):
+from scoop import futures
+
+from oopnet.api import *
+from oopnet.elements.network import Network
+
+
+def roll_the_dice(network: Optional[Network] = None):
     cnet = Copy(network)
     for j in cnet.junctions:
         j.demand += np.random.normal(0.0, 1.0)

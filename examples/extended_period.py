@@ -1,5 +1,8 @@
-from oopnet.api import *
 import os
+
+from oopnet.api import *
+
+# todo: fix
 
 filename = os.path.join('data', 'C-town.inp')
 net = Read(filename)

@@ -1,6 +1,9 @@
-from oopnet.api import *
-from bokeh.plotting import output_file, show
 import os
+
+from bokeh.plotting import output_file, show
+
+from oopnet.api import *
+
 
 filename = os.path.join('..', 'examples', 'data', 'C-town.inp')
 

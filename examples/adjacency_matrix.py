@@ -1,7 +1,10 @@
+import os
+
+import networkx as nx
+
 from oopnet.api import *
 from oopnet.graph.graph import onlinks2nxlinks
-import os
-import networkx as nx
+
 
 filename = os.path.join('..', 'examples', 'data', 'anytown.inp')
 

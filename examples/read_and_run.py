@@ -1,5 +1,6 @@
-from oopnet.api import *
 import os
+
+from oopnet.api import *
 
 filename = os.path.join('data', 'Poulakis.inp')
 
