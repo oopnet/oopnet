@@ -1,14 +1,16 @@
-from traits.api import HasStrictTraits
-import pandas as pd
 import re
 import datetime
+
+import pandas as pd
+from traits.api import HasStrictTraits
 
 unixtime = datetime.datetime(year=1970, month=1, day=1)
 
 
 class Report(HasStrictTraits):
+    """ """
 
-    def __new__(self, filename):
+    def __new__(self, filename: str) -> pd.DataFrame:
 
         with open(filename, 'r') as fid:
             content = fid.readlines()

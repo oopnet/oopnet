@@ -1,11 +1,23 @@
 import re
-import xarray as xr
 import datetime
+from typing import Tuple, Optional, Union
+
+import xarray as xr
 import pandas as pd
 from traits.api import HasStrictTraits
 
+from xarray import DataArray, Dataset
 
-def str2hms(timestring):
+
+def str2hms(timestring: str) -> Tuple[int, int, float]:
+    """
+
+    Args:
+      timestring: str: 
+
+    Returns:
+
+    """
     vals = timestring.split(':')
     hours = int(vals[0])
     minutes = int(vals[1])
@@ -16,7 +28,16 @@ def str2hms(timestring):
     return hours, minutes, seconds
 
 
-def blockkey2typetime(blockkey, startdatetime=None):
+def blockkey2typetime(blockkey: str, startdatetime: Optional[datetime.datetime] = None) -> Tuple[str, datetime.datetime]:
+    """
+
+    Args:
+      blockkey:
+      startdatetime: (Default value = None)
+
+    Returns:
+
+    """
 
     vals = blockkey.split()
     kind = vals[0]
@@ -35,7 +56,15 @@ def blockkey2typetime(blockkey, startdatetime=None):
     return kind, time
 
 
-def lst2xray(lst):
+def lst2xray(lst: list) -> xr.DataArray:
+    """
+
+    Args:
+      lst: list: 
+
+    Returns:
+
+    """
     lst[2:] = [x[0:len(lst[0])+1] for x in lst[2:]]
     frame = pd.DataFrame.from_dict(lst[2:])
     frame.columns = ['id'] + lst[0]
@@ -46,8 +75,10 @@ def lst2xray(lst):
 
 
 class Report(HasStrictTraits):
+    """ """
 
-    def __new__(self, filename, startdatetime=None):
+    def __new__(self, filename: str, startdatetime: Optional[datetime.datetime] = None) -> \
+            tuple[Union[DataArray, Dataset, None], Union[DataArray, Dataset, None]]:
 
         with open(filename, 'r') as fid:
             content = fid.readlines()
