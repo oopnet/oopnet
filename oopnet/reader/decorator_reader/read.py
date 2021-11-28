@@ -1,15 +1,24 @@
 import re
-from ...elements.network import Network
-from ...elements.options_and_reporting import Report, Times
+
+from oopnet.elements.network import Network
+from oopnet.elements.options_and_reporting import Report, Times
+from oopnet.utils.unit_converter.convert import convert
+
 from .module_reader import list_all_functions_with_decorator
 from . import read_network_components, read_network_map_tags, read_options_and_reporting, \
     read_system_operation, read_water_quality
-from ...utils.unit_converter.convert import convert
 
 
+def filesplitter(filename: str) -> dict[str, list]:
+    """Reads an EPANET input file and splits the content into blocks.
 
-def filesplitter(filename):
+    Args:
+      filename: filename of the EPANET input file
 
+    Returns:
+        blocks
+
+    """
     with open(filename, 'r') as fid:
         content = fid.readlines()
         blocks = dict()
@@ -32,12 +41,15 @@ def filesplitter(filename):
     return blocks
 
 
-def read(filename):
-    """
-    Function reads an EPAnet Input file and returns a network object
+def read(filename: str) -> Network:
+    """Function reads an EPANET input file and returns a network object.
 
-    :param filename: filename of the Epanet Input File
-    :return: network object
+    Args:
+      filename: filename of the EPANET input file
+
+    Returns:
+      network object
+
     """
 
     modules = [read_network_components, read_network_map_tags, read_options_and_reporting,

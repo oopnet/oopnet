@@ -1,14 +1,13 @@
 import datetime
-from .base import NetworkComponent
 from dataclasses import dataclass, field
 from typing import List, Union, Optional
+
+from .base import NetworkComponent
 
 
 @dataclass
 class Curve:
-    """
-    Defines data curves and their X,Y points.
-    """
+    """Defines data curves and their X,Y points."""
     id: str
     comment: Optional[str] = None
     xvalues: List[float] = field(default_factory=list)
@@ -17,9 +16,7 @@ class Curve:
 
 @dataclass
 class Pattern:
-    """
-    Defines time patterns.
-    """
+    """Defines time patterns."""
     id: str
     comment: Optional[str] = None
     multipliers: List = field(default_factory=list)
@@ -27,9 +24,7 @@ class Pattern:
 
 @dataclass
 class Energy:
-    """
-    Defines parameters used to compute pumping energy and cost.
-    """
+    """Defines parameters used to compute pumping energy and cost."""
 
     keyword: str = None  # = Enum('GLOBAL', 'PUMP', 'DEMAND CHARGE')
     pumpid: NetworkComponent = None  # = Instance(NetworkComponent)  # ToDo: pipeid self referencing on pump class instead of NetworkComponent
@@ -69,14 +64,15 @@ class Rule:
 
 @dataclass
 class Controlcondition:
+    """ """
 
     # ToDo: object attribute should be either instance of Node instead of Network Component
-    object: NetworkComponent
+    object: Optional[NetworkComponent] = None
     # __object = Instance(Node)
-    relation: str  #  = Enum('ABOVE', 'BELOW')
-    value: float
-    time: Union[float, datetime.timedelta]
-    clocktime: datetime.datetime
+    relation: Optional[str] = None  #  = Enum('ABOVE', 'BELOW')
+    value: Optional[float] = None
+    time: Union[None, float, datetime.timedelta] = None
+    clocktime: Optional[datetime.datetime] = None
 
 
 @dataclass

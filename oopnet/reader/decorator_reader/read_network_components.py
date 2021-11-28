@@ -1,18 +1,36 @@
+from oopnet.elements.network import Network
+from oopnet.elements.network_components import Junction, Tank, Reservoir, Pipe, Pump, Valve, PRV, TCV, PSV, GPV, PBV, \
+    FCV
+from oopnet.elements.system_operation import Pattern
+from oopnet.utils.getters.get_by_id import get_node, get_junction, get_pattern, get_curve
+from oopnet.utils.adders import *
+
 from .decorators import section_reader
-from ...elements.network_components import *
-from ...elements.system_operation import Pattern
-from ...utils.getters.get_by_id import get_node, get_junction, get_pattern, get_curve
 
 
 @section_reader('TITLE', 4)
-def read_title(network, block):
+def read_title(network: Network, block: list):
+    """Reads the network title from block.
+
+    Args:
+      network: OOPNET network object where the title shall be stored
+      block: EPANET input file block
+
+    """
     for vals in block:
         vals = vals['values']
         network.title = " ".join(vals)
 
 
 @section_reader('JUNCTIONS', 1)
-def read_junction(network, block):
+def read_junction(network: Network, block: list):
+    """Reads junctions from block.
+
+    Args:
+      network: OOPNET network object where the junctions shall be stored
+      block: EPANET input file block
+
+    """
     for vals in block:
         comment = vals['comments'] or None
         vals = vals['values']
@@ -24,11 +42,18 @@ def read_junction(network, block):
         if len(vals) > 3:
             p = get_pattern(network, vals[3])
             j.demandpattern = p
-        network.junctions.append(j)
+        add_junction(network, j, False)
 
 
 @section_reader('RESERVOIRS', 1)
-def read_reservoir(network, block):
+def read_reservoir(network: Network, block: list):
+    """Reads reservoirs from block.
+
+    Args:
+      network: OOPNET network object where the reservoirs shall be stored
+      block: EPANET input file block
+
+    """
     for vals in block:
         comment = vals['comments'] or None
         vals = vals['values']
@@ -37,11 +62,18 @@ def read_reservoir(network, block):
             r.head = float(vals[1])
         if len(vals) > 2:
             r.headpattern = Pattern(id=vals[2])
-        network.reservoirs.append(r)
+        add_reservoir(network, r, False)
 
 
 @section_reader('TANKS', 1)
-def read_tanks(network, block):
+def read_tanks(network: Network, block: list):
+    """Reads tanks from block.
+
+    Args:
+      network: OOPNET network object where the tanks shall be stored
+      block: EPANET input file block
+
+    """
     for vals in block:
         comment = vals['comments'] or None
         vals = vals['values']
@@ -61,11 +93,18 @@ def read_tanks(network, block):
         if len(vals) > 7:
             c = get_curve(network, vals[7])
             t.volumecurve = c
-        network.tanks.append(t)
+        add_tank(network, t, False)
 
 
 @section_reader('PIPES', 2)
-def read_pipes(network, block):
+def read_pipes(network: Network, block: list):
+    """Reads pipes from block.
+
+    Args:
+      network: OOPNET network object where the pipes shall be stored
+      block: EPANET input file block
+
+    """
     for vals in block:
         comment = vals['comments'][0] if vals['comments'] else None
         vals = vals['values']
@@ -87,12 +126,18 @@ def read_pipes(network, block):
             p.minorloss = float(vals[6])
         if len(vals) > 7:
             p.status = vals[7].upper()
-
-        network.pipes.append(p)
+        add_pipe(network, p, False)
 
 
 @section_reader('PUMPS', 2)
-def read_pumps(network, block):
+def read_pumps(network: Network, block: list):
+    """Reads pumps from block.
+
+    Args:
+      network: OOPNET network object where the pumps shall be stored
+      block: EPANET input file block
+
+    """
     for vals in block:
         comment = vals['comments'][0] if vals['comments'] else None
         vals = vals['values']
@@ -107,11 +152,18 @@ def read_pumps(network, block):
             p.keyword = vals[3]
         if len(vals) > 4:
             p.value = " ".join(vals[4:])
-        network.pumps.append(p)
+        add_pump(network, p, False)
 
 
 @section_reader('VALVES', 2)
-def read_valves(network, block):
+def read_valves(network: Network, block: list):
+    """Reads valves from block.
+
+    Args:
+      network: OOPNET network object where the valves shall be stored
+      block: EPANET input file block
+
+    """
     for vals in block:
         comment = vals['comments'][0] if vals['comments'] else None
         vals = vals['values']
@@ -143,11 +195,18 @@ def read_valves(network, block):
             v.setting = vals[5]
         if len(vals) > 6:
             v.minorloss = float(vals[6])
-        network.valves.append(v)
+        add_valve(network, v, False)
 
 
 @section_reader('EMITTERS', 2)
-def read_emitters(network, block):
+def read_emitters(network: Network, block: list):
+    """Reads emitters from block.
+
+    Args:
+      network: OOPNET network object where the emitters shall be stored
+      block: EPANET input file block
+
+    """
     for vals in block:
         vals = vals['values']
         j = get_junction(network, vals[0])

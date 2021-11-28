@@ -1,18 +1,31 @@
 import datetime
+
+from oopnet.elements.network import Network
+from oopnet.elements.system_operation import Curve, Pattern, Energy, Control, Controlcondition, Action, Rule, Condition
+from oopnet.utils.getters.get_by_id import get_curve, get_pump, get_pattern, get_link, get_node, get_junction
+from oopnet.utils.getters.element_lists import get_link_ids, get_node_ids, get_curve_ids, get_pattern_ids
+
 from .decorators import section_reader
-from ...elements.system_operation import Curve, Pattern, Energy, Control, Controlcondition, Action, Rule, Condition
-from ...utils.getters.get_by_id import get_curve, get_pump, get_pattern, get_link, get_node, get_junction
-from ...utils.getters.element_lists import get_link_ids, get_node_ids
+from ...utils.adders import add_curve, add_pattern
 
 
 @section_reader('CURVES', 0)
-def read_curves(network, block):
+def read_curves(network: Network, block: list):
+    """Reads curves from block.
+
+    Args:
+      network: OOPNET network object where the curves shall be stored
+      block: EPANET input file block
+    """
     for vals in block:
         vals = vals['values']
+        exists = False
 
-
-
-        c = Curve(id=vals[0])
+        if vals[0] in get_curve_ids(network):
+            c = get_curve(network, vals[0])
+            exists = True
+        else:
+            c = Curve(id=vals[0])
 
         if len(vals) > 1:
             m = float(vals[1])
@@ -30,16 +43,30 @@ def read_curves(network, block):
                 c.yvalues = list(c.yvalues).append(m)
             else:
                 c.yvalues.append(m)
-        network.curves.append(c)
+
+        if not exists:
+            add_curve(network, c, False)
 
 
 @section_reader('PATTERNS', 0)
-def read_patterns(network, block):
+def read_patterns(network: Network, block: list):
+    """Reads patterns from block.
+
+    Args:
+      network: OOPNET network object where the patterns shall be stored
+      block: EPANET input file block
+    """
     for vals in block:
         m = None
         vals = vals['values']
 
-        p = Pattern(id=vals[0])
+        exists = False
+
+        if vals[0] in get_pattern_ids(network):
+            p = get_pattern(network, vals[0])
+            exists = True
+        else:
+            p = Pattern(id=vals[0])
 
         if len(vals) == 2:
             m = float(vals[1])
@@ -59,15 +86,18 @@ def read_patterns(network, block):
             else:
                 for l in m:
                     p.multipliers.append(l)
-        if network.patterns is None:
-            network.patterns = [p]
-        else:
-            if p not in network.patterns:
-                network.patterns.append(p)
+        if not exists:
+            add_pattern(network, p, False)
 
 
 @section_reader('ENERGY', 3)
-def read_energy(network, block):
+def read_energy(network: Network, block: list):
+    """Reads energy from block.
+
+    Args:
+      network: OOPNET network object where the energy curves shall be stored
+      block: EPANET input file block
+    """
     for vals in block:
         vals = vals['values']
         e = Energy()
@@ -75,7 +105,7 @@ def read_energy(network, block):
             e.keyword = 'GLOBAL'
             e.parameter = vals[1].upper()
             if e.parameter == 'PATTERN':
-                p = next(filter(lambda x: x.id==vals[2], network.patterns))
+                p = next(filter(lambda x: x.id == vals[2], network.patterns))
                 e.value = p
             else:
                 e.value = float(vals[2])
@@ -92,6 +122,7 @@ def read_energy(network, block):
         elif vals[0].upper() == 'DEMAND' and vals[1].upper() == 'CHARGE':
             e.keyword = 'DEMAND CHARGE'
             e.value = float(vals[2])
+        # todo: create add function
         if network.energies is None:
             network.energies = [e]
         else:
@@ -99,7 +130,14 @@ def read_energy(network, block):
 
 
 @section_reader('STATUS', 3)
-def read_status(network, block):
+def read_status(network: Network, block: list):
+    """Reads status information from block.
+
+    Args:
+      network: OOPNET network object where the status information shall be stored
+      block: EPANET input file block
+
+    """
     for vals in block:
         vals = vals['values']
         l = get_link(network, vals[0])
@@ -110,7 +148,14 @@ def read_status(network, block):
 
 
 @section_reader('CONTROLS', 3)
-def read_controls(network, block):
+def read_controls(network: Network, block: list):
+    """Reads controls from block.
+
+    Args:
+      network: OOPNET network object where the controls shall be stored
+      block: EPANET input file block
+
+    """
     for vals in block:
         vals = vals['values']
         condition = Controlcondition()
@@ -143,6 +188,7 @@ def read_controls(network, block):
                     condition = Controlcondition(clocktime=datetime.datetime.strptime(vals[5] + vals[6],
                                                                                       timeformat))
         c = Control(action=action, condition=condition)
+        # todo: create adder function
         if network.controls is None:
             network.controls = [c]
         else:
@@ -150,7 +196,14 @@ def read_controls(network, block):
 
 
 @section_reader('RULES', 0)
-def read_rules(network, block):
+def read_rules(network: Network, block: list):
+    """Reads rules from block.
+
+    Args:
+      network: OOPNET network object where the rules shall be stored
+      block: EPANET input file block
+
+    """
     for vals in block:
         vals = vals['values']
         if vals[0].upper() == 'RULE':
@@ -209,6 +262,7 @@ def read_rules(network, block):
                             ac.value = float(vals[4])
                         except:
                             ac.value = vals[4].upper()
+                # todo: create adder function
                 if r.condition is None:
                     r.condition = [ac]
                 else:
@@ -216,7 +270,14 @@ def read_rules(network, block):
 
 
 @section_reader('DEMANDS', 2)
-def read_demands(network, block):
+def read_demands(network: Network, block: list):
+    """Reads demands from block.
+
+    Args:
+      network: OOPNET network object where the demands shall be stored
+      block: EPANET input file block
+
+    """
     for vals in block:
         vals = vals['values']
         j = get_junction(network, vals[0])

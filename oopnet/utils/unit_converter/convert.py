@@ -34,6 +34,7 @@ CMD2LPS = 0.0115741
 
 
 class Converter(HasStrictTraits):
+    """ """
 
     f_demand = Float(1.0)
     f_diameter_pipes = Float(1.0)
@@ -112,40 +113,44 @@ class Converter(HasStrictTraits):
 
 
 def convert(network):
+    """
+
+    Args:
+      network: 
+
+    Returns:
+
+    """
 
     if network.options.units != 'LPS':
         converter = Converter(network)
 
-        if network.junctions:
-            for j in network.junctions:
-                if j.emittercoefficient:
-                    j.emittercoefficient *= converter.f_emitter_coefficient
-                if j.demand:
-                    if isinstance(j.demand, list):
-                        j.demand = [x * converter.f_demand for x in j.demand]
-                    else:
-                        j.demand *= converter.f_demand
-                if j.elevation:
-                    j.elevation *= converter.f_elevation
+        for j in network.junctions:
+            if j.emittercoefficient:
+                j.emittercoefficient *= converter.f_emitter_coefficient
+            if j.demand:
+                if isinstance(j.demand, list):
+                    j.demand = [x * converter.f_demand for x in j.demand]
+                else:
+                    j.demand *= converter.f_demand
+            if j.elevation:
+                j.elevation *= converter.f_elevation
 
-        if network.tanks:
-            for t in network.tanks:
-                t.diam *= converter.f_diameter_tanks
-                t.elevation *= converter.f_elevation
-                t.initlevel *= converter.f_elevation
-                t.minlevel *= converter.f_elevation
-                t.maxlevel *= converter.f_elevation
-                t.minvolume *= converter.f_volume
+        for t in network.tanks:
+            t.diam *= converter.f_diameter_tanks
+            t.elevation *= converter.f_elevation
+            t.initlevel *= converter.f_elevation
+            t.minlevel *= converter.f_elevation
+            t.maxlevel *= converter.f_elevation
+            t.minvolume *= converter.f_volume
 
-        if network.reservoirs:
-            for r in network.reservoirs:
-                r.elevation *= converter.f_elevation
-                r.head *= converter.f_hydraulic_head
+        for r in network.reservoirs:
+            r.elevation *= converter.f_elevation
+            r.head *= converter.f_hydraulic_head
 
-        if network.pipes:
-            for p in network.pipes:
-                p.diameter *= converter.f_diameter_pipes
-                p.length *= converter.f_length
-                p.roughness *= converter.f_roughness_coeff
+        for p in network.pipes:
+            p.diameter *= converter.f_diameter_pipes
+            p.length *= converter.f_length
+            p.roughness *= converter.f_roughness_coeff
 
         network.options.units = 'LPS'

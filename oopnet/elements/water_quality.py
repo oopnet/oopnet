@@ -1,18 +1,19 @@
-from typing import Union, List
+from typing import Union, List, Optional
 from dataclasses import dataclass
-from ..elements.network_components import Pipe
+
+from oopnet.elements.network_components import Pipe
 
 
 @dataclass
 class Reaction:
-    """Defines parameters related to chemical reactions occuring in the network."""
-    orderbulk: float
-    orderwall: float
-    ordertank: float
-    globalbulk: float
-    globalwall: float
-    bulk: Union[Pipe, List[Pipe]]
-    wall: Union[Pipe, List[Pipe]]
-    tank: Union[Pipe, List[Pipe]]
-    limitingpotential: float
-    roughnesscorrelation: float
+    """Defines parameters related to chemical reactions occurring in the network."""
+    orderbulk: Optional[float] = None
+    orderwall: Optional[float] = None
+    ordertank: Optional[float] = None
+    globalbulk: Optional[float] = None
+    globalwall: Optional[float] = None
+    bulk: Union[None, Pipe, List[Pipe]] = None
+    wall: Union[None, Pipe, List[Pipe]] = None
+    tank: Union[None, Pipe, List[Pipe]] = None
+    limitingpotential: Optional[float] = None
+    roughnesscorrelation: Optional[float] = None

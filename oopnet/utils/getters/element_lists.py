@@ -1,191 +1,237 @@
 # Retrieve all id's of specific objects
-def get_junction_ids(network):
+from oopnet.elements.network import Network, ComponentList
+
+
+def get_pattern_ids(network: Network) -> list:
+    """Function for getting all pattern ids in a network
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of pattern ids
+
     """
-    Function for getting all junction ids in a network
+    return [x.id for x in network.patterns]
 
-    :param network: OOPNET network object
-    :return: list of junction ids
+
+def get_curve_ids(network: Network) -> list:
+    """Function for getting all curve ids in a network
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of curve ids
+
     """
-    ids = []
-    if network.junctions:
-        ids = [x.id for x in network.junctions]
-    return ids
+    return [x.id for x in network.curves]
 
 
-def get_tank_ids(network):
+def get_junction_ids(network: Network) -> list:
+    """Function for getting all junction ids in a network
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of junction ids
+
     """
-    Function for getting all tank ids in a network
+    return [x.id for x in network.junctions]
 
-    :param network: OOPNET network object
-    :return: list of tank ids
+
+def get_tank_ids(network: Network) -> list:
+    """Function for getting all tank ids in a network
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of tank ids
+
     """
-    ids = []
-    if network.tanks:
-        ids = [x.id for x in network.tanks]
-    return ids
+    return [x.id for x in network.tanks]
 
 
-def get_reservoir_ids(network):
+def get_reservoir_ids(network: Network) -> list:
+    """Function for getting all reservoir ids in a network
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of reservoir ids
+
     """
-    Function for getting all reservoir ids in a network
-
-    :param network: OOPNET network object
-    :return: list of reservoir ids
-    """
-    ids = []
-    if network.reservoirs:
-        ids = [x.id for x in network.reservoirs]
-    return ids
+    return [x.id for x in network.reservoirs]
 
 
-def get_node_ids(network):
-    """
-    Function for getting all node ids in a network
+def get_node_ids(network: Network) -> list:
+    """Function for getting all node ids in a network
 
-    :param network: OOPNET network object
-    :return: list of node ids
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of node ids
+
     """
     return get_junction_ids(network) + get_tank_ids(network) + get_reservoir_ids(network)
 
 
-def get_pipe_ids(network):
+def get_pipe_ids(network: Network) -> list:
+    """Function for getting all pipe ids in a network
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of pipe ids
+
     """
-    Function for getting all pipe ids in a network
+    return [x.id for x in network.pipes]
 
-    :param network: OOPNET network object
-    :return: list of pipe ids
+
+def get_pump_ids(network: Network) -> list:
+    """Function for getting all pump ids in a network
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of pump ids
+
     """
-    ids = []
-    if network.pipes:
-        ids = [x.id for x in network.pipes]
-    return ids
+    return [x.id for x in network.pumps]
 
 
-def get_pump_ids(network):
+def get_valve_ids(network: Network) -> list:
+    """Function for getting all valve ids in a network
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of valve ids
+
     """
-    Function for getting all pump ids in a network
-
-    :param network: OOPNET network object
-    :return: list of pump ids
-    """
-    ids = []
-    if network.pumps:
-        ids = [x.id for x in network.pumps]
-    return ids
+    return [x.id for x in network.valves]
 
 
-def get_valve_ids(network):
-    """
-    Function for getting all valve ids in a network
+def get_link_ids(network: Network) -> list:
+    """Function for getting all link ids in a network
 
-    :param network: OOPNET network object
-    :return: list of valve ids
-    """
-    ids = []
-    if network.valves:
-        ids = [x.id for x in network.valves]
-    return ids
+    Args:
+      network: OOPNET network object
 
+    Returns:
+      list of link ids
 
-def get_link_ids(network):
-    """
-    Function for getting all link ids in a network
-
-    :param network: OOPNET network object
-    :return: list of link ids
     """
     return get_pipe_ids(network) + get_pump_ids(network) + get_valve_ids(network)
 
+
 # Retrieve all specific objects
-def get_pipes(network):
+def get_pipes(network: Network) -> ComponentList:
+    """This function returns all network pipes as a list
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of pipes
+
     """
-    This function returns all network pipes as a list
+    return network.pipes
 
-    :param network: OOPNET network object
-    :return: list of pipes
+
+def get_junctions(network: Network) -> ComponentList:
+    """This function returns all network junctions as a list
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of junctions
+
     """
-    objects = []
-    if network.pipes:
-        objects = network.pipes
-    return objects
+    return network.junctions
 
 
-def get_junctions(network):
+def get_reservoirs(network: Network) -> ComponentList:
+    """This function returns all reservoirs in the network as a list
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of reservoirs
+
     """
-    This function returns all network junctions as a list
+    return network.reservoirs
 
-    :param network: OOPNET network object
-    :return: list of junctions
+
+def get_tanks(network: Network) -> ComponentList:
+    """This function returns all tanks in the network as a list
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of tanks
+
     """
-    objects = []
-    if network.junctions:
-        objects = network.junctions
-    return objects
+    return network.tanks
 
 
-def get_reservoirs(network):
+def get_nodes(network: Network) -> ComponentList:
+    """This function returns all network nodes as a list (junctions, tanks and reservoirs)
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of nodes
+
     """
-    This function returns all reservoirs in the network as a list
+    return network.junctions + network.tanks + network.reservoirs
 
-    :param network: OOPNET network object
-    :return: list of reservoirs
+
+def get_links(network: Network) -> ComponentList:
+    """This function returns all network links as a list (pipes, pumps and valves)
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of links
+
     """
-    objects = []
-    if network.reservoirs:
-        objects = network.reservoirs
-    return objects
+    return network.pipes + network.pumps + network.valves
 
 
-def get_tanks(network):
+def get_pumps(network: Network) -> ComponentList:
+    """This function returns all pumps in the network as a list
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of pumps
+
     """
-    This function returns all tanks in the network as a list
-
-    :param network: OOPNET network object
-    :return: list of tanks
-    """
-    objects = []
-    if network.tanks:
-        objects = network.tanks
-    return objects
-
-
-def get_nodes(network):
-    """
-    This function returns all network nodes as a list (junctions, tanks and reservoirs)
-
-    :param network: OOPNET network object
-    :return: list of nodes
-    """
-    objects = []
-    if network.junctions:
-        objects += network.junctions
-    if network.tanks:
-        objects += network.tanks
-    if network.reservoirs:
-        objects += network.reservoirs
-    return objects
-
-
-def get_links(network):
-    """
-    This function returns all network links as a list (pipes, pumps and valves)
-
-    :param network: OOPNET network object
-    :return: list of links
-    """
-    objects = []
-    if network.pipes:
-        objects += network.pipes
-    if network.pumps:
-        objects += network.pumps
-    if network.valves:
-        objects += network.valves
-    return objects
-
-
-def get_pumps(network):
     return network.pumps
 
 
-def get_valves(network):
+def get_valves(network: Network) -> ComponentList:
+    """This function returns all valves in the network as a list
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of valves
+
+    """
     return network.valves

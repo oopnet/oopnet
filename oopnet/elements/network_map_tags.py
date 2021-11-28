@@ -1,11 +1,12 @@
 from dataclasses import dataclass
 from typing import List
-from .base import NetworkComponent
+
 from .network_components import Node
 
 
 @dataclass
 class Vertex:
+    """ """
     # ToDo: Implement Vertex
     """
     .. warning::
@@ -16,9 +17,7 @@ class Vertex:
 
 @dataclass
 class Label:
-    """
-    Assigns coordinates to map labels.
-    """
+    """Assigns coordinates to map labels."""
 
     xcoordinate: float
     ycoordinate: float
@@ -28,9 +27,7 @@ class Label:
 
 @dataclass
 class Backdrop:
-    """
-    Identifies a backdrop image and dimensions for the network map.
-    """
+    """Identifies a backdrop image and dimensions for the network map."""
 
     dimensions: List[float]
     units: str
@@ -39,10 +36,9 @@ class Backdrop:
 
 
 @dataclass
-class Tag(NetworkComponent):
-    """
-    Associates category labels (tags) with specific nodes and links.
-    """
-
+class Tag:
+    """Associates category labels (tags) with specific nodes and links."""
+    id: str
+    comment: str
     object: str  # = Enum('NODE', 'LINK')
     tag: str

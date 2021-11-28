@@ -4,9 +4,7 @@ from dataclasses import dataclass
 
 @dataclass
 class ReaderDecorator:
-    """
-    Class for saving the reader function properties in a proper way with the decorators
-    """
+    """Class for saving the reader function properties in a proper way with the decorators"""
 
     sectionname: Optional[str] = None
     functionname: Optional[str] = None
@@ -15,11 +13,36 @@ class ReaderDecorator:
 
 
 def make_registering_decorator_factory(foreign_decorator_factory):
+    """
+
+    Args:
+      foreign_decorator_factory: 
+
+    Returns:
+
+    """
 
     def new_decorator_factory(*args, **kw):
+        """
+
+        Args:
+          *args: 
+          **kw: 
+
+        Returns:
+
+        """
         old_generated_decorator = foreign_decorator_factory(*args, **kw)
 
         def new_generated_decorator(func):
+            """
+
+            Args:
+              func: 
+
+            Returns:
+
+            """
             modified_func = old_generated_decorator(func)
             modified_func.decorator = new_decorator_factory  # keep track of decorator
             modified_func.decorator_args = args
@@ -31,11 +54,19 @@ def make_registering_decorator_factory(foreign_decorator_factory):
     return new_decorator_factory
 
 
-def section_reader(title, priority):
-    """ Synchronization decorator """
-    def wrap(f):
+def section_reader(title: str, priority: int):
+    """Synchronization decorator
+
+    Args:
+      title: section title
+      priority: reading priority
+
+    Returns:
+        section reader
+
+    """
+    def wrap(f: Callable):
         def new_function(*args, **kw):
-            # print "From decorator"
             return f(*args, **kw)
         return new_function
     return wrap

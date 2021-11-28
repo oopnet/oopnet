@@ -1,7 +1,19 @@
+from io import TextIOWrapper
+
+from oopnet.elements.network import Network
+
 from .decorators import section_writer
 
 
 def timedelta2hours(td):
+    """
+
+    Args:
+      td: 
+
+    Returns:
+
+    """
     dhours = td.days * 24
     hours, remainder = divmod(td.seconds, 3600)
     hours += dhours
@@ -10,6 +22,14 @@ def timedelta2hours(td):
 
 
 def timedelta2startclocktime(t):
+    """
+
+    Args:
+      t: 
+
+    Returns:
+
+    """
     p = 'am'
     h = t.days * 24 + t.seconds / 3600
     if h > 12:
@@ -20,6 +40,14 @@ def timedelta2startclocktime(t):
 
 
 def reportparameter2str(rp):
+    """
+
+    Args:
+      rp: 
+
+    Returns:
+
+    """
     if rp == 'YES':
         return 'YES'
     elif rp == 'NO':
@@ -29,11 +57,26 @@ def reportparameter2str(rp):
 
 
 def reportprecision2str(rp):
+    """
+
+    Args:
+      rp: 
+
+    Returns:
+
+    """
     return 'PRECISION ' + str(rp)
 
 
 @section_writer('OPTIONS', 3)
-def write_options(network, fid):
+def write_options(network: Network, fid: TextIOWrapper):
+    """Writes network options to an EPANET input file.
+
+    Args:
+      network: OOPNET network object to write
+      fid: output object
+
+    """
     print('[OPTIONS]', file=fid)
     if network.options is not None:
         o = network.options
@@ -93,7 +136,14 @@ def write_options(network, fid):
 
 
 @section_writer('TIMES', 3)
-def write_times(network, fid):
+def write_times(network: Network, fid: TextIOWrapper):
+    """Writes time settings to an EPANET input file.
+
+    Args:
+      network: OOPNET network object to write
+      fid: output object
+
+    """
     print('[TIMES]', file=fid)
     if network.times is not None:
         t = network.times
@@ -121,7 +171,14 @@ def write_times(network, fid):
 
 
 @section_writer('REPORT', 3)
-def write_report(network, fid):
+def write_report(network: Network, fid: TextIOWrapper):
+    """Writes report settings to an EPANET input file.
+
+    Args:
+      network: OOPNET network object to write
+      fid: output object
+
+    """
     print('[REPORT]', file=fid)
     if network.report is not None:
         r = network.report

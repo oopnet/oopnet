@@ -1,14 +1,25 @@
 import os
+from typing import Optional
+
 import numpy as np
-from ..elements.network_components import Junction, Pipe
-from ..report.report_getter_functions import pressure, flow
+
+from oopnet.elements.network_components import Junction, Pipe
+from oopnet.report.report_getter_functions import pressure, flow
+from oopnet.report.xrayreport import Report
 
 
-def mkdir(newdir):
+def mkdir(newdir: str):
     """works the way a good mkdir should :)
-        - already exists, silently complete
-        - regular file in the way, raise an exception
-        - parent directory(ies) does not exist, make them as well
+
+    - already exists, silently complete
+    - regular file in the way, raise an exception
+    - parent directory(ies) does not exist, make them as well
+
+    Args:
+      newdir: path to be created
+
+    Returns:
+
     """
     if os.path.isdir(newdir):
         pass
@@ -24,6 +35,17 @@ def mkdir(newdir):
 
 
 def adddummyjunction(network, pipe, ce, dummyname='Dummy'):
+    """
+
+    Args:
+      network: 
+      pipe: 
+      ce: 
+      dummyname:  (Default value = 'Dummy')
+
+    Returns:
+
+    """
     x1 = pipe.startnode.xcoordinate
     x2 = pipe.endnode.xcoordinate
     y1 = pipe.startnode.ycoordinate
@@ -82,6 +104,14 @@ def adddummyjunction(network, pipe, ce, dummyname='Dummy'):
 
 
 def length(link):
+    """
+
+    Args:
+      link: 
+
+    Returns:
+
+    """
     x1 = link.startnode.xcoordinate
     x2 = link.endnode.xcoordinate
     y1 = link.startnode.ycoordinate
@@ -96,10 +126,13 @@ def length(link):
 
 
 def sources(network):
-    """
-    This function returns all sources (tanks and reservoirs) if an oopnet network
-    :param network:
-    :return:
+    """This function returns all sources (tanks and reservoirs) if an oopnet network
+
+    Args:
+      network: return:
+
+    Returns:
+
     """
     if network.tanks and network.reservoirs:
         return network.reservoirs + network.tanks
@@ -111,15 +144,21 @@ def sources(network):
         return None
 
 
-def make_measurement(report, sensors, precision=None):
-    """
-    This function simulates a measurement in the system at predefined sensorpositions and returns a measurement vector
+def make_measurement(report: Report, sensors: dict, precision: Optional[dict] = None):
+    """This function simulates a measurement in the system at predefined sensorpositions and returns a measurement vector
 
-    :param report: OOPNET report object
-    :param sensors: dict with keys 'Flow' and/or 'Pressure' containing the node- resp. linkids as list
-                    -> {'Flow':['flowsensor1', 'flowsensor2], 'Pressure':['sensor1', 'sensor2', 'sensor3']}
-    :param precision: dict with keys 'Flow' and/or 'Pressure' and number of decimals -> {'Flow':3, 'Pressure':2}
-    :return: numpy vector containing the measurements
+    Args:
+      report: OOPNET report object
+      sensors: dict with keys 'Flow' and/or 'Pressure' containing the node- resp. linkids as list
+    -> {'Flow':['flowsensor1', 'flowsensor2], 'Pressure':['sensor1', 'sensor2', 'sensor3']}
+      precision: dict with keys 'Flow' and/or 'Pressure' and number of decimals -> {'Flow':3, 'Pressure':2}
+      report: Report: 
+      sensors: dict: 
+      precision: Optional[dict]:  (Default value = None)
+
+    Returns:
+      numpy vector containing the measurements
+
     """
     vec = np.ndarray(0)
     for what in sorted(sensors.keys()):
@@ -139,10 +178,13 @@ def make_measurement(report, sensors, precision=None):
 
 
 def copy(network):
-    """
-    This function makes a deepcopy of an OOPNET network object
+    """This function makes a deepcopy of an OOPNET network object
 
-    :param network: OOPNET network object
-    :return: deepcopy of OOPNET network object
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      deepcopy of OOPNET network object
+
     """
     return network.__deepcopy__()

@@ -1,16 +1,18 @@
-from traits.api import HasStrictTraits
-import networkx as nx
-import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib.colors as colors
 import matplotlib.cm as cmx
 from matplotlib.collections import LineCollection
-from oopnet.elements.network import Pipe
+import networkx as nx
+import numpy as np
 import pandas as pd
+from traits.api import HasStrictTraits
+
+from oopnet.elements.network import Pipe
 from oopnet.utils.getters.element_lists import get_link_ids, get_node_ids
 
-
+# todo: refactor
 class Plotnodes(HasStrictTraits):
+    """ """
 
     def __new__(self, nodes, nodetype, color, ms, zorder, nodetruncate=None):
         nid = []
@@ -46,6 +48,7 @@ class Plotnodes(HasStrictTraits):
 
 
 class Plotpipes(HasStrictTraits):
+    """ """
 
     def __new__(self, network, color):
 
@@ -76,6 +79,7 @@ class Plotpipes(HasStrictTraits):
         return lines
 
 class Plotlink(HasStrictTraits):
+    """ """
 
     def __new__(self, link, **kwargs):
 
@@ -93,6 +97,7 @@ class Plotlink(HasStrictTraits):
 
 
 class Plotgraph(HasStrictTraits):
+    """ """
 
     def __new__(self, network, fignum=None):
 
@@ -102,22 +107,24 @@ class Plotgraph(HasStrictTraits):
 
 
 class Plotsimulation(HasStrictTraits):
-    """
-    This function plots OOPNET networks with simulation results as a network plot with Matplotlib.
-
+    """This function plots OOPNET networks with simulation results as a network plot with Matplotlib.
+    
     Symbols for Nodes: Junctions are plotted as circles, Reservoirs as diamonds, Tanks as squares.
-
+    
     Symbols for Links: Pipes are plotted as lines with no markers, Valves are plotted as lines with triangulars in the middle, Pumps are plotted as lines with pentagons
 
-    :param network: OOPNET network object one wants to plot
-    :param fignum: figure number, where to plot the network
-    :param nodes: Values related to the nodes as Pandas Series generated e.g. by one of OOPNET's Report functions (e.g. Pressure(rpt)). If nodes is None or specific nodes do not have  values, then the nodes are drawn as black circles
-    :param links: Values related to the links as Pandas Series generated e.g. by one of OOPNET's Report functions (e.g. Flow(rpt)). If links is None or specific links do not have  values, then the links are drawn as black lines
-    :param colorbar: If True a colorbar is created, if False there is no colorbar in the plot. If one wants to set this setting for nodes and links seperatly, make use of a dictionary with key 'node' for nodes respectively key 'link' for links (e.g. colorbar = {'node':True, 'link':False} plots a colorbar for nodes but not for links)
-    :param colormap: Colormap defining which colors are used for the simulation results (default is matplotlib's colormap viridis). colormap can either be a string for matplotlib colormaps, a matplotlib.colors.LinearSegmentedColormap object or a matplotlib.colors.ListedColormap object. If one wants to use different colormaps for nodes and links, then make use of a dictionary with key 'node' for nodes respectively key 'link' for links (e.g. colormaps = {'node':'jet', 'link':'cool'} plots nodes with colormap jet and links using colormap cool)
-    :param robust: If True, 2nd and 98th percentiles are used as limits for the colorbar, else the minima and maxima are used.
-    :param nodetruncate: If True, only junctions for which a value was submitted using the nodes parameter are plotted. If the nodes parameters isn't being used, all junctions are plotted. If not set True, junctions for which no value was submitted using the nodes parameters are plotted in black. This only applies to junctions and not to tanks and reservoirs, which are always plotted.
-    :return: Matplotlib's figure handle
+    Args:
+      network: OOPNET network object one wants to plot
+      fignum: figure number, where to plot the network
+      nodes: Values related to the nodes as Pandas Series generated e.g. by one of OOPNET's Report functions (e.g. Pressure(rpt)). If nodes is None or specific nodes do not have  values, then the nodes are drawn as black circles
+      links: Values related to the links as Pandas Series generated e.g. by one of OOPNET's Report functions (e.g. Flow(rpt)). If links is None or specific links do not have  values, then the links are drawn as black lines
+      colorbar: If True a colorbar is created, if False there is no colorbar in the plot. If one wants to set this setting for nodes and links seperatly, make use of a dictionary with key 'node' for nodes respectively key 'link' for links (e.g. colorbar = {'node':True, 'link':False} plots a colorbar for nodes but not for links)
+      colormap: Colormap defining which colors are used for the simulation results (default is matplotlib's colormap viridis). colormap can either be a string for matplotlib colormaps, a matplotlib.colors.LinearSegmentedColormap object or a matplotlib.colors.ListedColormap object. If one wants to use different colormaps for nodes and links, then make use of a dictionary with key 'node' for nodes respectively key 'link' for links (e.g. colormaps = {'node':'jet', 'link':'cool'} plots nodes with colormap jet and links using colormap cool)
+      robust: If True, 2nd and 98th percentiles are used as limits for the colorbar, else the minima and maxima are used.
+      nodetruncate: If True, only junctions for which a value was submitted using the nodes parameter are plotted. If the nodes parameters isn't being used, all junctions are plotted. If not set True, junctions for which no value was submitted using the nodes parameters are plotted in black. This only applies to junctions and not to tanks and reservoirs, which are always plotted.
+
+    Returns:
+      Matplotlib's figure handle
 
     """
 
@@ -251,6 +258,15 @@ class Plotsimulation(HasStrictTraits):
 
 
 def outsidelist(element, colorhash):
+    """
+
+    Args:
+      element: 
+      colorhash: 
+
+    Returns:
+
+    """
     if element in colorhash:
         return colorhash[element]
     else:
@@ -258,6 +274,7 @@ def outsidelist(element, colorhash):
 
 
 class Plotnodetext(HasStrictTraits):
+    """ """
 
     def __new__(self, node, text, **kwargs):
         return plt.text(node.xcoordinate, node.ycoordinate, text, **kwargs)

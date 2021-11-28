@@ -1,261 +1,260 @@
-from oopnet.utils.getters.element_lists import get_pipe_ids
+from typing import Optional, List, Union
 
-from ...elements.network_components import *
+from oopnet.elements.base import NetworkComponent
+from oopnet.utils.getters.element_lists import get_pipe_ids, get_reservoir_ids, get_tank_ids, get_junction_ids, \
+    get_pump_ids, get_valve_ids, get_pattern_ids, get_node_ids, get_link_ids, get_curve_ids
+from oopnet.elements.network import Network
+from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Pump, Valve, Curve, Pattern, Node, Link
 
 
 class ComponentExistsException(Exception):
+    """ """
     def __init__(self, id, message=None):
         if not message:
             self.message = f'A component with the ID "{id}" already exists in the network.'
-        super().__init__(message=self.message)
+        super().__init__(self.message)
 
 
-def add_pattern(network, pattern):
-    if network.patterns:
-        network.patterns.append(pattern)
+def _check_obj_exists(network: Network, obj: List[NetworkComponent]) -> bool:
+    pass
+
+
+# todo: implement addition of multiple object instances?.de
+def add_pattern(network: Network, pattern: Optional[Pattern] = None, check_exists: bool = True, **kwargs):
+    """Adds a Pattern to an OOPNET network object.
+    
+    This function takes either a Pattern object OR the keyword arguments to initialize a new Pattern object.
+
+    Args:
+      network: OOPNET network
+      pattern: Pattern object to add to the network
+      check_exists: checks if a Curve with the same ID already exists in the network
+      **kwargs: Pattern init keyword arguments
+
+    """
+    if not pattern:
+        pid = kwargs['id']
+        pattern = Pattern(**kwargs)
     else:
-        network.patterns = [pattern]
+        pid = pattern.id
 
-
-def add_junction(network, **kwargs):
-    '''
-    This function adds a Junction to an OOPNET network.
-
-    :param network: OOPNET network object
-    :param id: ID of the Junction
-    '''
-    pid = kwargs['id']
-
-    if 'comment' not in kwargs.keys():
-        kwargs['comment'] = None
-    if 'tag' not in kwargs.keys():
-        kwargs['tag'] = None
-
-    if pid in get_pipe_ids(network):
+    if check_exists and pid in get_pattern_ids(network):
         raise ComponentExistsException(pid)
 
-    j = Junction(**kwargs)
-    network.junctions.append(j)
+    network.patterns.add(pattern)
 
 
-def add_reservoir(network, id, xcoordinate=0.0, ycoordinate=0.0, elevation=0.0, initialquality=0.0,
-                 sourcequality=0.0, sourcetype=None, strength=0.0, sourcepattern=None, head=1.0, headpattern=None,
-                 mixingmodel=None, comment=None):
-    '''
-    This function adds a Reservoir to an OOPNET network.
+def add_curve(network: Network, curve: Optional[Curve] = None, check_exists: bool = True, **kwargs):
+    """Adds a Curve to an OOPNET network object.
+    
+    This function takes either a Curve object OR the keyword arguments to initialize a new Curve object.
 
-    :param network: OOPNET network object
-    :param id: ID of the Reservoir
-    '''
-    r = None
-    if network.reservoirs:
-        try:
-            r = network.networkhash['node'][id]
-        except:
-            pass
-    if not r:
-        if comment:
-            r = Reservoir(id=id, comment=comment)
-        else:
-            r = Reservoir(id=id)
-    if xcoordinate:
-        r.xcoordinate = xcoordinate
-    if ycoordinate:
-        r.ycoordinate = ycoordinate
-    if elevation:
-        r.elevation = elevation
-    if initialquality:
-        r.initialquality = initialquality
-    if sourcequality:
-        r.sourcequality = sourcequality
-    if sourcetype:
-        r.sourcetype = sourcetype
-    if strength:
-        r.strength = strength
-    if sourcepattern:
-        r.sourcepattern = sourcepattern
-    if head:
-        r.head = head
-    if headpattern:
-        r.headpattern = headpattern
-    if mixingmodel:
-        r.mixingmodel = mixingmodel
+    Args:
+      network: OOPNET network object
+      curve: Curve object to add to the network
+      check_exists: checks if a Curve with the same ID already exists in the network
+      **kwargs: Curve init keyword arguments
 
-    if network.reservoirs is None:
-        network.reservoirs = [r]
+    """
+    if not curve:
+        cid = kwargs['id']
+        curve = Curve(**kwargs)
     else:
-        network.reservoirs.append(r)
-    network.networkhash['node'][id] = r
+        cid = curve.id
+
+    if check_exists and cid in get_curve_ids(network):
+        raise ComponentExistsException(cid)
+
+    network.curves.add(curve)
 
 
-def add_tank(network, **kwargs):
-    '''
-    This function adds a Tank to an OOPNET network.
+def add_junction(network: Network, junction: Optional[Junction] = None, check_exists: bool = True, **kwargs):
+    """Adds a Junction to an OOPNET network object.
+    
+    This function takes either a Junction object OR the keyword arguments to initialize a new Junction object.
 
-    :param network: OOPNET network object
-    :param id: ID of the tank
-    '''
-    t = None
-    if network.tanks:
-        try:
-            t = network.networkhash['node'][id]
-        except:
-            pass
-    if not t:
-        if comment:
-            t = Tank(id=id, comment=comment)
-        else:
-            t = Tank(id=id)
-    if xcoordinate:
-        t.xcoordinate = xcoordinate
-    if ycoordinate:
-        t.ycoordinate = ycoordinate
-    if elevation:
-        t.elevation = elevation
-    if initialquality:
-        t.initialquality = initialquality
-    if sourcequality:
-        t.sourcequality = sourcequality
-    if sourcetype:
-        t.sourcetype = sourcetype
-    if strength:
-        t.strength = strength
-    if sourcepattern:
-        t.sourcepattern = sourcepattern
-    if compartmentvolume:
-        t.compartmentvolume = compartmentvolume
-    if initlevel:
-        t.initlevel = initlevel
-    if maxlevel:
-        t.maxlevel = maxlevel
-    if minlevel:
-        t.minlevel = minlevel
-    if minvolume:
-        t.minvolume = minvolume
-    if mixingmodel:
-        t.mixingmodel = mixingmodel
-    if reactiontank:
-        t.reactiontank = reactiontank
-    if volumecurve:
-        t.volumecurve = volumecurve
+    Args:
+      network: OOPNET network object
+      junction: Junction object to add to the network
+      check_exists: checks if a Curve with the same ID already exists in the network
+      **kwargs: Junction init keyword arguments
 
-    if network.tanks is None:
-        network.tanks = [t]
+    """
+    if not junction:
+        pid = kwargs['id']
+        junction = Junction(**kwargs)
     else:
-        network.tanks.append(t)
-    network.networkhash['node'][id] = t
+        pid = junction.id
+
+    if check_exists and pid in get_junction_ids(network):
+        raise ComponentExistsException(pid)
+
+    network.junctions.add(junction)
 
 
-def add_pipe(network, id, startnode, endnode, diameter=100.0, length=100.0, roughness=0.1,
-             minorloss=0.0, reactionbulk=0.0, reactionwall=0.0, comment=None, tag=None, status=None):
-    '''
-    This function adds a Pipe to an OOPNET network.
+def add_reservoir(network: Network, reservoir: Optional[Reservoir] = None, check_exists: bool = True, **kwargs):
+    """Adds a Reservoir to an OOPNET network object.
+    
+    This function takes either a Reservoir object OR the keyword arguments to initialize a new Reservoir object.
 
-    :param network: OOPNET network object
-    :param id: ID of the Pipe
-    '''
-    p = None
-    if network.pipes:
-        try:
-            p = network.networkhash['link'][id]
-        except:
-            pass
-    if not p:
-        if comment:
-            p = Pipe(id=id, comment=comment)
-        else:
-            p = Pipe(id=id)
-    p.startnode = startnode
-    p.endnode = endnode
+    Args:
+      network: OOPNET network object
+      reservoir: Reservoir object to add to the network
+      check_exists: checks if a Curve with the same ID already exists in the network
+      **kwargs: Reservoir init keyword arguments
 
-    if tag:
-        p.tag = tag
-    if diameter:
-        p.diameter = diameter
-    if length:
-        p.length = length
-    if minorloss:
-        p.minorloss = minorloss
-    if reactionbulk:
-        p.reactionbulk = reactionbulk
-    if reactionwall:
-        p.reactionwall = reactionwall
-    if roughness:
-        p.roughness = roughness
-    if status:
-        p.status = status
-
-    if network.pipes is None:
-        network.pipes = [p]
+    """
+    if not reservoir:
+        rid = kwargs['id']
+        reservoir = Reservoir(**kwargs)
     else:
-        network.pipes.append(p)
-    network.networkhash['link'][id] = p
+        rid = reservoir.id
+
+    if check_exists and rid in get_reservoir_ids(network):
+        raise ComponentExistsException(rid)
+
+    network.reservoirs.add(reservoir)
 
 
-def add_pump(network, id, keyword, value, startnode, endnode, comment=None, tag=None):
-    '''
-    This function adds a Pump to an OOPNET network.
+def add_tank(network: Network, tank: Optional[Tank] = None, check_exists: bool = True, **kwargs):
+    """Adds a Tank to an OOPNET network object.
+    
+    This function takes either a Tank object OR the keyword arguments to initialize a new Tank object.
 
-    :param network: OOPNET network object
-    :param id: ID of the Pump
-    '''
-    p = None
-    if network.pumps:
-        try:
-            p = network.networkhash['link'][id]
-        except:
-            pass
-    if not p:
-        if comment:
-            p = Pump(id=id, comment=comment)
-        else:
-            p = Pump(id=id)
-    p.startnode = startnode
-    p.endnode = endnode
-    p.keyword = keyword
-    p.value = value
+    Args:
+      network: OOPNET network object
+      tank: Tank object to add to the network
+      check_exists: checks if a Curve with the same ID already exists in the network
+      **kwargs: Tank init keyword arguments
 
-    if tag:
-        p.tag = tag
-
-    if network.pumps is None:
-        network.pumps = [p]
+    """
+    if not tank:
+        tid = kwargs['id']
+        tank = Tank(**kwargs)
     else:
-        network.pumps.append(p)
-    network.networkhash['link'][id] = p
+        tid = tank.id
+
+    if check_exists and tid in get_tank_ids(network):
+        raise ComponentExistsException(tid)
+
+    network.tanks.add(tank)
 
 
-def add_valve(network, id, startnode, endnode, valvetype, diameter=100.0, minorloss=0.0, comment=None, tag=None):
-    '''
-    This function adds a Valve to an OOPNET network.
+def add_pipe(network: Network, pipe: Optional[Pipe] = None, check_exists: bool = True, **kwargs):
+    """Adds a Pipe to an OOPNET network object.
+    
+    This function takes either a Pipe object OR the keyword arguments to initialize a new Pipe object.
 
-    :param network: OOPNET network object
-    :param id: ID of the Valve
-    '''
-    v = None
-    if network.valves:
-        try:
-            v = network.networkhash['link'][id]
-        except:
-            pass
-    if not v:
-        if comment:
-            v = Valve(id=id, comment=comment)
-        else:
-            v = Valve(id=id)
-    v.startnode = startnode
-    v.endnode = endnode
-    v.valvetype = valvetype
+    Args:
+      network: OOPNET network object
+      pipe: Pipe object to add to the network
+      check_exists: checks if a Curve with the same ID already exists in the network
+      **kwargs: Pipe init keyword arguments
 
-    if tag:
-        v.tag = tag
-    if diameter:
-        v.diameter = diameter
-    if minorloss:
-        v.minorloss = minorloss
-
-    if network.valves is None:
-        network.valves = [v]
+    """
+    if not pipe:
+        pid = kwargs['id']
+        pipe = Pipe(**kwargs)
     else:
-        network.valves.append(v)
-    network.networkhash['link'][id] = v
+        pid = pipe.id
+
+    if check_exists and pid in get_pipe_ids(network):
+        raise ComponentExistsException(pid)
+
+    network.pipes.add(pipe)
+
+
+def add_pump(network: Network, pump: Optional[Pump] = None, check_exists: bool = True, **kwargs):
+    """Adds a Pump to an OOPNET network object.
+    
+    This function takes either a Pump object OR the keyword arguments to initialize a new Pump object.
+
+    Args:
+      network: OOPNET network object
+      pump: Pump object to add to the network
+      check_exists: checks if a Curve with the same ID already exists in the network
+      **kwargs: Pump init keyword arguments
+
+    """
+    if not pump:
+        pid = kwargs['id']
+        pump = Pump(**kwargs)
+    else:
+        pid = pump.id
+
+    if check_exists and pid in get_pump_ids(network):
+        raise ComponentExistsException(pid)
+
+    network.pumps.add(pump)
+
+
+def add_valve(network: Network, valve: Optional[Valve] = None, check_exists: bool = True, **kwargs):
+    """Adds a Valve to an OOPNET network object.
+    
+    This function takes either a Valve object OR the keyword arguments to initialize a new Valve object.
+
+    Args:
+      network: OOPNET network object
+      valve: Valve object to add to the network
+      check_exists: checks if a Curve with the same ID already exists in the network
+      **kwargs: Valve init keyword arguments
+
+    """
+    if not valve:
+        vid = kwargs['id']
+        valve = Valve(**kwargs)
+    else:
+        vid = valve.id
+
+    if check_exists and vid in get_valve_ids(network):
+        raise ComponentExistsException(vid)
+
+    network.valves.add(valve)
+
+
+def add_node(network: Network, node: Union[Junction, Reservoir, Tank], check_exists: bool = True):
+    """Adds a node to an OOPNET network object.
+
+    Args:
+      network: OOPNET network object
+      node: Node object to add to the network
+      check_exists: checks if a Curve with the same ID already exists in the network
+
+    """
+
+    if node.id in get_node_ids(network):
+        raise ComponentExistsException(node.id)
+
+    if isinstance(node, Junction):
+        add_junction(network, node, check_exists=check_exists)
+    elif isinstance(node, Reservoir):
+        add_reservoir(network, node, check_exists=check_exists)
+    elif isinstance(node, Tank):
+        add_tank(network, node, check_exists=check_exists)
+    else:
+        raise TypeError(f'Only Node types (Junction, Tank, Reservoir) can be passed to this function but an object of '
+                        f'type {type(node)} was passed.')
+
+
+def add_link(network: Network, link: Union[Pipe, Pump, Valve], check_exists: bool = True):
+    """Adds a link to an OOPNET network object.
+
+    Args:
+      network: OOPNET network object
+      link: Link object to add to the network
+      check_exists: checks if a Curve with the same ID already exists in the network
+
+    """
+
+    if link.id in get_link_ids(network):
+        raise ComponentExistsException(link.id)
+
+    if isinstance(link, Pipe):
+        add_pipe(network, link, check_exists=check_exists)
+    elif isinstance(link, Pump):
+        add_pump(network, link, check_exists=check_exists)
+    elif isinstance(link, Valve):
+        add_valve(network, link, check_exists=check_exists)
+    else:
+        raise TypeError(f'Only Link types (Pipe, Pump, Valve) can be passed to this function but an object of '
+                        f'type {type(link)} was passed.')

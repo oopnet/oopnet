@@ -1,16 +1,20 @@
 import networkx as nx
 import pandas as pd
-from ..utils.getters.element_lists import get_node_ids, get_links
+
+from oopnet.utils.getters.element_lists import get_node_ids, get_links, get_pumps, get_valves
+from oopnet.elements.network import Network
 
 
-def graph(network, weight='length', default=0.00001):
-    """
-    This function generates an undirected NetworkX graph from an OOPNET network
-    :param network: OOPNET network object
-    :param weight: name of pipe property as a string which is used as weight
-    :param default: When a default argument is given, it is returned when the attribute doesn't
-    exist; without it, an exception is raised in that case.
-    :return: undirected graph (networkx.Graph()-object)
+def graph(network: Network, weight: str = 'length', default: float = 0.00001) -> nx.Graph:
+    """This function generates an undirected NetworkX graph from an OOPNET network
+
+    Args:
+      network: OOPNET network object
+      weight: name of pipe property as a string which is used as weight (Default value = 'length')
+      default: When a default argument is given, it is returned when the attribute doesn't exist; without it, an exception is raised in that case. (Default value = 0.00001)
+
+    Returns:
+      undirected graph
     """
 
     g = nx.Graph()
@@ -26,25 +30,25 @@ def graph(network, weight='length', default=0.00001):
 
         g.add_edge(*e, weight=length, id=lid)
 
-    if network.pumps:
-        for p in network.pumps:
-            g.get_edge_data(p.startnode.id, p.endnode.id)[0]['weight'] = 0.00001
+    for p in get_pumps(network):
+        g.get_edge_data(p.startnode.id, p.endnode.id)['weight'] = 0.00001
 
-    if network.valves:
-        for v in network.valves:
-            g.get_edge_data(v.startnode.id, v.endnode.id)[0]['weight'] = 0.00001
+    for v in get_valves(network):
+        g.get_edge_data(v.startnode.id, v.endnode.id)[0]['weight'] = 0.00001
 
     return g
 
 
-def digraph(network, weight='length', default=0.00001):
-    """
-    This function generates an directed NetworkX graph from an OOPNET network
-    :param network: OOPNET network object
-    :param weight: name of pipe property as a string which is used as weight
-    :param default: When a default argument is given, it is returned when the attribute doesn't
-    exist; without it, an exception is raised in that case.
-    :return: directed graph (networkx.DiGraph()-object)
+def digraph(network: Network, weight: str = 'length', default: float = 0.00001) -> nx.DiGraph:
+    """This function generates an directed NetworkX graph from an OOPNET network
+
+    Args:
+      network: OOPNET network object
+      weight: name of pipe property as a string which is used as weight (Default value = 'length')
+      default: When a default argument is given, it is returned when the attribute doesn't exist; without it, an exception is raised in that case. (Default value = 0.00001)
+
+    Returns:
+      directed graph
     """
 
     g = nx.DiGraph()
@@ -60,25 +64,27 @@ def digraph(network, weight='length', default=0.00001):
 
         g.add_edge(*e, weight=length, id=lid)
 
-    if network.pumps:
+    if get_pumps(network):
         for p in network.pumps:
             g.get_edge_data(p.startnode.id, p.endnode.id)[0]['weight'] = 0.00001
 
-    if network.valves:
+    if get_valves(network):
         for v in network.valves:
             g.get_edge_data(v.startnode.id, v.endnode.id)[0]['weight'] = 0.00001
 
     return g
 
 
-def multigraph(network, weight='length', default=0.00001):
-    """
-    This function generates an undirected NetworkX graph from an OOPNET network
-    :param network: OOPNET network object
-    :param weight: name of pipe property as a string which is used as weight
-    :param default: When a default argument is given, it is returned when the attribute doesn't
-    exist; without it, an exception is raised in that case.
-    :return: undirected graph (networkx.Graph()-object)
+def multigraph(network: Network, weight: str = 'length', default: float = 0.00001) -> nx.MultiGraph:
+    """This function generates an undirected NetworkX graph from an OOPNET network
+
+    Args:
+      network: OOPNET network object
+      weight: name of pipe property as a string which is used as weight (Default value = 'length')
+      default: When a default argument is given, it is returned when the attribute doesn't exist; without it, an exception is raised in that case. (Default value = 0.00001)
+
+    Returns:
+      undirected graph
     """
     g = nx.MultiGraph()
 
@@ -93,35 +99,62 @@ def multigraph(network, weight='length', default=0.00001):
 
         g.add_edge(*e, weight=length, id=lid)
 
-    if network.pumps:
+    if get_pumps(network):
         for p in network.pumps:
             g.get_edge_data(p.startnode.id, p.endnode.id)[0]['weight'] = 0.00001
 
-    if network.valves:
+    if get_valves(network):
         for v in network.valves:
             g.get_edge_data(v.startnode.id, v.endnode.id)[0]['weight'] = 0.00001
 
     return g
 
 
-def onlinks2nxlinks(network):
+def onlinks2nxlinks(network: Network) -> list:
+    """
+    Args:
+      network:
+
+    Returns:
+
+    """
     return [(l.startnode.id, l.endnode.id) for l in network.pipes]
 
 
-def nxlinks2onlinks(G):
+def nxlinks2onlinks(G: nx.Graph) -> list:
+    """
+
+    Args:
+      G:
+
+    Returns:
+
+    """
     return [G.get_edge_data(n1, n2)['id'] for n1, n2 in G.edges()]
 
 
-def edge2pipeid(G, edge):
+def edge2pipeid(G: nx.Graph, edge: dict) -> dict:
+    """
+
+    Args:
+      G:
+      edge:
+
+    Returns:
+
+    """
     return G.get_edge_data(edge[0], edge[1])['id']
 
 
-def edgeresult2pandas(G, result):
-    """
-    Transform edge data retrieved e.g. from edge centric centrality measurements to a Pandas Series compatible with OOPNET
-    :param G: networkx graph object
-    :param result: dictionary with nodeduple as keys
-    :return: transformed result into a pandas series
+def edgeresult2pandas(G: nx.Graph, result: dict) -> pd.Series:
+    """Transform edge data retrieved e.g. from edge centric centrality measurements to a Pandas Series compatible with OOPNET
+
+    Args:
+      G: networkx graph object
+      result: dictionary with nodeduple as keys
+
+    Returns:
+      transformed result into a pandas series
     """
     for edge in list(result.keys()):
         pipe = edge2pipeid(G, edge)

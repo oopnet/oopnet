@@ -1,9 +1,21 @@
 import datetime
+
+from oopnet.elements.network import Network
+from oopnet.elements.options_and_reporting import Options, Times, Report, Reportparameter, Reportprecision
+from oopnet.utils.getters.get_by_id import get_node, get_link, get_pattern
+
 from .decorators import section_reader
-from ...elements.options_and_reporting import Options, Times, Report, Reportparameter, Reportprecision
 
 
-def time2timedelta(vals):
+def time2timedelta(vals: list) -> datetime.timedelta:
+    """
+
+    Args:
+      vals:
+
+    Returns:
+
+    """
     if ':' in vals[0]:
         dt = vals[0].split(':')
         if len(dt) == 2:
@@ -25,11 +37,27 @@ def time2timedelta(vals):
             return datetime.timedelta(hours=dt)
 
 
-def precision2report(vals):
+def precision2report(vals: list) -> int:
+    """
+
+    Args:
+      vals:
+
+    Returns:
+
+    """
     return int(vals[2])
 
 
-def parameter2report(vals):
+def parameter2report(vals: list) -> list:
+    """
+
+    Args:
+      vals:
+
+    Returns:
+
+    """
     vals[1] = vals[1].upper()
     if vals[1] == 'YES' or vals[1] == 'NO':
         return vals[1]
@@ -38,11 +66,16 @@ def parameter2report(vals):
 
 
 @section_reader('OPTIONS', 3)
-def read_options(network, block):
+def read_options(network: Network, block: list):
+    """Reads options from block.
+
+    Args:
+      network: OOPNET network object where the options shall be stored
+      block: EPANET input file block
+
+    """
     for vals in block:
         vals = vals['values']
-        if network.options is None:
-            network.options = Options()
         o = network.options
         vals[0] = vals[0].upper()
         if vals[0] == 'UNITS':
@@ -58,7 +91,7 @@ def read_options(network, block):
                 if vals[1].upper() == 'CHEMICAL':
                     o.quality = [vals[1].upper(), vals[2], vals[3]]
                 elif vals[1].upper() == 'TRACE':
-                    o.quality = [vals[1].upper(), network.networkhash['node'][vals[2]]]
+                    o.quality = [vals[1].upper(), get_node(network, vals[2])]
         elif vals[0] == 'VISCOSITY':
             o.viscosity = float(vals[1])
         elif vals[0] == 'DIFFUSIVITY':
@@ -76,7 +109,7 @@ def read_options(network, block):
                 o.unbalanced = [vals[1].upper(), int(vals[2])]
         elif vals[0] == 'PATTERN':
             try:
-                o.pattern = network.networkhash['pattern'][vals[1]]
+                o.pattern = get_pattern(network, vals[1])
             except:
                 o.pattern = 1
         elif vals[0] == 'DEMAND' and vals[1].upper() == 'MULTIPLIER':
@@ -100,12 +133,17 @@ def read_options(network, block):
 
 
 @section_reader('TIMES', 3)
-def read_times(network, block):
+def read_times(network: Network, block: list):
+    """Reads time settings from block.
+
+    Args:
+      network: OOPNET network object where the time settings shall be stored
+      block: EPANET input file block
+
+    """
     for vals in block:
         vals = vals['values']
         vals[0] = vals[0].upper()
-        if network.times is None:
-            network.times = Times()
         t = network.times
         if vals[0] == 'DURATION':
             t.duration = time2timedelta(vals[1:])
@@ -145,17 +183,18 @@ def read_times(network, block):
 
 
 @section_reader('REPORT', 3)
-def read_report(network, block):
+def read_report(network: Network, block: list):
+    """Reads report settings from block.
+
+    Args:
+      network: OOPNET network object where the report settings shall be stored
+      block: EPANET input file block
+
+    """
     for vals in block:
         vals = vals['values']
         vals[0] = vals[0].upper()
-        if network.report is None:
-            network.report = Report()
         r = network.report
-        if network.reportparameter is None:
-            network.reportparameter = Reportparameter()
-        elif network.reportprecision is None:
-            network.reportprecision = Reportprecision()
         param = network.reportparameter
         precision = network.reportprecision
         if vals[0] == 'PAGESIZE' or vals[0] == 'PAGE':
@@ -175,9 +214,9 @@ def read_report(network, block):
                 nodes = vals[1:]
                 for n in nodes:
                     if r.nodes is None:
-                        r.nodes = [network.networkhash['node'][n]]
+                        r.nodes = [get_node(network, n)]
                     else:
-                        r.nodes.append(network.networkhash['node'][n])
+                        r.nodes.append(get_node(network, n))
         elif vals[0] == 'LINKS':
             if vals[1].upper() == 'NONE' or vals[1].upper() == 'ALL':
                 r.links = vals[1].upper()
@@ -185,9 +224,9 @@ def read_report(network, block):
                 links = vals[1:]
                 for l in links:
                     if r.links is None:
-                        r.links = [network.networkhash['link'][l]]
+                        r.links = [get_link(network, l)]
                     else:
-                        r.links.append(network.networkhash['link'][l])
+                        r.links.append(get_link(network, l))
         else:
             if vals[1].upper() == 'PRECISION':
                 if vals[0] == 'ELEVATION':

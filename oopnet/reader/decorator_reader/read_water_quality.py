@@ -1,18 +1,33 @@
+from oopnet.elements.network import Network
+from oopnet.elements.water_quality import Reaction
+from oopnet.utils.getters.get_by_id import get_node, get_link, get_pattern
+
 from .decorators import section_reader
-from ...elements.water_quality import Reaction
 
 
 @section_reader('QUALITY', 3)
-def read_quality(network, block):
+def read_quality(network: Network, block: list):
+    """Reads quality settings from block.
+
+    Args:
+      network: OOPNET network object where the quality settings shall be stored
+      block: EPANET input file block
+    """
     for vals in block:
         vals = vals['values']
-        j = network.networkhash['node'][vals[0]]
+        j = get_node(network, vals[0])
         if len(vals) > 1:
             j.initialquality = float(vals[1])
 
 
 @section_reader('REACTIONS', 3)
-def read_reaction(network, block):
+def read_reaction(network: Network, block: list):
+    """Reads reaction settings from block.
+
+    Args:
+      network: OOPNET network object where the reaction settings shall be stored
+      block: EPANET input file block
+    """
     for vals in block:
         vals = vals['values']
         if network.reactions is None:
@@ -38,21 +53,21 @@ def read_reaction(network, block):
         elif vals[0] == 'ROUGHNESS' and vals[1].upper() == 'CORRELATION':
             r.limitingpotential = float(vals[2])
         elif vals[0] == 'BULK':
-            p = network.networkhash['link'][vals[1]]
+            p = get_link(network, vals[1])
             p.reactionbulk = float(vals[2])
             if r.bulk is None:
                 r.bulk = [p]
             else:
                 r.bulk.append(p)
         elif vals[0] == 'WALL':
-            p = network.networkhash['link'][vals[1]]
+            p = get_link(network, vals[1])
             p.reactionwall = float(vals[2])
             if r.wall is None:
                 r.wall = [p]
             else:
                 r.wall.append(p)
         elif vals[0] == 'TANK':
-            p = network.networkhash['link'][vals[1]]
+            p = get_link(network, vals[1])
             p.reactiontank = float(vals[2])
             if r.tank is None:
                 r.tank = [p]
@@ -61,25 +76,37 @@ def read_reaction(network, block):
 
 
 @section_reader('SOURCES', 3)
-def read_sources(network, block):
+def read_sources(network: Network, block: list):
+    """Reads sources from block.
+
+    Args:
+      network: OOPNET network object where the sources shall be stored
+      block: EPANET input file block
+
+    """
     for vals in block:
         vals = vals['values']
-        n = network.networkhash['node'][vals[0]]
-        # network.networkhash['source'][vals[0]] = n
+        n = get_node(network, vals[0])
         if len(vals) > 1:
             n.sourcetype = vals[1].upper()
         if len(vals) > 2:
             n.strength = float(vals[2])
         if len(vals) > 3:
-            n.sourcepattern = network.networkhash['pattern'][vals[3]]
+            n.sourcepattern = get_pattern(network, vals[3])
 
 
 @section_reader('MIXING', 3)
-def read_mixing(network, block):
+def read_mixing(network: Network, block: list):
+    """Reads mixing settings from block.
+
+    Args:
+      network: OOPNET network object where the mixing settings shall be stored
+      block: EPANET input file block
+
+    """
     for vals in block:
         vals = vals['values']
-        t = network.networkhash['node'][vals[0]]
-        # network.networkhash['mixing'][vals[0]] = t
+        t = get_node(network, vals[0])
         if len(vals) > 1:
             t.mixingmodel = vals[1].upper()
         if len(vals) > 2:
