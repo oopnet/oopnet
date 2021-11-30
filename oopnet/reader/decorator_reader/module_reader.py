@@ -1,7 +1,6 @@
 import inspect
 
-from .decorators import section_reader
-from .decorators import ReaderDecorator
+from oopnet.reader.decorator_reader.decorators import section_reader, ReaderDecorator
 
 
 def pred(c):

@@ -5,7 +5,6 @@ from typing import Tuple, Optional, Union
 import xarray as xr
 import pandas as pd
 from traits.api import HasStrictTraits
-
 from xarray import DataArray, Dataset
 
 

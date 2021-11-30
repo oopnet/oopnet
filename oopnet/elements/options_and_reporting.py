@@ -2,7 +2,7 @@ import datetime
 from dataclasses import dataclass
 from typing import List, Optional, Union
 
-from .network_components import Node, Pattern, Link
+from oopnet.elements.network_components import Node, Pattern, Link
 
 # todo: check default values
 

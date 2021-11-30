@@ -2,7 +2,7 @@ import datetime
 from dataclasses import dataclass, field
 from typing import List, Union, Optional
 
-from .base import NetworkComponent
+from oopnet.elements.base import NetworkComponent
 
 
 @dataclass

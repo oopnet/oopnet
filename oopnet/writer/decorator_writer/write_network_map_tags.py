@@ -1,12 +1,10 @@
 from io import TextIOWrapper
 
-from .decorators import section_writer
+from oopnet.writer.decorator_writer.decorators import section_writer
+from oopnet.elements.network import Network
 
 
 # todo: section doesn't have to be present for simulating with EPANET via CLI - could be omitted when creating an input file for simulations
-from ...elements.network import Network
-
-
 @section_writer('COORDINATES', 4)
 def write_coordinates(network: Network, fid: TextIOWrapper):
     """Writes coordinates to an EPANET input file.

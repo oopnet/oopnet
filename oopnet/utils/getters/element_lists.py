@@ -1,5 +1,5 @@
 # Retrieve all id's of specific objects
-from oopnet.elements.network import Network, ComponentList
+from oopnet.elements.network import Network
 
 
 def get_pattern_ids(network: Network) -> list:
@@ -12,7 +12,7 @@ def get_pattern_ids(network: Network) -> list:
       list of pattern ids
 
     """
-    return [x.id for x in network.patterns]
+    return list(network.patterns.keys())
 
 
 def get_curve_ids(network: Network) -> list:
@@ -25,7 +25,7 @@ def get_curve_ids(network: Network) -> list:
       list of curve ids
 
     """
-    return [x.id for x in network.curves]
+    return list(network.curves.keys())
 
 
 def get_junction_ids(network: Network) -> list:
@@ -38,7 +38,7 @@ def get_junction_ids(network: Network) -> list:
       list of junction ids
 
     """
-    return [x.id for x in network.junctions]
+    return list(network.junctions.keys())
 
 
 def get_tank_ids(network: Network) -> list:
@@ -51,7 +51,7 @@ def get_tank_ids(network: Network) -> list:
       list of tank ids
 
     """
-    return [x.id for x in network.tanks]
+    return list(network.tanks.keys())
 
 
 def get_reservoir_ids(network: Network) -> list:
@@ -64,7 +64,7 @@ def get_reservoir_ids(network: Network) -> list:
       list of reservoir ids
 
     """
-    return [x.id for x in network.reservoirs]
+    return list(network.reservoirs.keys())
 
 
 def get_node_ids(network: Network) -> list:
@@ -90,7 +90,7 @@ def get_pipe_ids(network: Network) -> list:
       list of pipe ids
 
     """
-    return [x.id for x in network.pipes]
+    return list(network.pipes.keys())
 
 
 def get_pump_ids(network: Network) -> list:
@@ -103,7 +103,7 @@ def get_pump_ids(network: Network) -> list:
       list of pump ids
 
     """
-    return [x.id for x in network.pumps]
+    return list(network.pumps.keys())
 
 
 def get_valve_ids(network: Network) -> list:
@@ -116,7 +116,7 @@ def get_valve_ids(network: Network) -> list:
       list of valve ids
 
     """
-    return [x.id for x in network.valves]
+    return list(network.valves.keys())
 
 
 def get_link_ids(network: Network) -> list:
@@ -133,7 +133,7 @@ def get_link_ids(network: Network) -> list:
 
 
 # Retrieve all specific objects
-def get_pipes(network: Network) -> ComponentList:
+def get_pipes(network: Network) -> list:
     """This function returns all network pipes as a list
 
     Args:
@@ -143,10 +143,10 @@ def get_pipes(network: Network) -> ComponentList:
       list of pipes
 
     """
-    return network.pipes
+    return list(network.pipes.values())
 
 
-def get_junctions(network: Network) -> ComponentList:
+def get_junctions(network: Network) -> list:
     """This function returns all network junctions as a list
 
     Args:
@@ -156,10 +156,10 @@ def get_junctions(network: Network) -> ComponentList:
       list of junctions
 
     """
-    return network.junctions
+    return list(network.junctions.values())
 
 
-def get_reservoirs(network: Network) -> ComponentList:
+def get_reservoirs(network: Network) -> list:
     """This function returns all reservoirs in the network as a list
 
     Args:
@@ -169,10 +169,10 @@ def get_reservoirs(network: Network) -> ComponentList:
       list of reservoirs
 
     """
-    return network.reservoirs
+    return list(network.reservoirs.values())
 
 
-def get_tanks(network: Network) -> ComponentList:
+def get_tanks(network: Network) -> list:
     """This function returns all tanks in the network as a list
 
     Args:
@@ -182,10 +182,10 @@ def get_tanks(network: Network) -> ComponentList:
       list of tanks
 
     """
-    return network.tanks
+    return list(network.tanks.values())
 
 
-def get_nodes(network: Network) -> ComponentList:
+def get_nodes(network: Network) -> list:
     """This function returns all network nodes as a list (junctions, tanks and reservoirs)
 
     Args:
@@ -195,10 +195,10 @@ def get_nodes(network: Network) -> ComponentList:
       list of nodes
 
     """
-    return network.junctions + network.tanks + network.reservoirs
+    return get_junctions(network) + get_tanks(network) + get_reservoirs(network)
 
 
-def get_links(network: Network) -> ComponentList:
+def get_links(network: Network) -> list:
     """This function returns all network links as a list (pipes, pumps and valves)
 
     Args:
@@ -208,10 +208,10 @@ def get_links(network: Network) -> ComponentList:
       list of links
 
     """
-    return network.pipes + network.pumps + network.valves
+    return get_pipes(network) + get_pumps(network) + get_valves(network)
 
 
-def get_pumps(network: Network) -> ComponentList:
+def get_pumps(network: Network) -> list:
     """This function returns all pumps in the network as a list
 
     Args:
@@ -221,10 +221,10 @@ def get_pumps(network: Network) -> ComponentList:
       list of pumps
 
     """
-    return network.pumps
+    return list(network.pumps.values())
 
 
-def get_valves(network: Network) -> ComponentList:
+def get_valves(network: Network) -> list:
     """This function returns all valves in the network as a list
 
     Args:
@@ -234,4 +234,17 @@ def get_valves(network: Network) -> ComponentList:
       list of valves
 
     """
-    return network.valves
+    return list(network.valves.values())
+
+
+def get_curves(network: Network) -> list:
+    """This function returns all curves in the network as a list
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of curves
+
+    """
+    return list(network.curves.values())

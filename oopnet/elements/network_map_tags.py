@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from .network_components import Node
+from oopnet.elements.network_components import Node
 
 
 @dataclass

@@ -15,10 +15,6 @@ class ComponentExistsException(Exception):
         super().__init__(self.message)
 
 
-def _check_obj_exists(network: Network, obj: List[NetworkComponent]) -> bool:
-    pass
-
-
 # todo: implement addition of multiple object instances?.de
 def add_pattern(network: Network, pattern: Optional[Pattern] = None, check_exists: bool = True, **kwargs):
     """Adds a Pattern to an OOPNET network object.
@@ -41,7 +37,8 @@ def add_pattern(network: Network, pattern: Optional[Pattern] = None, check_exist
     if check_exists and pid in get_pattern_ids(network):
         raise ComponentExistsException(pid)
 
-    network.patterns.add(pattern)
+    pattern._network = network
+    network.patterns[pid] = pattern
 
 
 def add_curve(network: Network, curve: Optional[Curve] = None, check_exists: bool = True, **kwargs):
@@ -65,7 +62,8 @@ def add_curve(network: Network, curve: Optional[Curve] = None, check_exists: boo
     if check_exists and cid in get_curve_ids(network):
         raise ComponentExistsException(cid)
 
-    network.curves.add(curve)
+    curve._network = network
+    network.curves[cid] = curve
 
 
 def add_junction(network: Network, junction: Optional[Junction] = None, check_exists: bool = True, **kwargs):
@@ -81,15 +79,15 @@ def add_junction(network: Network, junction: Optional[Junction] = None, check_ex
 
     """
     if not junction:
-        pid = kwargs['id']
+        jid = kwargs['id']
         junction = Junction(**kwargs)
     else:
-        pid = junction.id
+        jid = junction.id
 
-    if check_exists and pid in get_junction_ids(network):
-        raise ComponentExistsException(pid)
+    if check_exists and jid in get_junction_ids(network):
+        raise ComponentExistsException(jid)
 
-    network.junctions.add(junction)
+    network.junctions[jid] = junction
 
 
 def add_reservoir(network: Network, reservoir: Optional[Reservoir] = None, check_exists: bool = True, **kwargs):
@@ -113,7 +111,7 @@ def add_reservoir(network: Network, reservoir: Optional[Reservoir] = None, check
     if check_exists and rid in get_reservoir_ids(network):
         raise ComponentExistsException(rid)
 
-    network.reservoirs.add(reservoir)
+    network.reservoirs[rid] = reservoir
 
 
 def add_tank(network: Network, tank: Optional[Tank] = None, check_exists: bool = True, **kwargs):
@@ -137,7 +135,7 @@ def add_tank(network: Network, tank: Optional[Tank] = None, check_exists: bool =
     if check_exists and tid in get_tank_ids(network):
         raise ComponentExistsException(tid)
 
-    network.tanks.add(tank)
+    network.tanks[tid] = tank
 
 
 def add_pipe(network: Network, pipe: Optional[Pipe] = None, check_exists: bool = True, **kwargs):
@@ -161,7 +159,7 @@ def add_pipe(network: Network, pipe: Optional[Pipe] = None, check_exists: bool =
     if check_exists and pid in get_pipe_ids(network):
         raise ComponentExistsException(pid)
 
-    network.pipes.add(pipe)
+    network.pipes[pid] = pipe
 
 
 def add_pump(network: Network, pump: Optional[Pump] = None, check_exists: bool = True, **kwargs):
@@ -185,7 +183,7 @@ def add_pump(network: Network, pump: Optional[Pump] = None, check_exists: bool =
     if check_exists and pid in get_pump_ids(network):
         raise ComponentExistsException(pid)
 
-    network.pumps.add(pump)
+    network.pumps[pid] = pump
 
 
 def add_valve(network: Network, valve: Optional[Valve] = None, check_exists: bool = True, **kwargs):
@@ -209,7 +207,7 @@ def add_valve(network: Network, valve: Optional[Valve] = None, check_exists: boo
     if check_exists and vid in get_valve_ids(network):
         raise ComponentExistsException(vid)
 
-    network.valves.add(valve)
+    network.valves[vid] = valve
 
 
 def add_node(network: Network, node: Union[Junction, Reservoir, Tank], check_exists: bool = True):

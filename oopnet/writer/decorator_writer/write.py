@@ -1,8 +1,8 @@
 from oopnet.elements.network import Network
 
-from .module_reader import list_all_functions_with_decorator
-from . import write_network_components, write_network_map_tags, write_options_and_reporting, \
-    write_system_operation, write_water_quality
+from oopnet.writer.decorator_writer.module_reader import list_all_functions_with_decorator
+from oopnet.writer.decorator_writer import write_network_components, write_network_map_tags, \
+    write_options_and_reporting, write_system_operation, write_water_quality
 
 
 def write(network: Network, filename: str) -> int:

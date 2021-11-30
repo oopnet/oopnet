@@ -1,8 +1,7 @@
 from io import TextIOWrapper
 
 from oopnet.elements.network import Network
-
-from .decorators import section_writer
+from oopnet.writer.decorator_writer.decorators import section_writer
 
 
 @section_writer('QUALITY', 3)

@@ -15,7 +15,7 @@ def get_junction(network: Network, id: str) -> Junction:
       Junction with property id
 
     """
-    return network.junctions.binary_search(id)
+    return network.junctions[id]
 
 
 def get_tank(network: Network, id: str) -> Tank:
@@ -29,7 +29,7 @@ def get_tank(network: Network, id: str) -> Tank:
       Tank with property id
 
     """
-    return network.tanks.binary_search(id)
+    return network.tanks[id]
 
 
 def get_reservoir(network: Network, id: str) -> Reservoir:
@@ -43,7 +43,7 @@ def get_reservoir(network: Network, id: str) -> Reservoir:
       Reservoir with property id
 
     """
-    return network.reservoirs.binary_search(id)
+    return network.reservoirs[id]
 
 
 def get_pipe(network: Network, id: str) -> Pipe:
@@ -57,7 +57,7 @@ def get_pipe(network: Network, id: str) -> Pipe:
       Pipe with property id
 
     """
-    return network.pipes.binary_search(id)
+    return network.pipes[id]
 
 
 def get_pump(network: Network, id: str) -> Pump:
@@ -71,7 +71,7 @@ def get_pump(network: Network, id: str) -> Pump:
       Pump with property id
 
     """
-    return network.pumps.binary_search(id)
+    return network.pumps[id]
 
 
 def get_valve(network: Network, id: str) -> Valve:
@@ -85,7 +85,7 @@ def get_valve(network: Network, id: str) -> Valve:
       Valve with property id
 
     """
-    return network.valves.binary_search(id)
+    return network.valves[id]
 
 
 def get_curve(network: Network, id: str) -> Curve:
@@ -99,7 +99,7 @@ def get_curve(network: Network, id: str) -> Curve:
       Curve with property id
 
     """
-    return network.curves.binary_search(id)
+    return network.curves[id]
 
 
 def get_pattern(network: Network, id: str) -> Pattern:
@@ -113,7 +113,7 @@ def get_pattern(network: Network, id: str) -> Pattern:
       Pattern with property id
 
     """
-    return network.patterns.binary_search(id)
+    return network.patterns[id]
 
 
 def get_rule(network: Network, id: str) -> Rule:
@@ -127,7 +127,7 @@ def get_rule(network: Network, id: str) -> Rule:
       Rule with property id
 
     """
-    return network.rules.binary_search(id)
+    return network.rules[id]
 
 
 def get_node(network: Network, id: str) -> Node:
@@ -141,7 +141,7 @@ def get_node(network: Network, id: str) -> Node:
       Node with property id
 
     """
-    return network.nodes.binary_search(id)
+    return network.nodes[id]
 
 
 def get_link(network: Network, id: str) -> Link:
@@ -155,4 +155,4 @@ def get_link(network: Network, id: str) -> Link:
       Link with property id
 
     """
-    return network.links.binary_search(id)
+    return network.links[id]

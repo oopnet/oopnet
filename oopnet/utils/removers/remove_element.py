@@ -50,8 +50,7 @@ def remove_junction(network: Network, id: str):
       id: Junction ID
 
     """
-    j = get_junction(network, id)
-    network.junctions.remove(j)
+    network.junctions.pop(id)
 
 
 def remove_reservoir(network: Network, id: str):
@@ -62,8 +61,7 @@ def remove_reservoir(network: Network, id: str):
       id: Reservoir ID
 
     """
-    r = get_reservoir(network, id)
-    network.reservoirs.remove(r)
+    network.reservoirs.pop(id)
 
 
 def remove_tank(network: Network, id: str):
@@ -74,8 +72,7 @@ def remove_tank(network: Network, id: str):
       id: Tank ID
 
     """
-    t = get_tank(network, id)
-    network.tanks.remove(t)
+    network.tanks.pop(id)
 
 
 def remove_pipe(network: Network, id: str):
@@ -86,8 +83,7 @@ def remove_pipe(network: Network, id: str):
       id: Pipe ID
 
     """
-    p = get_pipe(network, id)
-    network.pipes.remove(p)
+    network.pipes.pop(id)
 
 
 def remove_pump(network: Network, id: str):
@@ -98,8 +94,7 @@ def remove_pump(network: Network, id: str):
       id: Pump ID
 
     """
-    p = get_pump(network, id)
-    network.pumps.remove(p)
+    network.pumps.pop(id)
 
 
 def remove_valve(network: Network, id: str):
@@ -110,5 +105,4 @@ def remove_valve(network: Network, id: str):
       id: Valve ID
 
     """
-    v = get_valve(network, id)
-    network.valves.remove(v)
+    network.valves.pop(id)

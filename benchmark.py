@@ -6,7 +6,8 @@ from dataclasses import dataclass
 from oopnet.api import *
 from oopnet.elements.network import Network
 
-filename = path.join('testing', 'networks', 'Poulakis_enhanced_PDA.inp')
+poulakis_filename = path.join('testing', 'networks', 'Poulakis_enhanced_PDA.inp')
+ctown_filename = path.join('testing', 'networks', 'C-town.inp')
 n = 1_000
 
 
@@ -58,6 +59,8 @@ class OOPNETBenchmark:
         self.write()
 
     def run_bechmark(self):
+        print(f'Running benchmark for {path.split(self.filename)[-1]}')
+
         print('Reading file')
         print(np.mean(timeit.Timer(stmt=self.read).repeat(number=n)))
 
@@ -81,6 +84,7 @@ class OOPNETBenchmark:
 
 
 if __name__ == '__main__':
-    OOPNETBenchmark(filename=filename).run_bechmark()
+    OOPNETBenchmark(filename=poulakis_filename).run_bechmark()
+    # OOPNETBenchmark(filename=ctown_filename).run_bechmark()
     # OOPNETBenchmark(filename=filename).run_single_instance()
 

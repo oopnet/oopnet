@@ -1,8 +1,8 @@
 from typing import List, Union, Optional
 from dataclasses import dataclass
 
-from .base import NetworkComponent
-from .system_operation import Pattern, Curve
+from oopnet.elements.base import NetworkComponent
+from oopnet.elements.system_operation import Pattern, Curve
 
 
 @dataclass
@@ -35,6 +35,7 @@ class Node(NetworkComponent):
     def coordinates(self) -> tuple:
         """Property returning node coordinates"""
         return self.xcoordinate, self.ycoordinate, self.elevation
+
 
 
 @dataclass
@@ -81,6 +82,14 @@ class Junction(Node):
     # todo: can a junction have several floats as demand?
     # demand = Either(Float, ListFloat)
 
+    def _set_id(self, id):
+        if self._network:
+            self._network.junctions.pop(self._id)
+            self._id = id
+            self._network.junctions[id] = self
+        else:
+            self._id = id
+
 
 @dataclass
 class Reservoir(Node):
@@ -97,6 +106,13 @@ class Reservoir(Node):
     # todo: double check if mixing model is reservoir attribute
     mixingmodel: str = 'MIXED' # = Enum('MIXED', '2COMP', 'FIFO', 'LIFO')
 
+    def _set_id(self, id):
+        if self._network:
+            self._network.reservoirs.pop(self._id)
+            self._id = id
+            self._network.reservoirs[id] = self
+        else:
+            self._id = id
 
 @dataclass
 class Tank(Node):
@@ -123,6 +139,13 @@ class Tank(Node):
     reactiontank: Optional[float] = None
     mixingmodel: str = 'MIXED'  # = Enum('MIXED', '2COMP', 'FIFO', 'LIFO')
 
+    def _set_id(self, id):
+        if self._network:
+            self._network.tanks.pop(self._id)
+            self._id = id
+            self._network.tanks[id] = self
+        else:
+            self._id = id
 
 @dataclass
 class Pipe(Link):
@@ -145,6 +168,14 @@ class Pipe(Link):
     reactionbulk: Optional[float] = None
     reactionwall: Optional[float] = None
 
+    def _set_id(self, id):
+        if self._network:
+            self._network.pipes.pop(self._id)
+            self._id = id
+            self._network.pipes[id] = self
+        else:
+            self._id = id
+
 
 @dataclass
 class Pump(Link):
@@ -160,6 +191,14 @@ class Pump(Link):
     keyword: Optional[str] = None  # = Enum('POWER', 'HEAD', 'SPEED', 'PATTERN')
     value: Union[str, float, None] = None
     status: Union[str, float, None] = None  # = Either(None, Enum('OPEN', 'CLOSED', 'ACTIVE'), Float)
+
+    def _set_id(self, id):
+        if self._network:
+            self._network.pumps.pop(self._id)
+            self._id = id
+            self._network.pumps[id] = self
+        else:
+            self._id = id
 
 
 @dataclass
@@ -179,6 +218,14 @@ class Valve(Link):
     setting: Union[float, str] = 0
     # todo: double check possible setting datatypes
     # setting = Any  # ToDo: Rethink if any is correct for setting attribute
+
+    def _set_id(self, id):
+        if self._network:
+            self._network.valves.pop(self._id)
+            self._id = id
+            self._network.valves[id] = self
+        else:
+            self._id = id
 
 
 @dataclass

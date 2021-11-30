@@ -1,10 +1,8 @@
 import datetime
 
 from oopnet.elements.network import Network
-from oopnet.elements.options_and_reporting import Options, Times, Report, Reportparameter, Reportprecision
 from oopnet.utils.getters.get_by_id import get_node, get_link, get_pattern
-
-from .decorators import section_reader
+from oopnet.reader.decorator_reader.decorators import section_reader
 
 
 def time2timedelta(vals: list) -> datetime.timedelta:

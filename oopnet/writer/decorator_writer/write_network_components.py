@@ -1,8 +1,8 @@
 from io import TextIOWrapper
 
 from oopnet.elements.network import Network
-
-from .decorators import section_writer
+from oopnet.utils.getters import get_junctions, get_reservoirs, get_tanks, get_pipes, get_pumps, get_valves
+from oopnet.writer.decorator_writer.decorators import section_writer
 
 
 @section_writer('TITLE', 0)
@@ -31,7 +31,7 @@ def write_junctions(network: Network, fid: TextIOWrapper):
     """
     print('[JUNCTIONS]', file=fid)
     print(';id elevation demand demandpattern', file=fid)
-    for j in network.junctions:
+    for j in get_junctions(network):
         print(j.id, end=' ', file=fid)
         if j.elevation is not None:
             print(j.elevation, end=' ', file=fid)
@@ -63,7 +63,7 @@ def write_reservoirs(network: Network, fid: TextIOWrapper):
     """
     print('[RESERVOIRS]', file=fid)
     print(';id head pattern', file=fid)
-    for r in network.reservoirs:
+    for r in get_reservoirs(network):
         print(r.id, end=' ', file=fid)
         if r.head is not None:
             print(r.head, end=' ', file=fid)
@@ -86,7 +86,7 @@ def write_tanks(network: Network, fid: TextIOWrapper):
     """
     print('[TANKS]', file=fid)
     print(';id elevation initlevel minlevel maxlevel diam minvolume volumecurve', file=fid)
-    for t in network.tanks:
+    for t in get_tanks(network):
         print(t.id, end=' ', file=fid)
         if t.elevation is not None:
             print(t.elevation, end=' ', file=fid)
@@ -119,7 +119,7 @@ def write_pipes(network: Network, fid: TextIOWrapper):
     """
     print('[PIPES]', file=fid)
     print(';id startnode endnode length diameter roughness minorloss status', file=fid)
-    for p in network.pipes:
+    for p in get_pipes(network):
         print(p.id, end=' ', file=fid)
         if p.startnode is not None:
             print(p.startnode.id, end=' ', file=fid)
@@ -153,7 +153,7 @@ def write_pumps(network: Network, fid: TextIOWrapper):
     """
     print('[PUMPS]', file=fid)
     print(';id startnode endnode keyword value', file=fid)
-    for p in network.pumps:
+    for p in get_pumps(network):
         print(p.id, end=' ', file=fid)
         if p.startnode is not None:
             print(p.startnode.id, end=' ', file=fid)
@@ -180,7 +180,7 @@ def write_valves(network: Network, fid: TextIOWrapper):
     """
     print('[VALVES]', file=fid)
     print(';id startnode endnode diameter valvetype setting minorloss', file=fid)
-    for v in network.valves:
+    for v in get_valves(network):
         print(v.id, end=' ', file=fid)
         if v.startnode is not None:
             print(v.startnode.id, end=' ', file=fid)
@@ -211,7 +211,7 @@ def write_emitter(network: Network, fid: TextIOWrapper):
     """
     print('[EMITTERS]', file=fid)
     print(';id emittercoefficient', file=fid)
-    for j in network.junctions:
+    for j in get_junctions(network):
         if j.emittercoefficient > 0.0:
             print(j.id, j.emittercoefficient, file=fid)
     print('\n', file=fid)

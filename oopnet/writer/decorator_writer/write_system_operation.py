@@ -4,8 +4,8 @@ from io import TextIOWrapper
 from oopnet.elements.system_operation import Curve
 from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Valve, Pump
 from oopnet.elements.network import Network
-
-from .decorators import section_writer
+from oopnet.utils.getters.element_lists import get_curves
+from oopnet.writer.decorator_writer.decorators import section_writer
 
 
 @section_writer('CURVES', 3)
@@ -19,7 +19,7 @@ def write_curves(network: Network, fid: TextIOWrapper):
     """
     print('[CURVES]', file=fid)
     print(';id xvalue yvalue', file=fid)
-    for c in network.curves:
+    for c in get_curves(network):
         for x, y in zip(c.xvalues, c.yvalues):
             print(c.id, x, y, file=fid)
     print('\n', end=' ', file=fid)

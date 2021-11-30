@@ -4,9 +4,8 @@ from oopnet.elements.network import Network
 from oopnet.elements.system_operation import Curve, Pattern, Energy, Control, Controlcondition, Action, Rule, Condition
 from oopnet.utils.getters.get_by_id import get_curve, get_pump, get_pattern, get_link, get_node, get_junction
 from oopnet.utils.getters.element_lists import get_link_ids, get_node_ids, get_curve_ids, get_pattern_ids
-
-from .decorators import section_reader
-from ...utils.adders import add_curve, add_pattern
+from oopnet.reader.decorator_reader.decorators import section_reader
+from oopnet.utils.adders import add_curve, add_pattern
 
 
 @section_reader('CURVES', 0)
@@ -159,14 +158,14 @@ def read_controls(network: Network, block: list):
     for vals in block:
         vals = vals['values']
         condition = Controlcondition()
-        if vals[2].upper() == 'OPEN' or vals[2].upper() == 'CLOSED':
+        if vals[2].upper() in ['OPEN', 'CLOSED']:
             l = get_link(network, vals[1])
             action = Action(object=l, value=vals[2].upper())
         else:
             l = get_link(network, vals[1])
             action = Action(object=l, value=float(vals[2]))
         if vals[3].upper() == 'IF':
-            n = get_node(network, vals[1])
+            n = get_node(network, vals[5])
             condition = Controlcondition(object=n, relation=vals[6].upper(),
                                          value=float(vals[7]))
         elif vals[3].upper() == 'AT':
@@ -181,10 +180,7 @@ def read_controls(network: Network, block: list):
                     timeformat = '%H:%M'
                     condition = Controlcondition(clocktime=datetime.datetime.strptime(vals[5], timeformat))
                 elif len(vals) == 7:
-                    if ':' in vals[5]:
-                        timeformat = '%I:%M%p'
-                    else:
-                        timeformat = '%I%p'
+                    timeformat = '%I:%M%p' if ':' in vals[5] else '%I%p'
                     condition = Controlcondition(clocktime=datetime.datetime.strptime(vals[5] + vals[6],
                                                                                       timeformat))
         c = Control(action=action, condition=condition)

@@ -3,7 +3,7 @@ import unittest
 from oopnet.utils.getters import *
 from oopnet.utils.removers import *
 
-from base import SimpleModel
+from testing.base import SimpleModel
 
 
 class SimpleRemovalTest(unittest.TestCase):

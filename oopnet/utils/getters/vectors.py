@@ -1,8 +1,7 @@
 import numpy as np
 
 from oopnet.elements.network import Network
-
-from .element_lists import get_pipes, get_junctions, get_nodes, get_tanks, get_reservoirs
+from oopnet.utils.getters.element_lists import get_pipes, get_junctions, get_nodes, get_tanks, get_reservoirs
 
 
 def v_length(network: Network) -> np.array:

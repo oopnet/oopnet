@@ -1,7 +1,6 @@
 from oopnet.elements.network import Network
 from oopnet.utils.getters.get_by_id import get_node
-
-from .decorators import section_reader
+from oopnet.reader.decorator_reader.decorators import section_reader
 
 
 @section_reader('COORDINATES', 4)
