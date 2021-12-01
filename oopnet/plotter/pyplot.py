@@ -11,7 +11,9 @@ import pandas as pd
 
 from oopnet.elements.network import Network
 from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Pump, Valve
-from oopnet.utils.getters.element_lists import get_link_ids, get_node_ids
+from oopnet.utils.getters.element_lists import get_link_ids, get_node_ids, get_valves, get_pumps, get_junctions, \
+    get_reservoirs, get_tanks, get_pipes
+
 
 # todo: refactor
 class Plotnodes:
@@ -63,7 +65,7 @@ class Plotpipes:
         lines = []
         pid = []
 
-        for pipe in network.pipes:
+        for pipe in get_pipes(network):
             link = []
 
             ps = pipe.startnode
@@ -243,23 +245,18 @@ class Plotsimulation:
                 cb = plt.colorbar(scalar_map, extend=extend)
                 cb.set_label(links.name, size=22)
                 cb.ax.tick_params(labelsize=20)
-        if network.pipes:
-            ax.add_collection(Plotpipes(network, color=linkcolors))
 
-        if network.valves:
-            list(map(lambda x: Plotlink(x, marker='v', color=outsidelist(x.id, linkcolors), ms=markersize), network.valves))
+        ax.add_collection(Plotpipes(network, color=linkcolors))
 
-        if network.pumps:
-            list(map(lambda x: Plotlink(x, marker='p', color=outsidelist(x.id, linkcolors), ms=markersize), network.pumps))
+        list(map(lambda x: Plotlink(x, marker='v', color=outsidelist(x.id, linkcolors), ms=markersize), get_valves(network)))
 
-        if network.junctions:
-            Plotnodes(network.junctions, nodetype=Junction, color=nodecolors, ms=4*markersize, zorder=3, nodetruncate=nodetruncate)
+        list(map(lambda x: Plotlink(x, marker='p', color=outsidelist(x.id, linkcolors), ms=markersize), get_pumps(network)))
 
-        if network.reservoirs:
-            Plotnodes(network.reservoirs, nodetype=Reservoir, color=nodecolors, ms=4*markersize, zorder=4)
+        Plotnodes(get_junctions(network), nodetype=Junction, color=nodecolors, ms=4*markersize, zorder=3, nodetruncate=nodetruncate)
 
-        if network.tanks:
-            Plotnodes(network.tanks, nodetype=Tank, color=nodecolors, ms=4*markersize, zorder=5)
+        Plotnodes(get_reservoirs(network), nodetype=Reservoir, color=nodecolors, ms=4*markersize, zorder=4)
+
+        Plotnodes(get_tanks(network), nodetype=Tank, color=nodecolors, ms=4*markersize, zorder=5)
 
         plt.grid('off')
         plt.axis('equal')

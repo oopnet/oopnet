@@ -77,15 +77,15 @@ def write_options(network: Network, fid: TextIOWrapper):
 
     """
     print('[OPTIONS]', file=fid)
-    if network.options is not None:
+    if network.options:
         o = network.options
-        if o.units is not None:
+        if o.units:
             print('UNITS', o.units, file=fid)
-        if o.headloss is not None:
+        if o.headloss:
             print('HEADLOSS', o.headloss, file=fid)
-        if o.hydraulics is not None:
+        if o.hydraulics:
             print('HYDRAULICS', o.hydraulics[0], o.hydraulics[1], file=fid)
-        if o.quality is not None:
+        if o.quality:
             if not isinstance(o.quality, list):
                 print('QUALITY', o.quality, file=fid)
             else:
@@ -97,34 +97,34 @@ def write_options(network: Network, fid: TextIOWrapper):
                     print('QUALITY', o.quality[0], o.quality[1].id, file=fid)
         else:
             print('QUALTIY', 'NONE', file=fid)
-        if o.viscosity is not None:
+        if o.viscosity:
             print('VISCOSITY', o.viscosity, file=fid)
-        if o.diffusivity is not None:
+        if o.diffusivity:
             print('DIFFUSIVITY', o.diffusivity, file=fid)
-        if o.specificgravity is not None:
+        if o.specificgravity:
             print('SPECIFIC GRAVITY', o.specificgravity, file=fid)
-        if o.trials is not None:
+        if o.trials:
             print('TRIALS', o.trials, file=fid)
-        if o.accuracy is not None:
+        if o.accuracy:
             print('ACCURACY', str(o.accuracy).replace('e', 'E'), file=fid)
-        if o.unbalanced is not None:
+        if o.unbalanced:
             if not isinstance(o.unbalanced, list):
                 print('UNBALANCED', o.unbalanced, file=fid)
             else:
                 print('UNBALANCED', o.unbalanced[0], o.unbalanced[1], file=fid)
-        if o.pattern is not None:
+        if o.pattern:
             print('PATTERN', end=' ', file=fid)
             try:
                 print(o.pattern.id, file=fid)
             except:
                 print(o.pattern, file=fid)
-        if o.demandmultiplier is not None:
+        if o.demandmultiplier:
             print('DEMAND MULTIPLIER', o.demandmultiplier, file=fid)
-        if o.emitterexponent is not None:
+        if o.emitterexponent:
             print('EMITTER EXPONENT', o.emitterexponent, file=fid)
-        if o.tolerance is not None:
+        if o.tolerance:
             print('TOLERANCE', str(o.tolerance).replace('e', 'E'), file=fid)
-        if o.map is not None:
+        if o.map:
             print('MAP', o.map, file=fid)
         if o.demandmodel == 'PDA':
             print('DEMAND MODEL', 'PDA', file=fid)
@@ -144,27 +144,27 @@ def write_times(network: Network, fid: TextIOWrapper):
 
     """
     print('[TIMES]', file=fid)
-    if network.times is not None:
+    if network.times:
         t = network.times
-        if t.duration is not None:
+        if t.duration:
             print('DURATION', timedelta2hours(t.duration), file=fid)
-        if t.hydraulictimestep is not None:
+        if t.hydraulictimestep:
             print('HYDRAULIC TIMESTEP', timedelta2hours(t.hydraulictimestep), file=fid)
-        if t.qualitytimestep is not None:
+        if t.qualitytimestep:
             print('QUALITY TIMESTEP', timedelta2hours(t.qualitytimestep), file=fid)
-        if t.ruletimestep is not None:
+        if t.ruletimestep:
             print('RULE TIMESTEP', timedelta2hours(t.ruletimestep), file=fid)
-        if t.patterntimestep is not None:
+        if t.patterntimestep:
             print('PATTERN TIMESTEP', timedelta2hours(t.patterntimestep), file=fid)
-        if t.patternstart is not None:
+        if t.patternstart:
             print('PATTERN START', timedelta2hours(t.patternstart), file=fid)
-        if t.reporttimestep is not None:
+        if t.reporttimestep:
             print('REPORT TIMESTEP', timedelta2hours(t.reporttimestep), file=fid)
-        if t.reportstart is not None:
+        if t.reportstart:
             print('REPORT START', timedelta2hours(t.reportstart), file=fid)
-        if t.startclocktime is not None:
+        if t.startclocktime:
             print('START CLOCKTIME', timedelta2startclocktime(t.startclocktime), file=fid)
-        if t.statistic is not None:
+        if t.statistic:
             print('STATISTIC', t.statistic, file=fid)
     print('\n', end=' ', file=fid)
 
@@ -179,19 +179,19 @@ def write_report(network: Network, fid: TextIOWrapper):
 
     """
     print('[REPORT]', file=fid)
-    if network.report is not None:
+    if network.report:
         r = network.report
-        if r.pagesize is not None:
+        if r.pagesize:
             print('PAGESIZE', r.pagesize, file=fid)
-        if r.file is not None:
+        if r.file:
             print('FILE', r.file, file=fid)
-        if r.status is not None:
+        if r.status:
             print('STATUS', r.status, file=fid)
-        if r.summary is not None:
+        if r.summary:
             print('SUMMARY', r.summary, file=fid)
-        if r.energy is not None:
+        if r.energy:
             print('ENERGY', r.energy, file=fid)
-        if r.nodes is not None:
+        if r.nodes:
             if r.nodes == 'NONE' or r.nodes == 'ALL':
                 print('NODES', r.nodes, file=fid)
             else:
@@ -199,7 +199,7 @@ def write_report(network: Network, fid: TextIOWrapper):
                 for n in r.nodes:
                     print(n.id, end=' ', file=fid)
                 print('\n', end=' ', file=fid)
-        if r.links is not None:
+        if r.links:
             if r.links == 'NONE' or r.links == 'ALL':
                 print('LINKS', r.links, file=fid)
             else:
@@ -207,62 +207,62 @@ def write_report(network: Network, fid: TextIOWrapper):
                 for l in r.links:
                     print(l.id, end=' ', file=fid)
                 print('\n', end=' ', file=fid)
-    if network.reportparameter is not None:
+    if network.reportparameter:
         r = network.reportparameter
-        if r.elevation is not None:
+        if r.elevation:
             print('ELEVATION', reportparameter2str(r.elevation), file=fid)
-        if r.demand is not None:
+        if r.demand:
             print('DEMAND', reportparameter2str(r.demand), file=fid)
-        if r.head is not None:
+        if r.head:
             print('HEAD', reportparameter2str(r.head), file=fid)
-        if r.pressure is not None:
+        if r.pressure:
             print('PRESSURE', reportparameter2str(r.pressure), file=fid)
-        if r.quality is not None:
+        if r.quality:
             print('QUALITY', reportparameter2str(r.quality), file=fid)
-        if r.length is not None:
+        if r.length:
             print('LENGTH', reportparameter2str(r.length), file=fid)
-        if r.diameter is not None:
+        if r.diameter:
             print('DIAMETER', reportparameter2str(r.diameter), file=fid)
-        if r.flow is not None:
+        if r.flow:
             print('FLOW', reportparameter2str(r.flow), file=fid)
-        if r.velocity is not None:
+        if r.velocity:
             print('VELOCITY', reportparameter2str(r.velocity), file=fid)
-        if r.headloss is not None:
+        if r.headloss:
             print('HEADLOSS', reportparameter2str(r.headloss), file=fid)
-        if r.setting is not None:
+        if r.setting:
             print('SETTING', reportparameter2str(r.setting), file=fid)
-        if r.reaction is not None:
+        if r.reaction:
             print('REACTION', reportparameter2str(r.reaction), file=fid)
-        if r.ffactor is not None:
+        if r.ffactor:
             print('F-FACTOR', reportparameter2str(r.ffactor), file=fid)
-    if network.reportprecision is not None:
+    if network.reportprecision:
         r = network.reportprecision
-        if r.elevation is not None:
+        if r.elevation:
             print('ELEVATION', reportprecision2str(r.elevation), file=fid)
-        if r.demand is not None:
+        if r.demand:
             print('DEMAND', reportprecision2str(r.demand), file=fid)
-        if r.head is not None:
+        if r.head:
             print('HEAD', reportprecision2str(r.head), file=fid)
-        if r.pressure is not None:
+        if r.pressure:
             print('PRESSURE', reportprecision2str(r.pressure), file=fid)
-        if r.quality is not None:
+        if r.quality:
             print('QUALITY', reportprecision2str(r.quality), file=fid)
-        if r.length is not None:
+        if r.length:
             print('LENGTH', reportprecision2str(r.length), file=fid)
-        if r.diameter is not None:
+        if r.diameter:
             print('DIAMETER', reportprecision2str(r.diameter), file=fid)
-        if r.flow is not None:
+        if r.flow:
             print('FLOW', reportprecision2str(r.flow), file=fid)
-        if r.velocity is not None:
+        if r.velocity:
             print('VELOCITY', reportprecision2str(r.velocity), file=fid)
-        if r.headloss is not None:
+        if r.headloss:
             print('HEADLOSS', reportprecision2str(r.headloss), file=fid)
-        if r.position is not None:
+        if r.position:
             print('POSITION', reportprecision2str(r.position), file=fid)
-        if r.setting is not None:
+        if r.setting:
             print('SETTING', reportprecision2str(r.setting), file=fid)
-        if r.reaction is not None:
+        if r.reaction:
             print('REACTION', reportprecision2str(r.reaction), file=fid)
-        if r.ffactor is not None:
+        if r.ffactor:
             print('F-FACTOR', reportparameter2str(r.ffactor), file=fid)
     print('\n', end=' ', file=fid)

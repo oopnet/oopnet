@@ -1,12 +1,10 @@
 """
 This module contains all the base classes of OOPNET
 """
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
-from abc import abstractmethod
 
-
-@dataclass
+@dataclass(slots=True)
 class NetworkComponent:
     """This is OOPNET's base class for all objects having a name (id) in EPANET Input files
 
@@ -16,12 +14,11 @@ class NetworkComponent:
       tag: Associates category labels (tags) with specific nodes and links. An optional text string (with no spaces) used to assign e.g. the node to a category, such as a pressure zone.
 
     """
-    _id: str = ''
-    id: str = property(fget=lambda self: self._get_id(),
-                       fset=lambda self, value: self._set_id(value))
+    id: str = ''
+    _id: str = field(init=False, repr=False)
     comment: Optional[str] = None
     tag: Optional[str] = None
-    _network = None
+    _component_hash: dict = None
 
     def __str__(self):
         return self.id
@@ -29,9 +26,14 @@ class NetworkComponent:
     def __hash__(self):
         return hash(self.id) + hash(type(self))
 
-    def _get_id(self):
+    @property
+    def id(self) -> str:
         return self._id
 
-    @abstractmethod
-    def _set_id(self, id: str):
+    @id.setter
+    def id(self, id: str):
         """Sets ID of NetworkComponent and replaces key in network hash"""
+        if self._component_hash:
+            self._component_hash.pop(self._id)
+            self._component_hash[id] = self
+        self._id = id

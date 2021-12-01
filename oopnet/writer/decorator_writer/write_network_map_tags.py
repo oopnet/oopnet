@@ -1,5 +1,6 @@
 from io import TextIOWrapper
 
+from oopnet.utils.getters import get_nodes
 from oopnet.writer.decorator_writer.decorators import section_writer
 from oopnet.elements.network import Network
 
@@ -16,7 +17,7 @@ def write_coordinates(network: Network, fid: TextIOWrapper):
     """
     print('[COORDINATES]', file=fid)
     print(';nodeid xcoordinate ycoordinate', file=fid)
-    for n in network.nodes:
+    for n in get_nodes(network):
         print(n.id, n.xcoordinate, n.ycoordinate, file=fid)
     print('\n', end=' ', file=fid)
 

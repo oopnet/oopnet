@@ -76,15 +76,15 @@ class OOPNETBenchmark:
         print('Randomly accessing Links')
         print(np.mean(timeit.Timer(stmt=self.random_link_access).repeat(number=n)))
 
-        print('Simulating model')
-        print(np.mean(timeit.Timer(stmt=self.simulate).repeat(number=n)))
+        # print('Simulating model')
+        # print(np.mean(timeit.Timer(stmt=self.simulate).repeat(number=n)))
 
         print('Writing file')
         print(np.mean(timeit.Timer(stmt=self.write).repeat(number=n)))
 
 
 if __name__ == '__main__':
-    OOPNETBenchmark(filename=poulakis_filename).run_bechmark()
-    # OOPNETBenchmark(filename=ctown_filename).run_bechmark()
+    # OOPNETBenchmark(filename=poulakis_filename).run_bechmark()
+    OOPNETBenchmark(filename=ctown_filename).run_bechmark()
     # OOPNETBenchmark(filename=filename).run_single_instance()
 

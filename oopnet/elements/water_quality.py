@@ -4,7 +4,8 @@ from dataclasses import dataclass
 from oopnet.elements.network_components import Pipe
 
 
-@dataclass
+# todo: switch bulk, wall and tank to Optional[List[Pipe]]?
+@dataclass(slots=True)
 class Reaction:
     """Defines parameters related to chemical reactions occurring in the network."""
     orderbulk: Optional[float] = None

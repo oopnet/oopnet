@@ -15,7 +15,7 @@ def write_title(network: Network, fid: TextIOWrapper):
 
     """
     print('[TITLE]', file=fid)
-    if network.title is not None:
+    if network.title:
         print(network.title, file=fid)
     print('\n', file=fid)
 

@@ -1,7 +1,7 @@
 import networkx as nx
 import pandas as pd
 
-from oopnet.utils.getters.element_lists import get_node_ids, get_links, get_pumps, get_valves
+from oopnet.utils.getters.element_lists import get_node_ids, get_links, get_pumps, get_valves, get_pipes
 from oopnet.elements.network import Network
 
 
@@ -64,13 +64,11 @@ def digraph(network: Network, weight: str = 'length', default: float = 0.00001) 
 
         g.add_edge(*e, weight=length, id=lid)
 
-    if get_pumps(network):
-        for p in network.pumps:
-            g.get_edge_data(p.startnode.id, p.endnode.id)[0]['weight'] = 0.00001
+    for p in get_pumps(network):
+        g.get_edge_data(p.startnode.id, p.endnode.id)[0]['weight'] = 0.00001
 
-    if get_valves(network):
-        for v in network.valves:
-            g.get_edge_data(v.startnode.id, v.endnode.id)[0]['weight'] = 0.00001
+    for v in get_valves(network):
+        g.get_edge_data(v.startnode.id, v.endnode.id)[0]['weight'] = 0.00001
 
     return g
 
@@ -99,13 +97,11 @@ def multigraph(network: Network, weight: str = 'length', default: float = 0.0000
 
         g.add_edge(*e, weight=length, id=lid)
 
-    if get_pumps(network):
-        for p in network.pumps:
-            g.get_edge_data(p.startnode.id, p.endnode.id)[0]['weight'] = 0.00001
+    for p in get_pumps(network):
+        g.get_edge_data(p.startnode.id, p.endnode.id)[0]['weight'] = 0.00001
 
-    if get_valves(network):
-        for v in network.valves:
-            g.get_edge_data(v.startnode.id, v.endnode.id)[0]['weight'] = 0.00001
+    for v in get_valves(network):
+        g.get_edge_data(v.startnode.id, v.endnode.id)[0]['weight'] = 0.00001
 
     return g
 
@@ -118,7 +114,7 @@ def onlinks2nxlinks(network: Network) -> list:
     Returns:
 
     """
-    return [(l.startnode.id, l.endnode.id) for l in network.pipes]
+    return [(l.startnode.id, l.endnode.id) for l in get_pipes(network)]
 
 
 def nxlinks2onlinks(G: nx.Graph) -> list:

@@ -5,7 +5,7 @@ from oopnet.elements.base import NetworkComponent
 from oopnet.elements.system_operation import Pattern, Curve
 
 
-@dataclass
+@dataclass(slots=True)
 class Node(NetworkComponent):
     """Defines base class for all Node like objects in OOPNET (Junction, Reservoir, Tank)
 
@@ -38,7 +38,7 @@ class Node(NetworkComponent):
 
 
 
-@dataclass
+@dataclass(slots=True)
 class Link(NetworkComponent):
     """Base class for all Link like objects in OOPNET (Pipe, Pump, Valve)
 
@@ -64,7 +64,7 @@ class Link(NetworkComponent):
                (self.endnode.xcoordinate, self.endnode.ycoordinate, self.endnode.elevation)
 
 
-@dataclass
+@dataclass(slots=True)
 class Junction(Node):
     """Defines Junction nodes contained in the network.
 
@@ -82,16 +82,8 @@ class Junction(Node):
     # todo: can a junction have several floats as demand?
     # demand = Either(Float, ListFloat)
 
-    def _set_id(self, id):
-        if self._network:
-            self._network.junctions.pop(self._id)
-            self._id = id
-            self._network.junctions[id] = self
-        else:
-            self._id = id
 
-
-@dataclass
+@dataclass(slots=True)
 class Reservoir(Node):
     """Defines all reservoir nodes contained in the network.
 
@@ -106,15 +98,8 @@ class Reservoir(Node):
     # todo: double check if mixing model is reservoir attribute
     mixingmodel: str = 'MIXED' # = Enum('MIXED', '2COMP', 'FIFO', 'LIFO')
 
-    def _set_id(self, id):
-        if self._network:
-            self._network.reservoirs.pop(self._id)
-            self._id = id
-            self._network.reservoirs[id] = self
-        else:
-            self._id = id
 
-@dataclass
+@dataclass(slots=True)
 class Tank(Node):
     """Defines all tank nodes contained in the network.
 
@@ -139,15 +124,8 @@ class Tank(Node):
     reactiontank: Optional[float] = None
     mixingmodel: str = 'MIXED'  # = Enum('MIXED', '2COMP', 'FIFO', 'LIFO')
 
-    def _set_id(self, id):
-        if self._network:
-            self._network.tanks.pop(self._id)
-            self._id = id
-            self._network.tanks[id] = self
-        else:
-            self._id = id
 
-@dataclass
+@dataclass(slots=True)
 class Pipe(Link):
     """Defines all pipe links contained in the network.
 
@@ -168,16 +146,8 @@ class Pipe(Link):
     reactionbulk: Optional[float] = None
     reactionwall: Optional[float] = None
 
-    def _set_id(self, id):
-        if self._network:
-            self._network.pipes.pop(self._id)
-            self._id = id
-            self._network.pipes[id] = self
-        else:
-            self._id = id
 
-
-@dataclass
+@dataclass(slots=True)
 class Pump(Link):
     """Defines all pump links contained in the network.
 
@@ -192,16 +162,8 @@ class Pump(Link):
     value: Union[str, float, None] = None
     status: Union[str, float, None] = None  # = Either(None, Enum('OPEN', 'CLOSED', 'ACTIVE'), Float)
 
-    def _set_id(self, id):
-        if self._network:
-            self._network.pumps.pop(self._id)
-            self._id = id
-            self._network.pumps[id] = self
-        else:
-            self._id = id
 
-
-@dataclass
+@dataclass(slots=True)
 class Valve(Link):
     """Defines all control valve links contained in the network
 
@@ -219,16 +181,8 @@ class Valve(Link):
     # todo: double check possible setting datatypes
     # setting = Any  # ToDo: Rethink if any is correct for setting attribute
 
-    def _set_id(self, id):
-        if self._network:
-            self._network.valves.pop(self._id)
-            self._id = id
-            self._network.valves[id] = self
-        else:
-            self._id = id
 
-
-@dataclass
+@dataclass(slots=True)
 class PRV(Valve):
     """ """
     # ToDo: Implement PRV (Pressure Reducing Valve)
@@ -241,7 +195,7 @@ class PRV(Valve):
     pass
 
 
-@dataclass
+@dataclass(slots=True)
 class TCV(Valve):
     """ """
     # ToDo: Implement TCV (Throttle Control Valve)
@@ -254,7 +208,7 @@ class TCV(Valve):
     pass
 
 
-@dataclass
+@dataclass(slots=True)
 class PSV(Valve):
     """ """
     # ToDo: Implement PSV (Pressure Sustaining Valve)
@@ -267,7 +221,7 @@ class PSV(Valve):
     pass
 
 
-@dataclass
+@dataclass(slots=True)
 class GPV(Valve):
     """ """
     # ToDo: Implement GPV (General Purpose Valve)
@@ -280,7 +234,7 @@ class GPV(Valve):
     pass
 
 
-@dataclass
+@dataclass(slots=True)
 class PBV(Valve):
     """ """
     # ToDo: Implement PBV (Pressure Breaker Valve)
@@ -293,7 +247,7 @@ class PBV(Valve):
     pass
 
 
-@dataclass
+@dataclass(slots=True)
 class FCV(Valve):
     """ """
     # ToDo: Implement FCV (Flow Control Valve)

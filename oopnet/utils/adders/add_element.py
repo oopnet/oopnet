@@ -1,8 +1,7 @@
-from typing import Optional, List, Union
+from typing import Optional, Union
 
 from oopnet.elements.base import NetworkComponent
-from oopnet.utils.getters.element_lists import get_pipe_ids, get_reservoir_ids, get_tank_ids, get_junction_ids, \
-    get_pump_ids, get_valve_ids, get_pattern_ids, get_node_ids, get_link_ids, get_curve_ids
+from oopnet.utils.getters.element_lists import get_pattern_ids, get_node_ids, get_link_ids, get_curve_ids
 from oopnet.elements.network import Network
 from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Pump, Valve, Curve, Pattern, Node, Link
 
@@ -15,7 +14,41 @@ class ComponentExistsException(Exception):
         super().__init__(self.message)
 
 
-# todo: implement addition of multiple object instances?.de
+def _check_exists(obj: NetworkComponent, network: Network):
+    """Checks if a component with the same ID and general type exists in the network.
+
+    Args:
+        obj: NetworkComponent that shall be added
+        network: OOPNET network object
+
+    """
+    if isinstance(obj, Node):
+        exists = obj.id in get_node_ids(network)
+    elif isinstance(obj, Link):
+        exists = obj.id in get_link_ids(network)
+    elif isinstance(obj, Pattern):
+        exists = obj.id in get_pattern_ids(network)
+    elif isinstance(obj, Curve):
+        exists = obj.id in get_curve_ids(network)
+    else:
+        raise TypeError(f'Trying to check the existence of an Object with an invalid type {type(obj)}.')
+    if exists:
+        raise ComponentExistsException(obj.id)
+
+
+def _add_component(obj: NetworkComponent, component_hash: dict):
+    """Adds a NetworkComponent to a hash
+
+    Args:
+        obj: NetworkComponent that shall be added
+        component_hash: hash table to which the NetworkComponent shall be added
+
+    """
+    obj._component_hash = component_hash
+    component_hash[obj.id] = obj
+
+
+# todo: implement addition of multiple object instances?
 def add_pattern(network: Network, pattern: Optional[Pattern] = None, check_exists: bool = True, **kwargs):
     """Adds a Pattern to an OOPNET network object.
     
@@ -24,21 +57,15 @@ def add_pattern(network: Network, pattern: Optional[Pattern] = None, check_exist
     Args:
       network: OOPNET network
       pattern: Pattern object to add to the network
-      check_exists: checks if a Curve with the same ID already exists in the network
+      check_exists: if True, checks if a Pattern with the same ID already exists in the network
       **kwargs: Pattern init keyword arguments
 
     """
     if not pattern:
-        pid = kwargs['id']
         pattern = Pattern(**kwargs)
-    else:
-        pid = pattern.id
-
-    if check_exists and pid in get_pattern_ids(network):
-        raise ComponentExistsException(pid)
-
-    pattern._network = network
-    network.patterns[pid] = pattern
+    if check_exists:
+        _check_exists(pattern, network)
+    _add_component(pattern, network.patterns)
 
 
 def add_curve(network: Network, curve: Optional[Curve] = None, check_exists: bool = True, **kwargs):
@@ -49,21 +76,15 @@ def add_curve(network: Network, curve: Optional[Curve] = None, check_exists: boo
     Args:
       network: OOPNET network object
       curve: Curve object to add to the network
-      check_exists: checks if a Curve with the same ID already exists in the network
+      check_exists: if True, checks if a Curve with the same ID already exists in the network
       **kwargs: Curve init keyword arguments
 
     """
     if not curve:
-        cid = kwargs['id']
         curve = Curve(**kwargs)
-    else:
-        cid = curve.id
-
-    if check_exists and cid in get_curve_ids(network):
-        raise ComponentExistsException(cid)
-
-    curve._network = network
-    network.curves[cid] = curve
+    if check_exists:
+        _check_exists(curve, network)
+    _add_component(curve, network.curves)
 
 
 def add_junction(network: Network, junction: Optional[Junction] = None, check_exists: bool = True, **kwargs):
@@ -74,20 +95,15 @@ def add_junction(network: Network, junction: Optional[Junction] = None, check_ex
     Args:
       network: OOPNET network object
       junction: Junction object to add to the network
-      check_exists: checks if a Curve with the same ID already exists in the network
+      check_exists: if True, checks if a Junction with the same ID already exists in the network
       **kwargs: Junction init keyword arguments
 
     """
     if not junction:
-        jid = kwargs['id']
         junction = Junction(**kwargs)
-    else:
-        jid = junction.id
-
-    if check_exists and jid in get_junction_ids(network):
-        raise ComponentExistsException(jid)
-
-    network.junctions[jid] = junction
+    if check_exists:
+        _check_exists(junction, network)
+    _add_component(junction, network.junctions)
 
 
 def add_reservoir(network: Network, reservoir: Optional[Reservoir] = None, check_exists: bool = True, **kwargs):
@@ -98,20 +114,15 @@ def add_reservoir(network: Network, reservoir: Optional[Reservoir] = None, check
     Args:
       network: OOPNET network object
       reservoir: Reservoir object to add to the network
-      check_exists: checks if a Curve with the same ID already exists in the network
+      check_exists: if True, checks if a Reservoir with the same ID already exists in the network
       **kwargs: Reservoir init keyword arguments
 
     """
     if not reservoir:
-        rid = kwargs['id']
         reservoir = Reservoir(**kwargs)
-    else:
-        rid = reservoir.id
-
-    if check_exists and rid in get_reservoir_ids(network):
-        raise ComponentExistsException(rid)
-
-    network.reservoirs[rid] = reservoir
+    if check_exists:
+        _check_exists(reservoir, network)
+    _add_component(reservoir, network.reservoirs)
 
 
 def add_tank(network: Network, tank: Optional[Tank] = None, check_exists: bool = True, **kwargs):
@@ -122,20 +133,15 @@ def add_tank(network: Network, tank: Optional[Tank] = None, check_exists: bool =
     Args:
       network: OOPNET network object
       tank: Tank object to add to the network
-      check_exists: checks if a Curve with the same ID already exists in the network
+      check_exists: if True, checks if a Tank with the same ID already exists in the network
       **kwargs: Tank init keyword arguments
 
     """
     if not tank:
-        tid = kwargs['id']
         tank = Tank(**kwargs)
-    else:
-        tid = tank.id
-
-    if check_exists and tid in get_tank_ids(network):
-        raise ComponentExistsException(tid)
-
-    network.tanks[tid] = tank
+    if check_exists:
+        _check_exists(tank, network)
+    _add_component(tank, network.tanks)
 
 
 def add_pipe(network: Network, pipe: Optional[Pipe] = None, check_exists: bool = True, **kwargs):
@@ -146,20 +152,15 @@ def add_pipe(network: Network, pipe: Optional[Pipe] = None, check_exists: bool =
     Args:
       network: OOPNET network object
       pipe: Pipe object to add to the network
-      check_exists: checks if a Curve with the same ID already exists in the network
+      check_exists: if True, checks if a Pipe with the same ID already exists in the network
       **kwargs: Pipe init keyword arguments
 
     """
     if not pipe:
-        pid = kwargs['id']
         pipe = Pipe(**kwargs)
-    else:
-        pid = pipe.id
-
-    if check_exists and pid in get_pipe_ids(network):
-        raise ComponentExistsException(pid)
-
-    network.pipes[pid] = pipe
+    if check_exists:
+        _check_exists(pipe, network)
+    _add_component(pipe, network.pipes)
 
 
 def add_pump(network: Network, pump: Optional[Pump] = None, check_exists: bool = True, **kwargs):
@@ -170,20 +171,15 @@ def add_pump(network: Network, pump: Optional[Pump] = None, check_exists: bool =
     Args:
       network: OOPNET network object
       pump: Pump object to add to the network
-      check_exists: checks if a Curve with the same ID already exists in the network
+      check_exists: if True, checks if a Pump with the same ID already exists in the network
       **kwargs: Pump init keyword arguments
 
     """
     if not pump:
-        pid = kwargs['id']
         pump = Pump(**kwargs)
-    else:
-        pid = pump.id
-
-    if check_exists and pid in get_pump_ids(network):
-        raise ComponentExistsException(pid)
-
-    network.pumps[pid] = pump
+    if check_exists:
+        _check_exists(pump, network)
+    _add_component(pump, network.pumps)
 
 
 def add_valve(network: Network, valve: Optional[Valve] = None, check_exists: bool = True, **kwargs):
@@ -194,35 +190,26 @@ def add_valve(network: Network, valve: Optional[Valve] = None, check_exists: boo
     Args:
       network: OOPNET network object
       valve: Valve object to add to the network
-      check_exists: checks if a Curve with the same ID already exists in the network
+      check_exists: if True, checks if a Valve with the same ID already exists in the network
       **kwargs: Valve init keyword arguments
 
     """
     if not valve:
-        vid = kwargs['id']
         valve = Valve(**kwargs)
-    else:
-        vid = valve.id
-
-    if check_exists and vid in get_valve_ids(network):
-        raise ComponentExistsException(vid)
-
-    network.valves[vid] = valve
+    if check_exists:
+        _check_exists(valve, network)
+    _add_component(valve, network.valves)
 
 
 def add_node(network: Network, node: Union[Junction, Reservoir, Tank], check_exists: bool = True):
-    """Adds a node to an OOPNET network object.
+    """Adds a Node to an OOPNET network object.
 
     Args:
       network: OOPNET network object
       node: Node object to add to the network
-      check_exists: checks if a Curve with the same ID already exists in the network
+      check_exists: if True, checks if a Node with the same ID already exists in the network
 
     """
-
-    if node.id in get_node_ids(network):
-        raise ComponentExistsException(node.id)
-
     if isinstance(node, Junction):
         add_junction(network, node, check_exists=check_exists)
     elif isinstance(node, Reservoir):
@@ -235,18 +222,14 @@ def add_node(network: Network, node: Union[Junction, Reservoir, Tank], check_exi
 
 
 def add_link(network: Network, link: Union[Pipe, Pump, Valve], check_exists: bool = True):
-    """Adds a link to an OOPNET network object.
+    """Adds a Link to an OOPNET network object.
 
     Args:
       network: OOPNET network object
       link: Link object to add to the network
-      check_exists: checks if a Curve with the same ID already exists in the network
+      check_exists: checks if a Link with the same ID already exists in the network
 
     """
-
-    if link.id in get_link_ids(network):
-        raise ComponentExistsException(link.id)
-
     if isinstance(link, Pipe):
         add_pipe(network, link, check_exists=check_exists)
     elif isinstance(link, Pump):

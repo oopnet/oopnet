@@ -248,3 +248,55 @@ def get_curves(network: Network) -> list:
 
     """
     return list(network.curves.values())
+
+
+def get_patterns(network: Network) -> list:
+    """This function returns all patterns in the network as a list
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of patterns
+
+    """
+    return list(network.patterns.values())
+
+
+def get_energies(network: Network) -> list:
+    """This function returns all energy entries in the network as a list
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of energy entries
+
+    """
+    return network.energies
+
+
+def get_controls(network: Network) -> list:
+    """This function returns all controls in the network as a list
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of controls
+
+    """
+    return network.controls
+
+
+def get_rules(network: Network) -> list:
+    """This function returns all rules in the network as a list
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of rules
+
+    """
+    return network.rules

@@ -6,4 +6,3 @@ pandas
 seaborn
 traits
 xarray
-sortedcontainers

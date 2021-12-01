@@ -6,23 +6,19 @@ from oopnet.elements.base import NetworkComponent
 
 
 @dataclass
-class Curve:
+class Curve(NetworkComponent):
     """Defines data curves and their X,Y points."""
-    id: str
-    comment: Optional[str] = None
     xvalues: List[float] = field(default_factory=list)
     yvalues: List[float] = field(default_factory=list)
 
 
 @dataclass
-class Pattern:
+class Pattern(NetworkComponent):
     """Defines time patterns."""
-    id: str
-    comment: Optional[str] = None
     multipliers: List = field(default_factory=list)
 
 
-@dataclass
+@dataclass(slots=True)
 class Energy:
     """Defines parameters used to compute pumping energy and cost."""
 
@@ -32,7 +28,7 @@ class Energy:
     value: Union[float, Pattern, Curve] = None  # = Either(Float, Instance(Pattern), Instance(Curve))
 
 
-@dataclass
+@dataclass(slots=True)
 class Condition:
     """A condition clause in a rule-based control"""
     # ToDo: object attribute should be either instance of Node or Link instead of Network Component
@@ -45,7 +41,7 @@ class Condition:
     value: Union[float, str, datetime.datetime, datetime.timedelta]  # = Either(Float, Enum('OPEN', 'CLOSED'), Instance(datetime.datetime), Instance(datetime.timedelta))
 
 
-@dataclass
+@dataclass(slots=True)
 class Action:
     """An action clause in a rule-based control"""
     # ToDo: object attribute should be either instance of Node or Link instead of Network Component
@@ -54,7 +50,7 @@ class Action:
     value: Union[float, str]  # = Either(Float, Enum('OPEN', 'CLOSED'))
 
 
-@dataclass
+@dataclass(slots=True)
 class Rule:
     """Defines rule-based controls that modify links based on a combination of conditions."""
     id: str
@@ -62,7 +58,7 @@ class Rule:
     priority: float
 
 
-@dataclass
+@dataclass(slots=True)
 class Controlcondition:
     """ """
 
@@ -75,7 +71,7 @@ class Controlcondition:
     clocktime: Optional[datetime.datetime] = None
 
 
-@dataclass
+@dataclass(slots=True)
 class Control:
 
     """Defines simple controls that modifiy links based on a single condition."""

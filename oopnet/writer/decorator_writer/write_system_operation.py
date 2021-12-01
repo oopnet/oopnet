@@ -4,7 +4,8 @@ from io import TextIOWrapper
 from oopnet.elements.system_operation import Curve
 from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Valve, Pump
 from oopnet.elements.network import Network
-from oopnet.utils.getters.element_lists import get_curves
+from oopnet.utils.getters.element_lists import get_curves, get_junctions, get_pipes, get_valves, get_pumps, \
+    get_patterns, get_energies, get_controls, get_rules
 from oopnet.writer.decorator_writer.decorators import section_writer
 
 
@@ -36,7 +37,7 @@ def write_patterns(network: Network, fid: TextIOWrapper):
     """
     print('[PATTERNS]', file=fid)
     print(';id multipliers', file=fid)
-    for p in network.patterns:
+    for p in get_patterns(network):
         for i, m in enumerate(p.multipliers):
             print(p.id, end=' ', file=fid)
             print(m, file=fid)
@@ -54,7 +55,7 @@ def write_energy(network: Network, fid: TextIOWrapper):
 
     """
     print('[ENERGY]', file=fid)
-    for e in network.energies:
+    for e in get_energies(network):
         print(e.keyword, end=' ', file=fid)
         if e.keyword == 'PUMP':
             print(e.pumpid.id, end=' ', file=fid)
@@ -80,13 +81,13 @@ def write_status(network: Network, fid: TextIOWrapper):
     """
     print('[STATUS]', file=fid)
     print(';id status/setting', file=fid)
-    for l in network.pipes:
+    for l in get_pipes(network):
         if l.initialstatus == 'CLOSED':
             print(l.id, l.initialstatus, file=fid)
-    for v in network.valves:
+    for v in get_valves(network):
         if v.initialstatus == 'CLOSED' or v.setting == 1:
             print(v.id, 'CLOSED', file=fid)
-    for pu in network.pumps:
+    for pu in get_pumps(network):
         if pu.initialstatus == 'CLOSED':
             print(pu.id, 'CLOSED', file=fid)
         elif pu.keyword == 'SPEED':
@@ -104,7 +105,7 @@ def write_controls(network: Network, fid: TextIOWrapper):
 
     """
     print('[CONTROLS]', file=fid)
-    for c in network.controls:
+    for c in get_controls(network):
         print('LINK', c.action.object.id, c.action.value, end=' ', file=fid)
         if c.condition.object is not None:
             print('IF NODE', c.condition.object.id, c.condition.relation, c.condition.value, file=fid)
@@ -125,7 +126,7 @@ def write_rules(network: Network, fid: TextIOWrapper):
 
     """
     print('[RULES]', file=fid)
-    for r in network.rules:
+    for r in get_rules(network):
         print('RULE', r.id, file=fid)
         for c in r.condition:
             objecttype = None
@@ -165,7 +166,7 @@ def write_demands(network: Network, fid: TextIOWrapper):
     """
     print('[DEMANDS]', file=fid)
     print(';id demand pattern category', file=fid)
-    for j in network.junctions:
+    for j in get_junctions(network):
         if j.demand is None or isinstance(j.demand, float) or isinstance(j.demand, int):
             pass
         elif isinstance(j.demand, list):

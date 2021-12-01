@@ -20,7 +20,7 @@ def filesplitter(filename: str) -> dict[str, list]:
     """
     with open(filename, 'r') as fid:
         content = fid.readlines()
-        blocks = dict()
+        blocks = {}
         blockname = 'TITLE'
         blocks[blockname] = []
         for line in content:
@@ -30,8 +30,7 @@ def filesplitter(filename: str) -> dict[str, list]:
                     blockname = line[1:-1]
                     blocks[blockname] = []
                 else:
-                    vals = dict()
-                    vals['values'] = line.split(';')[0].strip().split(' ')
+                    vals = {'values': line.split(';')[0].strip().split(' ')}
                     if len(line.split(';')) == 2:
                         vals['comments'] = line.split(';')[1].strip()
                     else:
@@ -64,14 +63,6 @@ def read(filename: str) -> Network:
     for f in newlist:
         if f.sectionname in list(blocks.keys()):
             f.readerfunction(network, blocks[f.sectionname])
-
-    # set network report if there exists no report section in the input file
-    if not network.report:
-        network.report = Report()
-
-    # set network times if there exists no times section in the input file
-    if not network.times:
-        network.times = Times()
 
     # Convert network to SI units:
     convert(network)

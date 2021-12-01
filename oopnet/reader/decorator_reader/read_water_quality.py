@@ -29,8 +29,6 @@ def read_reaction(network: Network, block: list):
     """
     for vals in block:
         vals = vals['values']
-        if network.reactions is None:
-            network.reactions = Reaction()
         r = network.reactions
         vals[0] = vals[0].upper()
         if vals[0] == 'ORDER':

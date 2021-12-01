@@ -1,67 +1,15 @@
 from copy import deepcopy
-from typing import Iterable, Callable, Optional, List, Union, Dict
+from typing import Optional, List, Dict
 from dataclasses import dataclass, field
 
-from sortedcontainers import SortedKeyList
 import networkx as nx
 
-from oopnet.elements.base import NetworkComponent
-# from oopnet.elements.network_components import Junction, Tank, Reservoir, Pipe, Pump, Valve, Node, Link
-# from oopnet.elements.network_map_tags import Vertex, Label, Backdrop
 from oopnet.elements.options_and_reporting import Options, Times, Report, Reportparameter, Reportprecision
 from oopnet.elements.system_operation import Energy, Control, Rule, Curve, Pattern
 from oopnet.elements.water_quality import Reaction
 
 
-# class ComponentList(SortedKeyList):
-#     """Class for storing NetworkComponent objects.
-#
-#     Attributes:
-#       data: Iterable containing NetworkComponents to be stored
-#       key: Callable to be used for sorting the objects
-#
-#     """
-#     def __init__(self, data: Optional[Iterable[NetworkComponent]] = None, key: Callable = lambda x: x.id):
-#         if data is None:
-#             data = []
-#         super().__init__(data, key=key)
-#
-#     def append(self, value: NetworkComponent):
-#         """Compatibility method for adding a NetworkComponent to a ComponentList.
-#
-#         Args:
-#           value: NetworkComponent to add to the ComponentList
-#
-#         """
-#         self.add(value)
-#
-#     def binary_search(self, id: str) -> Union[Junction, Tank, Reservoir, Pipe, Pump, Valve, Pattern, Curve, Rule,
-#                                               Node, Link]:
-#         """Lookup method for getting a NetworkComponent by its ID.
-#
-#         Args:
-#           id: Queried NetworkComponent's ID
-#
-#         Returns:
-#             NetworkComponent with submitted ID
-#
-#         """
-#         first = 0
-#         last = len(self) - 1
-#
-#         while first <= last:
-#             mid = (first + last) // 2
-#             if self[mid].id == id:
-#                 return self[mid]
-#             elif id < self[mid].id:
-#                 last = mid - 1
-#             else:
-#                 first = mid + 1
-#
-#         raise KeyError(f'No component with the ID "{id}" found in network.')
-
-
-@dataclass
+@dataclass(slots=True)
 class Network:
     """EPANET hydraulic model representation.
 

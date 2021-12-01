@@ -1,6 +1,7 @@
 from io import TextIOWrapper
 
 from oopnet.elements.network import Network
+from oopnet.utils.getters import get_tanks, get_nodes
 from oopnet.writer.decorator_writer.decorators import section_writer
 
 
@@ -15,7 +16,7 @@ def write_quality(network: Network, fid: TextIOWrapper):
     """
     print('[QUALITY]', file=fid)
     print(';id initialquality', file=fid)
-    for n in network.nodes:
+    for n in get_nodes(network):
         if n.initialquality > 0.0:
             print(n.id, n.initialquality, file=fid)
     print('\n', end=' ', file=fid)
@@ -32,29 +33,30 @@ def write_reactions(network: Network, fid: TextIOWrapper):
     """
     print('[REACTIONS]', file=fid)
     r = network.reactions
-    if r.orderbulk is not None:
+    if r.orderbulk:
         print('ORDER BULK', r.orderbulk, file=fid)
-    if r.orderwall is not None:
+    if r.orderwall:
         print('ORDER WALL', r.orderwall, file=fid)
-    if r.ordertank is not None:
+    if r.ordertank:
         print('ORDER TANK', r.ordertank, file=fid)
-    if r.globalbulk is not None:
+    if r.globalbulk:
         print('GLOBAL BULK', r.globalbulk, file=fid)
-    if r.globalwall is not None:
+    if r.globalwall:
         print('GLOBAL WALL', r.globalwall, file=fid)
-    if r.limitingpotential is not None:
+    if r.limitingpotential:
         print('LIMITING POTENTIAL', r.limitingpotential, file=fid)
-    if r.roughnesscorrelation is not None:
+    if r.roughnesscorrelation:
         print('ROUGHNESS CORRELATION', r.roughnesscorrelation, file=fid)
-    if r.bulk is not None:
-        for p in r.bulk:
-            print('BULK', p.id, p.reactionbulk, file=fid)
-    if r.wall is not None:
-        for p in r.wall:
-            print('WALL', p.id, p.reactionwall, file=fid)
-    if r.tank is not None:
-        for p in r.tank:
-            print('TANK', p.id, p.tank, file=fid)
+    # todo: fix and enable
+    # if r.bulk:
+    #     for p in r.bulk:
+    #         print('BULK', p.id, p.reactionbulk, file=fid)
+    # if r.wall:
+    #     for p in r.wall:
+    #         print('WALL', p.id, p.reactionwall, file=fid)
+    # if r.tank:
+    #     for p in r.tank:
+    #         print('TANK', p.id, p.tank, file=fid)
     print('\n', end=' ', file=fid)
 
 
@@ -69,12 +71,12 @@ def write_sources(network: Network, fid: TextIOWrapper):
     """
     print('[SOURCES]', file=fid)
     print(';id sourcetype strength sourcepattern', file=fid)
-    for n in network.nodes:
-        if n.sourcetype is not None:
+    for n in get_nodes(network):
+        if n.sourcetype:
             print(n.id, n.sourcetype, end=' ', file=fid)
             if n.strength > 0.0:
                 print(n.strength, end=' ', file=fid)
-            if n.sourcepattern is not None:
+            if n.sourcepattern:
                 print(n.sourcepattern.id, end=' ', file=fid)
             print('\n', end=' ', file=fid)
     print('\n', end=' ', file=fid)
@@ -91,8 +93,8 @@ def write_mixing(network: Network, fid: TextIOWrapper):
     """
     print('[MIXING]', file=fid)
     print(';tankid mixingmodel compartmentvolume', file=fid)
-    for t in network.tanks:
-        if t.mixingmodel is not None:
+    for t in get_tanks(network):
+        if t.mixingmodel:
             print(t.id, t.mixingmodel, end=' ', file=fid)
             if t.compartmentvolume != 0.0:
                 print(t.compartmentvolume, end=' ', file=fid)
