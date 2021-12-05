@@ -1,22 +1,26 @@
 import timeit
 from os import remove, path
-
 from dataclasses import dataclass
+from typing import Optional
 
-from oopnet.api import *
 from oopnet.elements.network import Network
+from oopnet.api import *
 
 poulakis_filename = path.join('testing', 'networks', 'Poulakis_enhanced_PDA.inp')
-ctown_filename = path.join('testing', 'networks', 'C-town.inp')
+ctown_filename = path.join('examples', 'data', 'C-town.inp')
 n = 1_000
 
 
 @dataclass
 class OOPNETBenchmark:
     filename: str
+    network: Optional[Network] = None
+
+    def __post_init__(self):
+        self.network = Read(self.filename)
 
     def read(self):
-        self.network = Read(self.filename)
+        network = Read(self.filename)
 
     def increase_demand(self):
         for j in get_junctions(self.network):
@@ -76,8 +80,8 @@ class OOPNETBenchmark:
         print('Randomly accessing Links')
         print(np.mean(timeit.Timer(stmt=self.random_link_access).repeat(number=n)))
 
-        # print('Simulating model')
-        # print(np.mean(timeit.Timer(stmt=self.simulate).repeat(number=n)))
+        print('Simulating model')
+        print(np.mean(timeit.Timer(stmt=self.simulate).repeat(number=n)))
 
         print('Writing file')
         print(np.mean(timeit.Timer(stmt=self.write).repeat(number=n)))

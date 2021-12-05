@@ -1,17 +1,10 @@
+from oopnet.exceptions import ComponentExistsException
 from typing import Optional, Union
 
 from oopnet.elements.base import NetworkComponent
 from oopnet.utils.getters.element_lists import get_pattern_ids, get_node_ids, get_link_ids, get_curve_ids
 from oopnet.elements.network import Network
 from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Pump, Valve, Curve, Pattern, Node, Link
-
-
-class ComponentExistsException(Exception):
-    """ """
-    def __init__(self, id, message=None):
-        if not message:
-            self.message = f'A component with the ID "{id}" already exists in the network.'
-        super().__init__(self.message)
 
 
 def _check_exists(obj: NetworkComponent, network: Network):

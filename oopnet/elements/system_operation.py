@@ -5,19 +5,22 @@ from typing import List, Union, Optional
 from oopnet.elements.base import NetworkComponent
 
 
-@dataclass
+# @dataclass
+@dataclass(slots=True)
 class Curve(NetworkComponent):
     """Defines data curves and their X,Y points."""
     xvalues: List[float] = field(default_factory=list)
     yvalues: List[float] = field(default_factory=list)
 
 
-@dataclass
+# @dataclass
+@dataclass(slots=True)
 class Pattern(NetworkComponent):
     """Defines time patterns."""
     multipliers: List = field(default_factory=list)
 
 
+# @dataclass
 @dataclass(slots=True)
 class Energy:
     """Defines parameters used to compute pumping energy and cost."""
@@ -28,6 +31,7 @@ class Energy:
     value: Union[float, Pattern, Curve] = None  # = Either(Float, Instance(Pattern), Instance(Curve))
 
 
+# @dataclass
 @dataclass(slots=True)
 class Condition:
     """A condition clause in a rule-based control"""
@@ -41,6 +45,7 @@ class Condition:
     value: Union[float, str, datetime.datetime, datetime.timedelta]  # = Either(Float, Enum('OPEN', 'CLOSED'), Instance(datetime.datetime), Instance(datetime.timedelta))
 
 
+# @dataclass
 @dataclass(slots=True)
 class Action:
     """An action clause in a rule-based control"""
@@ -50,6 +55,7 @@ class Action:
     value: Union[float, str]  # = Either(Float, Enum('OPEN', 'CLOSED'))
 
 
+# @dataclass
 @dataclass(slots=True)
 class Rule:
     """Defines rule-based controls that modify links based on a combination of conditions."""
@@ -58,6 +64,7 @@ class Rule:
     priority: float
 
 
+# @dataclass
 @dataclass(slots=True)
 class Controlcondition:
     """ """
@@ -71,6 +78,7 @@ class Controlcondition:
     clocktime: Optional[datetime.datetime] = None
 
 
+# @dataclass
 @dataclass(slots=True)
 class Control:
 

@@ -7,6 +7,7 @@ from oopnet.elements.network_components import Node, Pattern, Link
 # todo: check default values
 
 
+# @dataclass
 @dataclass(slots=True)
 class Options:
     """Defines various simulation options."""
@@ -31,6 +32,7 @@ class Options:
     pressureexponent: Optional[float] = None
 
 
+# @dataclass
 @dataclass(slots=True)
 class Times:
     """Defines various time step parameters used in the simulation."""
@@ -46,6 +48,7 @@ class Times:
     statistic: str = 'NONE'  # = Enum('NONE', 'AVERAGED', 'MINIMUM', 'MAXIMUM', 'RANGE')
 
 
+# @dataclass
 @dataclass(slots=True)
 class Reportparameter:
     """The parameter reporting option is used to identify which quantities are reported on, how many decimal places are
@@ -69,6 +72,7 @@ class Reportparameter:
     ffactor: Union[str, list, None] = None # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
 
 
+# @dataclass
 @dataclass(slots=True)
 class Reportprecision:
     """Describes the precision per report parameter."""
@@ -88,6 +92,7 @@ class Reportprecision:
     ffactor: Optional[int] = None
 
 
+# @dataclass
 @dataclass(slots=True)
 class Report:
     """Describes the contents of the output report produced from a simulation."""

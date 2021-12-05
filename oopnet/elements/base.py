@@ -4,6 +4,10 @@ This module contains all the base classes of OOPNET
 from dataclasses import dataclass, field
 from typing import Optional
 
+from oopnet.exceptions import ComponentExistsException
+
+
+# @dataclass
 @dataclass(slots=True)
 class NetworkComponent:
     """This is OOPNET's base class for all objects having a name (id) in EPANET Input files
@@ -15,7 +19,7 @@ class NetworkComponent:
 
     """
     id: str = ''
-    _id: str = field(init=False, repr=False)
+    _id: str = field(init=True, repr=False, default='')
     comment: Optional[str] = None
     tag: Optional[str] = None
     _component_hash: dict = None
@@ -34,6 +38,8 @@ class NetworkComponent:
     def id(self, id: str):
         """Sets ID of NetworkComponent and replaces key in network hash"""
         if self._component_hash:
+            if id in self._component_hash.keys():
+                raise ComponentExistsException(id)
             self._component_hash.pop(self._id)
             self._component_hash[id] = self
         self._id = id

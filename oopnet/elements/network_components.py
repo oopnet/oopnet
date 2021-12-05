@@ -5,6 +5,7 @@ from oopnet.elements.base import NetworkComponent
 from oopnet.elements.system_operation import Pattern, Curve
 
 
+# @dataclass
 @dataclass(slots=True)
 class Node(NetworkComponent):
     """Defines base class for all Node like objects in OOPNET (Junction, Reservoir, Tank)
@@ -37,7 +38,7 @@ class Node(NetworkComponent):
         return self.xcoordinate, self.ycoordinate, self.elevation
 
 
-
+# @dataclass
 @dataclass(slots=True)
 class Link(NetworkComponent):
     """Base class for all Link like objects in OOPNET (Pipe, Pump, Valve)
@@ -64,6 +65,7 @@ class Link(NetworkComponent):
                (self.endnode.xcoordinate, self.endnode.ycoordinate, self.endnode.elevation)
 
 
+# @dataclass
 @dataclass(slots=True)
 class Junction(Node):
     """Defines Junction nodes contained in the network.
@@ -83,6 +85,7 @@ class Junction(Node):
     # demand = Either(Float, ListFloat)
 
 
+# @dataclass
 @dataclass(slots=True)
 class Reservoir(Node):
     """Defines all reservoir nodes contained in the network.
@@ -99,6 +102,7 @@ class Reservoir(Node):
     mixingmodel: str = 'MIXED' # = Enum('MIXED', '2COMP', 'FIFO', 'LIFO')
 
 
+# @dataclass
 @dataclass(slots=True)
 class Tank(Node):
     """Defines all tank nodes contained in the network.
@@ -125,6 +129,7 @@ class Tank(Node):
     mixingmodel: str = 'MIXED'  # = Enum('MIXED', '2COMP', 'FIFO', 'LIFO')
 
 
+# @dataclass
 @dataclass(slots=True)
 class Pipe(Link):
     """Defines all pipe links contained in the network.
@@ -147,6 +152,7 @@ class Pipe(Link):
     reactionwall: Optional[float] = None
 
 
+# @dataclass
 @dataclass(slots=True)
 class Pump(Link):
     """Defines all pump links contained in the network.
@@ -163,6 +169,7 @@ class Pump(Link):
     status: Union[str, float, None] = None  # = Either(None, Enum('OPEN', 'CLOSED', 'ACTIVE'), Float)
 
 
+# @dataclass
 @dataclass(slots=True)
 class Valve(Link):
     """Defines all control valve links contained in the network
@@ -182,6 +189,7 @@ class Valve(Link):
     # setting = Any  # ToDo: Rethink if any is correct for setting attribute
 
 
+# @dataclass
 @dataclass(slots=True)
 class PRV(Valve):
     """ """
@@ -195,6 +203,7 @@ class PRV(Valve):
     pass
 
 
+# @dataclass
 @dataclass(slots=True)
 class TCV(Valve):
     """ """
@@ -208,6 +217,7 @@ class TCV(Valve):
     pass
 
 
+# @dataclass
 @dataclass(slots=True)
 class PSV(Valve):
     """ """
@@ -221,6 +231,7 @@ class PSV(Valve):
     pass
 
 
+# @dataclass
 @dataclass(slots=True)
 class GPV(Valve):
     """ """
@@ -234,6 +245,7 @@ class GPV(Valve):
     pass
 
 
+# @dataclass
 @dataclass(slots=True)
 class PBV(Valve):
     """ """
@@ -247,6 +259,7 @@ class PBV(Valve):
     pass
 
 
+# @dataclass
 @dataclass(slots=True)
 class FCV(Valve):
     """ """
