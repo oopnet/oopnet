@@ -64,6 +64,10 @@ class Link(NetworkComponent):
         return (self.startnode.xcoordinate, self.startnode.ycoordinate, self.startnode.elevation), \
                (self.endnode.xcoordinate, self.endnode.ycoordinate, self.endnode.elevation)
 
+    def revert(self):
+        old_start = self.startnode
+        self.startnode = self.endnode
+        self.endnode = old_start
 
 # @dataclass
 @dataclass(slots=True)

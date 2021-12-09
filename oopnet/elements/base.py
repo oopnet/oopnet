@@ -37,9 +37,12 @@ class NetworkComponent:
     @id.setter
     def id(self, id: str):
         """Sets ID of NetworkComponent and replaces key in network hash"""
+        print(1)
         if self._component_hash:
-            if id in self._component_hash.keys():
+            print(id, self._id)
+            if id in self._component_hash:
                 raise ComponentExistsException(id)
-            self._component_hash.pop(self._id)
-            self._component_hash[id] = self
+            self._component_hash[id] = self._component_hash[self._id]
+            del self._component_hash[self._id]
+            # self._component_hash[id] = self
         self._id = id
