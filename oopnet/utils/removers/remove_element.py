@@ -23,6 +23,7 @@ def remove_link(network: Network, id: str):
         raise Exception(f'No link with ID {id} in the network.')
 
 
+# todo: remove Links connected to Node?
 def remove_node(network: Network, id: str):
     """This function removes a specific Node from an OOPNET network
 

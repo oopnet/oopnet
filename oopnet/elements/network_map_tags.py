@@ -4,8 +4,8 @@ from typing import List
 from oopnet.elements.network_components import Node
 
 
-# @dataclass
-@dataclass(slots=True)
+@dataclass
+# @dataclass(slots=True)
 class Vertex:
     """ """
     # ToDo: Implement Vertex
@@ -16,8 +16,8 @@ class Vertex:
     pass
 
 
-# @dataclass
-@dataclass(slots=True)
+@dataclass
+# @dataclass(slots=True)
 class Label:
     """Assigns coordinates to map labels."""
 
@@ -27,8 +27,8 @@ class Label:
     anchor: Node
 
 
-# @dataclass
-@dataclass(slots=True)
+@dataclass
+# @dataclass(slots=True)
 class Backdrop:
     """Identifies a backdrop image and dimensions for the network map."""
 
@@ -38,8 +38,8 @@ class Backdrop:
     offset: List[float]
 
 
-# @dataclass
-@dataclass(slots=True)
+@dataclass
+# @dataclass(slots=True)
 class Tag:
     """Associates category labels (tags) with specific nodes and links."""
     id: str
