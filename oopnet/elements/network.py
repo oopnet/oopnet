@@ -45,7 +45,7 @@ class Network:
     backdrop: Optional['Backdrop'] = None
     energies: List[Energy] = field(default_factory=list)
     controls: List[Control] = field(default_factory=list)
-    rules: List[Rule] = field(default_factory=list)
+    rules: Dict[str, Rule] = field(default_factory=dict)
     reactions: Reaction = Reaction
     options: Options = Options()
     times: Times = Times()

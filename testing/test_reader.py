@@ -2,7 +2,7 @@ import unittest
 
 from oopnet.elements.network_components import Junction, Tank, Reservoir, Pipe, Pump, Valve
 
-from testing.base import PoulakisEnhancedPDAModel
+from testing.base import PoulakisEnhancedPDAModel, MicropolisModel
 
 
 class PoulakisEnhancedReaderTest(unittest.TestCase):
@@ -53,6 +53,21 @@ class PoulakisEnhancedReaderTest(unittest.TestCase):
             self.assertTrue('P' in v.id)
 
     # todo: add options, reportparameter, curve, pattern ... tests
+
+
+class MicorpolisReaderTest(unittest.TestCase):
+    def setUp(self) -> None:
+        self.model = MicropolisModel()
+
+    def test_controls(self):
+        self.assertEqual(self.model.n_controls, len(self.model.network.controls))
+
+    def test_patterns(self):
+        self.assertEqual(self.model.n_patterns, len(self.model.network.patterns))
+
+    def test_curves(self):
+        self.assertEqual(self.model.n_curves, len(self.model.network.curves))
+
 
 if __name__ == '__main__':
     unittest.main()

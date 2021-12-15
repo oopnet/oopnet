@@ -36,16 +36,16 @@ class Options:
 # @dataclass(slots=True)
 class Times:
     """Defines various time step parameters used in the simulation."""
-    duration: datetime.timedelta = None
-    hydraulictimestep: datetime.timedelta = None
-    qualitytimestep: datetime.timedelta = None
-    ruletimestep: datetime.timedelta = None
-    patterntimestep: datetime.timedelta = None
-    patternstart: datetime.timedelta = None
-    reporttimestep: datetime.timedelta = None
-    reportstart: datetime.timedelta = None
-    startclocktime: datetime.timedelta = None
-    statistic: str = 'NONE'  # = Enum('NONE', 'AVERAGED', 'MINIMUM', 'MAXIMUM', 'RANGE')
+    duration: Optional[datetime.timedelta] = None
+    hydraulictimestep: Optional[datetime.timedelta] = None
+    qualitytimestep: Optional[datetime.timedelta] = None
+    ruletimestep: Optional[datetime.timedelta] = None
+    patterntimestep: Optional[datetime.timedelta] = None
+    patternstart: Optional[datetime.timedelta] = None
+    reporttimestep: Optional[datetime.timedelta] = None
+    reportstart: Optional[datetime.timedelta] = None
+    startclocktime: Optional[datetime.timedelta] = None
+    statistic: Optional[str] = 'NONE'  # = Enum('NONE', 'AVERAGED', 'MINIMUM', 'MAXIMUM', 'RANGE')
 
 
 @dataclass

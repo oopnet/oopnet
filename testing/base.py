@@ -66,12 +66,16 @@ class TestModel:
 
     """
     network: Network
-    n_junctions: int
-    n_tanks: int
-    n_reservoirs: int
-    n_pipes: int
-    n_valves: int
-    n_pumps: int
+    n_junctions: int = 0
+    n_tanks: int = 0
+    n_reservoirs: int = 0
+    n_pipes: int = 0
+    n_valves: int = 0
+    n_pumps: int = 0
+    n_controls: int = 0
+    n_rules: int = 0
+    n_curves: int = 0
+    n_patterns: int = 0
 
     @property
     def n_nodes(self) -> int:
@@ -108,8 +112,25 @@ class PoulakisEnhancedPDAModel(TestModel):
         self.network = Read(join('networks', 'Poulakis_enhanced_PDA.inp'))
 
 
+class MicropolisModel(TestModel):
+    n_junctions = 1574
+    n_tanks = 1
+    n_reservoirs = 2
+    n_pipes = 1415
+    n_valves = 196
+    n_controls = 0
+    n_pumps = 8
+    n_rules = 7
+    n_curves = 5
+    n_patterns = 7
+
+
+    def __init__(self):
+        self.network = Read(join('..', 'examples', 'data', 'MICROPOLIS_v1.inp'))
+
+
 if __name__ == '__main__':
     from oopnet.api import *
-    network = PoulakisEnhancedPDAModel()
+    network = MicropolisModel()
     rpt = Run(network.network, output=True, delete=False)
     # rpt2 = Run(thing=join('networks', 'Poulakis_enhanced_PDA.inp'), output=True, delete=False)

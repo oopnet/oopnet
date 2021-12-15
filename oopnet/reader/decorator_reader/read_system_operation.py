@@ -5,7 +5,7 @@ from oopnet.elements.system_operation import Curve, Pattern, Energy, Control, Co
 from oopnet.utils.getters.get_by_id import get_curve, get_pump, get_pattern, get_link, get_node, get_junction
 from oopnet.utils.getters.element_lists import get_link_ids, get_node_ids, get_curve_ids, get_pattern_ids
 from oopnet.reader.decorator_reader.decorators import section_reader
-from oopnet.utils.adders import add_curve, add_pattern
+from oopnet.utils.adders import add_curve, add_pattern, add_rule
 
 
 @section_reader('CURVES', 0)
@@ -104,7 +104,7 @@ def read_energy(network: Network, block: list):
             e.keyword = 'GLOBAL'
             e.parameter = vals[1].upper()
             if e.parameter == 'PATTERN':
-                p = next(filter(lambda x: x.id == vals[2], network.patterns))
+                p = get_pattern(network, vals[2])
                 e.value = p
             else:
                 e.value = float(vals[2])
@@ -204,10 +204,7 @@ def read_rules(network: Network, block: list):
         vals = vals['values']
         if vals[0].upper() == 'RULE':
             r = Rule(id=vals[1])
-            if network.rules is None:
-                network.rules = [r]
-            else:
-                network.rules.append(r)
+            add_rule(network, r)
         else:
             if vals[0].upper() == 'PRIORITY':
                 r.priority = float(vals[1])

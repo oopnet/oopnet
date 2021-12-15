@@ -28,6 +28,19 @@ def get_curve_ids(network: Network) -> list:
     return list(network.curves.keys())
 
 
+def get_rule_ids(network: Network) -> list:
+    """Function for getting all rule ids in a network
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of curve ids
+
+    """
+    return list(network.rules.keys())
+
+
 def get_junction_ids(network: Network) -> list:
     """Function for getting all junction ids in a network
 
@@ -299,4 +312,4 @@ def get_rules(network: Network) -> list:
       list of rules
 
     """
-    return network.rules
+    return list(network.rules.values())

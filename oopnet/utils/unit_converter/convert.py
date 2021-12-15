@@ -1,5 +1,8 @@
-from traits.api import HasStrictTraits, Float
+from dataclasses import dataclass
+
 import numpy as np
+
+from oopnet.utils.getters import get_junctions, get_tanks, get_reservoirs, get_pipes
 
 """
 Convert all units which are possible in the EPANET-Input file to LPS
@@ -33,28 +36,26 @@ CMH2LPS = 0.27778
 CMD2LPS = 0.0115741
 
 
-class Converter(HasStrictTraits):
+@dataclass
+class Converter:
     """ """
 
-    f_demand = Float(1.0)
-    f_diameter_pipes = Float(1.0)
-    f_diameter_tanks = Float(1.0)
-    f_elevation = Float(1.0)
-    f_emitter_coefficient = Float(1.0)
-    f_flow = Float(1.0)
-    f_hydraulic_head = Float(1.0)
-    f_length = Float(1.0)
-    f_power = Float(1.0)
-    f_pressure = Float(1.0)
-    f_reaction_coeff_wall = Float(1.0)
-    f_roughness_coeff = Float(1.0)
-    f_velocity = Float(1.0)
-    f_volume = Float(1.0)
-
-    # no setter and getter functions are necessary
+    f_demand: float = 1.0
+    f_diameter_pipes: float = 1.0
+    f_diameter_tanks: float = 1.0
+    f_elevation: float = 1.0
+    f_emitter_coefficient: float = 1.0
+    f_flow: float = 1.0
+    f_hydraulic_head: float = 1.0
+    f_length: float = 1.0
+    f_power: float = 1.0
+    f_pressure: float = 1.0
+    f_reaction_coeff_wall: float = 1.0
+    f_roughness_coeff: float = 1.0
+    f_velocity: float = 1.0
+    f_volume: float = 1.0
 
     def __init__(self, network):
-        super(Converter, self).__init__()
         us_units = ['CFS',
                     'GPM',
                     'MGD',
@@ -125,7 +126,7 @@ def convert(network):
     if network.options.units != 'LPS':
         converter = Converter(network)
 
-        for j in network.junctions:
+        for j in get_junctions(network):
             if j.emittercoefficient:
                 j.emittercoefficient *= converter.f_emitter_coefficient
             if j.demand:
@@ -136,7 +137,7 @@ def convert(network):
             if j.elevation:
                 j.elevation *= converter.f_elevation
 
-        for t in network.tanks:
+        for t in get_tanks(network):
             t.diam *= converter.f_diameter_tanks
             t.elevation *= converter.f_elevation
             t.initlevel *= converter.f_elevation
@@ -144,11 +145,11 @@ def convert(network):
             t.maxlevel *= converter.f_elevation
             t.minvolume *= converter.f_volume
 
-        for r in network.reservoirs:
+        for r in get_reservoirs(network):
             r.elevation *= converter.f_elevation
             r.head *= converter.f_hydraulic_head
 
-        for p in network.pipes:
+        for p in get_pipes(network):
             p.diameter *= converter.f_diameter_pipes
             p.length *= converter.f_length
             p.roughness *= converter.f_roughness_coeff

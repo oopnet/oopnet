@@ -36,13 +36,13 @@ class Energy:
 class Condition:
     """A condition clause in a rule-based control"""
     # ToDo: object attribute should be either instance of Node or Link instead of Network Component
-    object: NetworkComponent
+    object: NetworkComponent = None
     # __object = Either(Instance(Node), Instance(Link))
-    logical: str  # = Either('IF', 'AND', 'OR', 'THEN', 'ELSE')
-    attribute: str # = Enum('DEMAND', 'HEAD', 'PRESSURE', 'LEVEL', 'FILLTIME', 'DRAINTIME', 'FLOW', 'STATUS', 'SETTING',
+    logical: str = None # = Either('IF', 'AND', 'OR', 'THEN', 'ELSE')
+    attribute: str = None # = Enum('DEMAND', 'HEAD', 'PRESSURE', 'LEVEL', 'FILLTIME', 'DRAINTIME', 'FLOW', 'STATUS', 'SETTING',
                    #    'TIME', 'CLOCKTIME')
-    relation: str  #  = Enum('=', '<>', '<', '>', '<=', '>=', 'IS', 'NOT', 'BELOW', 'ABOVE')
-    value: Union[float, str, datetime.datetime, datetime.timedelta]  # = Either(Float, Enum('OPEN', 'CLOSED'), Instance(datetime.datetime), Instance(datetime.timedelta))
+    relation: str = None  #  = Enum('=', '<>', '<', '>', '<=', '>=', 'IS', 'NOT', 'BELOW', 'ABOVE')
+    value: Union[float, str, datetime.datetime, datetime.timedelta] = None  # = Either(Float, Enum('OPEN', 'CLOSED'), Instance(datetime.datetime), Instance(datetime.timedelta))
 
 
 @dataclass
@@ -50,9 +50,9 @@ class Condition:
 class Action:
     """An action clause in a rule-based control"""
     # ToDo: object attribute should be either instance of Node or Link instead of Network Component
-    object: Union[NetworkComponent, str]  # = Either(NetworkComponent, 'SYSTEM')
+    object: Union[NetworkComponent, str] = None  # = Either(NetworkComponent, 'SYSTEM')
     # __object = Either(Instance(Node), Instance(Link), 'SYSTEM')
-    value: Union[float, str]  # = Either(Float, Enum('OPEN', 'CLOSED'))
+    value: Union[float, str] = None  # = Either(Float, Enum('OPEN', 'CLOSED'))
 
 
 @dataclass
@@ -60,8 +60,8 @@ class Action:
 class Rule:
     """Defines rule-based controls that modify links based on a combination of conditions."""
     id: str
-    condition: Union[Condition, List[Condition]]  # = Either(Instance(Condition), List(Instance(Condition)))
-    priority: float
+    condition: Union[Condition, List[Condition]] = None  # = Either(Instance(Condition), List(Instance(Condition)))
+    priority: float = None
 
 
 @dataclass
@@ -83,5 +83,5 @@ class Controlcondition:
 class Control:
 
     """Defines simple controls that modifiy links based on a single condition."""
-    action: Action
-    condition: Controlcondition
+    action: Action = None
+    condition: Controlcondition = None
