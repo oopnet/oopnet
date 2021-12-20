@@ -88,27 +88,27 @@ class ExistingModelTest(unittest.TestCase):
 
     def test_add_existing_junction(self):
         with self.assertRaises(ComponentExistsException):
-            add_junction(self.network, id='J-1')
+            add_junction(self.network, Junction(id='J-1'))
 
     def test_add_existing_reservoir(self):
         with self.assertRaises(ComponentExistsException):
-            add_reservoir(self.network, id='R-1')
+            add_reservoir(self.network, Reservoir(id='R-1'))
 
     def test_add_existing_tank(self):
         with self.assertRaises(ComponentExistsException):
-            add_tank(self.network, id='T-1')
+            add_tank(self.network, Tank(id='T-1'))
 
     def test_add_existing_pipe(self):
         with self.assertRaises(ComponentExistsException):
-            add_pipe(self.network, id='P-1')
+            add_pipe(self.network, Pipe(id='P-1'))
 
     def test_add_existing_pump(self):
         with self.assertRaises(ComponentExistsException):
-            add_pump(self.network, id='PU-1')
+            add_pump(self.network, Pump(id='PU-1'))
 
     def test_add_existing_valve(self):
         with self.assertRaises(ComponentExistsException):
-            add_valve(self.network, id='V-1')
+            add_valve(self.network, Valve(id='V-1'))
 
     def test_invalid_node(self):
         with self.assertRaises(TypeError):

@@ -1,17 +1,16 @@
 import networkx as nx
 import pandas as pd
 
-from oopnet.utils.getters.element_lists import get_node_ids, get_links, get_pumps, get_valves, get_pipes
+from oopnet.utils.getters.element_lists import get_node_ids, get_links, get_pipes
 from oopnet.elements.network import Network
 
-# todo: add report weights (e.g., flow, headloss)
 
+# todo: add report weights (e.g., flow, headloss)
 def _add_nodes(graph, network):
     graph.add_nodes_from(get_node_ids(network))
 
 
 def _add_links(graph, network, weight, default):
-    pipes = get_pipes(network)
     for l in get_links(network):
         e = (l.startnode.id,
              l.endnode.id)

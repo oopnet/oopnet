@@ -124,7 +124,6 @@ class MicropolisModel(TestModel):
     n_curves = 5
     n_patterns = 7
 
-
     def __init__(self):
         self.network = Read(join('..', 'examples', 'data', 'MICROPOLIS_v1.inp'))
 
