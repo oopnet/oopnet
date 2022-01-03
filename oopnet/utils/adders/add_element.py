@@ -1,4 +1,4 @@
-from oopnet.exceptions import ComponentExistsException
+from oopnet.exceptions import ComponentExistsError
 from typing import Optional, Union
 
 from oopnet.elements.base import NetworkComponent

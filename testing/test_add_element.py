@@ -2,7 +2,7 @@ import unittest
 
 from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Pump, Valve, Link, Node
 from oopnet.elements.system_operation import Pattern, Curve
-from oopnet.exceptions import ComponentExistsException
+from oopnet.exceptions import ComponentExistsError
 from oopnet.utils.getters import *
 from oopnet.utils.adders import *
 from oopnet.elements.network import Network
@@ -87,27 +87,27 @@ class ExistingModelTest(unittest.TestCase):
     # todo: add tests that include patterns + curves
 
     def test_add_existing_junction(self):
-        with self.assertRaises(ComponentExistsException):
+        with self.assertRaises(ComponentExistsError):
             add_junction(self.network, Junction(id='J-1'))
 
     def test_add_existing_reservoir(self):
-        with self.assertRaises(ComponentExistsException):
+        with self.assertRaises(ComponentExistsError):
             add_reservoir(self.network, Reservoir(id='R-1'))
 
     def test_add_existing_tank(self):
-        with self.assertRaises(ComponentExistsException):
+        with self.assertRaises(ComponentExistsError):
             add_tank(self.network, Tank(id='T-1'))
 
     def test_add_existing_pipe(self):
-        with self.assertRaises(ComponentExistsException):
+        with self.assertRaises(ComponentExistsError):
             add_pipe(self.network, Pipe(id='P-1'))
 
     def test_add_existing_pump(self):
-        with self.assertRaises(ComponentExistsException):
+        with self.assertRaises(ComponentExistsError):
             add_pump(self.network, Pump(id='PU-1'))
 
     def test_add_existing_valve(self):
-        with self.assertRaises(ComponentExistsException):
+        with self.assertRaises(ComponentExistsError):
             add_valve(self.network, Valve(id='V-1'))
 
     def test_invalid_node(self):

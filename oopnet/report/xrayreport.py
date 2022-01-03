@@ -7,6 +7,7 @@ import pandas as pd
 from traits.api import HasStrictTraits
 from xarray import DataArray, Dataset
 
+from oopnet.report.error_manager import ErrorManager
 
 def str2hms(timestring: str) -> Tuple[int, int, float]:
     """
@@ -84,7 +85,16 @@ class Report(HasStrictTraits):
             block = dict()
             key = 'start'
             block[key] = list()
-            for linenumber, line in enumerate(content[:-1]):
+            error_manager = ErrorManager()
+            error_found = False
+
+            for linenumber, line in enumerate(content):
+                if error_found and len(line.strip()) != 0:
+                    error_manager.append_error_message(line)
+                elif error_found:
+                    error_found = False
+
+                error_found = error_manager.check_line(line)
                 if len(line.strip()) == 0:
                     key = content[linenumber+1]
                     key = re.sub(r'\s+', ' ', key.replace('\n', '').strip())
@@ -97,7 +107,7 @@ class Report(HasStrictTraits):
                         pass
                     else:
                         block[key].append(line.split(' '))
-
+        error_manager.raise_errors()
         links = None
         nodes = None
         data = None

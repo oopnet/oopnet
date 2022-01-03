@@ -4,7 +4,7 @@ This module contains all the base classes of OOPNET
 from dataclasses import dataclass, field
 from typing import Optional
 
-from oopnet.exceptions import ComponentExistsException
+from oopnet.exceptions import ComponentExistsError
 
 
 @dataclass
@@ -38,7 +38,7 @@ class NetworkComponent:
         """Sets ID of NetworkComponent and replaces key in network hash"""
         if self._component_hash:
             if id in self._component_hash:
-                raise ComponentExistsException(id)
+                raise ComponentExistsError(id)
             self._component_hash[id] = self
             del self._component_hash[self._id]
         self._id = id
