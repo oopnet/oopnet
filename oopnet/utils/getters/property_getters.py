@@ -1,7 +1,7 @@
 import pandas as pd
 
 from oopnet.utils.getters.element_lists import get_links, get_link_ids, get_pipes, get_pipe_ids, get_nodes, \
-    get_node_ids, get_junction_ids, get_junctions, get_valve_ids, get_valves
+    get_node_ids, get_junction_ids, get_junctions, get_valve_ids, get_valves, get_pumps, get_pump_ids
 from oopnet.elements.network import Network
 """
 Functions for getting network properties as pandas dataframes
@@ -90,8 +90,8 @@ def get_initialstatus(network: Network) -> pd.Series:
       initial status as pandas.Series
 
     """
-    values = [x.intialstatus for x in get_links(network)]
-    names = get_link_ids(network)
+    values = [x.initialstatus for x in get_pumps(network) + get_valves(network)]
+    names = get_pump_ids(network) + get_valve_ids(network)
     series = pd.Series(data=values, index=names)
     series.name = 'intial status'
     return series
@@ -124,8 +124,8 @@ def get_setting(network: Network) -> pd.Series:
       settings as pandas.Series
 
     """
-    values = [x.setting for x in get_links(network)]
-    names = get_link_ids(network)
+    values = [x.setting for x in get_pumps(network) + get_valves(network)]
+    names = get_pump_ids(network) + get_valve_ids(network)
     series = pd.Series(data=values, index=names)
     series.name = 'setting'
     return series

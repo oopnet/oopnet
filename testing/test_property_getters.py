@@ -34,7 +34,7 @@ class SimplePropertyGetterTest(unittest.TestCase):
     def test_get_initialstatus(self):
         status = get_initialstatus(self.model.network)
         self.assertIsInstance(status, pd.Series)
-        self.assertEqual(self.model.n_links, len(status))
+        self.assertEqual(self.model.n_pumps + self.model.n_valves, len(status))
 
     def test_get_status(self):
         status = get_status(self.model.network)
@@ -44,7 +44,7 @@ class SimplePropertyGetterTest(unittest.TestCase):
     def test_get_settings(self):
         settings = get_setting(self.model.network)
         self.assertIsInstance(settings, pd.Series)
-        self.assertEqual(self.model.n_valves, len(settings))
+        self.assertEqual(self.model.n_valves + self.model.n_pumps, len(settings))
 
     def test_get_linkcenter_coordinates(self):
         coords = get_linkcenter_coordinates(self.model.network)

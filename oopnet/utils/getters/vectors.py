@@ -1,7 +1,8 @@
 import numpy as np
 
 from oopnet.elements.network import Network
-from oopnet.utils.getters.element_lists import get_pipes, get_junctions, get_nodes, get_tanks, get_reservoirs
+from oopnet.utils.getters.element_lists import get_pipes, get_junctions, get_nodes, get_tanks, get_reservoirs, \
+    get_valves
 
 
 def v_length(network: Network) -> np.array:
@@ -11,7 +12,7 @@ def v_length(network: Network) -> np.array:
       network: OOPNET network object
 
     Returns:
-      roughness as numpy.ndarray
+      length as numpy.ndarray
 
     """
     return np.asarray([x.length for x in get_pipes(network)])
@@ -19,16 +20,16 @@ def v_length(network: Network) -> np.array:
 
 # todo: make v_diameter return valve diameters?
 def v_diameter(network: Network) -> np.array:
-    """Get all diameter values of all pipes in the network as a numpy array
+    """Get all diameter values of all pipes and valves in the network as a numpy array
 
     Args:
       network: OOPNET network object
 
     Returns:
-      roughness as numpy.ndarray
+      diameter as numpy.ndarray
 
     """
-    return np.asarray([x.diameter for x in get_pipes(network)])
+    return np.asarray([x.diameter for x in get_pipes(network) + get_valves(network)])
 
 
 def v_roughness(network: Network) -> np.array:

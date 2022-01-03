@@ -171,6 +171,7 @@ class Pump(Link):
     keyword: Optional[str] = None  # = Enum('POWER', 'HEAD', 'SPEED', 'PATTERN')
     value: Union[str, float, None] = None
     status: Union[str, float, None] = None  # = Either(None, Enum('OPEN', 'CLOSED', 'ACTIVE'), Float)
+    setting: Optional[float] = None
 
 
 @dataclass
