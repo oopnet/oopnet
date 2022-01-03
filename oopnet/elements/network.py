@@ -10,7 +10,6 @@ from oopnet.elements.water_quality import Reaction
 
 
 @dataclass
-# @dataclass(slots=True)
 class Network:
     """EPANET hydraulic model representation.
 
@@ -78,10 +77,6 @@ class Network:
     def __deepcopy__(self):
         # ToDo: Check if elements not inheritated from Network Components are copied in the right way
         network_copy = Network()
-        # slots version
-        # for attr in self.__slots__:
-        #     val = getattr(self, attr)
-        #     setattr(network_copy, attr, deepcopy(val))
         for attr, val in self.__dict__.items():
             setattr(network_copy, attr, deepcopy(val))
         return network_copy

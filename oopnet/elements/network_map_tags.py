@@ -5,7 +5,6 @@ from oopnet.elements.network_components import Node
 
 
 @dataclass
-# @dataclass(slots=True)
 class Vertex:
     """ """
     # ToDo: Implement Vertex
@@ -17,7 +16,6 @@ class Vertex:
 
 
 @dataclass
-# @dataclass(slots=True)
 class Label:
     """Assigns coordinates to map labels."""
 
@@ -28,7 +26,6 @@ class Label:
 
 
 @dataclass
-# @dataclass(slots=True)
 class Backdrop:
     """Identifies a backdrop image and dimensions for the network map."""
 
@@ -39,7 +36,6 @@ class Backdrop:
 
 
 @dataclass
-# @dataclass(slots=True)
 class Tag:
     """Associates category labels (tags) with specific nodes and links."""
     id: str

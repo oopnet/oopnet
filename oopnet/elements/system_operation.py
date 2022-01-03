@@ -6,7 +6,6 @@ from oopnet.elements.base import NetworkComponent
 
 
 @dataclass
-# @dataclass(slots=True)
 class Curve(NetworkComponent):
     """Defines data curves and their X,Y points."""
     xvalues: List[float] = field(default_factory=list)
@@ -14,14 +13,12 @@ class Curve(NetworkComponent):
 
 
 @dataclass
-# @dataclass(slots=True)
 class Pattern(NetworkComponent):
     """Defines time patterns."""
     multipliers: List = field(default_factory=list)
 
 
 @dataclass
-# @dataclass(slots=True)
 class Energy:
     """Defines parameters used to compute pumping energy and cost."""
 
@@ -32,7 +29,6 @@ class Energy:
 
 
 @dataclass
-# @dataclass(slots=True)
 class Condition:
     """A condition clause in a rule-based control"""
     # ToDo: object attribute should be either instance of Node or Link instead of Network Component
@@ -46,7 +42,6 @@ class Condition:
 
 
 @dataclass
-# @dataclass(slots=True)
 class Action:
     """An action clause in a rule-based control"""
     # ToDo: object attribute should be either instance of Node or Link instead of Network Component
@@ -56,7 +51,6 @@ class Action:
 
 
 @dataclass
-# @dataclass(slots=True)
 class Rule:
     """Defines rule-based controls that modify links based on a combination of conditions."""
     id: str
@@ -65,7 +59,6 @@ class Rule:
 
 
 @dataclass
-# @dataclass(slots=True)
 class Controlcondition:
     """ """
 
@@ -79,7 +72,6 @@ class Controlcondition:
 
 
 @dataclass
-# @dataclass(slots=True)
 class Control:
 
     """Defines simple controls that modifiy links based on a single condition."""

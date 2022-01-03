@@ -6,7 +6,6 @@ from oopnet.elements.system_operation import Pattern, Curve
 
 
 @dataclass
-# @dataclass(slots=True)
 class Node(NetworkComponent):
     """Defines base class for all Node like objects in OOPNET (Junction, Reservoir, Tank)
 
@@ -39,7 +38,6 @@ class Node(NetworkComponent):
 
 
 @dataclass
-# @dataclass(slots=True)
 class Link(NetworkComponent):
     """Base class for all Link like objects in OOPNET (Pipe, Pump, Valve)
 
@@ -70,7 +68,6 @@ class Link(NetworkComponent):
         self.endnode = old_start
 
 @dataclass
-# @dataclass(slots=True)
 class Junction(Node):
     """Defines Junction nodes contained in the network.
 
@@ -90,7 +87,6 @@ class Junction(Node):
 
 
 @dataclass
-# @dataclass(slots=True)
 class Reservoir(Node):
     """Defines all reservoir nodes contained in the network.
 
@@ -107,7 +103,6 @@ class Reservoir(Node):
 
 
 @dataclass
-# @dataclass(slots=True)
 class Tank(Node):
     """Defines all tank nodes contained in the network.
 
@@ -134,7 +129,6 @@ class Tank(Node):
 
 
 @dataclass
-# @dataclass(slots=True)
 class Pipe(Link):
     """Defines all pipe links contained in the network.
 
@@ -157,7 +151,6 @@ class Pipe(Link):
 
 
 @dataclass
-# @dataclass(slots=True)
 class Pump(Link):
     """Defines all pump links contained in the network.
 
@@ -175,7 +168,6 @@ class Pump(Link):
 
 
 @dataclass
-# @dataclass(slots=True)
 class Valve(Link):
     """Defines all control valve links contained in the network
 
@@ -195,7 +187,6 @@ class Valve(Link):
 
 
 @dataclass
-# @dataclass(slots=True)
 class PRV(Valve):
     """ """
     # ToDo: Implement PRV (Pressure Reducing Valve)
@@ -209,7 +200,6 @@ class PRV(Valve):
 
 
 @dataclass
-# @dataclass(slots=True)
 class TCV(Valve):
     """ """
     # ToDo: Implement TCV (Throttle Control Valve)
@@ -223,7 +213,6 @@ class TCV(Valve):
 
 
 @dataclass
-# @dataclass(slots=True)
 class PSV(Valve):
     """ """
     # ToDo: Implement PSV (Pressure Sustaining Valve)
@@ -237,7 +226,6 @@ class PSV(Valve):
 
 
 @dataclass
-# @dataclass(slots=True)
 class GPV(Valve):
     """ """
     # ToDo: Implement GPV (General Purpose Valve)
@@ -251,7 +239,6 @@ class GPV(Valve):
 
 
 @dataclass
-# @dataclass(slots=True)
 class PBV(Valve):
     """ """
     # ToDo: Implement PBV (Pressure Breaker Valve)
@@ -265,7 +252,6 @@ class PBV(Valve):
 
 
 @dataclass
-# @dataclass(slots=True)
 class FCV(Valve):
     """ """
     # ToDo: Implement FCV (Flow Control Valve)

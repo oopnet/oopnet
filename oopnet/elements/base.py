@@ -8,7 +8,6 @@ from oopnet.exceptions import ComponentExistsException
 
 
 @dataclass
-# @dataclass(slots=True)
 class NetworkComponent:
     """This is OOPNET's base class for all objects having a name (id) in EPANET Input files
 

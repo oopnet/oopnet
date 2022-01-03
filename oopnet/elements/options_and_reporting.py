@@ -8,7 +8,6 @@ from oopnet.elements.network_components import Node, Pattern, Link
 
 
 @dataclass
-# @dataclass(slots=True)
 class Options:
     """Defines various simulation options."""
     units: str = 'GPM'  # = Enum('CFS', 'GPM', 'MGD', 'IMGD', 'AFD', 'LPS', 'LPM', 'MLD', 'CMH', 'CMD')
@@ -33,7 +32,6 @@ class Options:
 
 
 @dataclass
-# @dataclass(slots=True)
 class Times:
     """Defines various time step parameters used in the simulation."""
     duration: Optional[datetime.timedelta] = None
@@ -49,7 +47,6 @@ class Times:
 
 
 @dataclass
-# @dataclass(slots=True)
 class Reportparameter:
     """The parameter reporting option is used to identify which quantities are reported on, how many decimal places are
     displayed, and what kind of filtering should be used to limit the output reporting.
@@ -73,7 +70,6 @@ class Reportparameter:
 
 
 @dataclass
-# @dataclass(slots=True)
 class Reportprecision:
     """Describes the precision per report parameter."""
     elevation: Optional[int] = None
@@ -93,7 +89,6 @@ class Reportprecision:
 
 
 @dataclass
-# @dataclass(slots=True)
 class Report:
     """Describes the contents of the output report produced from a simulation."""
     pagesize: Optional[int] = None
