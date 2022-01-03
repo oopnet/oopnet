@@ -6,26 +6,23 @@ from inspect import getmembers, isclass
 
 class EPANETSimulationError(Exception):
     def __init__(self, message):
+        self.errors = message
         super().__init__(message)
 
 
 # todo: implement as exceptions? (prevents raising multiple simulation errors)
-class EPANETError:
-    description = None
+class EPANETError(Exception):
+    def __init__(self, description, details):
+        msg = f'Error {self.code} - {description}'
+        if details:
+            msg +=  ' ({details})'
+        super().__init__(msg)
 
     @property
     @abstractmethod
     def code(self):
         """Error code as described in the EPANET manual."""
 
-    def __init__(self, message):
-        self.message = message
-
-    def __repr__(self):
-        out = f'{self.__class__.__name__} | Error {self.code}: {self.message}'
-        if self.description:
-            out += f' {self.description}'
-        return out
 
 class InsufficientMemoryError(EPANETError):
     code = 101

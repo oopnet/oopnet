@@ -18,15 +18,15 @@ class ErrorManager:
             error_text = text_line.split(raised_code)[1]
             for error in self._error_list:
                 if raised_code_int == error.code:
-                    self.found_errors.append(error(error_text))
+                    self.found_errors.append([error, error_text, None])
                     return True
         return False
 
     def append_error_message(self, text_line):
         text_line = text_line.replace('\n', '').strip()
         err = self.found_errors[-1]
-        err.description = text_line
+        err[2] = text_line
 
     def raise_errors(self):
         if self.found_errors:
-            raise EPANETSimulationError(self.found_errors)
+            raise EPANETSimulationError([err(msg, desc) for err, msg, desc in self.found_errors])
