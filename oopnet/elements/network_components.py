@@ -1,7 +1,8 @@
+from enum import Enum
 from typing import List, Union, Optional
 from dataclasses import dataclass
 
-from oopnet.elements.base import NetworkComponent
+from oopnet.elements.base import NetworkComponent, Status, MixingModel, PumpKeyword, PipeStatus
 from oopnet.elements.system_operation import Pattern, Curve
 
 
@@ -25,7 +26,7 @@ class Node(NetworkComponent):
     elevation: float = 0.0
     initialquality: float = 0.0
     sourcequality: float = 0.0
-    # todo: rethink enum type hinting for sourcetype
+    # todo: rethink enum type hinting for sourcetype, implement as abstract properties?
     sourcetype: Optional[str] = None
     strength: float = 0.0
     # todo: source pattern as general Node attribute?
@@ -51,10 +52,30 @@ class Link(NetworkComponent):
     startnode: Optional[Node] = None
     endnode: Optional[Node] = None
     # todo: rethink enum type hinting for initialstatus and status
-    initialstatus: str = 'OPEN'
-    status: str = 'OPEN'
+    _initialstatus: Status = Status.OPEN
+    _status: Status = Status.OPEN
     # initialstatus = Either(None, Enum('OPEN', 'CLOSED', 'ACTIVE', 'CV'), Float)
     # status = Enum('OPEN', 'CLOSED', 'ACTIVE', 'CV')
+
+    @property
+    def initialstatus(self):
+        return self._initialstatus
+
+    @initialstatus.setter
+    def initialstatus(self, value):
+        if isinstance(value, str):
+            value = Status[value]
+        self._initialstatus = value
+        
+    @property
+    def status(self):
+        return self._status
+
+    @status.setter
+    def status(self, value):
+        if isinstance(value, str):
+            value = Status[value]
+        self._status = value
 
     @property
     def coordinates(self) -> tuple[tuple[float, float, float], tuple[float, float, float]]:
@@ -66,6 +87,7 @@ class Link(NetworkComponent):
         old_start = self.startnode
         self.startnode = self.endnode
         self.endnode = old_start
+
 
 @dataclass
 class Junction(Node):
@@ -125,7 +147,7 @@ class Tank(Node):
     volumecurve: Optional[Curve] = None
     compartmentvolume: Optional[float] = None
     reactiontank: Optional[float] = None
-    mixingmodel: str = 'MIXED'  # = Enum('MIXED', '2COMP', 'FIFO', 'LIFO')
+    mixingmodel: MixingModel = MixingModel.MIXED  # = Enum('MIXED', '2COMP', 'FIFO', 'LIFO')
 
 
 @dataclass
@@ -148,8 +170,32 @@ class Pipe(Link):
     minorloss: float = 0
     reactionbulk: Optional[float] = None
     reactionwall: Optional[float] = None
+    _initialstatus: PipeStatus = PipeStatus.OPEN
+    _status: PipeStatus = PipeStatus.OPEN
+
+    @property
+    def initialstatus(self):
+        return self._initialstatus
+
+    @initialstatus.setter
+    def initialstatus(self, value):
+        if isinstance(value, str):
+            value = PipeStatus[value]
+            print(value)
+        self._initialstatus = value
+
+    @property
+    def status(self):
+        return self._status
+
+    @status.setter
+    def status(self, value):
+        if isinstance(value, str):
+            value = PipeStatus[value]
+        self._status = value
 
 
+# todo: rethink keyword, value structure
 @dataclass
 class Pump(Link):
     """Defines all pump links contained in the network.
@@ -161,9 +207,9 @@ class Pump(Link):
       status: 
 
     """
-    keyword: Optional[str] = None  # = Enum('POWER', 'HEAD', 'SPEED', 'PATTERN')
+    keyword: Optional[PumpKeyword] = None  # = Enum('POWER', 'HEAD', 'SPEED', 'PATTERN')
     value: Union[str, float, None] = None
-    status: Union[str, float, None] = None  # = Either(None, Enum('OPEN', 'CLOSED', 'ACTIVE'), Float)
+    status: Union[Status, float, None] = None  # = Either(None, Enum('OPEN', 'CLOSED', 'ACTIVE'), Float)
     setting: Optional[float] = None
 
 

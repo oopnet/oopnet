@@ -2,6 +2,7 @@
 This module contains all the base classes of OOPNET
 """
 from dataclasses import dataclass, field
+from enum import Enum, auto
 from typing import Optional
 
 from oopnet.exceptions import ComponentExistsError
@@ -42,3 +43,53 @@ class NetworkComponent:
             self._component_hash[id] = self
             del self._component_hash[self._id]
         self._id = id
+
+
+# todo: seperate file
+class Status(Enum):
+    OPEN = auto()
+    CLOSED = auto()
+    # todo: what's this?
+    ACTIVE = auto()
+
+
+class PipeStatus(Enum):
+    OPEN = auto()
+    CLOSED = auto()
+    CV = auto()
+
+
+# todo: add to_string
+class MixingModel(Enum):
+    MIXED = auto()
+    TWOCOMP = auto()
+    FIFO = auto()
+    LIFO = auto()
+
+
+class Unit(Enum):
+    CFS = auto()
+    GPM = auto()
+    MGD = auto()
+    IMGD = auto()
+    AFD = auto()
+    LPS = auto()
+    LPM = auto()
+    MLD = auto()
+    CMH = auto()
+    CMD = auto()
+
+
+# todo: add to_string, rename?
+class HeadlossFormula(Enum):
+    HW = auto()
+    DW = auto()
+    CM = auto()
+
+
+# todo: rethink name
+class PumpKeyword(Enum):
+    POWER = auto()
+    HEAD = auto()
+    SPEED = auto()
+    PATTERN = auto()

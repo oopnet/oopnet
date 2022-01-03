@@ -2,6 +2,7 @@ import datetime
 from dataclasses import dataclass
 from typing import List, Optional, Union
 
+from oopnet.elements.base import Unit, HeadlossFormula
 from oopnet.elements.network_components import Node, Pattern, Link
 
 # todo: check default values
@@ -10,8 +11,8 @@ from oopnet.elements.network_components import Node, Pattern, Link
 @dataclass
 class Options:
     """Defines various simulation options."""
-    units: str = 'GPM'  # = Enum('CFS', 'GPM', 'MGD', 'IMGD', 'AFD', 'LPS', 'LPM', 'MLD', 'CMH', 'CMD')
-    headloss: str = 'H-W'  # = Enum('H-W', 'D-W', 'C-M')
+    units: Unit = Unit.GPM  # = 'GPM'  # = Enum('CFS', 'GPM', 'MGD', 'IMGD', 'AFD', 'LPS', 'LPM', 'MLD', 'CMH', 'CMD')
+    headloss: HeadlossFormula = HeadlossFormula.HW  # str = 'H-W'  # = Enum('H-W', 'D-W', 'C-M')
     hydraulics: Optional[List[str]] = None  # = Either(None, List('USE', Str), List('SAVE', Str))
     quality: Union[str, list, None] = None  # = Any #Either(None, Enum('NONE', 'CHEMICAL', 'AGE'), List('TRACE', Instance(Node)), List('CHEMICAL', Str, Str))
     viscosity: Optional[float] = None
