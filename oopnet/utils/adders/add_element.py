@@ -30,7 +30,7 @@ def _check_exists(obj: NetworkComponent, network: Network):
     else:
         raise TypeError(f'Trying to check the existence of an Object with an invalid type {type(obj)}.')
     if exists:
-        raise ComponentExistsException(obj.id)
+        raise ComponentExistsError(obj.id)
 
 
 def _add_component(obj: NetworkComponent, component_hash: dict):
