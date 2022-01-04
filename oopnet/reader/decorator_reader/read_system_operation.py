@@ -1,6 +1,9 @@
 import datetime
 
+from oopnet.elements.base import PipeStatus, PumpStatus, ValveStatus, EnergyKeyword, EnergyParameter, Relation, \
+    LimitSetting, Logic, ConditionAttribute
 from oopnet.elements.network import Network
+from oopnet.elements.network_components import Pipe, Pump
 from oopnet.elements.system_operation import Curve, Pattern, Energy, Control, Controlcondition, Action, Rule, Condition
 from oopnet.utils.getters.get_by_id import get_curve, get_pump, get_pattern, get_link, get_node, get_junction
 from oopnet.utils.getters.element_lists import get_link_ids, get_node_ids, get_curve_ids, get_pattern_ids
@@ -101,25 +104,26 @@ def read_energy(network: Network, block: list):
         vals = vals['values']
         e = Energy()
         if vals[0].upper() == 'GLOBAL':
-            e.keyword = 'GLOBAL'
-            e.parameter = vals[1].upper()
-            if e.parameter == 'PATTERN':
+            e.keyword = EnergyKeyword[vals[0].upper()]
+            param = 'EFFICIENCY' if 'EFF' in vals[1].upper() else vals[1].upper()
+            e.parameter = EnergyParameter(param)
+            if e.parameter == EnergyParameter.PATTERN:
                 p = get_pattern(network, vals[2])
                 e.value = p
             else:
                 e.value = float(vals[2])
         elif vals[0].upper() == 'PUMP':
-            e.keyword = 'PUMP'
+            e.keyword = EnergyKeyword[vals[0].upper()]
             e.pumpid = get_pump(network, vals[1])
-            e.parameter = vals[2].upper()
-            if e.parameter == 'PATTERN':
+            e.parameter = EnergyParameter[vals[2].upper()]
+            if e.parameter == EnergyParameter.PATTERN:
                 e.value = get_pattern(network, vals[3])
-            elif e.parameter.startswith('EFFIC'):
+            elif e.parameter == EnergyParameter.EFFICIENCY:
                 e.value = get_curve(network, vals[3])
             else:
                 e.value = float(vals[3])
         elif vals[0].upper() == 'DEMAND' and vals[1].upper() == 'CHARGE':
-            e.keyword = 'DEMAND CHARGE'
+            e.keyword = EnergyParameter['DEMAND_CHARGE']
             e.value = float(vals[2])
         # todo: create add function
         if network.energies is None:
@@ -141,9 +145,16 @@ def read_status(network: Network, block: list):
         vals = vals['values']
         l = get_link(network, vals[0])
         try:
+            # todo: necessary? cast to roughness or equivalent possible?
             l.setting = float(vals[1])
         except:
-            l.status = vals[1].upper()
+            status = vals[1].upper()
+            if isinstance(l, Pipe):
+                l.status = PipeStatus(status)
+            elif isinstance(l, Pump):
+                l.status = PumpStatus(status)
+            else:
+                l.status = ValveStatus(status)
 
 
 @section_reader('CONTROLS', 3)
@@ -166,8 +177,7 @@ def read_controls(network: Network, block: list):
             action = Action(object=l, value=float(vals[2]))
         if vals[3].upper() == 'IF':
             n = get_node(network, vals[5])
-            condition = Controlcondition(object=n, relation=vals[6].upper(),
-                                         value=float(vals[7]))
+            condition = Controlcondition(object=n, relation=LimitSetting[vals[6].upper()], value=float(vals[7]))
         elif vals[3].upper() == 'AT':
             if vals[4].upper() == 'TIME':
                 if ':' in vals[5]:
@@ -209,12 +219,12 @@ def read_rules(network: Network, block: list):
             if vals[0].upper() == 'PRIORITY':
                 r.priority = float(vals[1])
             else:
-                ac = Condition(logical=vals[0].upper())
+                ac = Condition(logical=Logic[vals[0].upper()])
                 if vals[2] in get_link_ids(network):
                     l = get_link(network, vals[2])
                     ac.object = l
-                    ac.attribute = vals[3].upper()
-                    ac.relation = vals[4].upper()
+                    ac.attribute = ConditionAttribute[vals[3].upper()]
+                    ac.relation = Relation.parse(vals[4].upper())
                     try:
                         ac.value = float(vals[5])
                     except:
@@ -222,15 +232,15 @@ def read_rules(network: Network, block: list):
                 elif vals[2] in get_node_ids(network):
                     n = get_node(network, vals[2])
                     ac.object = n
-                    ac.attribute = vals[3].upper()
-                    ac.relation = vals[4].upper()
+                    ac.attribute = ConditionAttribute[vals[3].upper()]
+                    ac.relation = Relation.parse(vals[4].upper())
                     try:
                         ac.value = float(vals[5])
                     except:
                         ac.value = vals[5].upper()
                 elif vals[1].upper() == 'SYSTEM':
-                    ac.attribute = vals[2].upper()
-                    ac.relation = vals[3].upper()
+                    ac.attribute = ConditionAttribute[vals[2].upper()]
+                    ac.relation = Relation.parse(vals[3].upper())
                     if ac.attribute == 'TIME':
                         if ':' in vals[4]:
                             dt = vals[4].split(':')

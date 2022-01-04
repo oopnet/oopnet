@@ -1,6 +1,7 @@
 from os.path import join
 from typing import List
 
+from oopnet.elements.base import PumpKeyword, ValveType
 from oopnet.elements.network import Network
 from oopnet.elements.network_components import Junction, Pipe, Tank, Reservoir, Pump, Valve
 from oopnet.elements.system_operation import Curve
@@ -42,9 +43,9 @@ def create_dummy_spa_network() -> Network:
     add_curve(network, c)
 
     add_dummy_pipes(network, [('J-1', 'T-1'), ('J-1', 'R-1')])
-    pu = Pump(id='PU-1', keyword='HEAD', value='C-1', startnode=get_node(network, 'J-1'),
+    pu = Pump(id='PU-1', keyword=PumpKeyword.HEAD, value='C-1', startnode=get_node(network, 'J-1'),
               endnode=get_node(network, 'J-2'))
-    v = Valve(id='V-1', valvetype='PRV', setting=5, startnode=get_node(network, 'J-1'),
+    v = Valve(id='V-1', valvetype=ValveType.PRV, setting=5, startnode=get_node(network, 'J-1'),
               endnode=get_node(network, 'J-3'))
 
     for obj in [pu, v]:

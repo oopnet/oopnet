@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
+from oopnet.elements.base import TagObject
 from oopnet.elements.network_components import Node
 
 
@@ -40,5 +41,5 @@ class Tag:
     """Associates category labels (tags) with specific nodes and links."""
     id: str
     comment: str
-    object: str  # = Enum('NODE', 'LINK')
+    object: TagObject  # = Enum('NODE', 'LINK')
     tag: str

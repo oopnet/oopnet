@@ -1,6 +1,8 @@
 import datetime
 from io import TextIOWrapper
 
+from oopnet.elements.base import PipeStatus, ValveStatus, PumpStatus, EnergyKeyword, NetworkComponent, \
+    ConditionAttribute
 from oopnet.elements.system_operation import Curve
 from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Valve, Pump
 from oopnet.elements.network import Network
@@ -56,11 +58,11 @@ def write_energy(network: Network, fid: TextIOWrapper):
     """
     print('[ENERGY]', file=fid)
     for e in get_energies(network):
-        print(e.keyword, end=' ', file=fid)
-        if e.keyword == 'PUMP':
+        print(e.keyword.value, end=' ', file=fid)
+        if e.keyword == EnergyKeyword.PUMP:
             print(e.pumpid.id, end=' ', file=fid)
         if e.parameter is not None:
-            print(e.parameter, end=' ', file=fid)
+            print(e.parameter.value, end=' ', file=fid)
         if e.value is not None:
             if isinstance(e.value, Curve):
                 print(e.value.id, end=' ', file=fid)
@@ -82,14 +84,14 @@ def write_status(network: Network, fid: TextIOWrapper):
     print('[STATUS]', file=fid)
     print(';id status/setting', file=fid)
     for l in get_pipes(network):
-        if l.initialstatus == 'CLOSED':
-            print(l.id, l.initialstatus, file=fid)
+        if l.initialstatus == PipeStatus.CLOSED:
+            print(l.id, l.initialstatus.name, file=fid)
     for v in get_valves(network):
-        if v.initialstatus == 'CLOSED' or v.setting == 1:
-            print(v.id, 'CLOSED', file=fid)
+        if v.initialstatus == ValveStatus.CLOSED or v.setting == 1:
+            print(v.id, v.initialstatus.name, file=fid)
     for pu in get_pumps(network):
-        if pu.initialstatus == 'CLOSED':
-            print(pu.id, 'CLOSED', file=fid)
+        if pu.initialstatus == PumpStatus.CLOSED:
+            print(pu.id, pu.initialstatus.name, file=fid)
         elif pu.keyword == 'SPEED':
             print(pu.id, pu.value, file=fid)
     print('\n', end=' ', file=fid)
@@ -129,28 +131,16 @@ def write_rules(network: Network, fid: TextIOWrapper):
     for r in get_rules(network):
         print('RULE', r.id, file=fid)
         for c in r.condition:
-            objecttype = None
-            if c.object is not None:
-                if isinstance(c.object, Junction):
-                    objecttype = 'JUNCTION'
-                elif isinstance(c.object, Reservoir):
-                    objecttype = 'RESERVOIR'
-                elif isinstance(c.object, Tank):
-                    objecttype = 'TANK'
-                elif isinstance(c.object, Pipe):
-                    objecttype = 'PIPE'
-                elif isinstance(c.object, Valve):
-                    objecttype = 'VALVE'
-                elif isinstance(c.object, Pump):
-                    objecttype = 'PUMP'
-                print(c.logical, objecttype, c.object.id, c.attribute, c.relation, c.value, file=fid)
+            if isinstance(c.object, NetworkComponent):
+                object_type = c.object.__class__.__name__
+                print(c.logical.value, object_type, c.object.id, c.attribute.value, c.relation.value, c.value, file=fid)
             elif c.attribute is not None:
-                objecttype = 'SYSTEM'
-                if c.attribute == 'TIME':
-                    print(c.logical, objecttype, c.attribute, c.relation, str(c.value)[:-3], file=fid)
-                elif c.attribute == 'CLOCKTIME':
+                object_type = 'SYSTEM'
+                if c.attribute == ConditionAttribute.TIME:
+                    print(c.logical.value, object_type, c.attribute.value, c.relation.value, str(c.value)[:-3], file=fid)
+                elif c.attribute == ConditionAttribute.CLOCKTIME:
                     timeformat = '%I:%M %p'
-                    print(c.logical, objecttype, c.attribute, c.relation, \
+                    print(c.logical.value, object_type, c.attribute.value, c.relation.value, \
                           datetime.datetime.strftime(c.value, timeformat), file=fid)
     print('\n', end=' ', file=fid)
 

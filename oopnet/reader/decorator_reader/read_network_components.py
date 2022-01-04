@@ -1,3 +1,4 @@
+from oopnet.elements.base import PipeStatus, PumpKeyword, ValveType
 from oopnet.elements.network import Network
 from oopnet.elements.network_components import Junction, Tank, Reservoir, Pipe, Pump, Valve, PRV, TCV, PSV, GPV, PBV, \
     FCV
@@ -124,7 +125,8 @@ def read_pipes(network: Network, block: list):
         if len(vals) > 6:
             p.minorloss = float(vals[6])
         if len(vals) > 7:
-            p.status = vals[7].upper()
+            # todo: initialstatus or status?
+            p.status = PipeStatus[vals[7].upper()]
         add_pipe(network, p, False)
 
 
@@ -148,7 +150,7 @@ def read_pumps(network: Network, block: list):
             j = get_node(network, vals[2])
             p.endnode = j
         if len(vals) > 3:
-            p.keyword = vals[3]
+            p.keyword = PumpKeyword[vals[3]]
         if len(vals) > 4:
             p.value = " ".join(vals[4:])
         add_pump(network, p, False)
@@ -189,7 +191,7 @@ def read_valves(network: Network, block: list):
         if len(vals) > 3:
             v.diameter = float(vals[3])
         if len(vals) > 4:
-            v.valvetype = vals[4]
+            v.valvetype = ValveType[vals[4]]
         if len(vals) > 5:
             v.setting = vals[5]
         if len(vals) > 6:

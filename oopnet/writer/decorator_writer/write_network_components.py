@@ -118,7 +118,7 @@ def write_pipes(network: Network, fid: TextIOWrapper):
 
     """
     print('[PIPES]', file=fid)
-    print(';id startnode endnode length diameter roughness minorloss status', file=fid)
+    print(';id startnode endnode length diameter roughness minorloss', file=fid)  # status', file=fid)
     for p in get_pipes(network):
         print(p.id, end=' ', file=fid)
         if p.startnode is not None:
@@ -134,8 +134,8 @@ def write_pipes(network: Network, fid: TextIOWrapper):
         if p.minorloss is not None:
             print(p.minorloss, end=' ', file=fid)
         # todo: either put status here or in status section?
-        if p.status is not None:
-            print(p.status, end=' ', file=fid)
+        # if p.status is not None:
+        #     print(p.status.name, end=' ', file=fid)
         if p.comment is not None:
             print(';', p.comment, end=' ', file=fid)
         print('\n', end=' ', file=fid)
@@ -160,7 +160,7 @@ def write_pumps(network: Network, fid: TextIOWrapper):
         if p.endnode is not None:
             print(p.endnode.id, end=' ', file=fid)
         if p.keyword is not None:
-            print(p.keyword, end=' ', file=fid)
+            print(p.keyword.value, end=' ', file=fid)
         if p.value is not None:
             print(p.value, end=' ', file=fid)
         if p.comment is not None:
@@ -189,7 +189,7 @@ def write_valves(network: Network, fid: TextIOWrapper):
         if v.diameter is not None:
             print(v.diameter, end=' ', file=fid)
         if v.valvetype is not None:
-            print(v.valvetype, end=' ', file=fid)
+            print(v.valvetype.value, end=' ', file=fid)
         if v.setting is not None:
             print(v.setting, end=' ', file=fid)
         if v.minorloss is not None:

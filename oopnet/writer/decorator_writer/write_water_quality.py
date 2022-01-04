@@ -95,7 +95,7 @@ def write_mixing(network: Network, fid: TextIOWrapper):
     print(';tankid mixingmodel compartmentvolume', file=fid)
     for t in get_tanks(network):
         if t.mixingmodel:
-            print(t.id, t.mixingmodel, end=' ', file=fid)
+            print(t.id, t.mixingmodel.name, end=' ', file=fid)
             if t.compartmentvolume != 0.0:
                 print(t.compartmentvolume, end=' ', file=fid)
             print('\n', end=' ', file=fid)

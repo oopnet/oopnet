@@ -1,8 +1,9 @@
-from enum import Enum
 from typing import List, Union, Optional
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from abc import abstractmethod
 
-from oopnet.elements.base import NetworkComponent, Status, MixingModel, PumpKeyword, PipeStatus
+from oopnet.elements.base import NetworkComponent, MixingModel, PumpKeyword, PipeStatus, ValveType, PumpStatus, \
+    ValveStatus
 from oopnet.elements.system_operation import Pattern, Curve
 
 
@@ -52,30 +53,30 @@ class Link(NetworkComponent):
     startnode: Optional[Node] = None
     endnode: Optional[Node] = None
     # todo: rethink enum type hinting for initialstatus and status
-    _initialstatus: Status = Status.OPEN
-    _status: Status = Status.OPEN
+    # _initialstatus: Union[Status, float] = Status.OPEN
+    # _status: Status = Status.OPEN
     # initialstatus = Either(None, Enum('OPEN', 'CLOSED', 'ACTIVE', 'CV'), Float)
     # status = Enum('OPEN', 'CLOSED', 'ACTIVE', 'CV')
 
     @property
+    @abstractmethod
     def initialstatus(self):
-        return self._initialstatus
+        """Returns link's initial status."""
 
     @initialstatus.setter
+    @abstractmethod
     def initialstatus(self, value):
-        if isinstance(value, str):
-            value = Status[value]
-        self._initialstatus = value
+        """Sets link's initial status."""
         
     @property
+    @abstractmethod
     def status(self):
-        return self._status
+        """Sets link's status."""
 
     @status.setter
+    @abstractmethod
     def status(self, value):
-        if isinstance(value, str):
-            value = Status[value]
-        self._status = value
+        """Sets link's status."""
 
     @property
     def coordinates(self) -> tuple[tuple[float, float, float], tuple[float, float, float]]:
@@ -84,9 +85,8 @@ class Link(NetworkComponent):
                (self.endnode.xcoordinate, self.endnode.ycoordinate, self.endnode.elevation)
 
     def revert(self):
-        old_start = self.startnode
-        self.startnode = self.endnode
-        self.endnode = old_start
+        """Switches the link's start and end nodes."""
+        self.startnode, self.endnode = self.endnode, self.startnode
 
 
 @dataclass
@@ -120,8 +120,6 @@ class Reservoir(Node):
     """
     head: float = None  # = Either(None, Float, ListFloat)
     headpattern: Optional[Pattern] = None  # = Either(None, Instance(Pattern), List(Instance(Pattern)))
-    # todo: double check if mixing model is reservoir attribute
-    mixingmodel: str = 'MIXED' # = Enum('MIXED', '2COMP', 'FIFO', 'LIFO')
 
 
 @dataclass
@@ -135,7 +133,8 @@ class Tank(Node):
       diam: The diameter of the tank in meters. For cylindrical tanks this is the actual diameter. For square or rectangular tanks it can be an equivalent diameter equal to 1.128 times the square root of the cross-sectional area. For tanks whose geometry will be described by a curve (see below) it can be set to any value.
       minvolume: The volume of water in the tank when it is at its minimum level, in cubic meter. This is an optional property, useful mainly for describing the bottom geometry of non-cylindrical tanks where a full volume versus depth curve will not be supplied (see below).
       volumecurve: Curve object used to describe the relation between tank volume and water level. If no value is supplied then the tank is assumed to be cylindrical.
-      compartmentvolume: param reactiontank: The bulk reaction coefficient for chemical reactions in the tank. Time units are 1/days. Use a positive value for growth reactions and a negative value for decay. Leave blank if the Global Bulk reaction coefficient specified in the project's Reactions Options will apply. See Water Quality Reactions in the Epanet manual Section 3.4 for more information.
+      compartmentvolume: todo: fill in description
+      reactiontank: The bulk reaction coefficient for chemical reactions in the tank. Time units are 1/days. Use a positive value for growth reactions and a negative value for decay. Leave blank if the Global Bulk reaction coefficient specified in the project's Reactions Options will apply. See Water Quality Reactions in the Epanet manual Section 3.4 for more information.
       mixingmodel: The type of water quality mixing that occurs within the tank. The choices include MIXED (fully mixed), 2COMP (two-compartment mixing), FIFO (first-in-first-out plug flow) and LIFO (last-in-first-out plug flow).
 
     """
@@ -170,26 +169,28 @@ class Pipe(Link):
     minorloss: float = 0
     reactionbulk: Optional[float] = None
     reactionwall: Optional[float] = None
-    _initialstatus: PipeStatus = PipeStatus.OPEN
-    _status: PipeStatus = PipeStatus.OPEN
+    initialstatus: PipeStatus = PipeStatus.OPEN
+    _initialstatus: PipeStatus = field(init=False, repr=False)
+    status: PipeStatus = PipeStatus.OPEN
+    _status: PipeStatus = field(init=False, repr=False) 
 
     @property
-    def initialstatus(self):
+    def initialstatus(self) -> PipeStatus:
         return self._initialstatus
 
     @initialstatus.setter
-    def initialstatus(self, value):
+    def initialstatus(self, value: Union[PipeStatus, str]):
         if isinstance(value, str):
             value = PipeStatus[value]
             print(value)
         self._initialstatus = value
 
     @property
-    def status(self):
+    def status(self) -> PipeStatus:
         return self._status
 
     @status.setter
-    def status(self, value):
+    def status(self, value: Union[PipeStatus, str]):
         if isinstance(value, str):
             value = PipeStatus[value]
         self._status = value
@@ -209,8 +210,32 @@ class Pump(Link):
     """
     keyword: Optional[PumpKeyword] = None  # = Enum('POWER', 'HEAD', 'SPEED', 'PATTERN')
     value: Union[str, float, None] = None
-    status: Union[Status, float, None] = None  # = Either(None, Enum('OPEN', 'CLOSED', 'ACTIVE'), Float)
     setting: Optional[float] = None
+    initialstatus: PumpStatus = PumpStatus.OPEN
+    _initialstatus: PumpStatus = field(init=False, repr=False)
+    status: PumpStatus = PumpStatus.OPEN
+    _status: PumpStatus = field(init=False, repr=False) 
+
+    @property
+    def initialstatus(self) -> PumpStatus:
+        return self._initialstatus
+
+    @initialstatus.setter
+    def initialstatus(self, value: Union[PumpStatus, str]):
+        if isinstance(value, str):
+            value = PumpStatus[value]
+            print(value)
+        self._initialstatus = value
+
+    @property
+    def status(self) -> PumpStatus:
+        return self._status
+
+    @status.setter
+    def status(self, value: Union[PumpStatus, str]):
+        if isinstance(value, str):
+            value = PumpStatus[value]
+        self._status = value
 
 
 @dataclass
@@ -224,12 +249,38 @@ class Valve(Link):
       setting: Setting value depending on valvetype.
 
     """
-    valvetype: str = 'PRV'
+    # todo: valvetype necessary?
+    valvetype: ValveType = ValveType.PRV
     diameter: float = 12
     minorloss: float = 0
     setting: Union[float, str] = 0
     # todo: double check possible setting datatypes
     # setting = Any  # ToDo: Rethink if any is correct for setting attribute
+    initialstatus: ValveStatus = ValveStatus.OPEN
+    _initialstatus: ValveStatus = field(init=False, repr=False)
+    status: ValveStatus = ValveStatus.OPEN
+    _status: ValveStatus = field(init=False, repr=False) 
+
+    @property
+    def initialstatus(self) -> ValveStatus:
+        return self._initialstatus
+
+    @initialstatus.setter
+    def initialstatus(self, value: Union[ValveStatus, str]):
+        if isinstance(value, str):
+            value = ValveStatus[value]
+            print(value)
+        self._initialstatus = value
+
+    @property
+    def status(self) -> ValveStatus:
+        return self._status
+
+    @status.setter
+    def status(self, value: Union[ValveStatus, str]):
+        if isinstance(value, str):
+            value = ValveStatus[value]
+        self._status = value
 
 
 @dataclass

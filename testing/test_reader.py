@@ -1,6 +1,7 @@
 import unittest
 
 from oopnet.elements.network_components import Junction, Tank, Reservoir, Pipe, Pump, Valve
+from oopnet.api import Run
 
 from testing.base import PoulakisEnhancedPDAModel, MicropolisModel
 
@@ -67,6 +68,9 @@ class MicorpolisReaderTest(unittest.TestCase):
 
     def test_curves(self):
         self.assertEqual(self.model.n_curves, len(self.model.network.curves))
+
+    def test_run(self):
+        Run(self.model.network)
 
 
 if __name__ == '__main__':

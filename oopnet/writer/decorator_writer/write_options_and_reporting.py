@@ -1,10 +1,13 @@
+import datetime
 from io import TextIOWrapper
+from typing import Union, Tuple
 
+from oopnet.elements.base import QualityOption, DemandModel, BoolSetting, LimitSetting, ReportElementSetting
 from oopnet.elements.network import Network
 from oopnet.writer.decorator_writer.decorators import section_writer
 
 
-def timedelta2hours(td):
+def timedelta2hours(td: datetime.timedelta) -> str:
     """
 
     Args:
@@ -20,7 +23,7 @@ def timedelta2hours(td):
     return str(hours) + ':' + str(minutes).zfill(2)
 
 
-def timedelta2startclocktime(t):
+def timedelta2startclocktime(t: datetime.timedelta) -> str:
     """
 
     Args:
@@ -38,7 +41,7 @@ def timedelta2startclocktime(t):
     return str(int(h)).zfill(2) + ':' + str(int(m)).zfill(2) + ' ' + p
 
 
-def reportparameter2str(rp):
+def reportparameter2str(rp: Union[BoolSetting, Tuple[LimitSetting, float]]) -> str:
     """
 
     Args:
@@ -47,15 +50,13 @@ def reportparameter2str(rp):
     Returns:
 
     """
-    if rp == 'YES':
-        return 'YES'
-    elif rp == 'NO':
-        return 'NO'
-    if isinstance(rp, list):
-        return rp[0] + ' ' + str(rp[1])
+    if isinstance(rp, tuple):
+        return f'{rp[0].value} {rp[1]}'
+    else:
+        return rp.value
 
 
-def reportprecision2str(rp):
+def reportprecision2str(rp: int) -> str:
     """
 
     Args:
@@ -64,7 +65,7 @@ def reportprecision2str(rp):
     Returns:
 
     """
-    return 'PRECISION ' + str(rp)
+    return f'PRECISION {rp}'
 
 
 @section_writer('OPTIONS', 3)
@@ -80,21 +81,20 @@ def write_options(network: Network, fid: TextIOWrapper):
     if network.options:
         o = network.options
         if o.units:
-            print('UNITS', o.units, file=fid)
+            print('UNITS', o.units.value, file=fid)
         if o.headloss:
-            print('HEADLOSS', o.headloss, file=fid)
+            print('HEADLOSS', o.headloss.value, file=fid)
         if o.hydraulics:
-            print('HYDRAULICS', o.hydraulics[0], o.hydraulics[1], file=fid)
+            print('HYDRAULICS', o.hydraulics[0].value, o.hydraulics[1], file=fid)
         if o.quality:
             if not isinstance(o.quality, list):
                 print('QUALITY', o.quality, file=fid)
-            else:
-                if o.quality[0] == 'AGE':
-                    print('QUALITY', o.quality[0], file=fid)
-                elif o.quality[0] == 'CHEMICAL':
-                    print('QUALITY', o.quality[0], o.quality[1], o.quality[2], file=fid)
-                elif o.quality[0] == 'TRACE':
-                    print('QUALITY', o.quality[0], o.quality[1].id, file=fid)
+            elif o.quality[0] == QualityOption.AGE:
+                print('QUALITY', o.quality[0].value, file=fid)
+            elif o.quality[0] == QualityOption.CHEMICAL:
+                print('QUALITY', o.quality[0].value, o.quality[1], o.quality[2], file=fid)
+            elif o.quality[0] == QualityOption.TRACE:
+                print('QUALITY', o.quality[0].value, o.quality[1].id, file=fid)
         else:
             print('QUALTIY', 'NONE', file=fid)
         if o.viscosity:
@@ -108,10 +108,10 @@ def write_options(network: Network, fid: TextIOWrapper):
         if o.accuracy:
             print('ACCURACY', str(o.accuracy).replace('e', 'E'), file=fid)
         if o.unbalanced:
-            if not isinstance(o.unbalanced, list):
-                print('UNBALANCED', o.unbalanced, file=fid)
+            if not isinstance(o.unbalanced, tuple):
+                print('UNBALANCED', o.unbalanced.value, file=fid)
             else:
-                print('UNBALANCED', o.unbalanced[0], o.unbalanced[1], file=fid)
+                print('UNBALANCED', o.unbalanced[0].value, o.unbalanced[1], file=fid)
         if o.pattern:
             print('PATTERN', end=' ', file=fid)
             try:
@@ -126,7 +126,7 @@ def write_options(network: Network, fid: TextIOWrapper):
             print('TOLERANCE', str(o.tolerance).replace('e', 'E'), file=fid)
         if o.map:
             print('MAP', o.map, file=fid)
-        if o.demandmodel == 'PDA':
+        if o.demandmodel == DemandModel.PDA:
             print('DEMAND MODEL', 'PDA', file=fid)
             print('MINIMUM PRESSURE', o.minimumpressure, file=fid)
             print('REQUIRED PRESSURE', o.requiredpressure, file=fid)
@@ -165,7 +165,7 @@ def write_times(network: Network, fid: TextIOWrapper):
         if t.startclocktime:
             print('START CLOCKTIME', timedelta2startclocktime(t.startclocktime), file=fid)
         if t.statistic:
-            print('STATISTIC', t.statistic, file=fid)
+            print('STATISTIC', t.statistic.value, file=fid)
     print('\n', end=' ', file=fid)
 
 
@@ -186,22 +186,22 @@ def write_report(network: Network, fid: TextIOWrapper):
         if r.file:
             print('FILE', r.file, file=fid)
         if r.status:
-            print('STATUS', r.status, file=fid)
+            print('STATUS', r.status.value, file=fid)
         if r.summary:
-            print('SUMMARY', r.summary, file=fid)
+            print('SUMMARY', r.summary.value, file=fid)
         if r.energy:
-            print('ENERGY', r.energy, file=fid)
+            print('ENERGY', r.energy.value, file=fid)
         if r.nodes:
-            if r.nodes == 'NONE' or r.nodes == 'ALL':
-                print('NODES', r.nodes, file=fid)
+            if isinstance(r.nodes, ReportElementSetting):
+                print('NODES', r.nodes.value, file=fid)
             else:
                 print('NODES', end=' ', file=fid)
                 for n in r.nodes:
                     print(n.id, end=' ', file=fid)
                 print('\n', end=' ', file=fid)
         if r.links:
-            if r.links == 'NONE' or r.links == 'ALL':
-                print('LINKS', r.links, file=fid)
+            if isinstance(r.links, ReportElementSetting):
+                print('LINKS', r.links.value, file=fid)
             else:
                 print('LINKS', end=' ', file=fid)
                 for l in r.links:

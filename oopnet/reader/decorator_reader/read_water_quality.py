@@ -1,3 +1,4 @@
+from oopnet.elements.base import MixingModel
 from oopnet.elements.network import Network
 from oopnet.elements.water_quality import Reaction
 from oopnet.utils.getters.get_by_id import get_node, get_link, get_pattern
@@ -105,6 +106,6 @@ def read_mixing(network: Network, block: list):
         vals = vals['values']
         t = get_node(network, vals[0])
         if len(vals) > 1:
-            t.mixingmodel = vals[1].upper()
+            t.mixingmodel = MixingModel[vals[1].upper()]
         if len(vals) > 2:
             t.compartmentvolume = float(vals[2])

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from oopnet.elements.base import Unit
 from oopnet.utils.getters import get_junctions, get_tanks, get_reservoirs, get_pipes
 
 """
@@ -56,61 +57,62 @@ class Converter:
     f_volume: float = 1.0
 
     def __init__(self, network):
-        us_units = ['CFS',
-                    'GPM',
-                    'MGD',
-                    'IMGD',
-                    'AFD']
+        if network.options.units == Unit.LPS:
+            return
 
-        si_units = ['LPS',
-                    'LPM',
-                    'MLD',
-                    'CMH',
-                    'CMD']
+        us_units = [Unit.CFS,
+                    Unit.GPM,
+                    Unit.MGD,
+                    Unit.IMGD,
+                    Unit.AFD]
 
-        if network.options.units != 'LPS':
+        if network.options.units in us_units:
 
-            if network.options.units in us_units:
+            self.f_diameter_pipes = INCH2MILLIMETER
+            self.f_diameter_tanks = FEET2METER
+            self.f_elevation = FEET2METER
+            self.f_hydraulic_head = FEET2METER
+            self.f_length = FEET2METER
+            self.f_power = HORESEPOWER2KILOWATTS
+            self.f_pressure = PSI2METER
+            self.f_reaction_coeff_wall = FEET2METER
+            if network.options.headloss == 'D-W':
+                self.f_roughness_coeff = 1.0e3 * FEET2METER
+            self.f_velocity = FEET2METER
+            self.f_volume = FEET2METER ** 3
 
-                self.f_diameter_pipes = INCH2MILLIMETER
-                self.f_diameter_tanks = FEET2METER
-                self.f_elevation = FEET2METER
-                self.f_hydraulic_head = FEET2METER
-                self.f_length = FEET2METER
-                self.f_power = HORESEPOWER2KILOWATTS
-                self.f_pressure = PSI2METER
-                self.f_reaction_coeff_wall = FEET2METER
-                if network.options.headloss == 'D-W':
-                    self.f_roughness_coeff = 1.0e3 * FEET2METER
-                self.f_velocity = FEET2METER
-                self.f_volume = FEET2METER ** 3
+        if network.options.units == Unit.CFS:
+            self.f_flow = CFS2LPS
+        elif network.options.units == Unit.GPM:
+            self.f_flow = GPM2LPS
+        elif network.options.units == Unit.MGD:
+            self.f_flow = MGD2LPS
+        elif network.options.units == Unit.IMGD:
+            self.f_flow = IMGD2LPS
+        elif network.options.units == Unit.AFD:
+            self.f_flow = AFD2LPS
+        elif network.options.units == Unit.LPM:
+            self.f_flow = LPM2LPS
+        elif network.options.units == Unit.MLD:
+            self.f_flow = MLD2LPS
+        elif network.options.units == Unit.CMH:
+            self.f_flow = CMH2LPS
+        elif network.options.units == Unit.CMD:
+            self.f_flow = CMD2LPS
+        else:
+            raise ValueError(f'Illegal unit {network.options.units} defined.')
 
-            if network.options.units == 'CFS':
-                self.f_flow = CFS2LPS
-            elif network.options.units == 'GPM':
-                self.f_flow = GPM2LPS
-            elif network.options.units == 'MGD':
-                self.f_flow = MGD2LPS
-            elif network.options.units == 'IMGD':
-                self.f_flow = IMGD2LPS
-            elif network.options.units == 'AFD':
-                self.f_flow = AFD2LPS
-            elif network.options.units == 'LPM':
-                self.f_flow = LPM2LPS
-            elif network.options.units == 'MLD':
-                self.f_flow = MLD2LPS
-            elif network.options.units == 'CMH':
-                self.f_flow = CMH2LPS
-            elif network.options.units == 'CMD':
-                self.f_flow = CMD2LPS
-            else:
-                print('Undefined units for convertion!!!')
+        self.f_demand = self.f_flow
+        si_units = [Unit.LPS,
+                    Unit.LPM,
+                    Unit.MLD,
+                    Unit.CMH,
+                    Unit.CMD]
 
-            self.f_demand = self.f_flow
-            if network.options.units in us_units:
-                self.f_emitter_coefficient = self.f_flow * 1.0 / np.sqrt(PSI2METER)
-            elif network.options.units in si_units:
-                self.f_emitter_coefficient = self.f_flow
+        if network.options.units in us_units:
+            self.f_emitter_coefficient = self.f_flow * 1.0 / np.sqrt(PSI2METER)
+        elif network.options.units in si_units:
+            self.f_emitter_coefficient = self.f_flow
 
 
 def convert(network):
@@ -123,35 +125,37 @@ def convert(network):
 
     """
 
-    if network.options.units != 'LPS':
-        converter = Converter(network)
+    if network.options.units == Unit.LPS:
+        return
 
-        for j in get_junctions(network):
-            if j.emittercoefficient:
-                j.emittercoefficient *= converter.f_emitter_coefficient
-            if j.demand:
-                if isinstance(j.demand, list):
-                    j.demand = [x * converter.f_demand for x in j.demand]
-                else:
-                    j.demand *= converter.f_demand
-            if j.elevation:
-                j.elevation *= converter.f_elevation
+    converter = Converter(network)
 
-        for t in get_tanks(network):
-            t.diam *= converter.f_diameter_tanks
-            t.elevation *= converter.f_elevation
-            t.initlevel *= converter.f_elevation
-            t.minlevel *= converter.f_elevation
-            t.maxlevel *= converter.f_elevation
-            t.minvolume *= converter.f_volume
+    for j in get_junctions(network):
+        if j.emittercoefficient:
+            j.emittercoefficient *= converter.f_emitter_coefficient
+        if j.demand:
+            if isinstance(j.demand, list):
+                j.demand = [x * converter.f_demand for x in j.demand]
+            else:
+                j.demand *= converter.f_demand
+        if j.elevation:
+            j.elevation *= converter.f_elevation
 
-        for r in get_reservoirs(network):
-            r.elevation *= converter.f_elevation
-            r.head *= converter.f_hydraulic_head
+    for t in get_tanks(network):
+        t.diam *= converter.f_diameter_tanks
+        t.elevation *= converter.f_elevation
+        t.initlevel *= converter.f_elevation
+        t.minlevel *= converter.f_elevation
+        t.maxlevel *= converter.f_elevation
+        t.minvolume *= converter.f_volume
 
-        for p in get_pipes(network):
-            p.diameter *= converter.f_diameter_pipes
-            p.length *= converter.f_length
-            p.roughness *= converter.f_roughness_coeff
+    for r in get_reservoirs(network):
+        r.elevation *= converter.f_elevation
+        r.head *= converter.f_hydraulic_head
 
-        network.options.units = 'LPS'
+    for p in get_pipes(network):
+        p.diameter *= converter.f_diameter_pipes
+        p.length *= converter.f_length
+        p.roughness *= converter.f_roughness_coeff
+
+    network.options.units = Unit.LPS
