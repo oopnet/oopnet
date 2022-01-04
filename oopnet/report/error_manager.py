@@ -5,13 +5,13 @@ from oopnet.report.simulation_errors import get_error_list, EPANETSimulationErro
 
 class ErrorManager:
     def __init__(self):
-        self.error_exp = compile(r'\d{3}: ')
-        self._error_list = get_error_list()
         self.found_errors = []
+        self._error_exp = compile(r'\d{3}: ')
+        self._error_list = get_error_list()
 
     def check_line(self, text_line) -> bool:
         text_line = text_line.replace('\n', '')
-        matches = self.error_exp.search(text_line)
+        matches = self._error_exp.search(text_line)
         if matches:
             raised_code = matches.group()
             raised_code_int = int(matches.group().replace(': ', ''))
@@ -29,4 +29,4 @@ class ErrorManager:
 
     def raise_errors(self):
         if self.found_errors:
-            raise EPANETSimulationError([err(msg, desc) for err, msg, desc in self.found_errors])
+            raise EPANETSimulationError([err(msg, details) for err, msg, details in self.found_errors])

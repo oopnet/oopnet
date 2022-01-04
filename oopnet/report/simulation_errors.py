@@ -6,16 +6,19 @@ from inspect import getmembers, isclass
 
 class EPANETSimulationError(Exception):
     def __init__(self, message):
-        self.errors = message
         super().__init__(message)
 
+    @property
+    def errors(self):
+        return self.args[0]
 
 # todo: implement as exceptions? (prevents raising multiple simulation errors)
 class EPANETError(Exception):
+
     def __init__(self, description, details):
         msg = f'Error {self.code} - {description}'
         if details:
-            msg +=  ' ({details})'
+            msg +=  f' {details}'
         super().__init__(msg)
 
     @property
