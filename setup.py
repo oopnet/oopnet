@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-# todo: check entries
+# todo: check entries; move parts to setup.cfg?
 setup(
     name='oopnet',
     version='0.0.1',

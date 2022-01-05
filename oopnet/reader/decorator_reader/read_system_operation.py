@@ -74,20 +74,24 @@ def read_patterns(network: Network, block: list):
             m = float(vals[1])
         elif len(vals) > 2:
             m = list(map(float, vals[1:]))
-        if p.multipliers is None:
-            p.multipliers = m
-        elif len(p.multipliers) == 1:
-            if isinstance(m, float):
-                p.multipliers.append(m)
-            else:
-                for l in m:
-                    p.multipliers.append(l)
+        if (
+            p.multipliers is not None
+            and len(p.multipliers) == 1
+            and isinstance(m, float)
+            or p.multipliers is not None
+            and len(p.multipliers) != 1
+            and isinstance(m, float)
+        ):
+            p.multipliers.append(m)
+        elif (
+            p.multipliers is not None
+            and len(p.multipliers) == 1
+            or p.multipliers is not None
+        ):
+            for l in m:
+                p.multipliers.append(l)
         else:
-            if isinstance(m, float):
-                p.multipliers.append(m)
-            else:
-                for l in m:
-                    p.multipliers.append(l)
+            p.multipliers = m
         if not exists:
             add_pattern(network, p, False)
 
@@ -194,14 +198,14 @@ def read_controls(network: Network, block: list):
                     condition = Controlcondition(clocktime=datetime.datetime.strptime(vals[5] + vals[6],
                                                                                       timeformat))
         c = Control(action=action, condition=condition)
-        # todo: create adder function
+        # todo: create adder function for controls
         if network.controls is None:
             network.controls = [c]
         else:
             network.controls.append(c)
 
 
-@section_reader('RULES', 0)
+@section_reader('RULES', 3)
 def read_rules(network: Network, block: list):
     """Reads rules from block.
 
@@ -215,61 +219,55 @@ def read_rules(network: Network, block: list):
         if vals[0].upper() == 'RULE':
             r = Rule(id=vals[1])
             add_rule(network, r)
+        elif vals[0].upper() == 'PRIORITY':
+            r.priority = float(vals[1])
         else:
-            if vals[0].upper() == 'PRIORITY':
-                r.priority = float(vals[1])
-            else:
-                ac = Condition(logical=Logic[vals[0].upper()])
-                if vals[2] in get_link_ids(network):
-                    l = get_link(network, vals[2])
-                    ac.object = l
-                    ac.attribute = ConditionAttribute[vals[3].upper()]
-                    ac.relation = Relation.parse(vals[4].upper())
-                    try:
-                        ac.value = float(vals[5])
-                    except:
-                        ac.value = vals[5].upper()
-                elif vals[2] in get_node_ids(network):
-                    n = get_node(network, vals[2])
-                    ac.object = n
-                    ac.attribute = ConditionAttribute[vals[3].upper()]
-                    ac.relation = Relation.parse(vals[4].upper())
-                    try:
-                        ac.value = float(vals[5])
-                    except:
-                        ac.value = vals[5].upper()
-                elif vals[1].upper() == 'SYSTEM':
-                    ac.attribute = ConditionAttribute[vals[2].upper()]
-                    ac.relation = Relation.parse(vals[3].upper())
-                    if ac.attribute == 'TIME':
-                        if ':' in vals[4]:
-                            dt = vals[4].split(':')
-                            ac.value = datetime.timedelta(hours=float(dt[0]), minutes=float(dt[1]))
-                        else:
-                            ac.value = datetime.timedelta(hours=float(vals[4]))
-                    elif ac.attribute == 'CLOCKTIME':
-                        if len(vals) == 5:
-                            if ':' in vals[4]:
-                                timeformat = '%H:%M'
-                            else:
-                                timeformat = '%H'
-                            ac.value = datetime.datetime.strptime(vals[4], timeformat)
-                        if len(vals) == 6:
-                            if ':' in vals[4]:
-                                timeformat = '%I:%M%p'
-                            else:
-                                timeformat = '%I%p'
-                            ac.value = datetime.datetime.strptime(vals[4] + vals[5], timeformat)
+            ac = Condition(logical=Logic[vals[0].upper()])
+            if vals[2] in get_link_ids(network):
+                l = get_link(network, vals[2])
+                ac.object = l
+                ac.attribute = ConditionAttribute[vals[3].upper()]
+                ac.relation = Relation.parse(vals[4].upper())
+                try:
+                    ac.value = float(vals[5])
+                except:
+                    ac.value = vals[5].upper()
+            elif vals[2] in get_node_ids(network):
+                n = get_node(network, vals[2])
+                ac.object = n
+                ac.attribute = ConditionAttribute[vals[3].upper()]
+                ac.relation = Relation.parse(vals[4].upper())
+                try:
+                    ac.value = float(vals[5])
+                except:
+                    ac.value = vals[5].upper()
+            elif vals[1].upper() == 'SYSTEM':
+                ac.object = 'SYSTEM'
+                ac.attribute = ConditionAttribute[vals[2].upper()]
+                ac.relation = Relation.parse(vals[3].upper())
+                if ac.attribute == 'TIME':
+                    if ':' in vals[4]:
+                        dt = vals[4].split(':')
+                        ac.value = datetime.timedelta(hours=float(dt[0]), minutes=float(dt[1]))
                     else:
-                        try:
-                            ac.value = float(vals[4])
-                        except:
-                            ac.value = vals[4].upper()
-                # todo: create adder function
-                if r.condition is None:
-                    r.condition = [ac]
+                        ac.value = datetime.timedelta(hours=float(vals[4]))
+                elif ac.attribute == 'CLOCKTIME':
+                    if len(vals) == 5:
+                        timeformat = '%H:%M' if ':' in vals[4] else '%H'
+                        ac.value = datetime.datetime.strptime(vals[4], timeformat)
+                    if len(vals) == 6:
+                        timeformat = '%I:%M%p' if ':' in vals[4] else '%I%p'
+                        ac.value = datetime.datetime.strptime(vals[4] + vals[5], timeformat)
                 else:
-                    r.condition.append(ac)
+                    try:
+                        ac.value = float(vals[4])
+                    except:
+                        ac.value = vals[4].upper()
+            # todo: create adder function for conditions
+            if r.condition is None:
+                r.condition = [ac]
+            else:
+                r.condition.append(ac)
 
 
 @section_reader('DEMANDS', 2)
@@ -285,13 +283,14 @@ def read_demands(network: Network, block: list):
         vals = vals['values']
         j = get_junction(network, vals[0])
         if len(vals) > 1:
-            if j.demand:
+            if (
+                not j.demand
+                and isinstance(j.demand, float)
+                and abs(j.demand) > 0.0
+            ):
+                j.demand = [j.demand, float(vals[1])]
+            elif not j.demand and isinstance(j.demand, float) or j.demand:
                 j.demand = float(vals[1])
-            elif isinstance(j.demand, float):
-                if abs(j.demand) > 0.0:
-                    j.demand = [j.demand, float(vals[1])]
-                else:
-                    j.demand = float(vals[1])
             elif isinstance(j.demand, list):
                 j.demand.append(float(vals[1]))
         if len(vals) > 2:

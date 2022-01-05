@@ -5,6 +5,7 @@ from oopnet.elements.base import ReportParameterSetting, Unit, HeadlossFormula, 
     BalancingOption, DemandModel, StatisticSetting, BoolSetting, LimitSetting, ReportStatusSetting, \
     ReportElementSetting, ReportBoolSetting
 from oopnet.elements.network import Network
+from oopnet.utils.getters import get_pattern_ids
 from oopnet.utils.getters.get_by_id import get_node, get_link, get_pattern
 from oopnet.reader.decorator_reader.decorators import section_reader
 
@@ -111,9 +112,9 @@ def read_options(network: Network, block: list):
             if len(vals) > 2:
                 o.unbalanced = (opt, int(vals[2]))
         elif vals[0] == 'PATTERN':
-            try:
+            if vals[1] in get_pattern_ids(network):
                 o.pattern = get_pattern(network, vals[1])
-            except:
+            else:
                 o.pattern = 1
         elif vals[0] == 'DEMAND' and vals[1].upper() == 'MULTIPLIER':
             o.demandmultiplier = float(vals[2])
@@ -167,18 +168,19 @@ def read_times(network: Network, block: list):
         elif vals[0] == 'START' and vals[1].upper() == 'CLOCKTIME':
             if ':' in vals[2]:
                 h, m = list(map(int, vals[2].split(':')))  # todo: catch seconds, then three values are there to unpack
+                h = h if h != 12 or vals[3].upper() != 'AM' else 0
                 if len(vals) > 3 and vals[3].upper() == 'PM':
                     h += 12
                 t.startclocktime = datetime.timedelta(hours=h, minutes=m)
-                            # timeformat = '%I:%M %p'
-                            # t.startclocktime = datetime.datetime.strptime(vals[2] + ' ' + vals[3], timeformat)
+                                        # timeformat = '%I:%M %p'
+                                        # t.startclocktime = datetime.datetime.strptime(vals[2] + ' ' + vals[3], timeformat)
             else:
-                h = int(vals[2])
+                h = int(vals[2]) if vals[2] != '12' or vals[3].upper() != 'AM' else 0
                 if len(vals) > 3 and vals[3].upper() == 'PM':
                     h += 12
                 t.startclocktime = datetime.timedelta(hours=h)
-                            # timeformat = '%I %p'
-                            # t.startclocktime = datetime.datetime.strptime(vals[2] + ' ' + vals[3], timeformat)
+                                        # timeformat = '%I %p'
+                                        # t.startclocktime = datetime.datetime.strptime(vals[2] + ' ' + vals[3], timeformat)
         elif vals[0] == 'STATISTIC':
             t.statistic = StatisticSetting(vals[1].upper())
 

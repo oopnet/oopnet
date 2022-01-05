@@ -129,6 +129,22 @@ class MicropolisModel(TestModel):
         self.network = Read(join('..', 'examples', 'data', 'MICROPOLIS_v1.inp'))
 
 
+class RulesModel(TestModel):
+    n_junctions = 1
+    n_tanks = 1
+    n_reservoirs = 1
+    n_pipes = 2
+    n_valves = 0
+    n_controls = 0
+    n_pumps = 1
+    n_rules = 2
+    n_curves = 1
+    n_patterns = 0
+
+    def __init__(self):
+        self.network = Read(join('networks', 'Rules_network.inp'))
+
+
 if __name__ == '__main__':
     from oopnet.api import *
     network = MicropolisModel()

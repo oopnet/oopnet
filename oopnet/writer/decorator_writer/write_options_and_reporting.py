@@ -127,7 +127,7 @@ def write_options(network: Network, fid: TextIOWrapper):
         if o.map:
             print('MAP', o.map, file=fid)
         if o.demandmodel == DemandModel.PDA:
-            print('DEMAND MODEL', 'PDA', file=fid)
+            print('DEMAND MODEL', o.demandmodel.value, file=fid)
             print('MINIMUM PRESSURE', o.minimumpressure, file=fid)
             print('REQUIRED PRESSURE', o.requiredpressure, file=fid)
             print('PRESSURE EXPONENT', o.pressureexponent, file=fid)

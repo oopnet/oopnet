@@ -12,7 +12,6 @@ class EPANETSimulationError(Exception):
     def errors(self):
         return self.args[0]
 
-# todo: implement as exceptions? (prevents raising multiple simulation errors)
 class EPANETError(Exception):
 
     def __init__(self, description, details):

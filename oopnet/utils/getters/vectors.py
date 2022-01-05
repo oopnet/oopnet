@@ -18,7 +18,6 @@ def v_length(network: Network) -> np.array:
     return np.asarray([x.length for x in get_pipes(network)])
 
 
-# todo: make v_diameter return valve diameters?
 def v_diameter(network: Network) -> np.array:
     """Get all diameter values of all pipes and valves in the network as a numpy array
 
