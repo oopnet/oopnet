@@ -7,10 +7,10 @@ import shutil
 import re
 from typing import Union, Optional
 
-from oopnet.elements.network import Network
+from oopnet.elements import Network
 from oopnet.utils import utils
 from oopnet.report.xrayreport import Report
-from oopnet.writer.decorator_writer.write import write
+from oopnet.writer import Write
 
 
 def run(thing: Union[Network, str], filename: Optional[str] = None, delete: bool = True,
@@ -120,7 +120,7 @@ class ModelSimulator:
             return out
 
         if isinstance(self.thing, Network):
-            write(self.thing, filename=self.filename)
+            Write(self.thing, filename=self.filename)
 
         cmd = subprocess.run(self.command, capture_output=True, shell=False)
         out, err = cmd.stdout, cmd.stderr

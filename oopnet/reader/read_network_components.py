@@ -1,11 +1,14 @@
-from oopnet.elements.base import PipeStatus, PumpKeyword, ValveType
-from oopnet.elements.network import Network
-from oopnet.elements.network_components import Junction, Tank, Reservoir, Pipe, Pump, Valve, PRV, TCV, PSV, GPV, PBV, \
-    FCV
-from oopnet.elements.system_operation import Pattern
-from oopnet.utils.getters.get_by_id import get_node, get_junction, get_pattern, get_curve
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+from oopnet.elements.enums import PipeStatus, PumpKeyword, ValveType
+from oopnet.elements import Junction, Tank, Reservoir, Pipe, Pump, Valve, PRV, TCV, PSV, GPV, PBV, \
+    FCV, Pattern
+from oopnet.utils.getters import get_node, get_junction, get_pattern, get_curve
 from oopnet.utils.adders import *
-from oopnet.reader.decorator_reader.decorators import section_reader
+from oopnet.reader.decorators import section_reader
+if TYPE_CHECKING:
+    from oopnet.elements import Network
 
 
 @section_reader('TITLE', 4)

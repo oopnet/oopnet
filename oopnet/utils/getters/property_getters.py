@@ -1,8 +1,8 @@
 import pandas as pd
 
-from oopnet.utils.getters.element_lists import get_links, get_link_ids, get_pipes, get_pipe_ids, get_nodes, \
+from oopnet.utils.getters import get_links, get_link_ids, get_pipes, get_pipe_ids, get_nodes, \
     get_node_ids, get_junction_ids, get_junctions, get_valve_ids, get_valves, get_pumps, get_pump_ids
-from oopnet.elements.network import Network
+from oopnet.elements import Network
 """
 Functions for getting network properties as pandas dataframes
 """

@@ -1,18 +1,16 @@
 import unittest
 import datetime
 
-from oopnet.elements.base import DemandModel, Unit, HeadlossFormula, BalancingOption, ReportStatusSetting, \
-    ReportBoolSetting, StatisticSetting
-from oopnet.elements.network_components import Junction, Tank, Reservoir, Pipe, Pump, Valve
-from oopnet.api import Run
-from oopnet.utils.getters import get_curve, get_pattern
-from oopnet.utils.getters.element_lists import get_patterns
-
-from testing.base import PoulakisEnhancedPDAModel, MicropolisModel, RulesModel
+from oopnet.elements.enums import Unit, HeadlossFormula, BalancingOption, DemandModel, StatisticSetting, \
+    ReportStatusSetting, ReportBoolSetting
+from oopnet.elements import Junction, Tank, Reservoir, Pipe, Pump, Valve
+from oopnet.simulator import Run
+from oopnet.utils.getters import get_curve, get_pattern, get_patterns
 
 
 class PoulakisEnhancedReaderTest(unittest.TestCase):
     def setUp(self) -> None:
+        from testing.base import PoulakisEnhancedPDAModel
         self.model = PoulakisEnhancedPDAModel()
 
     def test_junctions(self):
@@ -113,6 +111,7 @@ class PoulakisEnhancedReaderTest(unittest.TestCase):
 
 class MicorpolisReaderTest(unittest.TestCase):
     def setUp(self) -> None:
+        from testing.base import MicropolisModel
         self.model = MicropolisModel()
 
     def test_controls(self):
@@ -171,7 +170,29 @@ class MicorpolisReaderTest(unittest.TestCase):
 
 class RulesModelReaderTest(unittest.TestCase):
     def setUp(self) -> None:
+        from testing.base import RulesModel
         self.model = RulesModel()
+
+    def test_options(self):
+        options = self.model.network.options
+        self.assertEqual(Unit.LPS, options.units)
+        self.assertEqual(40, options.trials)
+        self.assertEqual(HeadlossFormula.HW, options.headloss)
+        self.assertEqual(0.001, options.accuracy)
+        self.assertEqual(1, options.demandmultiplier)
+        self.assertEqual(0.5, options.emitterexponent)
+        self.assertEqual(1, options.pattern)
+        self.assertEqual(DemandModel.DDA, options.demandmodel)
+        self.assertEqual(None, options.minimumpressure)
+        self.assertEqual(None, options.requiredpressure)
+        self.assertEqual(None, options.pressureexponent)
+        self.assertEqual((BalancingOption.CONTINUE, 10), options.unbalanced)
+        self.assertEqual(1, options.viscosity)
+        self.assertEqual(0.01, options.tolerance)
+
+    def test_run(self):
+        self.assertEqual(DemandModel.DDA, self.model.network.options.demandmodel)
+        Run(self.model.network)
 
     def test_rules(self):
         self.assertEqual(self.model.n_rules, len(self.model.network.rules))

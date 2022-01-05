@@ -1,8 +1,7 @@
 from typing import List
 
-from oopnet.elements.network import Network
-from oopnet.elements.network_components import Pipe, Junction, Reservoir, Tank, Node, Link, Pump, Valve
-from oopnet.elements.system_operation import Curve, Pattern, Energy, Control, Rule
+from oopnet.elements import Network, Pipe, Junction, Reservoir, Tank, Node, Link, Pump, Valve, Curve, Pattern, Energy, \
+    Control, Rule
 
 
 def get_pattern_ids(network: Network) -> List[str]:

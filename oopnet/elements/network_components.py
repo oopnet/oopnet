@@ -2,9 +2,9 @@ from typing import List, Union, Optional
 from dataclasses import dataclass, field
 from abc import abstractmethod
 
-from oopnet.elements.base import NetworkComponent, MixingModel, PumpKeyword, PipeStatus, ValveType, PumpStatus, \
-    ValveStatus
+from oopnet.elements.base import NetworkComponent
 from oopnet.elements.system_operation import Pattern, Curve
+from oopnet.elements.enums import PipeStatus, ValveStatus, PumpStatus, MixingModel, PumpKeyword, ValveType
 
 
 @dataclass

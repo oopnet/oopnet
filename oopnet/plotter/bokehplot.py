@@ -7,7 +7,7 @@ import pandas as pd
 import matplotlib.cm as cmx
 from matplotlib import pyplot as plt
 
-from oopnet.utils.getters.element_lists import get_link_ids, get_node_ids
+from oopnet.utils.getters import get_link_ids, get_node_ids
 
 # todo: refactor
 def convert_to_hex(rgba_color):

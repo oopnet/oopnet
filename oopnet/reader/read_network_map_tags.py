@@ -1,6 +1,10 @@
-from oopnet.elements.network import Network
-from oopnet.utils.getters.get_by_id import get_node
-from oopnet.reader.decorator_reader.decorators import section_reader
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from oopnet.elements import Network
+from oopnet.utils.getters import get_node
+from oopnet.reader.decorators import section_reader
 
 
 @section_reader('COORDINATES', 4)

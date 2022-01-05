@@ -1,7 +1,8 @@
+from __future__ import annotations
 from dataclasses import dataclass
 from typing import List
 
-from oopnet.elements.base import TagObject
+from oopnet.elements.enums import TagObject
 from oopnet.elements.network_components import Node
 
 

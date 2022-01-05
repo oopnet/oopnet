@@ -1,10 +1,8 @@
-from oopnet.reader.decorator_reader.read import read as Read
-from oopnet.writer.decorator_writer.write import write as Write
-from oopnet.simulator.epanet2 import run as Run
+from oopnet.reader import Read
+from oopnet.writer import Write
+from oopnet.simulator import Run
 
-from oopnet.graph.graph import graph as Graph
-from oopnet.graph.graph import digraph as DiGraph
-from oopnet.graph.graph import multigraph as MultiGraph
+from oopnet.graph.graph import Graph, DiGraph, MultiGraph
 
 from oopnet.plotter.pyplot import Plotsimulation as Plot
 from oopnet.plotter.bokehplot import Plotsimulation as BPlot
@@ -26,4 +24,4 @@ import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
 
-# todo: move content to __init__.py?
+# todo: move content to __init__.py and remove numpy, matplotlib, ...?

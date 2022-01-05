@@ -1,10 +1,12 @@
+from __future__ import annotations
 import os
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 import numpy as np
 
-from oopnet.elements.network_components import Junction, Pipe
-from oopnet.report.report_getter_functions import pressure, flow
+if TYPE_CHECKING:
+    from oopnet.elements import Junction, Pipe
+from oopnet.report import Pressure, Flow
 from oopnet.report.xrayreport import Report
 
 
@@ -136,12 +138,11 @@ def sources(network):
     """
     if network.tanks and network.reservoirs:
         return network.reservoirs + network.tanks
-    if network.tanks and not network.reservoirs:
+    if network.tanks:
         return network.tanks
-    if not network.tanks and network.reservoirs:
+    if network.reservoirs:
         return network.reservoirs
-    if not network.tanks and not network.reservoirs:
-        return None
+    return None
 
 
 def make_measurement(report: Report, sensors: dict, precision: Optional[dict] = None):
@@ -163,17 +164,11 @@ def make_measurement(report: Report, sensors: dict, precision: Optional[dict] = 
     vec = np.ndarray(0)
     for what in sorted(sensors.keys()):
         if what == 'Flow':
-            if precision is None:
-                dec = 3
-            else:
-                dec = precision[what]
-            vec = np.around(np.concatenate((vec, flow(report)[sensors[what]].values)), decimals=dec)
+            dec = 3 if precision is None else precision[what]
+            vec = np.around(np.concatenate((vec, Flow(report)[sensors[what]].values)), decimals=dec)
         elif what == 'Pressure':
-            if precision is None:
-                dec = 2
-            else:
-                dec = precision[what]
-            vec = np.around(np.concatenate((vec, pressure(report)[sensors[what]].values)), decimals=dec)
+            dec = 2 if precision is None else precision[what]
+            vec = np.around(np.concatenate((vec, Pressure(report)[sensors[what]].values)), decimals=dec)
     return vec
 
 

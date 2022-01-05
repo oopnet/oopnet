@@ -1,8 +1,8 @@
 from io import TextIOWrapper
 
-from oopnet.elements.network import Network
+from oopnet.elements import Network
 from oopnet.utils.getters import get_junctions, get_reservoirs, get_tanks, get_pipes, get_pumps, get_valves
-from oopnet.writer.decorator_writer.decorators import section_writer
+from oopnet.writer.decorators import section_writer
 
 
 @section_writer('TITLE', 0)

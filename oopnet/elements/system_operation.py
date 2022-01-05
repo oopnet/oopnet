@@ -1,10 +1,14 @@
+from __future__ import annotations
 import datetime
 from dataclasses import dataclass, field
-from typing import List, Union, Optional
+from typing import List, Union, Optional, TYPE_CHECKING
 
-from oopnet.elements.base import NetworkComponent, LimitSetting, EnergyParameter, EnergyKeyword, Logic, \
-    ConditionAttribute, BoolSetting, Relation
-# from oopnet.elements.network_components import Node, Link
+from oopnet.elements.base import NetworkComponent
+from oopnet.elements.enums import BoolSetting, LimitSetting, EnergyKeyword, EnergyParameter, Logic, Relation, \
+    ConditionAttribute
+
+if TYPE_CHECKING:
+    from oopnet.elements.network_components import Node, Link
 
 # todo: refactor reader to allow for mandatory attributes
 @dataclass
@@ -45,8 +49,7 @@ class Condition:
 @dataclass
 class Action:
     """An action clause in a rule-based control"""
-    # ToDo: object attribute should be either instance of Node or Link -> circular import
-    object: Union['Node', 'Link', str] = None  # = Either(NetworkComponent, 'SYSTEM')
+    object: Union[Node, Link, str] = None  # = Either(NetworkComponent, 'SYSTEM')
     value: Union[float, BoolSetting] = None  # = Either(Float, Enum('OPEN', 'CLOSED'))
 
 

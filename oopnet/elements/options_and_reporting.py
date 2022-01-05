@@ -1,10 +1,12 @@
+from __future__ import annotations
 import datetime
 from dataclasses import dataclass
 from typing import List, Optional, Union, Literal, Tuple
 
-from oopnet.elements.base import Unit, HeadlossFormula, HydraulicOption, QualityOption, BalancingOption, DemandModel, \
-    StatisticSetting, BoolSetting, LimitSetting, ReportStatusSetting, ReportElementSetting, \
-    ReportParameterSetting, ReportBoolSetting
+from oopnet.elements.enums import BoolSetting, Unit, HeadlossFormula, HydraulicOption, QualityOption, BalancingOption, \
+    DemandModel, StatisticSetting, LimitSetting, ReportStatusSetting, ReportBoolSetting, ReportElementSetting, \
+    ReportParameterSetting
+
 from oopnet.elements.network_components import Node, Pattern, Link
 
 # todo: check default values

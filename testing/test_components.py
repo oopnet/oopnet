@@ -1,7 +1,7 @@
 import unittest
 
-from oopnet.api import get_link, get_link_ids
-from oopnet.elements.base import PipeStatus
+from oopnet.utils.getters import get_link, get_link_ids
+from oopnet.elements.enums import PipeStatus
 
 from testing.base import SimpleModel
 

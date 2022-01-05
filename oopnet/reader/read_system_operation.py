@@ -1,14 +1,16 @@
+from __future__ import annotations
 import datetime
+from typing import TYPE_CHECKING
 
-from oopnet.elements.base import PipeStatus, PumpStatus, ValveStatus, EnergyKeyword, EnergyParameter, Relation, \
-    LimitSetting, Logic, ConditionAttribute
-from oopnet.elements.network import Network
-from oopnet.elements.network_components import Pipe, Pump
-from oopnet.elements.system_operation import Curve, Pattern, Energy, Control, Controlcondition, Action, Rule, Condition
-from oopnet.utils.getters.get_by_id import get_curve, get_pump, get_pattern, get_link, get_node, get_junction
-from oopnet.utils.getters.element_lists import get_link_ids, get_node_ids, get_curve_ids, get_pattern_ids
-from oopnet.reader.decorator_reader.decorators import section_reader
+from oopnet.elements.enums import PipeStatus, ValveStatus, PumpStatus, LimitSetting, EnergyKeyword, EnergyParameter, \
+    Logic, Relation, ConditionAttribute
+from oopnet.elements import Pipe, Pump, Curve, Pattern, Energy, Control, Controlcondition, Action, Rule, Condition
+from oopnet.utils.getters import get_curve, get_pump, get_pattern, get_link, get_node, get_junction, get_link_ids, \
+    get_node_ids, get_curve_ids, get_pattern_ids
+from oopnet.reader.decorators import section_reader
 from oopnet.utils.adders import add_curve, add_pattern, add_rule
+if TYPE_CHECKING:
+    from oopnet.elements import Network
 
 
 @section_reader('CURVES', 0)

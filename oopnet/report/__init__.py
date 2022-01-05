@@ -14,3 +14,4 @@ from .report_getter_functions import position as Position
 from .report_getter_functions import setting as Setting
 from .report_getter_functions import nodeinfo as Nodeinfo
 from .report_getter_functions import linkinfo as Linkinfo
+from .simulation_errors import EPANETSimulationError

@@ -1,7 +1,5 @@
-from oopnet.elements.network import Network
-from oopnet.utils.getters.get_by_id import get_node, get_link, get_junction, get_reservoir, get_tank, get_pipe, \
-    get_pump, get_valve
-from oopnet.elements.network_components import Junction, Tank, Reservoir, Pipe, Pump, Valve
+from oopnet.elements import Network, Junction, Tank, Reservoir, Pipe, Pump, Valve
+from oopnet.utils.getters import get_node, get_link
 
 
 def remove_link(network: Network, id: str):

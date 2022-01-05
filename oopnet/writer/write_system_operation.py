@@ -1,14 +1,12 @@
 import datetime
 from io import TextIOWrapper
 
-from oopnet.elements.base import PipeStatus, ValveStatus, PumpStatus, EnergyKeyword, NetworkComponent, \
-    ConditionAttribute
-from oopnet.elements.system_operation import Curve
-from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Valve, Pump
-from oopnet.elements.network import Network
-from oopnet.utils.getters.element_lists import get_curves, get_junctions, get_pipes, get_valves, get_pumps, \
+from oopnet.elements.base import NetworkComponent
+from oopnet.elements.enums import PipeStatus, ValveStatus, PumpStatus, EnergyKeyword, ConditionAttribute
+from oopnet.elements import Network, Curve
+from oopnet.utils.getters import get_curves, get_junctions, get_pipes, get_valves, get_pumps, \
     get_patterns, get_energies, get_controls, get_rules
-from oopnet.writer.decorator_writer.decorators import section_writer
+from oopnet.writer.decorators import section_writer
 
 
 @section_writer('CURVES', 3)

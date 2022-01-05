@@ -1,12 +1,11 @@
 from oopnet.exceptions import ComponentExistsError
-from typing import Optional, Union
+from typing import Union
 
-from oopnet.elements.base import NetworkComponent
-from oopnet.utils.getters.element_lists import get_pattern_ids, get_node_ids, get_link_ids, get_curve_ids, get_rule_ids
-from oopnet.elements.network import Network
-from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Pump, Valve, Curve, Pattern, Node, \
+from oopnet.utils.getters import get_pattern_ids, get_node_ids, get_link_ids, get_curve_ids, get_rule_ids
+from oopnet.elements import Network, Junction, Reservoir, Tank, Pipe, Pump, Valve, Curve, Pattern, Node, \
     Link
 from oopnet.elements.system_operation import Rule
+from oopnet.elements.base import NetworkComponent
 
 
 def _check_exists(obj: NetworkComponent, network: Network):

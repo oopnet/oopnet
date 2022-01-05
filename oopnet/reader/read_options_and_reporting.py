@@ -1,13 +1,13 @@
+from __future__ import annotations
 import datetime
-from typing import Tuple, Union
+from typing import Tuple, Union, TYPE_CHECKING
 
-from oopnet.elements.base import ReportParameterSetting, Unit, HeadlossFormula, HydraulicOption, QualityOption, \
-    BalancingOption, DemandModel, StatisticSetting, BoolSetting, LimitSetting, ReportStatusSetting, \
-    ReportElementSetting, ReportBoolSetting
-from oopnet.elements.network import Network
-from oopnet.utils.getters import get_pattern_ids
-from oopnet.utils.getters.get_by_id import get_node, get_link, get_pattern
-from oopnet.reader.decorator_reader.decorators import section_reader
+from oopnet.elements.enums import BoolSetting, Unit, HeadlossFormula, HydraulicOption, QualityOption, BalancingOption, \
+    DemandModel, StatisticSetting, LimitSetting, ReportStatusSetting, ReportBoolSetting, ReportElementSetting
+if TYPE_CHECKING:
+    from oopnet.elements import Network
+from oopnet.utils.getters import get_pattern_ids, get_node, get_link, get_pattern
+from oopnet.reader.decorators import section_reader
 
 
 def time2timedelta(vals: list) -> datetime.timedelta:
@@ -76,9 +76,9 @@ def read_options(network: Network, block: list):
       block: EPANET input file block
 
     """
+    o = network.options
     for vals in block:
         vals = vals['values']
-        o = network.options
         vals[0] = vals[0].upper()
         if vals[0] == 'UNITS':
             o.units = Unit[vals[1].upper()]
@@ -132,8 +132,6 @@ def read_options(network: Network, block: list):
             o.requiredpressure = float(vals[2])
         elif vals[0] == 'PRESSURE' and vals[1].upper() == 'EXPONENT':
             o.pressureexponent = float(vals[2])
-        if not o.demandmodel:
-            o.demandmodel = DemandModel.DDA
 
 
 @section_reader('TIMES', 3)
@@ -145,10 +143,10 @@ def read_times(network: Network, block: list):
       block: EPANET input file block
 
     """
+    t = network.times
     for vals in block:
         vals = vals['values']
         vals[0] = vals[0].upper()
-        t = network.times
         if vals[0] == 'DURATION':
             t.duration = time2timedelta(vals[1:])
         elif vals[0] == 'HYDRAULIC' and vals[1].upper() == 'TIMESTEP':
@@ -172,15 +170,15 @@ def read_times(network: Network, block: list):
                 if len(vals) > 3 and vals[3].upper() == 'PM':
                     h += 12
                 t.startclocktime = datetime.timedelta(hours=h, minutes=m)
-                                        # timeformat = '%I:%M %p'
-                                        # t.startclocktime = datetime.datetime.strptime(vals[2] + ' ' + vals[3], timeformat)
+                # timeformat = '%I:%M %p'
+                # t.startclocktime = datetime.datetime.strptime(vals[2] + ' ' + vals[3], timeformat)
             else:
                 h = int(vals[2]) if vals[2] != '12' or vals[3].upper() != 'AM' else 0
                 if len(vals) > 3 and vals[3].upper() == 'PM':
                     h += 12
                 t.startclocktime = datetime.timedelta(hours=h)
-                                        # timeformat = '%I %p'
-                                        # t.startclocktime = datetime.datetime.strptime(vals[2] + ' ' + vals[3], timeformat)
+                # timeformat = '%I %p'
+                # t.startclocktime = datetime.datetime.strptime(vals[2] + ' ' + vals[3], timeformat)
         elif vals[0] == 'STATISTIC':
             t.statistic = StatisticSetting(vals[1].upper())
 
@@ -194,12 +192,12 @@ def read_report(network: Network, block: list):
       block: EPANET input file block
 
     """
+    r = network.report
+    param = network.reportparameter
+    precision = network.reportprecision
     for vals in block:
         vals = vals['values']
         vals[0] = vals[0].upper()
-        r = network.report
-        param = network.reportparameter
-        precision = network.reportprecision
         if vals[0] in ['PAGESIZE', 'PAGE']:
             r.pagesize = int(vals[1])
         elif vals[0] == 'FILE':

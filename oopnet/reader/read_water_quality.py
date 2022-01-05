@@ -1,8 +1,11 @@
-from oopnet.elements.base import MixingModel
-from oopnet.elements.network import Network
-from oopnet.elements.water_quality import Reaction
-from oopnet.utils.getters.get_by_id import get_node, get_link, get_pattern
-from oopnet.reader.decorator_reader.decorators import section_reader
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+from oopnet.elements.enums import MixingModel
+if TYPE_CHECKING:
+    from oopnet.elements import Network
+from oopnet.utils.getters import get_node, get_link, get_pattern
+from oopnet.reader.decorators import section_reader
 
 
 @section_reader('QUALITY', 3)
@@ -28,9 +31,9 @@ def read_reaction(network: Network, block: list):
       network: OOPNET network object where the reaction settings shall be stored
       block: EPANET input file block
     """
+    r = network.reactions
     for vals in block:
         vals = vals['values']
-        r = network.reactions
         vals[0] = vals[0].upper()
         if vals[0] == 'ORDER':
             vals[1] = vals[1].upper()

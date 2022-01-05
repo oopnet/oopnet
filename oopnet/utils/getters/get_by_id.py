@@ -1,7 +1,4 @@
-# Retrieve a specific instance of an object contained in the network with a specific id
-from oopnet.elements.network import Network
-from oopnet.elements.network_components import Junction, Link, Node, Valve, Pump, Pipe, Reservoir, Tank
-from oopnet.elements.system_operation import Rule, Pattern, Curve
+from oopnet.elements import Network, Junction, Link, Node, Valve, Pump, Pipe, Reservoir, Tank, Rule, Pattern, Curve
 
 
 def get_junction(network: Network, id: str) -> Junction:

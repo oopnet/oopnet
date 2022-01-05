@@ -1,7 +1,7 @@
 import datetime
 import unittest
 
-from oopnet.elements.base import ReportBoolSetting, DemandModel
+from oopnet.elements.enums import DemandModel, ReportBoolSetting
 from oopnet.utils.getters import *
 
 from testing.base import SimpleModel

@@ -2,7 +2,7 @@ from io import TextIOWrapper
 
 from oopnet.elements.network import Network
 from oopnet.utils.getters import get_tanks, get_nodes
-from oopnet.writer.decorator_writer.decorators import section_writer
+from oopnet.writer.decorators import section_writer
 
 
 @section_writer('QUALITY', 3)

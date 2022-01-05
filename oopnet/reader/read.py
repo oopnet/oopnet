@@ -1,11 +1,10 @@
 import re
 
-from oopnet.elements.network import Network
-from oopnet.elements.options_and_reporting import Report, Times
+from oopnet.elements import Network
 from oopnet.utils.unit_converter.convert import convert
-from oopnet.reader.decorator_reader.module_reader import list_all_functions_with_decorator
-from oopnet.reader.decorator_reader import read_network_components, read_network_map_tags, read_options_and_reporting, \
-    read_system_operation, read_water_quality
+from oopnet.reader.module_reader import list_all_functions_with_decorator
+from oopnet.reader import read_water_quality, read_network_map_tags, read_options_and_reporting, \
+    read_network_components, read_system_operation
 
 
 def filesplitter(filename: str) -> dict[str, list]:
@@ -64,7 +63,7 @@ def read(filename: str) -> Network:
         if f.sectionname in list(blocks.keys()):
             f.readerfunction(network, blocks[f.sectionname])
 
-    # Convert network to SI units:
+    # Convert network to SI units
     convert(network)
 
     return network

@@ -1,7 +1,9 @@
-from typing import Union, List, Optional
+from __future__ import annotations
+from typing import Union, List, Optional, TYPE_CHECKING
 from dataclasses import dataclass
 
-from oopnet.elements.network_components import Pipe
+if TYPE_CHECKING:
+    from oopnet.elements.network_components import Pipe
 
 
 # todo: switch bulk, wall and tank to Optional[List[Pipe]]?

@@ -1,8 +1,11 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 import numpy as np
 
-from oopnet.elements.network import Network
-from oopnet.utils.getters.element_lists import get_pipes, get_junctions, get_nodes, get_tanks, get_reservoirs, \
-    get_valves
+if TYPE_CHECKING:
+    from oopnet.elements import Network
+from oopnet.utils.getters import get_pipes, get_junctions, get_nodes, get_tanks, get_reservoirs, get_valves
 
 
 def v_length(network: Network) -> np.array:

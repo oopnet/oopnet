@@ -1,1 +1,2 @@
-__author__ = 'davidsteffelbauer'
+from .pyplot import Plotsimulation as Plot
+from .bokehplot import Plotsimulation as BPlot

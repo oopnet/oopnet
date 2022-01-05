@@ -1,1 +1,1 @@
-__author__ = 'davidsteffelbauer'
+from .write import write as Write

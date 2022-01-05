@@ -1,6 +1,6 @@
 import inspect
 
-from oopnet.writer.decorator_writer.decorators import section_writer, WriterDecorator
+from oopnet.writer.decorators import section_writer, WriterDecorator
 
 
 def pred(c):

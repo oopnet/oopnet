@@ -4,7 +4,6 @@ from typing import Tuple, Optional, Union
 
 import xarray as xr
 import pandas as pd
-from traits.api import HasStrictTraits
 from xarray import DataArray, Dataset
 
 from oopnet.report.error_manager import ErrorManager
@@ -21,10 +20,7 @@ def str2hms(timestring: str) -> Tuple[int, int, float]:
     vals = timestring.split(':')
     hours = int(vals[0])
     minutes = int(vals[1])
-    if len(vals) > 2:
-        seconds = float(vals[2])
-    else:
-        seconds = 0
+    seconds = float(vals[2]) if len(vals) > 2 else 0
     return hours, minutes, seconds
 
 
@@ -65,7 +61,7 @@ def lst2xray(lst: list) -> xr.DataArray:
     Returns:
 
     """
-    lst[2:] = [x[0:len(lst[0])+1] for x in lst[2:]]
+    lst[2:] = [x[:len(lst[0])+1] for x in lst[2:]]
     frame = pd.DataFrame.from_dict(lst[2:])
     frame.columns = ['id'] + lst[0]
     frame[lst[0]] = frame[lst[0]].applymap(float)
@@ -74,38 +70,33 @@ def lst2xray(lst: list) -> xr.DataArray:
     return xr.DataArray(frame)
 
 
-class Report(HasStrictTraits):
+class Report:
     """ """
 
-    def __new__(self, filename: str, startdatetime: Optional[datetime.datetime] = None) -> \
-            tuple[Union[DataArray, Dataset, None], Union[DataArray, Dataset, None]]:
+    def __new__(cls, filename: str, startdatetime: Optional[datetime.datetime] = None) -> tuple[Union[DataArray, Dataset, None], Union[DataArray, Dataset, None]]:
 
         with open(filename, 'r') as fid:
             content = fid.readlines()
-            block = dict()
+            block = {}
             key = 'start'
-            block[key] = list()
+            block[key] = []
             error_manager = ErrorManager()
             error_found = False
 
             for linenumber, line in enumerate(content):
                 if error_found and len(line.strip()) != 0:
                     error_manager.append_error_message(line)
-                elif error_found:
-                    error_found = False
 
                 error_found = error_manager.check_line(line)
                 if len(line.strip()) == 0:
                     key = content[linenumber+1]
                     key = re.sub(r'\s+', ' ', key.replace('\n', '').strip())
-                    block[key] = list()
+                    block[key] = []
                 else:
                     line = re.sub(r'\s+', ' ', line.replace('\n', '').strip())
-                    if line in key:
-                        pass
-                    elif line.startswith('---------'):
-                        pass
-                    else:
+                    if line not in key and (
+                        line in key or not line.startswith('---------')
+                    ):
                         block[key].append(line.split(' '))
         error_manager.raise_errors()
         links = None
@@ -114,11 +105,7 @@ class Report(HasStrictTraits):
 
         format = '%y.%m.%d %H:%M:%S'
         for k in list(block.keys()):
-            if 'Node' in k:
-                pass
-            elif 'Link' in k:
-                pass
-            else:
+            if 'Node' not in k and 'Link' not in k:
                 block.pop(k)
 
         for kind in ['Node', 'Link']:

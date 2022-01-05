@@ -1,11 +1,9 @@
 import unittest
 
-from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Pump, Valve, Link, Node
-from oopnet.elements.system_operation import Pattern, Curve
+from oopnet.elements import Network, Junction, Reservoir, Tank, Pipe, Pump, Valve, Link, Node, Pattern, Curve
 from oopnet.exceptions import ComponentExistsError
 from oopnet.utils.getters import *
 from oopnet.utils.adders import *
-from oopnet.elements.network import Network
 
 from testing.base import add_dummy_junctions, create_dummy_spa_network
 
@@ -54,7 +52,7 @@ class BlankModelLinkTest(unittest.TestCase):
         self.network = add_dummy_junctions(network, 2)
 
     def test_add_simple_pipe_object(self):
-        from oopnet.elements.base import PumpStatus
+        from oopnet.elements.enums import PumpStatus
         j1 = get_junction(self.network, 'J-1')
         j2 = get_junction(self.network, 'J-2')
         add_pipe(self.network, Pipe(id='test', startnode=j1, endnode=j2, diameter=200, length=250, roughness=0.3,

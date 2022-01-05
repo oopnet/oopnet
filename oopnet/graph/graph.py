@@ -1,11 +1,16 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 import networkx as nx
 import pandas as pd
 
-from oopnet.utils.getters.element_lists import get_node_ids, get_links, get_pipes
-from oopnet.elements.network import Network
+from oopnet.utils.getters import get_node_ids, get_links, get_pipes
+if TYPE_CHECKING:
+    from oopnet.elements import Network
 
 
 # todo: add report weights (e.g., flow, headloss)
+# todo: add documentation
 def _add_nodes(graph, network):
     graph.add_nodes_from(get_node_ids(network))
 
@@ -18,56 +23,56 @@ def _add_links(graph, network, weight, default):
         graph.add_edge(*e, weight=weight_value, id=l.id)
 
 
-def graph(network: Network, weight: str = 'length', default: float = 0.00001) -> nx.Graph:
-    """This function generates an undirected NetworkX graph from an OOPNET network
+class Graph:
+    def __new__(cls, network: Network, weight: str = 'length', default: float = 0.00001) -> nx.Graph:
+        """Generates an undirected NetworkX graph from an OOPNET network.
 
-    Args:
-      network: OOPNET network object
-      weight: name of pipe property as a string which is used as weight (Default value = 'length')
-      default: When set, the default value is returned as weight for objects that don't have the defined weight attribute. Without it, an exception is raised for those objects. (Default value = 0.00001)
-
-    Returns:
-      undirected graph
-    """
-    g = nx.Graph()
-    _add_nodes(g, network)
-    _add_links(g, network, weight, default)
-    return g
+        Args:
+          network: OOPNET network object
+          weight: name of pipe property as a string which is used as weight (Default value = 'length')
+          default: When set, the default value is returned as weight for objects that don't have the defined weight attribute. Without it, an exception is raised for those objects. (Default value = 0.00001)
+        """
+        graph = nx.Graph()
+        _add_nodes(graph, network)
+        _add_links(graph, network, weight, default)
+        return graph
 
 
-def digraph(network: Network, weight: str = 'length', default: float = 0.00001) -> nx.DiGraph:
-    """This function generates an directed NetworkX graph from an OOPNET network
+class DiGraph:
+    def __new__(cls, network: Network, weight: str = 'length', default: float = 0.00001) -> nx.DiGraph:
+        """Generates a directed NetworkX graph from an OOPNET network.
 
-    Args:
-      network: OOPNET network object
-      weight: name of pipe property as a string which is used as weight (Default value = 'length')
-      default: When a default argument is given, it is returned when the attribute doesn't exist; without it, an exception is raised in that case. (Default value = 0.00001)
+        Args:
+          network: OOPNET network object
+          weight: name of pipe property as a string which is used as weight (Default value = 'length')
+          default: When a default argument is given, it is returned when the attribute doesn't exist; without it, an exception is raised in that case. (Default value = 0.00001)
 
-    Returns:
-      directed graph
-    """
+        Returns:
+          directed graph
+        """
 
-    g = nx.DiGraph()
-    _add_nodes(g, network)
-    _add_links(g, network, weight, default)
-    return g
+        g = nx.DiGraph()
+        _add_nodes(g, network)
+        _add_links(g, network, weight, default)
+        return g
 
 
-def multigraph(network: Network, weight: str = 'length', default: float = 0.00001) -> nx.MultiGraph:
-    """This function generates an undirected NetworkX graph from an OOPNET network
+class MultiGraph:
+    def __new__(cls, network: Network, weight: str = 'length', default: float = 0.00001) -> nx.MultiGraph:
+        """This function generates an undirected NetworkX graph from an OOPNET network
 
-    Args:
-      network: OOPNET network object
-      weight: name of pipe property as a string which is used as weight (Default value = 'length')
-      default: When a default argument is given, it is returned when the attribute doesn't exist; without it, an exception is raised in that case. (Default value = 0.00001)
+        Args:
+          network: OOPNET network object
+          weight: name of pipe property as a string which is used as weight (Default value = 'length')
+          default: When a default argument is given, it is returned when the attribute doesn't exist; without it, an exception is raised in that case. (Default value = 0.00001)
 
-    Returns:
-      undirected graph
-    """
-    g = nx.MultiGraph()
-    _add_nodes(g, network)
-    _add_links(g, network, weight, default)
-    return g
+        Returns:
+          undirected graph
+        """
+        g = nx.MultiGraph()
+        _add_nodes(g, network)
+        _add_links(g, network, weight, default)
+        return g
 
 
 def onlinks2nxlinks(network: Network) -> list:

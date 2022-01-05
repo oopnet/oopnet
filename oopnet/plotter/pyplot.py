@@ -9,9 +9,8 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 
-from oopnet.elements.network import Network
-from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Pump, Valve
-from oopnet.utils.getters.element_lists import get_link_ids, get_node_ids, get_valves, get_pumps, get_junctions, \
+from oopnet.elements import Network, Junction, Reservoir, Tank, Pipe, Pump, Valve
+from oopnet.utils.getters import get_link_ids, get_node_ids, get_valves, get_pumps, get_junctions, \
     get_reservoirs, get_tanks, get_pipes
 
 

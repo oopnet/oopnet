@@ -1,12 +1,16 @@
+from __future__ import annotations
 from copy import deepcopy
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, TYPE_CHECKING
 from dataclasses import dataclass, field
 
 import networkx as nx
 
-from oopnet.elements.options_and_reporting import Options, Times, Report, Reportparameter, Reportprecision
-from oopnet.elements.system_operation import Energy, Control, Rule, Curve, Pattern
 from oopnet.elements.water_quality import Reaction
+from oopnet.elements.options_and_reporting import Options, Times, Report, Reportparameter, Reportprecision
+if TYPE_CHECKING:
+    from oopnet.elements.system_operation import Energy, Control, Rule, Curve, Pattern
+    from oopnet.elements.network_components import Node, Junction, Tank, Reservoir, Link, Pump, Pipe, Valve
+    from oopnet.elements.network_map_tags import Vertex, Label, Backdrop
 
 
 @dataclass
@@ -39,9 +43,9 @@ class Network:
 
     """
     title: Optional[str] = None
-    vertices: Dict[str, 'Vertex'] = field(default_factory=dict)
-    labels: Dict[str, 'Label'] = field(default_factory=dict)
-    backdrop: Optional['Backdrop'] = None
+    vertices: Dict[str, Vertex] = field(default_factory=dict)
+    labels: Dict[str, Label] = field(default_factory=dict)
+    backdrop: Optional[Backdrop] = None
     energies: List[Energy] = field(default_factory=list)
     controls: List[Control] = field(default_factory=list)
     rules: Dict[str, Rule] = field(default_factory=dict)
@@ -53,29 +57,28 @@ class Network:
     reportprecision: Reportprecision = Reportprecision()
     graph: Optional[nx.Graph] = None
 
-    junctions: Dict[str, 'Junction'] = field(default_factory=dict)
-    tanks: Dict[str, 'Tank'] = field(default_factory=dict)
-    reservoirs: Dict[str, 'Reservoir'] = field(default_factory=dict)
+    junctions: Dict[str, Junction] = field(default_factory=dict)
+    tanks: Dict[str, Tank] = field(default_factory=dict)
+    reservoirs: Dict[str, Reservoir] = field(default_factory=dict)
 
-    pipes: Dict[str, 'Pipe'] = field(default_factory=dict)
-    pumps: Dict[str, 'Pump'] = field(default_factory=dict)
-    valves: Dict[str, 'Valve'] = field(default_factory=dict)
+    pipes: Dict[str, Pipe] = field(default_factory=dict)
+    pumps: Dict[str, Pump] = field(default_factory=dict)
+    valves: Dict[str, Valve] = field(default_factory=dict)
 
     curves: Dict[str, Curve] = field(default_factory=dict)
     patterns: Dict[str, Pattern] = field(default_factory=dict)
 
     @property
-    def nodes(self) -> dict:
+    def nodes(self) -> dict[str, Node]:
         """Property returning all Junction, Reservoir and Tank objects from the model."""
         return self.junctions | self.reservoirs | self.tanks
 
     @property
-    def links(self) -> dict:
+    def links(self) -> dict[str, Link]:
         """Property returning all Pipe, Pump, and Valve objects from the model."""
         return self.pipes | self.pumps | self.valves
 
     def __deepcopy__(self):
-        # ToDo: Check if elements not inheritated from Network Components are copied in the right way
         network_copy = Network()
         for attr, val in self.__dict__.items():
             setattr(network_copy, attr, deepcopy(val))
