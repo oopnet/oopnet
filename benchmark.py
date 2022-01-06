@@ -3,6 +3,8 @@ from os import remove, path
 from dataclasses import dataclass
 from typing import Optional
 
+from matplotlib import pyplot as plt
+
 from oopnet.elements.network import Network
 from oopnet.api import *
 
@@ -64,6 +66,10 @@ class OOPNETBenchmark:
         Write(self.network, 'test.inp')
         remove('test.inp')
 
+    def plot(self):
+        Plot(self.network)
+        plt.close()
+
     def run_single_instance(self):
         # self.read()
         # self.increase_demand()
@@ -78,32 +84,35 @@ class OOPNETBenchmark:
     def run_bechmark(self):
         print(f'Running benchmark for {path.split(self.filename)[-1]}')
 
-        # print('Reading file')
-        # print(np.mean(timeit.Timer(stmt=self.read).repeat(number=n)))
-        #
-        # print('\nChanging demands')
-        # print(np.mean(timeit.Timer(stmt=self.increase_demand).repeat(number=n)))
-        #
-        # print('\nChanging lengths')
-        # print(np.mean(timeit.Timer(stmt=self.change_length).repeat(number=n)))
-        #
-        # print('\nRandomly accessing Nodes')
-        # print(np.mean(timeit.Timer(stmt=self.random_node_access).repeat(number=n)))
-        #
-        # print('\nRandomly accessing Links')
-        # print(np.mean(timeit.Timer(stmt=self.random_link_access).repeat(number=n)))
+        print('Reading file')
+        print(np.mean(timeit.Timer(stmt=self.read).repeat(number=n)))
 
-        # print('\nLookup Node and Link IDs')
-        # print(np.mean(timeit.Timer(stmt=self.lookup_ids).repeat(number=n)))
+        print('\nChanging demands')
+        print(np.mean(timeit.Timer(stmt=self.increase_demand).repeat(number=n)))
+
+        print('\nChanging lengths')
+        print(np.mean(timeit.Timer(stmt=self.change_length).repeat(number=n)))
+
+        print('\nRandomly accessing Nodes')
+        print(np.mean(timeit.Timer(stmt=self.random_node_access).repeat(number=n)))
+
+        print('\nRandomly accessing Links')
+        print(np.mean(timeit.Timer(stmt=self.random_link_access).repeat(number=n)))
+
+        print('\nLookup Node and Link IDs')
+        print(np.mean(timeit.Timer(stmt=self.lookup_ids).repeat(number=n)))
 
         print('\nGenerating MultiGraph')
         print(np.mean(timeit.Timer(stmt=self.create_graph).repeat(number=n)))
 
-        # print('\nSimulating model')
-        # print(np.mean(timeit.Timer(stmt=self.simulate).repeat(number=n)))
-        #
-        # print('\nWriting file')
-        # print(np.mean(timeit.Timer(stmt=self.write).repeat(number=n)))
+        print('\nSimulating model')
+        print(np.mean(timeit.Timer(stmt=self.simulate).repeat(number=n)))
+
+        print('\nWriting file')
+        print(np.mean(timeit.Timer(stmt=self.write).repeat(number=n)))
+
+        print('\nPlotting network')
+        print(np.mean(timeit.Timer(stmt=self.plot).repeat(number=n)))
 
 
 if __name__ == '__main__':
