@@ -13,7 +13,7 @@ def pred(c):
 
     """
 
-    return inspect.isfunction(c) and hasattr(c, 'decorator') and c.decorator == section_reader
+    return hasattr(c, 'decorator') and c.decorator == section_reader
 
 
 def list_all_functions_with_decorator(modules, decorator):

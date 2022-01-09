@@ -1,10 +1,14 @@
 from __future__ import annotations
+
+from abc import abstractmethod
+
 from typing import TYPE_CHECKING
 
-from oopnet.elements.enums import PipeStatus, PumpKeyword, ValveType
-from oopnet.elements import Junction, Tank, Reservoir, Pipe, Pump, Valve, PRV, TCV, PSV, GPV, PBV, \
-    FCV, Pattern
-from oopnet.utils.getters import get_node, get_junction, get_pattern, get_curve
+from oopnet.reader.factory_base import ReadFactory, InvalidValveTypeError
+from oopnet.elements import Network, Tank, Reservoir, Pipe, Pump, Valve, Node, Pattern, Curve, Junction, FCV, PRV, PBV,\
+    PSV, GPV, TCV
+from oopnet.utils.getters import get_junction, get_pattern, get_curve, get_node
+from oopnet.elements.enums import PipeStatus, PumpStatus, ValveStatus, PumpKeyword, ValveType
 from oopnet.utils.adders import *
 from oopnet.reader.decorators import section_reader
 if TYPE_CHECKING:
@@ -25,181 +29,50 @@ def read_title(network: Network, block: list):
         network.title = " ".join(vals)
 
 
-@section_reader('JUNCTIONS', 1)
-def read_junction(network: Network, block: list):
-    """Reads junctions from block.
+class ComponentFactory(ReadFactory):
+    @staticmethod
+    def _read_comment(values: dict) -> str:
+        return values['comments'] or None
 
-    Args:
-      network: OOPNET network object where the junctions shall be stored
-      block: EPANET input file block
+    @classmethod
+    @abstractmethod
+    def _parse_single(cls, values, network):
+        pass
 
-    """
-    for vals in block:
-        comment = vals['comments'] or None
-        vals = vals['values']
-        j = Junction(id=vals[0], comment=comment, tag=None)
-        if len(vals) > 1:
-            j.elevation = float(vals[1])
-        if len(vals) > 2:
-            j.demand = float(vals[2])
-        if len(vals) > 3:
-            p = get_pattern(network, vals[3])
-            j.demandpattern = p
-        add_junction(network, j, False)
-
-
-@section_reader('RESERVOIRS', 1)
-def read_reservoir(network: Network, block: list):
-    """Reads reservoirs from block.
-
-    Args:
-      network: OOPNET network object where the reservoirs shall be stored
-      block: EPANET input file block
-
-    """
-    for vals in block:
-        comment = vals['comments'] or None
-        vals = vals['values']
-        r = Reservoir(id=vals[0], comment=comment, tag=None)
-        if len(vals) > 1:
-            r.head = float(vals[1])
-        if len(vals) > 2:
-            r.headpattern = Pattern(id=vals[2])
-        add_reservoir(network, r, False)
+    @staticmethod
+    def _create_attr_dict(attrs: list[str], values: list[str], cls_list: list, network: Network) -> dict:
+        attr_dict = {}
+        for attr, value, attr_cls in zip(attrs, values, cls_list):
+            if attr_cls == Pattern:
+                value = get_pattern(network, value) if value else None
+                attr_dict[attr] = value
+            elif attr_cls == Curve:
+                value = get_curve(network, value) if value else None
+                attr_dict[attr] = value
+            elif attr_cls == Node:
+                value = get_node(network, value)
+                attr_dict[attr] = value
+            elif attr_cls in {PipeStatus, PumpStatus, ValveStatus, PumpKeyword}:
+                attr_dict[attr] = attr_cls(value.upper())
+            elif value is not None:
+                attr_dict[attr] = attr_cls(value)
+        return attr_dict
 
 
-@section_reader('TANKS', 1)
-def read_tanks(network: Network, block: list):
-    """Reads tanks from block.
+@section_reader('EMITTERS', 4)
+class EmitterFactory(ComponentFactory):
+    def __new__(cls, network: Network, block: dict):
+        for values in block:
+            junction, emittercoefficient = cls._parse_single(values, network)
+            junction.emittercoefficient = emittercoefficient
 
-    Args:
-      network: OOPNET network object where the tanks shall be stored
-      block: EPANET input file block
-
-    """
-    for vals in block:
-        comment = vals['comments'] or None
-        vals = vals['values']
-        t = Tank(id=vals[0], comment=comment, tag=None)
-        if len(vals) > 1:
-            t.elevation = float(vals[1])
-        if len(vals) > 2:
-            t.initlevel = float(vals[2])
-        if len(vals) > 3:
-            t.minlevel = float(vals[3])
-        if len(vals) > 4:
-            t.maxlevel = float(vals[4])
-        if len(vals) > 5:
-            t.diam = float(vals[5])
-        if len(vals) > 6:
-            t.minvolume = float(vals[6])
-        if len(vals) > 7:
-            c = get_curve(network, vals[7])
-            t.volumecurve = c
-        add_tank(network, t, False)
-
-
-@section_reader('PIPES', 2)
-def read_pipes(network: Network, block: list):
-    """Reads pipes from block.
-
-    Args:
-      network: OOPNET network object where the pipes shall be stored
-      block: EPANET input file block
-
-    """
-    for vals in block:
-        comment = vals['comments'][0] if vals['comments'] else None
-        vals = vals['values']
-
-        p = Pipe(id=vals[0], comment=comment, tag=None)
-        if len(vals) > 1:
-            j = get_node(network, vals[1])
-            p.startnode = j
-        if len(vals) > 2:
-            j = get_node(network, vals[2])
-            p.endnode = j
-        if len(vals) > 3:
-            p.length = float(vals[3])
-        if len(vals) > 4:
-            p.diameter = float(vals[4])
-        if len(vals) > 5:
-            p.roughness = float(vals[5])
-        if len(vals) > 6:
-            p.minorloss = float(vals[6])
-        if len(vals) > 7:
-            # todo: initialstatus or status?
-            p.status = PipeStatus[vals[7].upper()]
-        add_pipe(network, p, False)
-
-
-@section_reader('PUMPS', 2)
-def read_pumps(network: Network, block: list):
-    """Reads pumps from block.
-
-    Args:
-      network: OOPNET network object where the pumps shall be stored
-      block: EPANET input file block
-
-    """
-    for vals in block:
-        comment = vals['comments'][0] if vals['comments'] else None
-        vals = vals['values']
-        p = Pump(id=vals[0], comment=comment, tag=None)
-        if len(vals) > 1:
-            j = get_node(network, vals[1])
-            p.startnode = j
-        if len(vals) > 2:
-            j = get_node(network, vals[2])
-            p.endnode = j
-        if len(vals) > 3:
-            p.keyword = PumpKeyword[vals[3]]
-        if len(vals) > 4:
-            p.value = " ".join(vals[4:])
-        add_pump(network, p, False)
-
-
-@section_reader('VALVES', 2)
-def read_valves(network: Network, block: list):
-    """Reads valves from block.
-
-    Args:
-      network: OOPNET network object where the valves shall be stored
-      block: EPANET input file block
-
-    """
-    for vals in block:
-        comment = vals['comments'][0] if vals['comments'] else None
-        vals = vals['values']
-        if vals[4] == 'PRV':
-            v = PRV(id=vals[0], comment=comment, tag=None)
-        elif vals[4] == 'TCV':
-            v = TCV(id=vals[0], comment=comment, tag=None)
-        elif vals[4] == 'PSV':
-            v = PSV(id=vals[0], comment=comment, tag=None)
-        elif vals[4] == 'GPV':
-            v = GPV(id=vals[0], comment=comment, tag=None)
-        elif vals[4] == 'PBV':
-            v = PBV(id=vals[0], comment=comment, tag=None)
-        elif vals[4] == 'FCV':
-            v = FCV(id=vals[0], comment=comment, tag=None)
-        else:
-            v = Valve(id=vals[0], comment=comment, tag=None)
-        if len(vals) > 1:
-            j = get_node(network, vals[1])
-            v.startnode = j
-        if len(vals) > 2:
-            j = get_node(network, vals[2])
-            v.endnode = j
-        if len(vals) > 3:
-            v.diameter = float(vals[3])
-        if len(vals) > 4:
-            v.valvetype = ValveType[vals[4]]
-        if len(vals) > 5:
-            v.setting = vals[5]
-        if len(vals) > 6:
-            v.minorloss = float(vals[6])
-        add_valve(network, v, False)
+    @classmethod
+    def _parse_single(cls, values, network) -> tuple:
+        attr_values = cls._pad_list(values['values'], 2)
+        attr_names = ['junction', 'emittercoefficient']
+        attr_cls = [Node, float]
+        attr_dict = cls._create_attr_dict(attr_names, attr_values, attr_cls, network)
+        return tuple(attr_dict[attr_name] for attr_name in attr_names)
 
 
 @section_reader('EMITTERS', 2)
@@ -215,3 +88,123 @@ def read_emitters(network: Network, block: list):
         vals = vals['values']
         j = get_junction(network, vals[0])
         j.emittercoefficient = float(vals[1])
+
+
+@section_reader('JUNCTIONS', 1)
+class JunctionFactory(ComponentFactory):
+    def __new__(cls, network: Network, block: dict):
+        for values in block:
+            j = cls._parse_single(values, network)
+            add_junction(network, j, False)
+
+    @classmethod
+    def _parse_single(cls, values, network) -> Junction:
+        comment = cls._read_comment(values)
+        attr_values = cls._pad_list(values['values'], 4)
+        attr_names = ['id', 'elevation', 'demand', 'demandpattern']
+        attr_cls = [str, float, float, Pattern]
+        attr_dict = cls._create_attr_dict(attr_names, attr_values, attr_cls, network)
+        return Junction(**attr_dict, comment=comment)
+
+
+@section_reader('RESERVOIRS', 1)
+class ReservoirFactory(ComponentFactory):
+    def __new__(cls, network: Network, block: dict):
+        for values in block:
+            r = cls._parse_single(values, network)
+            add_reservoir(network, r, False)
+
+    @classmethod
+    def _parse_single(cls, values, network) -> Reservoir:
+        comment = cls._read_comment(values)
+        attr_values = cls._pad_list(values['values'], 3)
+        attr_names = ['id', 'head', 'headpattern']
+        attr_cls = [str, float, Pattern]
+        attr_dict = cls._create_attr_dict(attr_names, attr_values, attr_cls, network)
+        return Reservoir(**attr_dict, comment=comment)
+
+
+@section_reader('TANKS', 1)
+class TankFactory(ComponentFactory):
+    def __new__(cls, network: Network, block: dict):
+        for values in block:
+            t = cls._parse_single(values, network)
+            add_tank(network, t, False)
+
+    @classmethod
+    def _parse_single(cls, values: dict, network: Network) -> Tank:
+        comment = cls._read_comment(values)
+        attr_values = cls._pad_list(values['values'], 8)
+        attr_names = ['id', 'elevation', 'initlevel', 'minlevel', 'maxlevel', 'diam', 'minvolume', 'volumecurve']
+        attr_cls = [str, float, float, float, float, float, float, Curve]
+        attr_dict = cls._create_attr_dict(attr_names, attr_values, attr_cls, network)
+        return Tank(**attr_dict, comment=comment)
+
+
+@section_reader('PIPES', 2)
+class PipeFactory(ComponentFactory):
+    def __new__(cls, network: Network, block: dict):
+        for values in block:
+            p = cls._parse_single(values, network)
+            add_pipe(network, p, False)
+
+    @classmethod
+    def _parse_single(cls, values: dict, network: Network) -> Pipe:
+        comment = cls._read_comment(values)
+        attr_values = cls._pad_list(values['values'], 8)
+        attr_names = ['id', 'startnode', 'endnode', 'length', 'diameter', 'roughness', 'minorloss', 'status']
+        attr_cls = [str, Node, Node, float, float, float, float, PipeStatus]
+        attr_dict = cls._create_attr_dict(attr_names, attr_values, attr_cls, network)
+        return Pipe(**attr_dict, comment=comment)
+
+
+@section_reader('PUMPS', 2)
+class PumpFactory(ComponentFactory):
+    def __new__(cls, network: Network, block: dict):
+        for values in block:
+            p = cls._parse_single(values, network)
+            add_pump(network, p, False)
+
+    @classmethod
+    def _parse_single(cls, values: dict, network: Network) -> Pump:
+        comment = cls._read_comment(values)
+        attr_values = cls._pad_list(values['values'], 5)
+        attr_names = ['id', 'startnode', 'endnode', 'keyword', 'value']
+        attr_cls = [str, Node, Node, PumpKeyword, str]
+        attr_dict = cls._create_attr_dict(attr_names, attr_values, attr_cls, network)
+        return Pump(**attr_dict, comment=comment)
+
+    @staticmethod
+    def _pad_list(alist: list, target_length: int, pump_value_index=4) -> list:
+        if len(alist) > pump_value_index:
+            pump_values = " ".join(alist[pump_value_index:])
+            shortend_list = alist[:pump_value_index]
+            shortend_list.append(pump_values)
+            alist = shortend_list
+        return ComponentFactory._pad_list(alist, target_length)
+
+
+@section_reader('VALVES', 2)
+class ValveFactory(ComponentFactory):
+    def __new__(cls, network: Network, block: dict):
+        for values in block:
+            v = cls._parse_single(values, network)
+            add_valve(network, v, False)
+
+    @classmethod
+    def _parse_single(cls, values: dict, network: Network) -> Valve:
+        comment = cls._read_comment(values)
+        attr_values = values['values']
+        valve_type = attr_values[4]
+        attr_values = cls._pad_list(values['values'], 7)
+        attr_names = ['id', 'startnode', 'endnode', 'diameter', 'valvetype', 'setting', 'minorloss']
+
+        if valve_type in {'PRV', 'TCV', 'PSV', 'PBV', 'FCV'}:
+            attr_cls = [str, Node, Node, float, ValveType, float, float]
+        elif valve_type == 'GPV':
+            # todo: switch GPV values to Curves
+            attr_cls = [str, Node, Node, float, ValveType, str, float]
+        else:
+            raise InvalidValveTypeError(valve_type)
+        attr_dict = cls._create_attr_dict(attr_names, attr_values, attr_cls, network)
+        return eval(valve_type)(**attr_dict, comment=comment)

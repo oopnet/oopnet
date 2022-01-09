@@ -1,9 +1,15 @@
 from __future__ import annotations
+
+from abc import abstractmethod
+
 import datetime
 from typing import Tuple, Union, TYPE_CHECKING
 
 from oopnet.elements.enums import BoolSetting, Unit, HeadlossFormula, HydraulicOption, QualityOption, BalancingOption, \
     DemandModel, StatisticSetting, LimitSetting, ReportStatusSetting, ReportBoolSetting, ReportElementSetting
+from oopnet.elements.options_and_reporting import Options
+from oopnet.elements import Pattern, Node
+
 if TYPE_CHECKING:
     from oopnet.elements import Network
 from oopnet.utils.getters import get_pattern_ids, get_node, get_link, get_pattern
@@ -29,9 +35,9 @@ def time2timedelta(vals: list) -> datetime.timedelta:
         dt = float(vals[0])
         if len(vals) != 2:
             return datetime.timedelta(hours=dt)
-        if vals[1].upper() in ['SECONDS', 'SEC']:
+        if vals[1].upper() in {'SECONDS', 'SEC'}:
             return datetime.timedelta(seconds=dt)
-        elif vals[1].upper() in ['MINUTES', 'MIN']:
+        elif vals[1].upper() in {'MINUTES', 'MIN'}:
             return datetime.timedelta(minutes=dt)
         elif vals[1].upper() == 'HOURS':
             return datetime.timedelta(hours=dt)
@@ -67,71 +73,109 @@ def parameter2report(vals: list) -> Union[BoolSetting, Tuple[LimitSetting, float
         return LimitSetting[vals[1]], float(vals[2])
 
 
+class OptionReportReader:
+    _mapping = {}
+    # _
+
+    def __new__(cls, network, block):
+        options = network.options
+        for values in block:
+            attr_name, attr_value = cls._parse_single(values, network)
+            if attr_value is not None:
+                setattr(options, attr_name, attr_value)
+
+    @classmethod
+    @abstractmethod
+    def _parse_single(cls, values, network) -> tuple:
+        pass
+
+
 @section_reader('OPTIONS', 3)
-def read_options(network: Network, block: list):
-    """Reads options from block.
+class OptionReader(OptionReportReader):
+    _mapping = {'UNITS': ('units', Unit),
+                'HEADLOSS': ('headloss', HeadlossFormula),
+                'HYDRAULICS': ('hydraulics', HydraulicOption),
+                'QUALITY': ('quality', QualityOption),
+                'VISCOSITY': ('viscosity', float),
+                'DIFFUSIVITY': ('diffusivity', float),
+                'SPECIFIC': ('specificgravity', float),
+                'TRIALS': ('trials', int),
+                'ACCURACY': ('accuracy', float),
+                'UNBALANCED': ('unbalanced', BalancingOption),
+                'PATTERN': ('pattern', Pattern),
+                'DEMAND MULTIPLIER': ('demandmultiplier', float),
+                'EMITTER': ('emitterexponent', float),
+                'TOLERANCE': ('tolerance', float),
+                'MAP': ('map', str),
+                'DEMAND MODEL': ('demandmodel', DemandModel),
+                'MINIMUM': ('minimumpressure', float),
+                'REQUIRED': ('requiredpressure', float),
+                'PRESSURE': ('pressureexponent', float)}
 
-    Args:
-      network: OOPNET network object where the options shall be stored
-      block: EPANET input file block
+    @classmethod
+    def _parse_single(cls, values: dict, network: Network) -> tuple:
+        attr_values = values['values']
+        name = attr_values[0].upper()
+        if name == 'QUALITY':
+            attr_value = cls._parse_quality(attr_values, network)
+        elif name == 'HYDRAULICS':
+            attr_value = cls._parse_hydraulics(attr_values)
+        elif name == 'UNBALANCED':
+            attr_value = cls._parse_unbalanced(attr_values)
+        elif name == 'PATTERN':
+            attr_value = cls._parse_pattern(attr_values, network)
+        else:
+            if name == 'DEMAND':
+                if attr_values[1].upper() == 'MODEL':
+                    name = 'DEMAND MODEL'
+                elif attr_values[1].upper() == 'MULTIPLIER':
+                    name = 'DEMAND MULTIPLIER'
+            try:
+                attr_cls = cls._mapping[name][1]
+            except KeyError:
+                return name, None
+            attr_value = attr_cls(attr_values[-1])
+        attr_name = cls._mapping[name][0]
+        return attr_name, attr_value
 
-    """
-    o = network.options
-    for vals in block:
-        vals = vals['values']
-        vals[0] = vals[0].upper()
-        if vals[0] == 'UNITS':
-            o.units = Unit[vals[1].upper()]
-        elif vals[0] == 'HEADLOSS':
-            o.headloss = HeadlossFormula.parse(vals[1].upper())
-        elif vals[0] == 'HYDRAULICS':
-            o.hydraulics = [HydraulicOption[vals[1].upper()], vals[2]]
-        elif vals[0] == 'QUALITY':
-            opt = QualityOption[vals[1].upper()]
-            if len(vals) == 2:
-                o.quality = opt
-            if len(vals) > 3:
-                if vals[1].upper() == 'CHEMICAL':
-                    o.quality = (opt, vals[2], vals[3])
-                elif vals[1].upper() == 'TRACE':
-                    o.quality = (opt, get_node(network, vals[2]))
-        elif vals[0] == 'VISCOSITY':
-            o.viscosity = float(vals[1])
-        elif vals[0] == 'DIFFUSIVITY':
-            o.diffusivity = float(vals[1])
-        elif vals[0] == 'SPECIFIC' and vals[1].upper() == 'GRAVITY':
-            o.specificgravity = float(vals[2])
-        elif vals[0] == 'TRIALS':
-            o.trials = int(vals[1])
-        elif vals[0] == 'ACCURACY':
-            o.accuracy = float(vals[1])
-        elif vals[0] == 'UNBALANCED':
-            opt = BalancingOption[vals[1].upper()]
-            if len(vals) == 2:
-                o.unbalanced = opt
-            if len(vals) > 2:
-                o.unbalanced = (opt, int(vals[2]))
-        elif vals[0] == 'PATTERN':
-            if vals[1] in get_pattern_ids(network):
-                o.pattern = get_pattern(network, vals[1])
-            else:
-                o.pattern = 1
-        elif vals[0] == 'DEMAND' and vals[1].upper() == 'MULTIPLIER':
-            o.demandmultiplier = float(vals[2])
-        elif vals[0] == 'EMITTER' and vals[1].upper() == 'EXPONENT':
-            o.emitterexponent = float(vals[2])
-        elif vals[0] == 'TOLERANCE':
-            o.tolerance = float(vals[1])
-        elif vals[0] == 'MAP':
-            o.map = vals[1]
-        elif vals[0] == 'DEMAND' and vals[1].upper() == 'MODEL':
-            o.demandmodel = DemandModel[vals[2]]
-        elif vals[0] == 'MINIMUM' and vals[1].upper() == 'PRESSURE':
-            o.minimumpressure = float(vals[2])
-        elif vals[0] == 'REQUIRED' and vals[1].upper() == 'PRESSURE':
-            o.requiredpressure = float(vals[2])
-        elif vals[0] == 'PRESSURE' and vals[1].upper() == 'EXPONENT':
-            o.pressureexponent = float(vals[2])
+    @classmethod
+    def _parse_unbalanced(cls, values: list) -> Union[BalancingOption, tuple[BalancingOption, int]]:
+        opt = BalancingOption[values[1].upper()]
+        if len(values) == 2:
+            return opt
+        if len(values) == 3:
+            return opt, int(values[2])
+
+    @classmethod
+    def _parse_hydraulics(cls, values: list) -> list[HydraulicOption, str]:
+        return [HydraulicOption[values[1].upper()], values[2]]
+
+    @classmethod
+    def _parse_quality(cls, values: list, network: Network) -> Union[QualityOption, tuple[QualityOption, str, str],
+                                                                     tuple[QualityOption, Node]]:
+        opt = QualityOption[values[1].upper()]
+        if len(values) == 2:
+            return opt
+        if len(values) > 3:
+            if values[1].upper() == 'CHEMICAL':
+                return opt, values[2], values[3]
+            elif values[1].upper() == 'TRACE':
+                return opt, get_node(network, values[2])
+
+    @classmethod
+    def _parse_pattern(cls, values: list, network: Network) -> Union[Pattern, int]:
+        if values[1] in get_pattern_ids(network):
+            return get_pattern(network, values[1])
+        else:
+            return 1
+
+
+# @section_reader('TIMES', 3)
+class TimesReader(OptionReportReader):
+    _mapping = {'DURATION': ('duration', 'time2timedelta'),
+                'HYDRAULIC': ('hydraulic', 'time2timedelta'),
+                'QUALITY': ('quality', 'time2timedelta'),
+                }
 
 
 @section_reader('TIMES', 3)
