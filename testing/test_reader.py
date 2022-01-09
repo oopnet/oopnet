@@ -197,5 +197,15 @@ class RulesModelReaderTest(unittest.TestCase):
     def test_rules(self):
         self.assertEqual(self.model.n_rules, len(self.model.network.rules))
 
+
+class CTownReaderTest(unittest.TestCase):
+    def setUp(self) -> None:
+        from testing.base import CTownModel
+        self.model = CTownModel()
+
+    def test_run(self):
+        rpt = Run(self.model.network, delete=False)
+
+
 if __name__ == '__main__':
     unittest.main()

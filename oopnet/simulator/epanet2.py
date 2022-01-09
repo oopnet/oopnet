@@ -80,9 +80,10 @@ class ModelSimulator:
     def _setup_report(self):
         """Sets up report."""
         if isinstance(self.thing, Network) and \
-                (self.thing.report.nodes == 'NONE') and (self.thing.report.links == 'NONE'):
-            self.thing.report.nodes = 'ALL'
-            self.thing.report.links = 'ALL'
+                (self.thing.report.nodes == ReportElementSetting.NONE or not self.thing.report.nodes) \
+                and (self.thing.report.links == ReportElementSetting.NONE or not self.thing.report.links):
+            self.thing.report.nodes = ReportElementSetting.ALL
+            self.thing.report.links = ReportElementSetting.ALL
 
     def _create_command(self):
         """Creates command for simulating model."""

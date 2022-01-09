@@ -3,7 +3,7 @@ from io import TextIOWrapper
 
 from oopnet.elements.base import NetworkComponent
 from oopnet.elements.enums import PipeStatus, ValveStatus, PumpStatus, EnergyKeyword, ConditionAttribute
-from oopnet.elements import Network, Curve
+from oopnet.elements import Network, Curve, Pattern
 from oopnet.utils.getters import get_curves, get_junctions, get_pipes, get_valves, get_pumps, \
     get_patterns, get_energies, get_controls, get_rules
 from oopnet.writer.decorators import section_writer
@@ -62,7 +62,7 @@ def write_energy(network: Network, fid: TextIOWrapper):
         if e.parameter is not None:
             print(e.parameter.value, end=' ', file=fid)
         if e.value is not None:
-            if isinstance(e.value, Curve):
+            if isinstance(e.value, (Curve, Pattern)):
                 print(e.value.id, end=' ', file=fid)
             else:
                 print(e.value, end=' ', file=fid)
@@ -108,7 +108,7 @@ def write_controls(network: Network, fid: TextIOWrapper):
     for c in get_controls(network):
         print('LINK', c.action.object.id, c.action.value, end=' ', file=fid)
         if c.condition.object is not None:
-            print('IF NODE', c.condition.object.id, c.condition.relation, c.condition.value, file=fid)
+            print('IF NODE', c.condition.object.id, c.condition.relation.value, c.condition.value, file=fid)
         elif c.condition.time is not None:
             print('AT TIME', str(c.condition.time)[:-3], file=fid)
         elif c.condition.clocktime is not None:

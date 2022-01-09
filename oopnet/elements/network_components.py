@@ -196,7 +196,7 @@ class Pipe(Link):
         self._status = value
 
 
-# todo: rethink keyword, value structure
+# todo: rethink keyword, value structure (what happens for multiple properties?)
 @dataclass
 class Pump(Link):
     """Defines all pump links contained in the network.

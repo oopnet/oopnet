@@ -23,9 +23,6 @@ class NetworkComponent:
     tag: Optional[str] = None
     _component_hash: dict = None
 
-    def __str__(self):
-        return self.id
-
     def __hash__(self):
         return hash(self.id) + hash(type(self))
 

@@ -111,6 +111,11 @@ class PoulakisEnhancedPDAModel(TestModel):
         self.network = Read(join('networks', 'Poulakis_enhanced_PDA.inp'))
 
 
+class CTownModel(TestModel):
+    def __init__(self):
+        self.network = Read(join('..', 'examples', 'data', 'C-town.inp'))
+
+
 class MicropolisModel(TestModel):
     n_junctions = 1574
     n_tanks = 1
