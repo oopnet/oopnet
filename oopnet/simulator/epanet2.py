@@ -8,6 +8,9 @@ import re
 from typing import Union, Optional
 
 from oopnet.elements import Network
+from oopnet.elements.enums import ReportElementSetting
+from oopnet.report.reportfile_reader import ReportFileReader
+from oopnet.report.binaryfile_reader import BinaryFileReader
 from oopnet.utils import utils
 from oopnet.report.xrayreport import Report
 from oopnet.writer import Write
@@ -100,6 +103,7 @@ class ModelSimulator:
             raise Exception('Operating system unknown.')
         cmd.append(self.filename)
         cmd.append(self.filename.replace('.inp', '.rpt'))
+        cmd.append(self.filename.replace('.inp', '.out'))
         self.command = cmd
 
     def _execute(self):
@@ -138,10 +142,11 @@ class ModelSimulator:
         self._create_command()
         self._execute()
 
-        rpt = Report(self.filename.replace('.inp', '.rpt'), startdatetime=self.startdatetime)
+        rpt = Report(self.filename.replace('.inp', '.rpt'), startdatetime=self.startdatetime, reader=ReportFileReader)
 
         if self.delete:
             os.remove(self.filename)
             os.remove(self.filename.replace('.inp', '.rpt'))
+            os.remove(self.filename.replace('.inp', '.out'))
 
         return rpt
