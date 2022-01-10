@@ -3,167 +3,167 @@ import pandas as pd
 from oopnet.report.xrayreport import Report
 
 
-def elevation(report: Report) -> pd.DataFrame:
+def elevation(report: Report) -> pd.Series:
     """Function for getting the elevations from a simulation report object
 
     Args:
       report: OOPNET simulation report
 
     Returns:
-      Pandas Dataframe containing the elevations of the nodes
+      Pandas Series containing the elevations of the nodes
 
     """
     nodes, links = report
-    df = nodes.sel(vars='Elevation').to_pandas()
-    df.name = 'Elevation (m)'
-    return df
+    data = nodes.sel(vars='Elevation').to_pandas()
+    data.name = 'Elevation (m)'
+    return data
 
 
-def demand(report: Report) -> pd.DataFrame:
+def demand(report: Report) -> pd.Series:
     """Function for getting the demands from a simulation report object
 
     Args:
       report: OOPNET simulation report
 
     Returns:
-      Pandas Dataframe containing the demands of the nodes
+      Pandas Series containing the demands of the nodes
 
     """
     nodes, links = report
-    df = nodes.sel(vars='Demand').to_pandas()
-    df.name = 'Demand (l/s)'
-    return df
+    data = nodes.sel(vars='Demand').to_pandas()
+    data.name = 'Demand (l/s)'
+    return data
 
 
-def head(report: Report) -> pd.DataFrame:
+def head(report: Report) -> pd.Series:
     """Function for getting the heads from a simulation report object
 
     Args:
       report: OOPNET simulation report
 
     Returns:
-      Pandas Dataframe containing the heads of the nodes
+      Pandas Series containing the heads of the nodes
 
     """
     nodes, links = report
-    df = nodes.sel(vars='Head').to_pandas()
-    df.name = 'Head (m)'
-    return df
+    data = nodes.sel(vars='Head').to_pandas()
+    data.name = 'Head (m)'
+    return data
 
 
-def pressure(report: Report) -> pd.DataFrame:
+def pressure(report: Report) -> pd.Series:
     """Function for getting the pressures from a simulation report object
 
     Args:
       report: OOPNET simulation report
 
     Returns:
-      Pandas Dataframe containing the pressures of the nodes
+      Pandas Series containing the pressures of the nodes
 
     """
     nodes, links = report
-    df = nodes.sel(vars='Pressure').to_pandas()
-    df.name = 'Pressure (m)'
-    return df
+    data = nodes.sel(vars='Pressure').to_pandas()
+    data.name = 'Pressure (m)'
+    return data
 
 
-def quality(report: Report) -> pd.DataFrame:
+def quality(report: Report) -> pd.Series:
     """Function for getting the qualities from a simulation report object
 
     Args:
       report: OOPNET simulation report
 
     Returns:
-      Pandas Dataframe containing the qualities of the nodes
+      Pandas Series containing the qualities of the nodes
 
     """
     nodes, links = report
-    df = nodes.sel(vars='Quality').to_pandas()
-    df.name = 'Quality'  # Todo: Add units to Quality
-    return df
+    data = nodes.sel(vars='Quality').to_pandas()
+    data.name = 'Quality'  # Todo: Add units to Quality
+    return data
 
 
-def length(report: Report) -> pd.DataFrame:
+def length(report: Report) -> pd.Series:
     """Function for getting the lengths from a simulation report object
 
     Args:
       report: OOPNET simulation report
 
     Returns:
-      Pandas Dataframe containing the lengths of the links
+      Pandas Series containing the lengths of the links
 
     """
     nodes, links = report
-    df = links.sel(vars='Length').to_pandas()
-    df.name = 'Length (m)'
-    return df
+    data = links.sel(vars='Length').to_pandas()
+    data.name = 'Length (m)'
+    return data
 
 
-def diameter(report: Report) -> pd.DataFrame:
+def diameter(report: Report) -> pd.Series:
     """Function for getting the diameters from a simulation report object
 
     Args:
       report: OOPNET simulation report
 
     Returns:
-      Pandas Dataframe containing the diameters of the links
+      Pandas Series containing the diameters of the links
 
     """
     nodes, links = report
-    df = links.sel(vars='Diameter').to_pandas()
-    df.name = 'Diameter (m)'
-    return df
+    data = links.sel(vars='Diameter').to_pandas()
+    data.name = 'Diameter (m)'
+    return data
 
 
-def flow(report: Report) -> pd.DataFrame:
+def flow(report: Report) -> pd.Series:
     """Function for getting the flows from a simulation report object
 
     Args:
       report: OOPNET simulation report
 
     Returns:
-      Pandas Dataframe containing the flows of the links
+      Pandas Series containing the flows of the links
 
     """
     nodes, links = report
-    df = links.sel(vars='Flow').to_pandas()
-    df.name = 'Flow (l/s)'
-    return df
+    data = links.sel(vars='Flow').to_pandas()
+    data.name = 'Flow (l/s)'
+    return data
 
 
-def velocity(report: Report) -> pd.DataFrame:
+def velocity(report: Report) -> pd.Series:
     """Function for getting the velocities from a simulation report object
 
     Args:
       report: OOPNET simulation report
 
     Returns:
-      Pandas Dataframe containing the velocities of the links
+      Pandas Series containing the velocities of the links
 
     """
     nodes, links = report
-    df = links.sel(vars='Velocity').to_pandas()
-    df.name = 'Velocity (m/s)'
-    return df
+    data = links.sel(vars='Velocity').to_pandas()
+    data.name = 'Velocity (m/s)'
+    return data
 
 
-def headlossper1000m(report: Report) -> pd.DataFrame:
+def headlossper1000m(report: Report) -> pd.Series:
     """Function for getting the headlosses from a simulation report object as it is in the report (units in headloss per 1000m)
 
     Args:
       report: OOPNET simulation report
 
     Returns:
-      Pandas Dataframe containing the headlosses of the links
+      Pandas Series containing the headlosses of the links
 
     """
     nodes, links = report
-    df = links.sel(vars='Headloss').to_pandas()
-    df.name = 'Headloss (/1000m)'
-    return df
+    data = links.sel(vars='Headloss').to_pandas()
+    data.name = 'Headloss (/1000m)'
+    return data
 
 
-def headloss(report: Report) -> pd.DataFrame:
+def headloss(report: Report) -> pd.Series:
     """Function for getting the headlosses from a simulation report object
     
     WARNING: If one wants to work with headloss, then the length has to be defined in the report
@@ -172,81 +172,81 @@ def headloss(report: Report) -> pd.DataFrame:
       report: OOPNET simulation report
 
     Returns:
-      Pandas Dataframe containing the headlosses of the links
+      Pandas Series containing the headlosses of the links
 
     """
     nodes, links = report
-    df = links.sel(vars='Headloss').to_pandas()
-    df = (df*length(report)/1000.0)
-    df.name = 'Headloss (m)'
-    return df
+    data = links.sel(vars='Headloss').to_pandas()
+    data = (data*length(report)/1000.0)
+    data.name = 'Headloss (m)'
+    return data
 
 
-def position(report: Report) -> pd.DataFrame:
+def position(report: Report) -> pd.Series:
     """Function for getting the positions from a simulation report object
 
     Args:
       report: OOPNET simulation report
 
     Returns:
-      Pandas Dataframe containing the positions of the links
+      Pandas Series containing the positions of the links
 
     """
     nodes, links = report
-    df = links.sel(vars='Position').to_pandas()
-    df.name = 'Position'
-    return df
+    data = links.sel(vars='Position').to_pandas()
+    data.name = 'Position'
+    return data
 
 
-def setting(report: Report) -> pd.DataFrame:
+def setting(report: Report) -> pd.Series:
     """Function for getting the settings from a simulation report object
 
     Args:
       report: OOPNET simulation report
 
     Returns:
-      Pandas Dataframe containing the settings of the links
+      Pandas Series containing the settings of the links
 
     """
     nodes, links = report
-    df = links.sel(vars='Setting').to_pandas()
-    df.name = 'Setting'
-    return df
+    data = links.sel(vars='Setting').to_pandas()
+    data.name = 'Setting'
+    return data
 
 
-def reaction(report: Report) -> pd.DataFrame:
+def reaction(report: Report) -> pd.Series:
     """Function for getting the reactions from a simulation report object
 
     Args:
       report: OOPNET simulation report
 
     Returns:
-      Pandas Dataframe containing the reactions of the links
+      Pandas Series containing the reactions of the links
 
     """
     nodes, links = report
-    df = links.sel(vars='Reaction').to_pandas()
-    df.name = 'Reaction (mass/L/day)'
-    return df
+    data = links.sel(vars='Reaction').to_pandas()
+    data.name = 'Reaction (mass/L/day)'
+    return data
 
 
-def ffactor(report: Report) -> pd.DataFrame:
+def ffactor(report: Report) -> pd.Series:
     """Function for getting the ffactors from a simulation report object
 
     Args:
       report: OOPNET simulation report
 
     Returns:
-      Pandas Dataframe containing the ffactors of the links
+      Pandas Series containing the ffactors of the links
 
     """
     nodes, links = report
-    df = links.sel(vars='F-Factor').to_pandas()
-    df.name = 'Friction Factor'
-    return df
+    data = links.sel(vars='F-Factor').to_pandas()
+    data.name = 'Friction Factor'
+    return data
 
 
-def nodeinfo(report: Report, nodename: str) -> pd.DataFrame:
+def nodeinfo(report: Report, nodename: str) -> pd.Series:
     """Function for getting the node informations from a simulation report object
 
     Args:
@@ -254,16 +254,16 @@ def nodeinfo(report: Report, nodename: str) -> pd.DataFrame:
       nodename: node ID
 
     Returns:
-      Pandas Dataframe containing the information of the nodes
+      Pandas Series containing the information of the nodes
 
     """
     nodes, links = report
-    df = nodes.sel(id=nodename).to_pandas()
-    df.name = nodename
-    return df
+    data = nodes.sel(id=nodename).to_pandas()
+    data.name = nodename
+    return data
 
 
-def linkinfo(report: Report, linkname: str) -> pd.DataFrame:
+def linkinfo(report: Report, linkname: str) -> pd.Series:
     """Function for getting the link informations from a simulation report object
 
     Args:
@@ -271,10 +271,10 @@ def linkinfo(report: Report, linkname: str) -> pd.DataFrame:
       linkname: link ID
 
     Returns:
-      Pandas Dataframe containing the information of the links
+      Pandas Series containing the information of the links
 
     """
     nodes, links = report
-    df = links.sel(id=linkname).to_pandas()
-    df.name = linkname
-    return df
+    data = links.sel(id=linkname).to_pandas()
+    data.name = linkname
+    return data

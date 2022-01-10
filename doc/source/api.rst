@@ -126,6 +126,14 @@ Removing functions
 .. autofunction:: oopnet.utils.removers.remove_element.remove_pump
 .. autofunction:: oopnet.utils.removers.remove_element.remove_valve
 
+-----
+Graph
+-----
+
+.. autoclass:: oopnet.graph.Graph
+.. autoclass:: oopnet.graph.DiGraph
+.. autoclass:: oopnet.graph.MultiGraph
+
 ----------------------------
 Shortcuts for other packages
 ----------------------------

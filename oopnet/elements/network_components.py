@@ -27,10 +27,8 @@ class Node(NetworkComponent):
     elevation: float = 0.0
     initialquality: float = 0.0
     sourcequality: float = 0.0
-    # todo: rethink enum type hinting for sourcetype, implement as abstract properties?
     sourcetype: Optional[str] = None
     strength: float = 0.0
-    # todo: source pattern as general Node attribute?
     sourcepattern: Optional[List[Pattern]] = None
 
     @property
@@ -101,11 +99,8 @@ class Junction(Node):
     """
 
     emittercoefficient: float = 0.0
-    # todo: can junctions have several patterns?
-    demandpattern: Optional[Pattern] = None  # = Either(Instance(Pattern), List(Instance(Pattern)))
-    demand: float = 0.0
-    # todo: can a junction have several floats as demand?
-    # demand = Either(Float, ListFloat)
+    demandpattern: Union[Pattern, list[Pattern], None] = None
+    demand: Union[float, list[float]] = 0.0
 
 
 @dataclass
@@ -254,8 +249,6 @@ class Valve(Link):
     diameter: float = 12
     minorloss: float = 0
     setting: Union[float, str] = 0
-    # todo: double check possible setting datatypes
-    # setting = Any  # ToDo: Rethink if any is correct for setting attribute
     initialstatus: ValveStatus = ValveStatus.OPEN
     _initialstatus: ValveStatus = field(init=False, repr=False)
     status: ValveStatus = ValveStatus.OPEN

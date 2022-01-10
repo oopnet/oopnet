@@ -4,6 +4,7 @@ from abc import abstractmethod
 
 from typing import TYPE_CHECKING
 
+from oopnet.elements.base import NetworkComponent
 from oopnet.reader.factory_base import ReadFactory, InvalidValveTypeError
 from oopnet.elements import Network, Tank, Reservoir, Pipe, Pump, Valve, Node, Pattern, Curve, Junction, FCV, PRV, PBV,\
     PSV, GPV, TCV
@@ -30,17 +31,38 @@ def read_title(network: Network, block: list):
 
 
 class ComponentFactory(ReadFactory):
+    """Base Factory for creating NetworkComponents and adding them to a Network."""
     @staticmethod
     def _read_comment(values: dict) -> str:
+        """Reads comment from values."""
         return values['comments'] or None
 
     @classmethod
     @abstractmethod
-    def _parse_single(cls, values, network):
-        pass
+    def _parse_single(cls, values: dict, network: Network) -> NetworkComponent:
+        """Abstract method for parsing a single object from values.
+
+        Args:
+            values: dictionary representing a row in the EPANET input file
+            network: Network to which the NetworkComponent shall be added
+        """
 
     @staticmethod
     def _create_attr_dict(attrs: list[str], values: list[str], cls_list: list, network: Network) -> dict:
+        """Creates a dictionary for instantiating a NetworkComponent object.
+
+        Creates a dictionary that can then be unpacked when instantiating a NetworkComponent object. The function casts
+        the passed values to the type defined in cls_list. attrs, values and cls_list have to be of the same length to
+        work properly.
+
+        Args:
+            attrs: list of attribute names of a NetworkComponent object (content depends on exact NetworkComponent type)
+            values: list of attribute values to be set
+            cls_list: list of attribute types
+
+        Returns:
+            dictionary with attribute names as keys and attribute values as values
+        """
         attr_dict = {}
         for attr, value, attr_cls in zip(attrs, values, cls_list):
             if attr_cls == Pattern:
@@ -61,6 +83,7 @@ class ComponentFactory(ReadFactory):
 
 @section_reader('EMITTERS', 4)
 class EmitterFactory(ComponentFactory):
+    """Factory for parsing and setting the emitter coefficients of Junctions."""
     def __new__(cls, network: Network, block: dict):
         for values in block:
             junction, emittercoefficient = cls._parse_single(values, network)
@@ -75,23 +98,9 @@ class EmitterFactory(ComponentFactory):
         return tuple(attr_dict[attr_name] for attr_name in attr_names)
 
 
-@section_reader('EMITTERS', 2)
-def read_emitters(network: Network, block: list):
-    """Reads emitters from block.
-
-    Args:
-      network: OOPNET network object where the emitters shall be stored
-      block: EPANET input file block
-
-    """
-    for vals in block:
-        vals = vals['values']
-        j = get_junction(network, vals[0])
-        j.emittercoefficient = float(vals[1])
-
-
 @section_reader('JUNCTIONS', 1)
 class JunctionFactory(ComponentFactory):
+    """Factory for parsing and creating Junctions and adding them to a Network."""
     def __new__(cls, network: Network, block: dict):
         for values in block:
             j = cls._parse_single(values, network)
@@ -109,6 +118,7 @@ class JunctionFactory(ComponentFactory):
 
 @section_reader('RESERVOIRS', 1)
 class ReservoirFactory(ComponentFactory):
+    """Factory for parsing and creating Reservoirs and adding them to a Network."""
     def __new__(cls, network: Network, block: dict):
         for values in block:
             r = cls._parse_single(values, network)
@@ -126,6 +136,7 @@ class ReservoirFactory(ComponentFactory):
 
 @section_reader('TANKS', 1)
 class TankFactory(ComponentFactory):
+    """Factory for parsing and creating Tanks and adding them to a Network."""
     def __new__(cls, network: Network, block: dict):
         for values in block:
             t = cls._parse_single(values, network)
@@ -143,6 +154,7 @@ class TankFactory(ComponentFactory):
 
 @section_reader('PIPES', 2)
 class PipeFactory(ComponentFactory):
+    """Factory for parsing and creating Pipes and adding them to a Network."""
     def __new__(cls, network: Network, block: dict):
         for values in block:
             p = cls._parse_single(values, network)
@@ -160,6 +172,7 @@ class PipeFactory(ComponentFactory):
 
 @section_reader('PUMPS', 2)
 class PumpFactory(ComponentFactory):
+    """Factory for parsing and creating Pumps and adding them to a Network."""
     def __new__(cls, network: Network, block: dict):
         for values in block:
             p = cls._parse_single(values, network)
@@ -186,6 +199,7 @@ class PumpFactory(ComponentFactory):
 
 @section_reader('VALVES', 2)
 class ValveFactory(ComponentFactory):
+    """Factory for parsing and creating Valves and adding them to a Network."""
     def __new__(cls, network: Network, block: dict):
         for values in block:
             v = cls._parse_single(values, network)
