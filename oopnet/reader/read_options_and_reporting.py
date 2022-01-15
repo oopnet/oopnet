@@ -3,10 +3,8 @@ from __future__ import annotations
 from abc import abstractmethod
 
 import datetime
-from typing import Tuple, Union, TYPE_CHECKING
+from typing import Union, TYPE_CHECKING
 
-from oopnet.elements.enums import BoolSetting, Unit, HeadlossFormula, HydraulicOption, QualityOption, BalancingOption, \
-    DemandModel, StatisticSetting, LimitSetting, ReportStatusSetting, ReportBoolSetting, ReportElementSetting
 from oopnet.elements.options_and_reporting import Options
 from oopnet.elements import Pattern, Node
 
@@ -57,7 +55,7 @@ def precision2report(vals: list) -> int:
     return int(vals[2])
 
 
-def parameter2report(vals: list) -> Union[BoolSetting, Tuple[LimitSetting, float]]:
+def parameter2report(vals: list) -> Union[str, list[str, float]]:
     """
 
     Args:
@@ -68,9 +66,9 @@ def parameter2report(vals: list) -> Union[BoolSetting, Tuple[LimitSetting, float
     """
     vals[1] = vals[1].upper()
     if vals[1] in ['YES', 'NO']:
-        return BoolSetting[vals[1]]
+        return vals[1]
     elif vals[1] in ['BELOW', 'ABOVE']:
-        return LimitSetting[vals[1]], float(vals[2])
+        return [vals[1], float(vals[2])]
 
 
 class OptionReportReader:
@@ -92,22 +90,22 @@ class OptionReportReader:
 
 @section_reader('OPTIONS', 3)
 class OptionReader(OptionReportReader):
-    _mapping = {'UNITS': ('units', Unit),
-                'HEADLOSS': ('headloss', HeadlossFormula),
-                'HYDRAULICS': ('hydraulics', HydraulicOption),
-                'QUALITY': ('quality', QualityOption),
+    _mapping = {'UNITS': ('units', str),
+                'HEADLOSS': ('headloss', str),
+                'HYDRAULICS': ('hydraulics', str),
+                'QUALITY': ('quality', str),
                 'VISCOSITY': ('viscosity', float),
                 'DIFFUSIVITY': ('diffusivity', float),
                 'SPECIFIC': ('specificgravity', float),
                 'TRIALS': ('trials', int),
                 'ACCURACY': ('accuracy', float),
-                'UNBALANCED': ('unbalanced', BalancingOption),
+                'UNBALANCED': ('unbalanced', str),
                 'PATTERN': ('pattern', Pattern),
                 'DEMAND MULTIPLIER': ('demandmultiplier', float),
                 'EMITTER': ('emitterexponent', float),
                 'TOLERANCE': ('tolerance', float),
                 'MAP': ('map', str),
-                'DEMAND MODEL': ('demandmodel', DemandModel),
+                'DEMAND MODEL': ('demandmodel', str),
                 'MINIMUM': ('minimumpressure', float),
                 'REQUIRED': ('requiredpressure', float),
                 'PRESSURE': ('pressureexponent', float)}
@@ -139,21 +137,21 @@ class OptionReader(OptionReportReader):
         return attr_name, attr_value
 
     @classmethod
-    def _parse_unbalanced(cls, values: list) -> Union[BalancingOption, tuple[BalancingOption, int]]:
-        opt = BalancingOption[values[1].upper()]
+    def _parse_unbalanced(cls, values: list) -> Union[str, tuple[str, int]]:
+        opt = values[1].upper()
         if len(values) == 2:
             return opt
         if len(values) == 3:
             return opt, int(values[2])
 
     @classmethod
-    def _parse_hydraulics(cls, values: list) -> list[HydraulicOption, str]:
-        return [HydraulicOption[values[1].upper()], values[2]]
+    def _parse_hydraulics(cls, values: list) -> list[str]:
+        return [values[1].upper(), values[2]]
 
     @classmethod
-    def _parse_quality(cls, values: list, network: Network) -> Union[QualityOption, tuple[QualityOption, str, str],
-                                                                     tuple[QualityOption, Node]]:
-        opt = QualityOption[values[1].upper()]
+    def _parse_quality(cls, values: list, network: Network) -> Union[str, tuple[str, str, str],
+                                                                     tuple[str, Node]]:
+        opt = values[1].upper()
         if len(values) == 2:
             return opt
         if len(values) > 3:
@@ -224,7 +222,7 @@ def read_times(network: Network, block: list):
                 # timeformat = '%I %p'
                 # t.startclocktime = datetime.datetime.strptime(vals[2] + ' ' + vals[3], timeformat)
         elif vals[0] == 'STATISTIC':
-            t.statistic = StatisticSetting(vals[1].upper())
+            t.statistic = vals[1].upper()
 
 
 @section_reader('REPORT', 3)
@@ -247,14 +245,14 @@ def read_report(network: Network, block: list):
         elif vals[0] == 'FILE':
             r.file = vals[1]
         elif vals[0] == 'STATUS':
-            r.status = ReportStatusSetting[vals[1].upper()]
+            r.status = vals[1].upper()
         elif vals[0] == 'SUMMARY':
-            r.summary = ReportBoolSetting[vals[1].upper()]
+            r.summary = vals[1].upper()
         elif vals[0] == 'ENERGY':
-            r.energy = ReportBoolSetting[vals[1].upper()]
+            r.energy = vals[1].upper()
         elif vals[0] == 'NODES':
             if vals[1].upper() in ['NONE', 'ALL']:
-                r.nodes = ReportElementSetting[vals[1].upper()]
+                r.nodes = vals[1].upper()
             else:
                 nodes = vals[1:]
                 for n in nodes:
@@ -264,7 +262,7 @@ def read_report(network: Network, block: list):
                         r.nodes.append(get_node(network, n))
         elif vals[0] == 'LINKS':
             if vals[1].upper() in ['NONE', 'ALL']:
-                r.nodes = ReportElementSetting[vals[1].upper()]
+                r.nodes = vals[1].upper()
             else:
                 links = vals[1:]
                 for l in links:

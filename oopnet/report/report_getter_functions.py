@@ -4,7 +4,7 @@ from oopnet.report.xrayreport import Report
 
 
 def elevation(report: Report) -> pd.Series:
-    """Function for getting the elevations from a simulation report object
+    """Function for getting the elevations from a simulation report object.
 
     Args:
       report: OOPNET simulation report
@@ -20,7 +20,7 @@ def elevation(report: Report) -> pd.Series:
 
 
 def demand(report: Report) -> pd.Series:
-    """Function for getting the demands from a simulation report object
+    """Function for getting the demands from a simulation report object.
 
     Args:
       report: OOPNET simulation report
@@ -36,7 +36,7 @@ def demand(report: Report) -> pd.Series:
 
 
 def head(report: Report) -> pd.Series:
-    """Function for getting the heads from a simulation report object
+    """Function for getting the heads from a simulation report object.
 
     Args:
       report: OOPNET simulation report
@@ -52,7 +52,7 @@ def head(report: Report) -> pd.Series:
 
 
 def pressure(report: Report) -> pd.Series:
-    """Function for getting the pressures from a simulation report object
+    """Function for getting the pressures from a simulation report object.
 
     Args:
       report: OOPNET simulation report
@@ -68,7 +68,7 @@ def pressure(report: Report) -> pd.Series:
 
 
 def quality(report: Report) -> pd.Series:
-    """Function for getting the qualities from a simulation report object
+    """Function for getting the qualities from a simulation report object.
 
     Args:
       report: OOPNET simulation report
@@ -84,7 +84,7 @@ def quality(report: Report) -> pd.Series:
 
 
 def length(report: Report) -> pd.Series:
-    """Function for getting the lengths from a simulation report object
+    """Function for getting the lengths from a simulation report object.
 
     Args:
       report: OOPNET simulation report
@@ -100,7 +100,7 @@ def length(report: Report) -> pd.Series:
 
 
 def diameter(report: Report) -> pd.Series:
-    """Function for getting the diameters from a simulation report object
+    """Function for getting the diameters from a simulation report object.
 
     Args:
       report: OOPNET simulation report
@@ -116,7 +116,7 @@ def diameter(report: Report) -> pd.Series:
 
 
 def flow(report: Report) -> pd.Series:
-    """Function for getting the flows from a simulation report object
+    """Function for getting the flows from a simulation report object.
 
     Args:
       report: OOPNET simulation report
@@ -132,7 +132,7 @@ def flow(report: Report) -> pd.Series:
 
 
 def velocity(report: Report) -> pd.Series:
-    """Function for getting the velocities from a simulation report object
+    """Function for getting the velocities from a simulation report object.
 
     Args:
       report: OOPNET simulation report
@@ -148,7 +148,8 @@ def velocity(report: Report) -> pd.Series:
 
 
 def headlossper1000m(report: Report) -> pd.Series:
-    """Function for getting the headlosses from a simulation report object as it is in the report (units in headloss per 1000m)
+    """Function for getting the headlosses from a simulation report object as it is in the report (units in headloss
+    per 1000m)
 
     Args:
       report: OOPNET simulation report
@@ -164,7 +165,7 @@ def headlossper1000m(report: Report) -> pd.Series:
 
 
 def headloss(report: Report) -> pd.Series:
-    """Function for getting the headlosses from a simulation report object
+    """Function for getting the headlosses from a simulation report object.
     
     WARNING: If one wants to work with headloss, then the length has to be defined in the report
 
@@ -183,7 +184,7 @@ def headloss(report: Report) -> pd.Series:
 
 
 def position(report: Report) -> pd.Series:
-    """Function for getting the positions from a simulation report object
+    """Function for getting the positions from a simulation report object.
 
     Args:
       report: OOPNET simulation report
@@ -199,7 +200,7 @@ def position(report: Report) -> pd.Series:
 
 
 def setting(report: Report) -> pd.Series:
-    """Function for getting the settings from a simulation report object
+    """Function for getting the settings from a simulation report object.
 
     Args:
       report: OOPNET simulation report
@@ -215,7 +216,7 @@ def setting(report: Report) -> pd.Series:
 
 
 def reaction(report: Report) -> pd.Series:
-    """Function for getting the reactions from a simulation report object
+    """Function for getting the reactions from a simulation report object.
 
     Args:
       report: OOPNET simulation report
@@ -231,7 +232,7 @@ def reaction(report: Report) -> pd.Series:
 
 
 def ffactor(report: Report) -> pd.Series:
-    """Function for getting the ffactors from a simulation report object
+    """Function for getting the ffactors from a simulation report object.
 
     Args:
       report: OOPNET simulation report
@@ -247,7 +248,7 @@ def ffactor(report: Report) -> pd.Series:
 
 
 def nodeinfo(report: Report, nodename: str) -> pd.Series:
-    """Function for getting the node informations from a simulation report object
+    """Function for getting the node informations from a simulation report object.
 
     Args:
       report: OOPNET simulation report
@@ -264,7 +265,7 @@ def nodeinfo(report: Report, nodename: str) -> pd.Series:
 
 
 def linkinfo(report: Report, linkname: str) -> pd.Series:
-    """Function for getting the link informations from a simulation report object
+    """Function for getting the link informations from a simulation report object.
 
     Args:
       report: OOPNET simulation report

@@ -7,7 +7,8 @@ import pandas as pd
 import matplotlib.cm as cmx
 from matplotlib import pyplot as plt
 
-from oopnet.utils.getters import get_link_ids, get_node_ids
+from oopnet.utils.getters import get_link_ids, get_node_ids, get_junctions, get_tanks, get_reservoirs, get_pipes, \
+    get_pumps, get_valves
 
 # todo: refactor
 def convert_to_hex(rgba_color):
@@ -145,7 +146,6 @@ class Plotsimulation(HasStrictTraits):
             n_cmap = colormap
             l_cmap = colormap
         elif isinstance(colormap, dict):
-
             if 'node' in colormap:
                 if isinstance(colormap['node'], str):
                     n_cmap = plt.get_cmap(colormap['node'])
@@ -169,52 +169,38 @@ class Plotsimulation(HasStrictTraits):
         else:
             f = figure()
 
-
         # Links
-
         if links is None:
-
             linklist = get_link_ids(network)
             linkcolors = pd.Series(['k'] * len(linklist), index=linklist)
 
         else:
-
             cnorm = colors.Normalize(vmin=np.nanmin(links.values), vmax=np.nanmax(links.values))
             scalar_map = cmx.ScalarMappable(norm=cnorm, cmap=l_cmap)
             scalar_map._A = []
             linkcolors = links.apply(scalar_map.to_rgba)
 
-        if network.pipes:
-            plotlink(f, network.pipes, linkcolors, marker=None)
+        plotlink(f, get_pipes(network), linkcolors, marker=None)
 
-        if network.valves:
-            plotlink(f, network.valves, linkcolors, marker='v')
+        plotlink(f, get_valves(network), linkcolors, marker='v')
 
-        if network.pumps:
-            plotlink(f, network.pumps, linkcolors, marker='p')
+        plotlink(f, get_pumps(network), linkcolors, marker='p')
 
         # Nodes
-
         if nodes is None:
-
             nodelist = get_node_ids(network)
             nodecolors = pd.Series(['k'] * len(nodelist), index=nodelist)
-
         else:
-
             cnorm = colors.Normalize(vmin=np.nanmin(nodes.values), vmax=np.nanmax(nodes.values))
             scalar_map = cmx.ScalarMappable(norm=cnorm, cmap=n_cmap)
             scalar_map._A = []
             nodecolors = nodes.apply(scalar_map.to_rgba)
 
-        if network.junctions:
-            plotnode(f, network.junctions, nodecolors, marker='o')
+        plotnode(f, get_junctions(network), nodecolors, marker='o')
 
-        if network.tanks:
-            plotnode(f, network.tanks, nodecolors, marker='s')
+        plotnode(f, get_tanks(network), nodecolors, marker='s')
 
-        if network.reservoirs:
-            plotnode(f, network.reservoirs, nodecolors, marker='D')
+        plotnode(f, get_reservoirs(network), nodecolors, marker='D')
 
-        f.axis.visible = None
+        f.axis.visible = False
         return f

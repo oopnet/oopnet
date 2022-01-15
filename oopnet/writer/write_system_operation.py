@@ -2,7 +2,6 @@ import datetime
 from io import TextIOWrapper
 
 from oopnet.elements.base import NetworkComponent
-from oopnet.elements.enums import PipeStatus, ValveStatus, PumpStatus, EnergyKeyword, ConditionAttribute
 from oopnet.elements import Network, Curve, Pattern
 from oopnet.utils.getters import get_curves, get_junctions, get_pipes, get_valves, get_pumps, \
     get_patterns, get_energies, get_controls, get_rules
@@ -56,11 +55,12 @@ def write_energy(network: Network, fid: TextIOWrapper):
     """
     print('[ENERGY]', file=fid)
     for e in get_energies(network):
-        print(e.keyword.value, end=' ', file=fid)
-        if e.keyword == EnergyKeyword.PUMP:
+        keyword = e.keyword if e.keyword != 'DEMAND_CHARGE' else 'DEMAND CHARGE'
+        print(keyword, end=' ', file=fid)
+        if keyword == 'PUMP':
             print(e.pumpid.id, end=' ', file=fid)
         if e.parameter is not None:
-            print(e.parameter.value, end=' ', file=fid)
+            print(e.parameter, end=' ', file=fid)
         if e.value is not None:
             if isinstance(e.value, (Curve, Pattern)):
                 print(e.value.id, end=' ', file=fid)
@@ -82,16 +82,16 @@ def write_status(network: Network, fid: TextIOWrapper):
     print('[STATUS]', file=fid)
     print(';id status/setting', file=fid)
     for l in get_pipes(network):
-        if l.initialstatus == PipeStatus.CLOSED:
-            print(l.id, l.initialstatus.name, file=fid)
+        if l.initialstatus == 'CLOSED':
+            print(l.id, l.initialstatus, file=fid)
     for v in get_valves(network):
-        if v.initialstatus == ValveStatus.CLOSED or v.setting == 1:
-            print(v.id, v.initialstatus.name, file=fid)
+        if v.initialstatus == 'CLOSED' or v.setting == 1:
+            print(v.id, v.initialstatus, file=fid)
     for pu in get_pumps(network):
-        if pu.initialstatus == PumpStatus.CLOSED:
-            print(pu.id, pu.initialstatus.name, file=fid)
+        if pu.initialstatus == 'CLOSED':
+            print(pu.id, pu.initialstatus, file=fid)
         elif pu.keyword == 'SPEED':
-            print(pu.id, pu.value, file=fid)
+            print(pu.id, pu, file=fid)
     print('\n', end=' ', file=fid)
 
 
@@ -108,7 +108,7 @@ def write_controls(network: Network, fid: TextIOWrapper):
     for c in get_controls(network):
         print('LINK', c.action.object.id, c.action.value, end=' ', file=fid)
         if c.condition.object is not None:
-            print('IF NODE', c.condition.object.id, c.condition.relation.value, c.condition.value, file=fid)
+            print('IF NODE', c.condition.object.id, c.condition.relation, c.condition.value, file=fid)
         elif c.condition.time is not None:
             print('AT TIME', str(c.condition.time)[:-3], file=fid)
         elif c.condition.clocktime is not None:
@@ -131,14 +131,14 @@ def write_rules(network: Network, fid: TextIOWrapper):
         for c in r.condition:
             if isinstance(c.object, NetworkComponent):
                 object_type = c.object.__class__.__name__
-                print(c.logical.value, object_type, c.object.id, c.attribute.value, c.relation.value, c.value, file=fid)
+                print(c.logical, object_type, c.object.id, c.attribute, c.relation, c.value, file=fid)
             elif c.attribute is not None:
                 object_type = 'SYSTEM'
-                if c.attribute == ConditionAttribute.TIME:
-                    print(c.logical.value, object_type, c.attribute.value, c.relation.value, str(c.value)[:-3], file=fid)
-                elif c.attribute == ConditionAttribute.CLOCKTIME:
+                if c.attribute == 'TIME':
+                    print(c.logical, object_type, c.attribute, c.relation, str(c.value)[:-3], file=fid)
+                elif c.attribute == 'CLOCKTIME':
                     timeformat = '%I:%M %p'
-                    print(c.logical.value, object_type, c.attribute.value, c.relation.value, \
+                    print(c.logical, object_type, c.attribute, c.relation, \
                           datetime.datetime.strftime(c.value, timeformat), file=fid)
     print('\n', end=' ', file=fid)
 

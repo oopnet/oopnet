@@ -1,55 +1,68 @@
 from __future__ import annotations
 import datetime
 from dataclasses import dataclass
-from typing import List, Optional, Union, Literal, Tuple
-
-from oopnet.elements.enums import BoolSetting, Unit, HeadlossFormula, HydraulicOption, QualityOption, BalancingOption, \
-    DemandModel, StatisticSetting, LimitSetting, ReportStatusSetting, ReportBoolSetting, ReportElementSetting, \
-    ReportParameterSetting
+from typing import Optional, Union
 
 from oopnet.elements.network_components import Node, Pattern, Link
 
 # todo: check default values
+# todo: add documentation
 
 
 @dataclass
 class Options:
     """Defines various simulation options."""
-    units: Unit = Unit.GPM  # = 'GPM'  # = Enum('CFS', 'GPM', 'MGD', 'IMGD', 'AFD', 'LPS', 'LPM', 'MLD', 'CMH', 'CMD')
-    headloss: HeadlossFormula = HeadlossFormula.HW  # str = 'H-W'  # = Enum('H-W', 'D-W', 'C-M')
-    hydraulics: Optional[Tuple[HydraulicOption, str]] = None  # = Either(None, List('USE', Str), List('SAVE', Str))
-    quality: Union[QualityOption, Tuple[Literal[QualityOption.TRACE], str], Tuple[Literal[QualityOption.CHEMICAL], str, str], None] = None  # = Any #Either(None, Enum('NONE', 'CHEMICAL', 'AGE'), List('TRACE', Instance(Node)), List('CHEMICAL', Str, Str))
-    viscosity: Optional[float] = None
-    diffusivity: Optional[float] = None
-    specificgravity: Optional[float] = None
-    trials: Optional[int] = None
-    accuracy: Optional[float] = None
-    unbalanced: Union[BalancingOption, Tuple[Literal[BalancingOption.CONTINUE], int], None] = None  # = Either(Enum('STOP', 'CONTINUE'), List('CONTINUE', Int))
-    pattern: Union[int, Pattern, None] = None
-    tolerance: Optional[float] = None
+    units: str = 'GPM'  # = 'GPM'  # = Enum('CFS', 'GPM', 'MGD', 'IMGD', 'AFD', 'LPS', 'LPM', 'MLD', 'CMH', 'CMD')
+    headloss: str = 'HW'  # str = 'H-W'  # = Enum('H-W', 'D-W', 'C-M')
+    hydraulics: Optional[tuple[str, str]] = None  # = Either(None, List('USE', Str), List('SAVE', Str))
+    quality: Union[str, tuple[str, str], tuple[str, str, str]] = 'NONE'  # = Any #Either(None, Enum('NONE', 'CHEMICAL', 'AGE'), List('TRACE', Instance(Node)), List('CHEMICAL', Str, Str))
+    viscosity: float = 1.0
+    diffusivity: float = 1.0
+    specificgravity: Optional[float] = 1.0
+    trials: int = 200
+    accuracy: float = 0.001
+    unbalanced: Union[str, tuple[str, int]] = 'STOP'  # = Either(Enum('STOP', 'CONTINUE'), List('CONTINUE', Int))
+    pattern: Union[int, Pattern, None] = 1.0
+    tolerance: float = 0.01
     map: Optional[str] = None
-    demandmultiplier: Optional[float] = None
-    emitterexponent: Optional[float] = None
-    demandmodel: DemandModel = DemandModel.DDA
-    minimumpressure: Optional[float] = None
-    requiredpressure: Optional[float] = None
-    pressureexponent: Optional[float] = None
+    demandmultiplier: float = 1.0
+    emitterexponent: float = 0.5
+    demandmodel: str = 'DDA'
+    minimumpressure: float = 0.0
+    requiredpressure: float = 0.1
+    pressureexponent: float = 0.5
 
 
 @dataclass
 class Times:
     """Defines various time step parameters used in the simulation."""
-    duration: Optional[datetime.timedelta] = None
-    hydraulictimestep: Optional[datetime.timedelta] = None
-    qualitytimestep: Optional[datetime.timedelta] = None
+    duration: datetime.timedelta = datetime.timedelta()
+    hydraulictimestep: datetime.timedelta = datetime.timedelta(hours=1)
+    qualitytimestep: Optional[datetime.timedelta] = None  # todo: correct qualitytimestep and ruletimestep
+    # _qualitytimestep: datetime.timedelta = field(init=False, repr=False)
     ruletimestep: Optional[datetime.timedelta] = None
     patterntimestep: Optional[datetime.timedelta] = None
-    patternstart: Optional[datetime.timedelta] = None
-    reporttimestep: Optional[datetime.timedelta] = None
-    reportstart: Optional[datetime.timedelta] = None
-    startclocktime: Optional[datetime.timedelta] = None
-    statistic: Optional[StatisticSetting] = StatisticSetting.NONE  # = Enum('NONE', 'AVERAGED', 'MINIMUM', 'MAXIMUM', 'RANGE')
-
+    patternstart: datetime.timedelta = datetime.timedelta()
+    reporttimestep: datetime.timedelta = datetime.timedelta(hours=1)
+    reportstart: datetime.timedelta = datetime.timedelta()
+    startclocktime: datetime.timedelta = datetime.timedelta()
+    statistic: str = 'NONE'  # = Enum('NONE', 'AVERAGED', 'MINIMUM', 'MAXIMUM', 'RANGE')
+    
+    # @property
+    # def qualitytimestep(self):
+    #     if not self._qualitytimestep:
+    #         qts = self.qualitytimestep.total_seconds()
+    #         min = np.flooar(qts / 60)
+    #         h = np.floor(min / 60)
+    #         s = qts - min * 60 + h * 60 ** 2
+    #         return datetime.timedelta(hours=h, minutes=min, seconds=s)
+    #     else:
+    #         return self._qualitytimestep
+    #     
+    # @qualitytimestep.setter
+    # def qualitstimestep(self, value):
+    #     self._qualitytimestep = value
+        
 
 @dataclass
 class Reportparameter:
@@ -59,49 +72,48 @@ class Reportparameter:
     Attributes:
 
     """
-    elevation: Union[BoolSetting, Tuple[LimitSetting, float], None] = None # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
-    demand: Union[BoolSetting, Tuple[LimitSetting, float], None] = None # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
-    head: Union[BoolSetting, Tuple[LimitSetting, float], None] = None # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
-    pressure: Union[BoolSetting, Tuple[LimitSetting, float], None] = None # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
-    quality: Union[BoolSetting, Tuple[LimitSetting, float], None] = None # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
-    length: Union[BoolSetting, Tuple[LimitSetting, float], None] = None # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
-    diameter: Union[BoolSetting, Tuple[LimitSetting, float], None] = None # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
-    flow: Union[BoolSetting, Tuple[LimitSetting, float], None] = None # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
-    velocity: Union[BoolSetting, Tuple[LimitSetting, float], None] = None # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
-    headloss: Union[BoolSetting, Tuple[LimitSetting, float], None] = None # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
-    setting: Union[BoolSetting, Tuple[LimitSetting, float], None] = None # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
-    reaction: Union[BoolSetting, Tuple[LimitSetting, float], None] = None # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
-    ffactor: Union[BoolSetting, Tuple[LimitSetting, float], None] = None # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
+    elevation: Union[str, tuple[str, float]] = 'NO'  # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
+    demand: Union[str, tuple[str, float]] = 'YES'  # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
+    head: Union[str, tuple[str, float]] = 'YES'  # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
+    pressure: Union[str, tuple[str, float]] = 'YES'  # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
+    quality: Union[str, tuple[str, float]] = 'YES'  # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
+    length: Union[str, tuple[str, float]] = 'NO'  # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
+    diameter: Union[str, tuple[str, float]] = 'NO'  # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
+    flow: Union[str, tuple[str, float]] = 'YES'  # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
+    velocity: Union[str, tuple[str, float]] = 'YES'  # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
+    headloss: Union[str, tuple[str, float]] = 'YES'  # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
+    setting: Union[str, tuple[str, float]] = 'NO'  # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
+    reaction: Union[str, tuple[str, float]] = 'NO'  # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
+    ffactor: Union[str, tuple[str, float]] = 'NO'  # = Either(None, Enum('YES', 'NO'), List('BELOW', Float), List('ABOVE', Float))
 
 
 @dataclass
 class Reportprecision:
     """Describes the precision per report parameter."""
-    elevation: Optional[int] = None
-    demand: Optional[int] = None
-    head: Optional[int] = None
-    pressure: Optional[int] = None
-    quality: Optional[int] = None
-    length: Optional[int] = None
-    diameter: Optional[int] = None
-    flow: Optional[int] = None
-    velocity: Optional[int] = None
-    headloss: Optional[int] = None
-    position: Optional[int] = None
-    setting: Optional[int] = None
-    reaction: Optional[int] = None
-    ffactor: Optional[int] = None
+    elevation: int = 2
+    demand: int = 2
+    head: int = 2
+    pressure: int = 2
+    quality: int = 2
+    length: int = 2
+    diameter: int = 2
+    flow: int = 2
+    velocity: int = 2
+    headloss: int = 2
+    setting: int = 2
+    reaction: int = 2
+    ffactor: int = 2
 
 
 @dataclass
 class Report:
     """Describes the contents of the output report produced from a simulation."""
-    pagesize: Optional[int] = None
+    pagesize: int = 0
     file: Optional[str] = None
-    status: Optional[ReportStatusSetting] = None  # = Either(None, Enum('YES', 'NO', 'FULL'))
-    summary: Optional[ReportBoolSetting] = None  # = Either(None, Enum('YES', 'NO'))
-    energy: Optional[ReportBoolSetting] = None  # = Either(None, Enum('YES', 'NO'))
-    nodes: Union[ReportElementSetting, Node, List[Node], None] = None  # = Either(None, Enum('NONE', 'ALL'), Instance(Node), List(Instance(Node)))
-    links: Union[ReportElementSetting, Link, List[Link], None] = None # = Either(None, Enum('NONE', 'ALL'), Instance(Link), List(Instance(Link)))
-    parameter: Union[ReportParameterSetting, Tuple[ReportParameterSetting, float], None] = None  # = Either(None, Enum('YES', 'NO', 'BELOW', 'ABOVE', 'PRECISION'))
+    status: str = 'NO'  # = Either(None, Enum('YES', 'NO', 'FULL'))
+    summary: str = 'YES'  # = Either(None, Enum('YES', 'NO'))
+    energy: str = 'NO'  # = Either(None, Enum('YES', 'NO'))
+    nodes: Union[str, Node, list[Node]] = 'ALL'  # = Either(None, Enum('NONE', 'ALL'), Instance(Node), List(Instance(Node)))
+    links: Union[str, Link, list[Link]] = 'ALL'  # = Either(None, Enum('NONE', 'ALL'), Instance(Link), List(Instance(Link)))
+    parameter: Union[str, tuple[str, float]] = None  # = Either(None, Enum('YES', 'NO', 'BELOW', 'ABOVE', 'PRECISION'))
     value: Optional[float] = None  # = Either(None, Float)

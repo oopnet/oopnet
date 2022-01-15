@@ -1,23 +1,49 @@
-from abc import abstractmethod
-from typing import List, Type
+from abc import abstractmethod, ABC
+from typing import Type
 from sys import modules
 from inspect import getmembers, isclass
 
 
 class EPANETSimulationError(Exception):
+    """Error raised when any errors were encountered while simulating a hydraulic model."""
+
     def __init__(self, message):
         super().__init__(message)
 
     @property
     def errors(self):
+        """Property containing all raised errors.
+
+        This property can be used as a shortcut to the raised errors. Useful when looking for a specific kind of error.
+
+        """
         return self.args[0]
 
-class EPANETError(Exception):
 
-    def __init__(self, description, details):
+class EPANETError(Exception):
+    """Base class for simulation errors.
+
+    This exception is not meant to be called manually but is only a super class for the specific EPANET errors listed
+    in the 'EPANET manual appendix concerning error messages
+     <https://epanet22.readthedocs.io/en/latest/back_matter.html#error-messages>'.
+
+    Attributes:
+        code: error code as listed in the 'EPANET manual appendix concerning error messages
+        <https://epanet22.readthedocs.io/en/latest/back_matter.html#error-messages>'
+
+    """
+
+    def __init__(self, description: str, details: str):
+        """
+
+        Args:
+            description: general error message
+            details: error details (if available)
+
+        """
         msg = f'Error {self.code} - {description}'
         if details:
-            msg +=  f' {details}'
+            msg += f' {details}'
         super().__init__(msg)
 
     @property
@@ -162,5 +188,6 @@ class ReportFileSavingError(EPANETError):
     code = 309
 
 
-def get_error_list() -> List[Type[EPANETError]]:
-    return [obj for name, obj in getmembers(modules[__name__]) if isclass(obj) and not issubclass(obj, EPANETSimulationError)]
+def get_error_list() -> list[Type[EPANETError]]:
+    """Lists all errors implemented."""
+    return [obj for name, obj in getmembers(modules[__name__]) if isclass(obj) and hasattr(obj, 'code')]

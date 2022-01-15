@@ -1,19 +1,18 @@
-from typing import List, Union, Optional
-from dataclasses import dataclass, field
+from typing import Union, Optional
+from dataclasses import dataclass
 from abc import abstractmethod
 
 from oopnet.elements.base import NetworkComponent
 from oopnet.elements.system_operation import Pattern, Curve
-from oopnet.elements.enums import PipeStatus, ValveStatus, PumpStatus, MixingModel, PumpKeyword, ValveType
 
 
 @dataclass
 class Node(NetworkComponent):
-    """Defines base class for all Node like objects in OOPNET (Junction, Reservoir, Tank)
+    """Base class for all Node like objects in OOPNET (Junction, Reservoir, Tank).
 
     Attributes:
-      xcoordinate: The horizontal location of the junction on the map, measured in the map's distance units. If left blank the node object will not appear on the network map.
-      ycoordinate: The vertical location of the junction on the map, measured in the map's distance units. If left blank the node object will not appear on the network map.
+      xcoordinate: The horizontal location of the junction on the map, measured in the map's distance units. If left blank, the node object will not appear on the network map.
+      ycoordinate: The vertical location of the junction on the map, measured in the map's distance units. If left blank, the node object will not appear on the network map.
       elevation: The elevation in meters above some common reference of the node. This is a required property. Elevation is used only to compute pressure at the node. For tanks it is a required property and means Elevation above a common datum in meters of the bottom shell of the tank.
       initialquality: Water quality level at the node at the start of the simulation period. Can be left blank if no water quality analysis is being made or if the level is zero.
       sourcequality: Quality of any water entering the network at this location.
@@ -29,7 +28,7 @@ class Node(NetworkComponent):
     sourcequality: float = 0.0
     sourcetype: Optional[str] = None
     strength: float = 0.0
-    sourcepattern: Optional[List[Pattern]] = None
+    sourcepattern: Optional[list[Pattern]] = None
 
     @property
     def coordinates(self) -> tuple:
@@ -39,7 +38,7 @@ class Node(NetworkComponent):
 
 @dataclass
 class Link(NetworkComponent):
-    """Base class for all Link like objects in OOPNET (Pipe, Pump, Valve)
+    """Base class for all Link like objects in OOPNET (Pipe, Pump, Valve).
 
     Attributes:
       startnode: Node-object at the start of the Link
@@ -92,9 +91,9 @@ class Junction(Node):
     """Defines Junction nodes contained in the network.
 
     Attributes:
-      emittercoefficient: Discharge coefficient for emitter (sprinkler or nozzle) placed at junction. The coefficient represents the flow (in current flow units) that occurs at a pressure drop of 1 meter. Leave blank if no emitter is present. See the Emitters topic in the Epanet Manual Section 3.1 for more details.
+      emittercoefficient: Discharge coefficient for emitter (sprinkler or nozzle) placed at junction. The coefficient represents the flow (in current flow units) that occurs at a pressure drop of 1 meter. Leave blank if no emitter is present. See the Emitters topic in the 'EPANET Manual Section 3.1 <https://epanet22.readthedocs.io/en/latest/3_network_model.html#physical-components>' for more details.
       demandpattern: Pattern object used to characterize time variation in demand for the main category of consumer at the junction. The pattern provides multipliers that are applied to the Base Demand to determine actual demand in a given time period.
-      demand: The average or nominal demand for water by the main category of consumer at the junction, as measured in the current flow units. A negative value is used to indicate an external source of flow into the junction. If left blank the demand is assumed to be zero.
+      demand: The average or nominal demand for water by the main category of consumer at the junction, as measured in the current flow units. A negative value is used to indicate an external source of flow into the junction.
 
     """
 
@@ -123,13 +122,13 @@ class Tank(Node):
 
     Attributes:
       initlevel: Height in meters of the water surface above the bottom elevation of the tank at the start of the simulation.
-      minlevel: Minimum height in meters of the water surface above the bottom elevation that will be maintained. The tank will not be allowed to drop below this level.
-      maxlevel: Maximum height in meters of the water surface above the bottom elevation that will be maintained. The tank will not be allowed to rise above this level.
+      minlevel: Minimum height in meters of the water surface above the bottom elevation that will be maintained. The water level in the tank will not be allowed to drop below this level.
+      maxlevel: Maximum height in meters of the water surface above the bottom elevation that will be maintained. The water level in the tank will not be allowed to rise above this level.
       diam: The diameter of the tank in meters. For cylindrical tanks this is the actual diameter. For square or rectangular tanks it can be an equivalent diameter equal to 1.128 times the square root of the cross-sectional area. For tanks whose geometry will be described by a curve (see below) it can be set to any value.
       minvolume: The volume of water in the tank when it is at its minimum level, in cubic meter. This is an optional property, useful mainly for describing the bottom geometry of non-cylindrical tanks where a full volume versus depth curve will not be supplied (see below).
       volumecurve: Curve object used to describe the relation between tank volume and water level. If no value is supplied then the tank is assumed to be cylindrical.
-      compartmentvolume: todo: fill in description
-      reactiontank: The bulk reaction coefficient for chemical reactions in the tank. Time units are 1/days. Use a positive value for growth reactions and a negative value for decay. Leave blank if the Global Bulk reaction coefficient specified in the project's Reactions Options will apply. See Water Quality Reactions in the Epanet manual Section 3.4 for more information.
+      compartmentvolume: The fraction of the tank’s total volume that comprises the inlet-outlet compartment of the two-compartment (2COMP) mixing model. Can be left blank if another type of mixing model is employed.
+      reactiontank: The bulk reaction coefficient for chemical reactions in the tank. Time units are 1/days. Use a positive value for growth reactions and a negative value for decay. Leave blank if the Global Bulk reaction coefficient specified in the project's Reactions Options will apply. See Water Quality Reactions in the 'EPANETmanual Section 3.4 <https://epanet22.readthedocs.io/en/latest/3_network_model.html#water-quality-simulation-model>' for moreinformation.
       mixingmodel: The type of water quality mixing that occurs within the tank. The choices include MIXED (fully mixed), 2COMP (two-compartment mixing), FIFO (first-in-first-out plug flow) and LIFO (last-in-first-out plug flow).
 
     """
@@ -141,7 +140,7 @@ class Tank(Node):
     volumecurve: Optional[Curve] = None
     compartmentvolume: Optional[float] = None
     reactiontank: Optional[float] = None
-    mixingmodel: MixingModel = MixingModel.MIXED  # = Enum('MIXED', '2COMP', 'FIFO', 'LIFO')
+    mixingmodel: str = 'MIXED'  # = Enum('MIXED', '2COMP', 'FIFO', 'LIFO')
 
 
 @dataclass
@@ -153,8 +152,8 @@ class Pipe(Link):
       diameter: The pipe diameter in mm.
       roughness: The roughness coefficient of the pipe. It is unitless for Hazen-Williams or Chezy-Manning roughness and has units of mm for Darcy-Weisbach roughness.
       minorloss: Unitless minor loss coefficient associated with bends, fittings, etc. Assumed 0 if left blank.
-      reactionbulk: The bulk reaction coefficient for the pipe. Time units are 1/days. Use a positive value for growth and a negative value for decay. Leave blank if the Global Bulk reaction coefficient from the project's Reaction Options will apply. See Water Quality Reactions in the Epanet Manual Section 3.4 for more information.
-      reactionwall: The wall reaction coefficient for the pipe. Time units are 1/days. Use a positive value for growth and a negative value for decay. Leave blank if the Global Wall reaction coefficient from the project's Reactions Options will apply. See Water Quality Reactions in the Epanet Manual Section 3.4 for more information.
+      reactionbulk: The bulk reaction coefficient for the pipe. Time units are 1/days. Use a positive value for growth and a negative value for decay. Leave blank if the Global Bulk reaction coefficient from the project's Reaction Options will apply. See Water Quality Reactions in the 'EPANET manual Section 3.4<https://epanet22.readthedocs.io/en/latest/3_network_model.html#water-quality-simulation-model>' for moreinformation.
+      reactionwall: The wall reaction coefficient for the pipe. Time units are 1/days. Use a positive value for growth and a negative value for decay. Leave blank if the Global Wall reaction coefficient from the project's Reactions Options will apply. See Water Quality Reactions in the 'EPANET manual Section 3.4<https://epanet22.readthedocs.io/en/latest/3_network_model.html#water-quality-simulation-model>' for moreinformation.
 
     """
     length: float = 1000
@@ -164,32 +163,8 @@ class Pipe(Link):
     minorloss: float = 0
     reactionbulk: Optional[float] = None
     reactionwall: Optional[float] = None
-    initialstatus: PipeStatus = PipeStatus.OPEN
-    _initialstatus: PipeStatus = field(init=False, repr=False)
-    status: PipeStatus = PipeStatus.OPEN
-    _status: PipeStatus = field(init=False, repr=False) 
-
-    @property
-    def initialstatus(self) -> PipeStatus:
-        return self._initialstatus
-
-    @initialstatus.setter
-    def initialstatus(self, value: Union[PipeStatus, str]):
-        if isinstance(value, str):
-            value = PipeStatus[value]
-            print(value)
-        self._initialstatus = value
-
-    @property
-    def status(self) -> PipeStatus:
-        return self._status
-
-    @status.setter
-    def status(self, value: Union[PipeStatus, str]):
-        if isinstance(value, str):
-            value = PipeStatus[value]
-        self._status = value
-
+    initialstatus: str = 'OPEN'
+    status: str = 'OPEN'
 
 # todo: rethink keyword, value structure (what happens for multiple properties?)
 @dataclass
@@ -198,39 +173,16 @@ class Pump(Link):
 
     todo: implement multiple keyword and value combinations
     Attributes:
-      keyword: Can either be POWER (power value for constant energy pump, hp (kW)), HEAD (ID of curve that describes head versus flow for the pump), SPEED (relative speed setting (normal speed is 1.0, 0 means pump is off)), PATTERN(ID of time pattern that describes how speed setting varies with time). Either POWER or HEAD must be supplied for each pump. The other keywords are optional.
+      keyword: Can either be POWER (power value for constant energy pump, hp (kW)), HEAD (ID of curve that describeshead versus flow for the pump), SPEED (relative speed setting (normal speed is 1.0, 0 means pump is off)),PATTERN(ID of time pattern that describes how speed setting varies with time). Either POWER or HEAD must be supplied for each pump. The other keywords are optional.
       value: Value according to the keyword attribute
       status: 
 
     """
-    keyword: Optional[PumpKeyword] = None  # = Enum('POWER', 'HEAD', 'SPEED', 'PATTERN')
+    keyword: Optional[str] = None  # = Enum('POWER', 'HEAD', 'SPEED', 'PATTERN')
     value: Union[str, float, None] = None
     setting: Optional[float] = None
-    initialstatus: PumpStatus = PumpStatus.OPEN
-    _initialstatus: PumpStatus = field(init=False, repr=False)
-    status: PumpStatus = PumpStatus.OPEN
-    _status: PumpStatus = field(init=False, repr=False) 
-
-    @property
-    def initialstatus(self) -> PumpStatus:
-        return self._initialstatus
-
-    @initialstatus.setter
-    def initialstatus(self, value: Union[PumpStatus, str]):
-        if isinstance(value, str):
-            value = PumpStatus[value]
-            print(value)
-        self._initialstatus = value
-
-    @property
-    def status(self) -> PumpStatus:
-        return self._status
-
-    @status.setter
-    def status(self, value: Union[PumpStatus, str]):
-        if isinstance(value, str):
-            value = PumpStatus[value]
-        self._status = value
+    initialstatus: str = 'OPEN'
+    status: str = 'OPEN'
 
 
 @dataclass
@@ -245,35 +197,12 @@ class Valve(Link):
 
     """
     # todo: valvetype necessary?
-    valvetype: ValveType = ValveType.PRV
+    valvetype: str = 'PRV'
     diameter: float = 12
     minorloss: float = 0
     setting: Union[float, str] = 0
-    initialstatus: ValveStatus = ValveStatus.OPEN
-    _initialstatus: ValveStatus = field(init=False, repr=False)
-    status: ValveStatus = ValveStatus.OPEN
-    _status: ValveStatus = field(init=False, repr=False) 
-
-    @property
-    def initialstatus(self) -> ValveStatus:
-        return self._initialstatus
-
-    @initialstatus.setter
-    def initialstatus(self, value: Union[ValveStatus, str]):
-        if isinstance(value, str):
-            value = ValveStatus[value]
-            print(value)
-        self._initialstatus = value
-
-    @property
-    def status(self) -> ValveStatus:
-        return self._status
-
-    @status.setter
-    def status(self, value: Union[ValveStatus, str]):
-        if isinstance(value, str):
-            value = ValveStatus[value]
-        self._status = value
+    initialstatus: str = 'OPEN'
+    status: str = 'OPEN'
 
 
 @dataclass

@@ -8,8 +8,7 @@ from oopnet.elements.base import NetworkComponent
 from oopnet.reader.factory_base import ReadFactory, InvalidValveTypeError
 from oopnet.elements import Network, Tank, Reservoir, Pipe, Pump, Valve, Node, Pattern, Curve, Junction, FCV, PRV, PBV,\
     PSV, GPV, TCV
-from oopnet.utils.getters import get_junction, get_pattern, get_curve, get_node
-from oopnet.elements.enums import PipeStatus, PumpStatus, ValveStatus, PumpKeyword, ValveType
+from oopnet.utils.getters import get_pattern, get_curve, get_node
 from oopnet.utils.adders import *
 from oopnet.reader.decorators import section_reader
 if TYPE_CHECKING:
@@ -65,6 +64,8 @@ class ComponentFactory(ReadFactory):
         """
         attr_dict = {}
         for attr, value, attr_cls in zip(attrs, values, cls_list):
+            if value is None:
+                continue
             if attr_cls == Pattern:
                 value = get_pattern(network, value) if value else None
                 attr_dict[attr] = value
@@ -74,9 +75,7 @@ class ComponentFactory(ReadFactory):
             elif attr_cls == Node:
                 value = get_node(network, value)
                 attr_dict[attr] = value
-            elif attr_cls in {PipeStatus, PumpStatus, ValveStatus, PumpKeyword}:
-                attr_dict[attr] = attr_cls(value.upper())
-            elif value is not None:
+            else:
                 attr_dict[attr] = attr_cls(value)
         return attr_dict
 
@@ -165,7 +164,7 @@ class PipeFactory(ComponentFactory):
         comment = cls._read_comment(values)
         attr_values = cls._pad_list(values['values'], 8)
         attr_names = ['id', 'startnode', 'endnode', 'length', 'diameter', 'roughness', 'minorloss', 'status']
-        attr_cls = [str, Node, Node, float, float, float, float, PipeStatus]
+        attr_cls = [str, Node, Node, float, float, float, float, str]
         attr_dict = cls._create_attr_dict(attr_names, attr_values, attr_cls, network)
         return Pipe(**attr_dict, comment=comment)
 
@@ -183,7 +182,7 @@ class PumpFactory(ComponentFactory):
         comment = cls._read_comment(values)
         attr_values = cls._pad_list(values['values'], 5)
         attr_names = ['id', 'startnode', 'endnode', 'keyword', 'value']
-        attr_cls = [str, Node, Node, PumpKeyword, str]
+        attr_cls = [str, Node, Node, str, str]
         attr_dict = cls._create_attr_dict(attr_names, attr_values, attr_cls, network)
         return Pump(**attr_dict, comment=comment)
 
@@ -214,10 +213,10 @@ class ValveFactory(ComponentFactory):
         attr_names = ['id', 'startnode', 'endnode', 'diameter', 'valvetype', 'setting', 'minorloss']
 
         if valve_type in {'PRV', 'TCV', 'PSV', 'PBV', 'FCV'}:
-            attr_cls = [str, Node, Node, float, ValveType, float, float]
+            attr_cls = [str, Node, Node, float, str, float, float]
         elif valve_type == 'GPV':
             # todo: switch GPV values to Curves
-            attr_cls = [str, Node, Node, float, ValveType, str, float]
+            attr_cls = [str, Node, Node, float, str, str, float]
         else:
             raise InvalidValveTypeError(valve_type)
         attr_dict = cls._create_attr_dict(attr_names, attr_values, attr_cls, network)

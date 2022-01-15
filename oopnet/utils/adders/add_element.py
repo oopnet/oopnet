@@ -8,12 +8,16 @@ from oopnet.elements.system_operation import Rule
 from oopnet.elements.base import NetworkComponent
 
 
-def _check_exists(obj: NetworkComponent, network: Network):
+def _check_exists(obj: Union[NetworkComponent, Rule], network: Network):
     """Checks if a component with the same ID and general type exists in the network.
 
     Args:
         obj: NetworkComponent that shall be added
         network: OOPNET network object
+
+    Raises:
+        TypError if an object of an invalid type was passed
+        ComponentExistsError if a component with the same ID already exists
 
     """
     if isinstance(obj, Node):
@@ -32,7 +36,7 @@ def _check_exists(obj: NetworkComponent, network: Network):
         raise ComponentExistsError(obj.id)
 
 
-def _add_component(obj: NetworkComponent, component_hash: dict):
+def _add_component(obj: Union[NetworkComponent, Rule], component_hash: dict):
     """Adds a NetworkComponent to a hash
 
     Args:

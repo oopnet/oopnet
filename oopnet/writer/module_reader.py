@@ -1,33 +1,33 @@
+from typing import Type, Callable
+
 import inspect
 
 from oopnet.writer.decorators import section_writer, WriterDecorator
 
 
-def pred(c):
-    """
+def pred(c: Type[Callable]) -> bool:
+    """Checks if a class or function is decorated with section_writer.
 
     Args:
-      c: 
+      c: callable to be checked
 
     Returns:
-
+        Returns True if the class or function is decorated with section_writer and False otherwise.
     """
-
     return inspect.isfunction(c) and hasattr(c, 'decorator') and c.decorator == section_writer
 
 
-def list_all_functions_with_decorator(modules, decorator):
-    """
+def list_section_writer_callables(modules):
+    """Lists all callables decorated with the section_writer decorator from a list of modules.
 
     Args:
-      modules: 
-      decorator: 
+      modules: list of modules to be checked for callables decorated with section_writer.
 
     Returns:
-
+        List of callables decorated with section_writer.
     """
 
-    all_functions = list()
+    all_functions = []
     for module in modules:
         funcs = inspect.getmembers(module, pred)
         for f in funcs:

@@ -1,7 +1,8 @@
+import os
+import pathlib
 from os.path import join
 from typing import List
 
-from oopnet.elements.enums import PumpKeyword, ValveType
 from oopnet.elements import Network, Junction, Pipe, Tank, Reservoir, Pump, Valve, Curve
 from oopnet.reader import Read
 from oopnet.utils.adders import add_junction, add_pipe, add_node, add_curve, add_link
@@ -41,9 +42,9 @@ def create_dummy_spa_network() -> Network:
     add_curve(network, c)
 
     add_dummy_pipes(network, [('J-1', 'T-1'), ('J-1', 'R-1')])
-    pu = Pump(id='PU-1', keyword=PumpKeyword.HEAD, value='C-1', startnode=get_node(network, 'J-1'),
+    pu = Pump(id='PU-1', keyword='HEAD', value='C-1', startnode=get_node(network, 'J-1'),
               endnode=get_node(network, 'J-2'))
-    v = Valve(id='V-1', valvetype=ValveType.PRV, setting=5, startnode=get_node(network, 'J-1'),
+    v = Valve(id='V-1', valvetype='PRV', setting=5, startnode=get_node(network, 'J-1'),
               endnode=get_node(network, 'J-3'))
 
     for obj in [pu, v]:
@@ -86,6 +87,9 @@ class TestModel:
         """Total number of links in network."""
         return self.n_pipes + self.n_pumps + self.n_valves
 
+    def __init__(self):
+        reset_root_dir()
+
 
 class SimpleModel(TestModel):
     n_junctions = 3
@@ -96,6 +100,7 @@ class SimpleModel(TestModel):
     n_pumps = 1
 
     def __init__(self):
+        super().__init__()
         self.network = create_dummy_spa_network()
 
 
@@ -108,11 +113,13 @@ class PoulakisEnhancedPDAModel(TestModel):
     n_pumps = 1
 
     def __init__(self):
+        super().__init__()
         self.network = Read(join('networks', 'Poulakis_enhanced_PDA.inp'))
 
 
 class CTownModel(TestModel):
     def __init__(self):
+        super().__init__()
         self.network = Read(join('..', 'examples', 'data', 'C-town.inp'))
 
 
@@ -129,6 +136,7 @@ class MicropolisModel(TestModel):
     n_patterns = 7
 
     def __init__(self):
+        super().__init__()
         self.network = Read(join('..', 'examples', 'data', 'MICROPOLIS_v1.inp'))
 
 
@@ -145,4 +153,16 @@ class RulesModel(TestModel):
     n_patterns = 0
 
     def __init__(self):
+        super().__init__()
         self.network = Read(join('networks', 'Rules_network.inp'))
+
+
+def set_root_dir():
+    file_dir = pathlib.Path(__file__).parent.absolute()
+    os.chdir(file_dir.parent / 'examples')
+    print(os.getcwd())
+
+
+def reset_root_dir():
+    file_dir = pathlib.Path(__file__)
+    os.chdir(file_dir.parent)

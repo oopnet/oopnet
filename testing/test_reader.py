@@ -1,8 +1,6 @@
 import unittest
 import datetime
 
-from oopnet.elements.enums import Unit, HeadlossFormula, BalancingOption, DemandModel, StatisticSetting, \
-    ReportStatusSetting, ReportBoolSetting
 from oopnet.elements import Junction, Tank, Reservoir, Pipe, Pump, Valve
 from oopnet.simulator import Run
 from oopnet.utils.getters import get_curve, get_pattern, get_patterns
@@ -71,25 +69,25 @@ class PoulakisEnhancedReaderTest(unittest.TestCase):
 
     def test_options(self):
         options = self.model.network.options
-        self.assertEqual(Unit.LPS, options.units)
+        self.assertEqual('LPS', options.units)
         self.assertEqual(40, options.trials)
-        self.assertEqual(HeadlossFormula.DW, options.headloss)
+        self.assertEqual('D-W', options.headloss)
         self.assertEqual(1.00000004749745E-10, options.accuracy)
         self.assertEqual(1, options.demandmultiplier)
         self.assertEqual(1, options.emitterexponent)
         self.assertEqual(1, options.pattern)
-        self.assertEqual(DemandModel.PDA, options.demandmodel)
+        self.assertEqual('PDA', options.demandmodel)
         self.assertEqual(0, options.minimumpressure)
         self.assertEqual(10, options.requiredpressure)
         self.assertEqual(0.5, options.pressureexponent)
-        self.assertEqual((BalancingOption.CONTINUE, 10), options.unbalanced)
+        self.assertEqual(('CONTINUE', 10), options.unbalanced)
         self.assertEqual(1, options.viscosity)
         self.assertEqual(1.00000004749745E-10, options.tolerance)
 
     def test_report(self):
         report = self.model.network.report
-        self.assertEqual(ReportStatusSetting.FULL, report.status)
-        self.assertEqual(ReportBoolSetting.NO, report.summary)
+        self.assertEqual('FULL', report.status)
+        self.assertEqual('NO', report.summary)
 
     def test_times(self):
         times = self.model.network.times
@@ -101,10 +99,10 @@ class PoulakisEnhancedReaderTest(unittest.TestCase):
         self.assertEqual(datetime.timedelta(hours=1), times.reporttimestep)
         self.assertEqual(datetime.timedelta(), times.reportstart)
         self.assertEqual(datetime.timedelta(), times.startclocktime)
-        self.assertEqual(StatisticSetting.NONE, times.statistic)
+        self.assertEqual('NONE', times.statistic)
 
     def test_run(self):
-        Run(self.model.network)
+        Run(self.model.network, delete=False)
 
     # todo: add options, reportparameter, curve, pattern ... tests
 
@@ -134,26 +132,26 @@ class MicorpolisReaderTest(unittest.TestCase):
 
     def test_options(self):
         options = self.model.network.options
-        self.assertEqual(Unit.LPS, options.units)
+        self.assertEqual('LPS', options.units)
         self.assertEqual(40, options.trials)
-        self.assertEqual(HeadlossFormula.DW, options.headloss)
+        self.assertEqual('D-W', options.headloss)
         self.assertEqual(0.001, options.accuracy)
         self.assertEqual(1, options.demandmultiplier)
         self.assertEqual(0.5, options.emitterexponent)
         defpat = get_pattern(self.model.network, 'DefPat')
         self.assertEqual(defpat, options.pattern)
-        self.assertEqual(DemandModel.DDA, options.demandmodel)
-        self.assertEqual(None, options.minimumpressure)
-        self.assertEqual(None, options.requiredpressure)
-        self.assertEqual(None, options.pressureexponent)
-        self.assertEqual((BalancingOption.CONTINUE, 10), options.unbalanced)
+        self.assertEqual('DDA', options.demandmodel)
+        self.assertEqual(0.0, options.minimumpressure)
+        self.assertEqual(0.1, options.requiredpressure)
+        self.assertEqual(0.5, options.pressureexponent)
+        self.assertEqual(('CONTINUE', 10), options.unbalanced)
         self.assertEqual(1, options.viscosity)
         self.assertEqual(0.01, options.tolerance)
 
     def test_report(self):
         report = self.model.network.report
-        self.assertEqual(ReportStatusSetting.NO, report.status)
-        self.assertEqual(ReportBoolSetting.NO, report.summary)
+        self.assertEqual('NO', report.status)
+        self.assertEqual('NO', report.summary)
 
     def test_times(self):
         times = self.model.network.times
@@ -165,7 +163,7 @@ class MicorpolisReaderTest(unittest.TestCase):
         self.assertEqual(datetime.timedelta(hours=1), times.reporttimestep)
         self.assertEqual(datetime.timedelta(), times.reportstart)
         self.assertEqual(datetime.timedelta(), times.startclocktime)
-        self.assertEqual(StatisticSetting.NONE, times.statistic)
+        self.assertEqual('NONE', times.statistic)
 
 
 class RulesModelReaderTest(unittest.TestCase):
@@ -175,23 +173,22 @@ class RulesModelReaderTest(unittest.TestCase):
 
     def test_options(self):
         options = self.model.network.options
-        self.assertEqual(Unit.LPS, options.units)
+        self.assertEqual('LPS', options.units)
         self.assertEqual(40, options.trials)
-        self.assertEqual(HeadlossFormula.HW, options.headloss)
+        self.assertEqual('H-W', options.headloss)
         self.assertEqual(0.001, options.accuracy)
         self.assertEqual(1, options.demandmultiplier)
         self.assertEqual(0.5, options.emitterexponent)
         self.assertEqual(1, options.pattern)
-        self.assertEqual(DemandModel.DDA, options.demandmodel)
-        self.assertEqual(None, options.minimumpressure)
-        self.assertEqual(None, options.requiredpressure)
-        self.assertEqual(None, options.pressureexponent)
-        self.assertEqual((BalancingOption.CONTINUE, 10), options.unbalanced)
+        self.assertEqual('DDA', options.demandmodel)
+        self.assertEqual(0.0, options.minimumpressure)
+        self.assertEqual(0.1, options.requiredpressure)
+        self.assertEqual(0.5, options.pressureexponent)
+        self.assertEqual(('CONTINUE', 10), options.unbalanced)
         self.assertEqual(1, options.viscosity)
         self.assertEqual(0.01, options.tolerance)
 
     def test_run(self):
-        self.assertEqual(DemandModel.DDA, self.model.network.options.demandmodel)
         Run(self.model.network)
 
     def test_rules(self):

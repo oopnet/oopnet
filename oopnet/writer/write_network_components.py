@@ -160,7 +160,7 @@ def write_pumps(network: Network, fid: TextIOWrapper):
         if p.endnode is not None:
             print(p.endnode.id, end=' ', file=fid)
         if p.keyword is not None:
-            print(p.keyword.value, end=' ', file=fid)
+            print(p.keyword, end=' ', file=fid)
         if p.value is not None:
             print(p.value, end=' ', file=fid)
         if p.comment is not None:
@@ -189,7 +189,7 @@ def write_valves(network: Network, fid: TextIOWrapper):
         if v.diameter is not None:
             print(v.diameter, end=' ', file=fid)
         if v.valvetype is not None:
-            print(v.valvetype.value, end=' ', file=fid)
+            print(v.valvetype, end=' ', file=fid)
         if v.setting is not None:
             print(v.setting, end=' ', file=fid)
         if v.minorloss is not None:

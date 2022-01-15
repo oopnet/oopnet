@@ -3,7 +3,7 @@ from oopnet.utils.getters import get_node, get_link
 
 
 def remove_link(network: Network, id: str):
-    """This function removes a specific Link from an OOPNET network
+    """This function removes a specific Link from an OOPNET network.
 
     Args:
       network: OOPNET network object
@@ -17,13 +17,11 @@ def remove_link(network: Network, id: str):
         remove_pump(network, id)
     elif isinstance(l, Valve):
         remove_valve(network, id)
-    else:
-        raise Exception(f'No link with ID {id} in the network.')
 
 
 # todo: remove Links connected to Node?
 def remove_node(network: Network, id: str):
-    """This function removes a specific Node from an OOPNET network
+    """This function removes a specific Node from an OOPNET network.
 
     Args:
       network: OOPNET network object
@@ -37,8 +35,6 @@ def remove_node(network: Network, id: str):
         remove_tank(network, id)
     elif isinstance(n, Reservoir):
         remove_reservoir(network, id)
-    else:
-        raise Exception(f'No node with ID {id} in the network.')
 
 
 def remove_junction(network: Network, id: str):

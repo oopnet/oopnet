@@ -1,8 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import List
 
-from oopnet.elements.enums import TagObject
 from oopnet.elements.network_components import Node
 
 
@@ -31,10 +29,10 @@ class Label:
 class Backdrop:
     """Identifies a backdrop image and dimensions for the network map."""
 
-    dimensions: List[float]
+    dimensions: list[float]
     units: str
     file: str
-    offset: List[float]
+    offset: list[float]
 
 
 @dataclass
@@ -42,5 +40,5 @@ class Tag:
     """Associates category labels (tags) with specific nodes and links."""
     id: str
     comment: str
-    object: TagObject  # = Enum('NODE', 'LINK')
+    object: str  # = Enum('NODE', 'LINK')
     tag: str

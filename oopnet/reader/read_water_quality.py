@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-from oopnet.elements.enums import MixingModel
 if TYPE_CHECKING:
     from oopnet.elements import Network
 from oopnet.utils.getters import get_node, get_link, get_pattern
@@ -15,6 +14,7 @@ def read_quality(network: Network, block: list):
     Args:
       network: OOPNET network object where the quality settings shall be stored
       block: EPANET input file block
+
     """
     for vals in block:
         vals = vals['values']
@@ -30,6 +30,7 @@ def read_reaction(network: Network, block: list):
     Args:
       network: OOPNET network object where the reaction settings shall be stored
       block: EPANET input file block
+
     """
     r = network.reactions
     for vals in block:
@@ -109,6 +110,6 @@ def read_mixing(network: Network, block: list):
         vals = vals['values']
         t = get_node(network, vals[0])
         if len(vals) > 1:
-            t.mixingmodel = MixingModel[vals[1].upper()]
+            t.mixingmodel = vals[1].upper()
         if len(vals) > 2:
             t.compartmentvolume = float(vals[2])

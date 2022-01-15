@@ -2,12 +2,11 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from oopnet.elements.enums import Unit
 from oopnet.utils.getters import get_junctions, get_tanks, get_reservoirs, get_pipes
 
 """
 Convert all units which are possible in the EPANET-Input file to LPS
-Possible: (This are the floe units)
+Possible: (This are the flow units)
     CFS ... cubic feet per second
     GPM ... gallons per minute
     MGD ... million gallons per day
@@ -37,7 +36,6 @@ CMH2LPS = 0.27778
 CMD2LPS = 0.0115741
 
 
-@dataclass
 class Converter:
     """ """
 
@@ -57,14 +55,14 @@ class Converter:
     f_volume: float = 1.0
 
     def __init__(self, network):
-        if network.options.units == Unit.LPS:
+        if network.options.units == 'LPS':
             return
 
-        us_units = [Unit.CFS,
-                    Unit.GPM,
-                    Unit.MGD,
-                    Unit.IMGD,
-                    Unit.AFD]
+        us_units = ['CFS',
+                    'GPM',
+                    'MGD',
+                    'IMGD',
+                    'AFD']
 
         if network.options.units in us_units:
 
@@ -81,33 +79,33 @@ class Converter:
             self.f_velocity = FEET2METER
             self.f_volume = FEET2METER ** 3
 
-        if network.options.units == Unit.CFS:
+        if network.options.units == 'CFS':
             self.f_flow = CFS2LPS
-        elif network.options.units == Unit.GPM:
+        elif network.options.units == 'GPM':
             self.f_flow = GPM2LPS
-        elif network.options.units == Unit.MGD:
+        elif network.options.units == 'MGD':
             self.f_flow = MGD2LPS
-        elif network.options.units == Unit.IMGD:
+        elif network.options.units == 'IMGD':
             self.f_flow = IMGD2LPS
-        elif network.options.units == Unit.AFD:
+        elif network.options.units == 'AFD':
             self.f_flow = AFD2LPS
-        elif network.options.units == Unit.LPM:
+        elif network.options.units == 'LPM':
             self.f_flow = LPM2LPS
-        elif network.options.units == Unit.MLD:
+        elif network.options.units == 'MLD':
             self.f_flow = MLD2LPS
-        elif network.options.units == Unit.CMH:
+        elif network.options.units == 'CMH':
             self.f_flow = CMH2LPS
-        elif network.options.units == Unit.CMD:
+        elif network.options.units == 'CMD':
             self.f_flow = CMD2LPS
         else:
             raise ValueError(f'Illegal unit {network.options.units} defined.')
 
         self.f_demand = self.f_flow
-        si_units = [Unit.LPS,
-                    Unit.LPM,
-                    Unit.MLD,
-                    Unit.CMH,
-                    Unit.CMD]
+        si_units = ['LPS',
+                    'LPM',
+                    'MLD',
+                    'CMH',
+                    'CMD']
 
         if network.options.units in us_units:
             self.f_emitter_coefficient = self.f_flow * 1.0 / np.sqrt(PSI2METER)
@@ -125,7 +123,7 @@ def convert(network):
 
     """
 
-    if network.options.units == Unit.LPS:
+    if network.options.units == 'LPS':
         return
 
     converter = Converter(network)
@@ -158,4 +156,4 @@ def convert(network):
         p.length *= converter.f_length
         p.roughness *= converter.f_roughness_coeff
 
-    network.options.units = Unit.LPS
+    network.options.units = 'LPS'

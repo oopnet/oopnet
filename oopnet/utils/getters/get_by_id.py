@@ -2,154 +2,154 @@ from oopnet.elements import Network, Junction, Link, Node, Valve, Pump, Pipe, Re
 
 
 def get_junction(network: Network, id: str) -> Junction:
-    """This function returns a specific Junction from the network with a specific id
+    """Gets a specific Junction from the network with a specific ID.
 
     Args:
       network: OOPNET network object
-      id: id of the Junction
+      id: ID of the Junction
 
     Returns:
-      Junction with property id
+      Junction with property ID
 
     """
     return network.junctions[id]
 
 
 def get_tank(network: Network, id: str) -> Tank:
-    """This function returns a specific Tank from the network with a specific id
+    """Gets a specific Tank from the network with a specific ID.
 
     Args:
       network: OOPNET network object
-      id: id of the Tank
+      id: ID of the Tank
 
     Returns:
-      Tank with property id
+      Tank with property ID
 
     """
     return network.tanks[id]
 
 
 def get_reservoir(network: Network, id: str) -> Reservoir:
-    """This function returns a specific Reservoir from the network with a specific id
+    """Gets a specific Reservoir from the network with a specific ID.
 
     Args:
       network: OOPNET network object
-      id: id of the Reservoir
+      id: ID of the Reservoir
 
     Returns:
-      Reservoir with property id
+      Reservoir with property ID
 
     """
     return network.reservoirs[id]
 
 
 def get_pipe(network: Network, id: str) -> Pipe:
-    """This function returns a specific Pipe from the network with a specific id
+    """Gets a specific Pipe from the network with a specific ID.
 
     Args:
       network: OOPNET network object
-      id: id of the Pipe
+      id: ID of the Pipe
 
     Returns:
-      Pipe with property id
+      Pipe with property ID
 
     """
     return network.pipes[id]
 
 
 def get_pump(network: Network, id: str) -> Pump:
-    """This function returns a specific Pump from the network with a specific id
+    """Gets a specific Pump from the network with a specific ID.
 
     Args:
       network: OOPNET network object
-      id: id of the Pump
+      id: ID of the Pump
 
     Returns:
-      Pump with property id
+      Pump with property ID
 
     """
     return network.pumps[id]
 
 
 def get_valve(network: Network, id: str) -> Valve:
-    """This function returns a specific Valve from the network with a specific id
+    """Gets a specific Valve from the network with a specific ID.
 
     Args:
       network: OOPNET network object
-      id: id of the Valve
+      id: ID of the Valve
 
     Returns:
-      Valve with property id
+      Valve with property ID
 
     """
     return network.valves[id]
 
 
 def get_curve(network: Network, id: str) -> Curve:
-    """This function returns a specific Curve from the network with a specific id
+    """Gets a specific Curve from the network with a specific ID.
 
     Args:
       network: OOPNET network object
-      id: id of the Curve
+      id: ID of the Curve
 
     Returns:
-      Curve with property id
+      Curve with property ID
 
     """
     return network.curves[id]
 
 
 def get_pattern(network: Network, id: str) -> Pattern:
-    """This function returns a specific Pattern from the network with a specific id
+    """Gets a specific Pattern from the network with a specific ID.
 
     Args:
       network: OOPNET network object
-      id: id of the Pattern
+      id: ID of the Pattern
 
     Returns:
-      Pattern with property id
+      Pattern with property ID
 
     """
     return network.patterns[id]
 
 
 def get_rule(network: Network, id: str) -> Rule:
-    """This function returns a specific Rule from the network with a specific id
+    """Gets a specific Rule from the network with a specific ID.
 
     Args:
       network: OOPNET network object
-      id: id of the Rule
+      id: ID of the Rule
 
     Returns:
-      Rule with property id
+      Rule with property ID
 
     """
     return network.rules[id]
 
 
 def get_node(network: Network, id: str) -> Node:
-    """This function returns a specific Node from the network with a specific id
+    """Gets a specific Node from the network with a specific ID.
 
     Args:
       network: OOPNET network object
-      id: id of the Node
+      id: ID of the Node
 
     Returns:
-      Node with property id
+      Node with property ID
 
     """
     return network.nodes[id]
 
 
 def get_link(network: Network, id: str) -> Link:
-    """This function returns a specific Link from the network with a specific id
+    """Gets a specific Link from the network with a specific ID.
 
     Args:
       network: OOPNET network object
-      id: id of the Link
+      id: ID of the Link
 
     Returns:
-      Link with property id
+      Link with property ID
 
     """
     return network.links[id]

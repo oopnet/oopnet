@@ -6,6 +6,7 @@ import pandas as pd
 unixtime = datetime.datetime(year=1970, month=1, day=1)
 
 
+# todo: add documentation
 class Report:
     """ """
 

@@ -1,4 +1,4 @@
-from typing import Union, Optional
+from typing import Union, Optional, Type
 
 import matplotlib.axes
 from matplotlib import pyplot as plt
@@ -18,7 +18,7 @@ from oopnet.utils.getters import get_link_ids, get_node_ids, get_valves, get_pum
 class Plotnodes:
     """ """
 
-    def __new__(cls, nodes: list, nodetype: Union[type[Junction], type[Reservoir], type[Tank]], color: pd.Series,
+    def __new__(cls, nodes: list, nodetype: Union[Type[Junction], Type[Reservoir], Type[Tank]], color: pd.Series,
                 ms: float, zorder: int, nodetruncate: bool = False):
         nid = []
         x = []

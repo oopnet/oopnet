@@ -8,7 +8,6 @@ import re
 from typing import Union, Optional
 
 from oopnet.elements import Network
-from oopnet.elements.enums import ReportElementSetting
 from oopnet.report.reportfile_reader import ReportFileReader
 from oopnet.report.binaryfile_reader import BinaryFileReader
 from oopnet.utils import utils
@@ -82,11 +81,11 @@ class ModelSimulator:
             
     def _setup_report(self):
         """Sets up report."""
-        if isinstance(self.thing, Network) and \
-                (self.thing.report.nodes == ReportElementSetting.NONE or not self.thing.report.nodes) \
-                and (self.thing.report.links == ReportElementSetting.NONE or not self.thing.report.links):
-            self.thing.report.nodes = ReportElementSetting.ALL
-            self.thing.report.links = ReportElementSetting.ALL
+        if isinstance(self.thing, Network):
+            if self.thing.report.nodes == 'NONE' or not self.thing.report.nodes:
+                self.thing.report.nodes = 'ALL'
+            if self.thing.report.links == 'NONE' or not self.thing.report.links:
+                self.thing.report.links = 'ALL'
 
     def _create_command(self):
         """Creates command for simulating model."""

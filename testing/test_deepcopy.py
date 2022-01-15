@@ -1,7 +1,6 @@
 import datetime
 import unittest
 
-from oopnet.elements.enums import DemandModel, ReportBoolSetting
 from oopnet.utils.getters import *
 
 from testing.base import SimpleModel
@@ -52,7 +51,7 @@ class SimpleDeepcopyTest(unittest.TestCase):
     def test_options(self):
         old_options = self.old_network.options
         new_options = self.new_network.options
-        old_options.demandmodel = DemandModel.PDA
+        old_options.demandmodel = 'PDA'
         self.assertFalse(old_options == new_options)
 
     def test_times(self):
@@ -64,7 +63,7 @@ class SimpleDeepcopyTest(unittest.TestCase):
     def test_report_parameter(self):
         old_parameter = self.old_network.reportparameter
         new_parameter = self.new_network.reportparameter
-        old_parameter.demand = ReportBoolSetting.YES
+        old_parameter.demand = 'NO'
         self.assertFalse(old_parameter == new_parameter)
 
     def test_report_precision(self):
@@ -76,7 +75,7 @@ class SimpleDeepcopyTest(unittest.TestCase):
     def test_report(self):
         old_report = self.old_network.report
         new_report = self.new_network.report
-        old_report.status = ReportBoolSetting.YES
+        old_report.status = 'YES'
         self.assertFalse(old_report == new_report)
         
 

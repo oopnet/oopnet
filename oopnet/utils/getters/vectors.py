@@ -9,7 +9,7 @@ from oopnet.utils.getters import get_pipes, get_junctions, get_nodes, get_tanks,
 
 
 def v_length(network: Network) -> np.array:
-    """Get all length values of all pipes in the network as a numpy array
+    """Gets all length values of all Pipes in the network as a numpy array
 
     Args:
       network: OOPNET network object
@@ -22,7 +22,7 @@ def v_length(network: Network) -> np.array:
 
 
 def v_diameter(network: Network) -> np.array:
-    """Get all diameter values of all pipes and valves in the network as a numpy array
+    """Gets all diameter values of all Pipes and valves in the network as a numpy array
 
     Args:
       network: OOPNET network object
@@ -35,7 +35,7 @@ def v_diameter(network: Network) -> np.array:
 
 
 def v_roughness(network: Network) -> np.array:
-    """Get all roughness values of all pipes in the network as a numpy array
+    """Gets all roughness values of all Pipes in the network as a numpy array
 
     Args:
       network: OOPNET network object
@@ -48,7 +48,7 @@ def v_roughness(network: Network) -> np.array:
 
 
 def v_minorloss(network: Network) -> np.array:
-    """Get all minor loss coefficient values of all pipes in the network as a numpy array
+    """Gets all minor loss coefficient values of all Pipes in the network as a numpy array
 
     Args:
       network: OOPNET network object
@@ -61,7 +61,7 @@ def v_minorloss(network: Network) -> np.array:
 
 
 def v_elevation(network: Network) -> np.array:
-    """Get all elevation values of all nodes in the network as a numpy array
+    """Gets all elevation values of all nodes in the network as a numpy array
 
     Args:
       network: OOPNET network object
@@ -74,7 +74,7 @@ def v_elevation(network: Network) -> np.array:
 
 
 def v_emittercoefficient(network: Network) -> np.array:
-    """Get all emitter coefficients values of all junctions in the network as a numpy array
+    """Gets all emitter coefficients values of all junctions in the network as a numpy array
 
     Args:
       network: OOPNET network object
@@ -87,7 +87,7 @@ def v_emittercoefficient(network: Network) -> np.array:
 
 
 def v_demand(network: Network) -> np.array:
-    """Get all emitter coefficients values of all junctions in the network as a numpy array
+    """Gets all emitter coefficients values of all junctions in the network as a numpy array
 
     Args:
       network: OOPNET network object
@@ -100,7 +100,7 @@ def v_demand(network: Network) -> np.array:
 
 
 def v_head(network: Network) -> np.array:
-    """Get all head values of all reservoir in the network as a numpy array
+    """Gets all head values of all reservoir in the network as a numpy array
 
     Args:
       network: OOPNET network object
@@ -113,7 +113,7 @@ def v_head(network: Network) -> np.array:
 
 
 def v_initlevel(network: Network) -> np.array:
-    """Get all initial levels of all tanks in the network as a numpy array
+    """Gets all initial levels of all tanks in the network as a numpy array
 
     Args:
       network: OOPNET network object
@@ -126,7 +126,7 @@ def v_initlevel(network: Network) -> np.array:
 
 
 def v_minlevel(network: Network) -> np.array:
-    """Get all minimum levels of all tanks in the network as a numpy array
+    """Gets all minimum levels of all tanks in the network as a numpy array
 
     Args:
       network: OOPNET network object
@@ -139,7 +139,7 @@ def v_minlevel(network: Network) -> np.array:
 
 
 def v_maxlevel(network: Network) -> np.array:
-    """Get all maximum levels of all tanks in the network as a numpy array
+    """Gets all maximum levels of all tanks in the network as a numpy array
 
     Args:
       network: OOPNET network object
@@ -152,7 +152,7 @@ def v_maxlevel(network: Network) -> np.array:
 
 
 def v_tankdiameter(network: Network) -> np.array:
-    """Get all diameters of all tanks in the network as a numpy array
+    """Gets all diameters of all tanks in the network as a numpy array
 
     Args:
       network: OOPNET network object
@@ -165,7 +165,7 @@ def v_tankdiameter(network: Network) -> np.array:
 
 
 def v_minvolume(network: Network) -> np.array:
-    """Get all minimal volumes of all tanks in the network as a numpy array
+    """Gets all minimal volumes of all tanks in the network as a numpy array
 
     Args:
       network: OOPNET network object

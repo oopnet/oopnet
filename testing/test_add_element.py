@@ -52,14 +52,13 @@ class BlankModelLinkTest(unittest.TestCase):
         self.network = add_dummy_junctions(network, 2)
 
     def test_add_simple_pipe_object(self):
-        from oopnet.elements.enums import PumpStatus
         j1 = get_junction(self.network, 'J-1')
         j2 = get_junction(self.network, 'J-2')
         add_pipe(self.network, Pipe(id='test', startnode=j1, endnode=j2, diameter=200, length=250, roughness=0.3,
                  minorloss=1.0, status='CLOSED', comment='Test'))
         self.assertEqual(1, len(self.network.pipes))
         p = get_pipe(self.network, 'test')
-        self.assertEqual(PumpStatus.CLOSED, p.status)
+        self.assertEqual('CLOSED', p.status)
 
     def test_add_simple_pump_object(self):
         j1 = get_junction(self.network, 'J-1')

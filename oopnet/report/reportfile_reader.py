@@ -10,13 +10,13 @@ from oopnet.report.error_manager import ErrorManager
 
 
 def str2hms(timestring: str) -> tuple[int, int, float]:
-    """
+    """Converts a string to a tuple containing hours, minutes and seconds.
 
     Args:
-      timestring: str:
+      timestring: string to be parsed
 
     Returns:
-
+        parsed timestring as a tuple
     """
     vals = timestring.split(':')
     hours = int(vals[0])
@@ -71,11 +71,12 @@ def lst2xray(lst: list) -> xr.DataArray:
     return xr.DataArray(frame)
 
 
+# todo: refactor
 class ReportFileReader:
     def __new__(cls, filename: str, startdatetime: Optional[datetime.datetime] = None) -> tuple[Union[DataArray, Dataset, None], Union[DataArray, Dataset, None]]:
         with open(filename, 'r') as fid:
             content = fid.readlines()
-            print(content)
+            # print(content)
             block = {}
             key = 'start'
             block[key] = []
@@ -84,7 +85,7 @@ class ReportFileReader:
 
             for linenumber, line in enumerate(content):
                 if error_found and len(line.strip()) != 0:
-                    error_manager.append_error_message(line)
+                    error_manager.append_error_details(line)
 
                 error_found = error_manager.check_line(line)
                 if len(line.strip()) == 0:

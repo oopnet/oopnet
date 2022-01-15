@@ -1,317 +1,315 @@
-from typing import List
-
 from oopnet.elements import Network, Pipe, Junction, Reservoir, Tank, Node, Link, Pump, Valve, Curve, Pattern, Energy, \
     Control, Rule
 
 
-def get_pattern_ids(network: Network) -> List[str]:
-    """Function for getting all pattern ids in a network
+def get_pattern_ids(network: Network) -> list[str]:
+    """Gets all Pattern IDs in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of pattern ids
+      list of Pattern IDs
 
     """
     return list(network.patterns.keys())
 
 
-def get_curve_ids(network: Network) -> List[str]:
-    """Function for getting all curve ids in a network
+def get_curve_ids(network: Network) -> list[str]:
+    """Gets all Curve IDs in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of curve ids
+      list of Curve IDs
 
     """
     return list(network.curves.keys())
 
 
-def get_rule_ids(network: Network) -> List[str]:
-    """Function for getting all rule ids in a network
+def get_rule_ids(network: Network) -> list[str]:
+    """Gets all Rule IDs in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of curve ids
+      list of Rule IDs
 
     """
     return list(network.rules.keys())
 
 
-def get_junction_ids(network: Network) -> List[str]:
-    """Function for getting all junction ids in a network
+def get_junction_ids(network: Network) -> list[str]:
+    """Gets all Junction IDs in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of junction ids
+      list of Junction IDs
 
     """
     return list(network.junctions.keys())
 
 
-def get_tank_ids(network: Network) -> List[str]:
-    """Function for getting all tank ids in a network
+def get_tank_ids(network: Network) -> list[str]:
+    """Gets all Tank IDs in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of tank ids
+      list of Tank IDs
 
     """
     return list(network.tanks.keys())
 
 
-def get_reservoir_ids(network: Network) -> List[str]:
-    """Function for getting all reservoir ids in a network
+def get_reservoir_ids(network: Network) -> list[str]:
+    """Gets all Reservoir IDs in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of reservoir ids
+      list of Reservoir IDs
 
     """
     return list(network.reservoirs.keys())
 
 
-def get_node_ids(network: Network) -> List[str]:
-    """Function for getting all node ids in a network
+def get_node_ids(network: Network) -> list[str]:
+    """Gets all Node IDs in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of node ids
+      list of Node IDs
 
     """
     return get_junction_ids(network) + get_tank_ids(network) + get_reservoir_ids(network)
 
 
-def get_pipe_ids(network: Network) -> List[str]:
-    """Function for getting all pipe ids in a network
+def get_pipe_ids(network: Network) -> list[str]:
+    """Gets all Pipe IDs in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of pipe ids
+      list of Pipe IDs
 
     """
     return list(network.pipes.keys())
 
 
-def get_pump_ids(network: Network) -> List[str]:
-    """Function for getting all pump ids in a network
+def get_pump_ids(network: Network) -> list[str]:
+    """Gets all Pump IDs in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of pump ids
+      list of Pump IDs
 
     """
     return list(network.pumps.keys())
 
 
-def get_valve_ids(network: Network) -> List[str]:
-    """Function for getting all valve ids in a network
+def get_valve_ids(network: Network) -> list[str]:
+    """Gets all Valve IDs in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of valve ids
+      list of Valve IDs
 
     """
     return list(network.valves.keys())
 
 
-def get_link_ids(network: Network) -> List[str]:
-    """Function for getting all link ids in a network
+def get_link_ids(network: Network) -> list[str]:
+    """Gets all Link IDs in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of link ids
+      list of Link IDs
 
     """
     return get_pipe_ids(network) + get_pump_ids(network) + get_valve_ids(network)
 
 
 # Retrieve all specific objects
-def get_pipes(network: Network) -> List[Pipe]:
-    """This function returns all network pipes as a list
+def get_pipes(network: Network) -> list[Pipe]:
+    """Gets all Pipes in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of pipes
+      list of Pipes
 
     """
     return list(network.pipes.values())
 
 
-def get_junctions(network: Network) -> List[Junction]:
-    """This function returns all network junctions as a list
+def get_junctions(network: Network) -> list[Junction]:
+    """Gets all Junctions in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of junctions
+      list of Junctions
 
     """
     return list(network.junctions.values())
 
 
-def get_reservoirs(network: Network) -> List[Reservoir]:
-    """This function returns all reservoirs in the network as a list
+def get_reservoirs(network: Network) -> list[Reservoir]:
+    """Gets all Reservoirs in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of reservoirs
+      list of Reservoirs
 
     """
     return list(network.reservoirs.values())
 
 
-def get_tanks(network: Network) -> List[Tank]:
-    """This function returns all tanks in the network as a list
+def get_tanks(network: Network) -> list[Tank]:
+    """Gets all Tanks in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of tanks
+      list of Tanks
 
     """
     return list(network.tanks.values())
 
 
-def get_nodes(network: Network) -> List[Node]:
-    """This function returns all network nodes as a list (junctions, tanks and reservoirs)
+def get_nodes(network: Network) -> list[Node]:
+    """Gets all Nodes (Junctions, Reservoirs and Tanks) in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of nodes
+      list of Nodes
 
     """
     return get_junctions(network) + get_tanks(network) + get_reservoirs(network)
 
 
-def get_links(network: Network) -> List[Link]:
-    """This function returns all network links as a list (pipes, pumps and valves)
+def get_links(network: Network) -> list[Link]:
+    """Gets all Links (Pipes, Pumps and Valves) in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of links
+      list of Links
 
     """
     return get_pipes(network) + get_pumps(network) + get_valves(network)
 
 
-def get_pumps(network: Network) -> List[Pump]:
-    """This function returns all pumps in the network as a list
+def get_pumps(network: Network) -> list[Pump]:
+    """Gets all Pumps in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of pumps
+      list of Pumps
 
     """
     return list(network.pumps.values())
 
 
-def get_valves(network: Network) -> List[Valve]:
-    """This function returns all valves in the network as a list
+def get_valves(network: Network) -> list[Valve]:
+    """Gets all Valves in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of valves
+      list of Valves
 
     """
     return list(network.valves.values())
 
 
-def get_curves(network: Network) -> List[Curve]:
-    """This function returns all curves in the network as a list
+def get_curves(network: Network) -> list[Curve]:
+    """Gets all Curves in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of curves
+      list of Curves
 
     """
     return list(network.curves.values())
 
 
-def get_patterns(network: Network) -> List[Pattern]:
-    """This function returns all patterns in the network as a list
+def get_patterns(network: Network) -> list[Pattern]:
+    """Gets all Patterns in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of patterns
+      list of Patterns
 
     """
     return list(network.patterns.values())
 
 
-def get_energies(network: Network) -> List[Energy]:
-    """This function returns all energy entries in the network as a list
+def get_energies(network: Network) -> list[Energy]:
+    """Gets all Energy entries in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of energy entries
+      list of Energy entries
 
     """
     return network.energies
 
 
-def get_controls(network: Network) -> List[Control]:
-    """This function returns all controls in the network as a list
+def get_controls(network: Network) -> list[Control]:
+    """Gets all Controls in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of controls
+      list of Controls
 
     """
     return network.controls
 
 
-def get_rules(network: Network) -> List[Rule]:
-    """This function returns all rules in the network as a list
+def get_rules(network: Network) -> list[Rule]:
+    """Gets all Rules in a network.
 
     Args:
       network: OOPNET network object
 
     Returns:
-      list of rules
+      list of Rules
 
     """
     return list(network.rules.values())

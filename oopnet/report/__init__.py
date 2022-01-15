@@ -14,4 +14,12 @@ from .report_getter_functions import position as Position
 from .report_getter_functions import setting as Setting
 from .report_getter_functions import nodeinfo as Nodeinfo
 from .report_getter_functions import linkinfo as Linkinfo
-from .simulation_errors import EPANETSimulationError
+from .simulation_errors import EPANETSimulationError, EPANETError, InsufficientMemoryError, HydraulicEquationError, \
+    InputDataError, EPANETSyntaxError, IllegalNumericalValueError, UndefinedNodeError, UndefinedLinkError, \
+    UndefinedTimePatternError, UndefinedCurveError, CheckValveImmutableError, NodeReferenceError, \
+    IllegalNodePropertyError, LinkReferenceError, IllegalLinkPropertyError, UndefinedTraceNodeError, \
+    IllegalAnalysisOptionError, TooManyCharactersError, SharedIDError, UndefinedPumpError, InvalidEnergyDataError, \
+    IllegalValveValveConnectionError, IllegalValveSourceConnectionError, MisplacedRuleClause, NotEnoughNodesError, \
+    NotEnoughSourcesError, InvalidTankLevelError, InvalidPumpError, InvalidCurveError, UnconnectedNodeError, \
+    TempInputFileAccessError, ReportFileAccessError, BinaryOutputFileAccessError, ResultFileSavingError, \
+    ReportFileSavingError
