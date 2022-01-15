@@ -11,7 +11,7 @@ from oopnet.report.xrayreport import Report
 
 
 def mkdir(newdir: str):
-    """works the way a good mkdir should :)
+    """Creates a new directory.
 
     - already exists, silently complete
     - regular file in the way, raise an exception
@@ -31,11 +31,11 @@ def mkdir(newdir: str):
         head, tail = os.path.split(newdir)
         if head and not os.path.isdir(head):
             mkdir(head)
-        # print "_mkdir %s" % repr(newdir)
         if tail:
             os.mkdir(newdir)
 
 
+# todo: remove?
 def adddummyjunction(network, pipe, ce, dummyname='Dummy'):
     """
 
