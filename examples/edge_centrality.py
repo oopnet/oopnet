@@ -2,19 +2,18 @@ import os
 
 import networkx as nx
 
-from oopnet.api import *
-from oopnet.graph.graph import edgeresult2pandas
+from oopnet import *
 
-filename = os.path.join('..', 'examples', 'data', 'anytown.inp')
+filename = os.path.join('data', 'anytown.inp')
 
 net = Read(filename)
 
-G = Graph(net)
+G = MultiGraph(net)
 
 c = nx.edge_betweenness_centrality(G)
 
 c = edgeresult2pandas(G, c)
 c.name = 'Edge-betweenness Centrality'
-
+print(c)
 Plot(net, links=c)
-Show()
+plt.show()

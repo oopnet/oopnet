@@ -1,8 +1,6 @@
 import os
 
-from oopnet.api import *
-
-# todo: fix
+from oopnet import *
 
 filename = os.path.join('data', 'C-town.inp')
 net = Read(filename)
@@ -30,4 +28,4 @@ Pressure(rpt)[['J10', 'J1058']].plot(ax=ax2)
 
 plt.xlabel('time', fontsize=16)
 plt.ylabel('p (m)', fontsize=16)
-Show()
+plt.show()

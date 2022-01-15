@@ -2,7 +2,7 @@ import os
 
 import networkx as nx
 
-from oopnet.api import *
+from oopnet import *
 
 # Read file into OOPNET
 filename = os.path.join('data', 'anytown.inp')
@@ -13,9 +13,9 @@ G = Graph(network)
 print(type(G))
 
 # Some graph theoretic measurements:
-print('Center:', nx.center(G))
-print('Diameter:', nx.diameter(G))
-print('Radius:', nx.radius(G))
+print(f'Center: {nx.center(G)}')
+print(f'Diameter: {nx.diameter(G)}')
+print(f'Radius: {nx.radius(G)}')
 
 # Page Rank algorithm
 pr = nx.pagerank_numpy(G)
@@ -47,4 +47,4 @@ df = pd.DataFrame(paths)
 f, ax = plt.subplots()
 # todo: fix
 sns.heatmap(df, square=True, xticklabels=5, yticklabels=5, linewidths=.5)
-Show()
+plt.show()

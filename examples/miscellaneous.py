@@ -1,7 +1,7 @@
 import os
 
-from oopnet.api import *
-from oopnet.elements.system_operation import Pattern
+from oopnet import *
+from oopnet.elements import Pattern
 
 filename = os.path.join('data', 'Poulakis.inp')
 
@@ -11,7 +11,7 @@ pat1 = Pattern(id='1', multipliers=list(np.linspace(0.5, 1.5, 10)))
 add_pattern(network, pat1)
 # network.patterns = [pat1]
 
-for j in network.junctions:
+for j in get_junctions(network):
     j.demandpattern = pat1
 network.times.duration = timedelta(hours=18)
 
@@ -19,7 +19,7 @@ network.times.duration = timedelta(hours=18)
 report = Run(network)
 
 Linkinfo(report, linkname='P-03').plot()
-Show()
+plt.show()
 
 
 # ax = plt.subplot(111)

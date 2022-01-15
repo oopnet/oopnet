@@ -2,11 +2,10 @@ import os
 
 import networkx as nx
 
-from oopnet.api import *
+from oopnet import *
 from oopnet.graph.graph import onlinks2nxlinks
 
-
-filename = os.path.join('..', 'examples', 'data', 'anytown.inp')
+filename = os.path.join('data', 'anytown.inp')
 
 net = Read(filename)
 
@@ -54,4 +53,4 @@ plt.imshow(D.todense(), cmap='viridis', interpolation='nearest')
 plt.title('Adjacency matrix; directed graph')
 plt.colorbar()
 
-Show()
+plt.show()

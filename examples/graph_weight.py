@@ -2,22 +2,22 @@ import os
 
 import networkx as nx
 
-from oopnet.api import *
+from oopnet import *
 
 # todo: fix
 
-filename = os.path.join('..', 'examples', 'data', 'C-town.inp')
+filename = os.path.join('data', 'C-town.inp')
 
 net = Read(filename)
 
 G = Graph(net, weight='diameter')
-
-print(nx.average_shortest_path_length(G, 'weight'))
+avg_sp = nx.average_shortest_path_length(G, 'weight')
+print(f'Average Shortest Path: {avg_sp}')
 
 G = Graph(net, weight='diameter', default=0)
-
-print(nx.average_shortest_path_length(G, 'weight'))
+avg_sp = nx.average_shortest_path_length(G, 'weight')
+print(f'Average Shortest Path: {avg_sp}')
 
 G = Graph(net, weight='length', default=0)
-
-print(nx.average_shortest_path_length(G, 'weight'))
+avg_sp = nx.average_shortest_path_length(G, 'weight')
+print(f'Average Shortest Path: {avg_sp}')
