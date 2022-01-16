@@ -77,21 +77,21 @@ def get_startendcoordinates(network: Network) -> pd.DataFrame:
                                          'end y-coordinate': ey})
 
 
-def get_initialstatus(network: Network) -> pd.Series:
-    """Gets all initial status of all Links in the Network as a pandas Series.
-
-    Args:
-      network: OOPNET Network object
-
-    Returns:
-      Pandas Series with Link IDs as index and initial status as values.
-
-    """
-    values = [x.initialstatus for x in get_pumps(network) + get_valves(network)]
-    names = get_pump_ids(network) + get_valve_ids(network)
-    series = pd.Series(data=values, index=names)
-    series.name = 'intial status'
-    return series
+# def get_initialstatus(network: Network) -> pd.Series:
+#     """Gets all initial status of all Links in the Network as a pandas Series.
+#
+#     Args:
+#       network: OOPNET Network object
+#
+#     Returns:
+#       Pandas Series with Link IDs as index and initial status as values.
+#
+#     """
+#     values = [x.initialstatus for x in get_pumps(network) + get_valves(network)]
+#     names = get_pump_ids(network) + get_valve_ids(network)
+#     series = pd.Series(data=values, index=names)
+#     series.name = 'intial status'
+#     return series
 
 
 def get_status(network: Network) -> pd.Series:

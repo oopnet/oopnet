@@ -75,6 +75,8 @@ class ComponentFactory(ReadFactory):
             elif attr_cls == Node:
                 value = get_node(network, value)
                 attr_dict[attr] = value
+            elif attr_cls == str and attr != 'id':
+                attr_dict[attr] = attr_cls(value.upper())
             else:
                 attr_dict[attr] = attr_cls(value)
         return attr_dict

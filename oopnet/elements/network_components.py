@@ -49,31 +49,7 @@ class Link(NetworkComponent):
     """
     startnode: Optional[Node] = None
     endnode: Optional[Node] = None
-    # todo: rethink enum type hinting for initialstatus and status
-    # _initialstatus: Union[Status, float] = Status.OPEN
-    # _status: Status = Status.OPEN
-    # initialstatus = Either(None, Enum('OPEN', 'CLOSED', 'ACTIVE', 'CV'), Float)
-    # status = Enum('OPEN', 'CLOSED', 'ACTIVE', 'CV')
-
-    @property
-    @abstractmethod
-    def initialstatus(self):
-        """Returns link's initial status."""
-
-    @initialstatus.setter
-    @abstractmethod
-    def initialstatus(self, value):
-        """Sets link's initial status."""
-        
-    @property
-    @abstractmethod
-    def status(self):
-        """Sets link's status."""
-
-    @status.setter
-    @abstractmethod
-    def status(self, value):
-        """Sets link's status."""
+    status: str = 'OPEN'
 
     @property
     def coordinates(self) -> tuple[tuple[float, float, float], tuple[float, float, float]]:
@@ -163,8 +139,7 @@ class Pipe(Link):
     minorloss: float = 0
     reactionbulk: Optional[float] = None
     reactionwall: Optional[float] = None
-    initialstatus: str = 'OPEN'
-    status: str = 'OPEN'
+
 
 # todo: rethink keyword, value structure (what happens for multiple properties?)
 @dataclass
@@ -181,8 +156,6 @@ class Pump(Link):
     keyword: Optional[str] = None  # = Enum('POWER', 'HEAD', 'SPEED', 'PATTERN')
     value: Union[str, float, None] = None
     setting: Optional[float] = None
-    initialstatus: str = 'OPEN'
-    status: str = 'OPEN'
 
 
 @dataclass
@@ -201,8 +174,6 @@ class Valve(Link):
     diameter: float = 12
     minorloss: float = 0
     setting: Union[float, str] = 0
-    initialstatus: str = 'OPEN'
-    status: str = 'OPEN'
 
 
 @dataclass

@@ -37,7 +37,7 @@ def write_patterns(network: Network, fid: TextIOWrapper):
     print('[PATTERNS]', file=fid)
     print(';id multipliers', file=fid)
     for p in get_patterns(network):
-        for i, m in enumerate(p.multipliers):
+        for m in p.multipliers:
             print(p.id, end=' ', file=fid)
             print(m, file=fid)
         print('\n', end=' ', file=fid)
@@ -82,14 +82,14 @@ def write_status(network: Network, fid: TextIOWrapper):
     print('[STATUS]', file=fid)
     print(';id status/setting', file=fid)
     for l in get_pipes(network):
-        if l.initialstatus == 'CLOSED':
-            print(l.id, l.initialstatus, file=fid)
+        if l.status == 'CLOSED':
+            print(l.id, l.status, file=fid)
     for v in get_valves(network):
-        if v.initialstatus == 'CLOSED' or v.setting == 1:
-            print(v.id, v.initialstatus, file=fid)
+        if v.status == 'CLOSED' or v.setting == 1:
+            print(v.id, v.status, file=fid)
     for pu in get_pumps(network):
-        if pu.initialstatus == 'CLOSED':
-            print(pu.id, pu.initialstatus, file=fid)
+        if pu.status == 'CLOSED':
+            print(pu.id, pu.status, file=fid)
         elif pu.keyword == 'SPEED':
             print(pu.id, pu, file=fid)
     print('\n', end=' ', file=fid)
@@ -159,15 +159,16 @@ def write_demands(network: Network, fid: TextIOWrapper):
             pass
         elif isinstance(j.demand, list):
             for i, d in enumerate(j.demand):
-                if i != 0:
-                    print(j.id, end=' ', file=fid)
-                    print(d, end=' ', file=fid)
-                    # todo: replace try except
-                    try:
-                        print(j.demandpattern[i].id, end=' ', file=fid)
-                    except:
-                        pass
-                    print('\n', end=' ', file=fid)
+                if i == 0:  # skip first line
+                    continue
+                print(j.id, end=' ', file=fid)
+                print(d, end=' ', file=fid)
+                # todo: replace try except
+                try:
+                    print(j.demandpattern[i].id, end=' ', file=fid)
+                except:
+                    pass
+                print('\n', end=' ', file=fid)
         else:
             raise TypeError(f'Unknown demand dtype {type(j.demand)}')
     print('\n', end=' ', file=fid)

@@ -12,7 +12,7 @@ from oopnet.elements.network_components import Node, Pattern, Link
 @dataclass
 class Options:
     """Defines various simulation options."""
-    units: str = 'GPM'  # = 'GPM'  # = Enum('CFS', 'GPM', 'MGD', 'IMGD', 'AFD', 'LPS', 'LPM', 'MLD', 'CMH', 'CMD')
+    units: str = 'LPS'  # = 'GPM'  # = Enum('CFS', 'GPM', 'MGD', 'IMGD', 'AFD', 'LPS', 'LPM', 'MLD', 'CMH', 'CMD')
     headloss: str = 'HW'  # str = 'H-W'  # = Enum('H-W', 'D-W', 'C-M')
     hydraulics: Optional[tuple[str, str]] = None  # = Either(None, List('USE', Str), List('SAVE', Str))
     quality: Union[str, tuple[str, str], tuple[str, str, str]] = 'NONE'  # = Any #Either(None, Enum('NONE', 'CHEMICAL', 'AGE'), List('TRACE', Instance(Node)), List('CHEMICAL', Str, Str))

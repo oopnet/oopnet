@@ -6,6 +6,6 @@ from .get_by_id import get_junction, get_tank, get_reservoir, get_pipe, get_pump
     get_pattern, get_rule, get_node, get_link
 from .special_getters import getneighbor, getnextneighbor, getsourcelist, getsourceneighbors
 from .property_getters import get_startnodes, get_endnodes, get_startendnodes, get_startendcoordinates, \
-    get_initialstatus, get_status, get_setting, get_linkcenter_coordinates, get_link_comment, get_length, \
+    get_status, get_setting, get_linkcenter_coordinates, get_link_comment, get_length, \
     get_diameter, get_roughness, get_minorloss, get_xcoordinate, get_ycoordinate, get_coordinates, get_elevation, \
-    get_basedemand, get_node_comment
+    get_basedemand, get_node_comment  #, get_initialstatus

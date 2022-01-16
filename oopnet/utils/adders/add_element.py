@@ -48,7 +48,6 @@ def _add_component(obj: Union[NetworkComponent, Rule], component_hash: dict):
     component_hash[obj.id] = obj
 
 
-# todo: implement addition of multiple object instances?
 def add_pattern(network: Network, pattern: Pattern, check_exists: bool = True):
     """Adds a Pattern to an OOPNET network object.
 

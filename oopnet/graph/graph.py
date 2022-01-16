@@ -27,7 +27,7 @@ def _add_links(graph, network, weight, default):
         graph.add_edge(*e, weight=weight_value, id=l.id)
 
 
-class Graph:
+class Graph(nx.Graph):
     """Generates an undirected NetworkX graph from an OOPNET network.
 
         Note:
@@ -36,15 +36,14 @@ class Graph:
 
         Args:
           network: OOPNET network object
-          weight: name of pipe property as a string which is used as weight (Default value = 'length') or a pandas Series with link IDs as index and weights as values.
-          default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects. (Default value = 0.00001)
+          weight: name of pipe property as a string which is used as weight or a pandas Series with link IDs as index and weights as values.
+          default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects.
 
         Returns:
             NetworkX Graph object containing all nodes and links in the passed Network.
 
         Examples:
-            The following will create a Graph with link lengths as edge weights (filename needs to be a valid EPANET
-            input file):
+            The following will create a Graph with link lengths as edge weights (filename needs to be a valid EPANET input file):
             >>> network = Network(filename)
             >>> g = Graph(network, 'length')
             Using a simulation result as link weight:
@@ -60,20 +59,19 @@ class Graph:
         return graph
 
 
-class DiGraph:
+class DiGraph(nx.DiGraph):
     """Generates a directed NetworkX graph from an OOPNET network.
 
         Args:
           network: OOPNET network object
-          weight: name of pipe property as a string which is used as weight (Default value = 'length') or a pandas Series with link IDs as index and weights as values.
-          default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects. (Default value = 0.00001)
+          weight: name of pipe property as a string which is used as weight or a pandas Series with link IDs as index and weights as values.
+          default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects.
 
         Returns:
             NetworkX DiGraph object containing all nodes and links in the passed Network.
 
         Examples:
-            The following will create a DiGraph with link lengths as edge weights (filename needs to be a valid EPANET
-            input file):
+            The following will create a DiGraph with link lengths as edge weights (filename needs to be a valid EPANET input file):
             >>> network = Network(filename)
             >>> g = DiGraph(network, 'length')
             Using a simulation result as link weight:
@@ -90,20 +88,19 @@ class DiGraph:
         return g
 
 
-class MultiGraph:
-    """This function generates an undirected NetworkX graph from an OOPNET network
+class MultiGraph(nx.MultiGraph):
+    """Generates an undirected NetworkX graph from an OOPNET network
 
         Args:
           network: OOPNET network object
-          weight: name of pipe property as a string which is used as weight (Default value = 'length') or a pandas Series with link IDs as index and weights as values.
-          default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects. (Default value = 0.00001)
+          weight: name of pipe property as a string which is used as weight or a pandas Series with link IDs as index and weights as values.
+          default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects.
 
         Returns:
             NetworkX MultiGraph object containing all nodes and links in the passed Network.
 
         Examples:
-            The following will create a MultiGraph with link lengths as edge weights (filename needs to be a valid EPANET
-            input file):
+            The following will create a MultiGraph with link lengths as edge weights (filename needs to be a valid EPANET input file):
             >>> network = Network(filename)
             >>> g = MultiGraph(network, 'length')
             Using a simulation result as link weight:
@@ -119,56 +116,67 @@ class MultiGraph:
         return g
 
 
-def onlinks2nxlinks(network: Network) -> list:
-    """
+# todo: add documentation
+def onlinks2nxlinks(network: Network) -> list[tuple[str, str]]:
+    """Converts OOPNET links to NetworkX graph edges.
+
     Args:
-      network:
+      network: OOPNET network object
 
     Returns:
-
+        List of tuples in the format (link.startnode.id, link.endnode.id)
     """
     return [(l.startnode.id, l.endnode.id) for l in get_pipes(network)]
 
 
-def nxlinks2onlinks(G: nx.Graph) -> list:
-    """
+def nxlinks2onlinks(G: nx.Graph) -> list[str]:
+    """Converts NetworkX graph edges to OOPNET link IDs.
 
     Args:
-      G:
+      G: NetworkX graph
 
     Returns:
-
+        List of OOPNET Link IDs
     """
     return [G.get_edge_data(n1, n2)['id'] for n1, n2 in G.edges()]
 
 
-def edge2pipeid(G: nx.Graph, edge: dict) -> dict:
-    """
+def edge2pipeid(G: nx.Graph, edge: tuple[str, str]) -> Union[str, list[str]]:
+    """Converts an NetworkX edge in a graph to an OOPNET Link ID.
 
     Args:
-      G:
-      edge:
+      G: NetworkX graph
+      edge: NetworkX edge
 
     Returns:
-
+        ID of corresponding OOPNET Link
     """
-    return G.get_edge_data(edge[0], edge[1])['id']
+    if not isinstance(G, nx.MultiGraph):
+        return G.get_edge_data(*edge)['id']
+    edges = G.get_edge_data(*edge)
+    result = [edges[x]['id'] for x in edges]
+    return result if len(result) > 1 else result[0]
 
 
 def edgeresult2pandas(G: nx.Graph, result: dict) -> pd.Series:
-    """Transform edge data retrieved e.g. from edge centric centrality measurements to a Pandas Series compatible with OOPNET
+    """Transforms edge data retrieved e.g. from edge centric centrality measurements to a Pandas Series compatible with OOPNET.
 
     Args:
       G: networkx graph object
-      result: dictionary with nodeduple as keys
+      result: dictionary with link IDs as keys
 
     Returns:
-      transformed result into a pandas series
+      transformed result into a pandas Series
     """
+    return_dict = {}
     for edge in list(result.keys()):
         pipe = edge2pipeid(G, edge)
-        result[pipe] = result.pop(edge)
-    return pd.Series(result)
+        if isinstance(pipe, list):
+            for lid in pipe:
+                return_dict[lid] = result[edge]
+        else:
+            return_dict[pipe] = result[edge]
+    return pd.Series(return_dict)
 
 
 if __name__ == '__main__':
