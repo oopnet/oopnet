@@ -1,23 +1,7 @@
-from abc import abstractmethod, ABC
-from typing import Type
+from abc import abstractmethod
+from typing import Type, Union
 from sys import modules
 from inspect import getmembers, isclass
-
-
-class EPANETSimulationError(Exception):
-    """Error raised when any errors were encountered while simulating a hydraulic model."""
-
-    def __init__(self, message):
-        super().__init__(message)
-
-    @property
-    def errors(self):
-        """Property containing all raised errors.
-
-        This property can be used as a shortcut to the raised errors. Useful when looking for a specific kind of error.
-
-        """
-        return self.args[0]
 
 
 class EPANETError(Exception):
@@ -50,6 +34,30 @@ class EPANETError(Exception):
     @abstractmethod
     def code(self):
         """Error code as described in the EPANET manual."""
+
+
+class EPANETSimulationError(Exception):
+    """Error raised when any errors were encountered while simulating a hydraulic model."""
+
+    def __init__(self, message):
+        super().__init__(message)
+
+    @property
+    def errors(self):
+        """Property containing all raised errors.
+
+        This property can be used as a shortcut to the raised errors. Useful when looking for a specific kind of error.
+
+        """
+        return self.args[0]
+
+    def _compare_instances(self, errorcls: Type[EPANETError]):
+        return any(isinstance(x, errorcls) for x in self.errors)
+
+    def check_contained_errors(self, errors: Union[Type[EPANETError], list[Type[EPANETError]]]):
+        if isinstance(errors, list):
+            return [self._compare_instances(error) for error in errors]
+        return self._compare_instances(errors)
 
 
 class InsufficientMemoryError(EPANETError):

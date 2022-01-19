@@ -1,14 +1,19 @@
-from oopnet.exceptions import ComponentExistsError
 from typing import Union
+import logging
 
+from oopnet.exceptions import ComponentExistsError
 from oopnet.utils.getters import get_pattern_ids, get_node_ids, get_link_ids, get_curve_ids, get_rule_ids
 from oopnet.elements import Network, Junction, Reservoir, Tank, Pipe, Pump, Valve, Curve, Pattern, Node, \
     Link
 from oopnet.elements.system_operation import Rule
 from oopnet.elements.base import NetworkComponent
+from oopnet.utils.oopnet_logging import logging_decorator
+
+logger = logging.getLogger(__name__)
 
 
-def _check_exists(obj: Union[NetworkComponent, Rule], network: Network):
+@logging_decorator(logger)
+def _check_exists(network: Network, obj: Union[NetworkComponent, Rule]):
     """Checks if a component with the same ID and general type exists in the network.
 
     Args:
@@ -36,6 +41,7 @@ def _check_exists(obj: Union[NetworkComponent, Rule], network: Network):
         raise ComponentExistsError(obj.id)
 
 
+@logging_decorator(logger)
 def _add_component(obj: Union[NetworkComponent, Rule], component_hash: dict):
     """Adds a NetworkComponent to a hash
 
@@ -58,8 +64,8 @@ def add_pattern(network: Network, pattern: Pattern, check_exists: bool = True):
 
     """
     if check_exists:
-        _check_exists(pattern, network)
-    _add_component(pattern, network.patterns)
+        _check_exists(network, pattern)
+    _add_component(pattern, network._patterns)
 
 
 def add_curve(network: Network, curve: Curve, check_exists: bool = True):
@@ -72,8 +78,8 @@ def add_curve(network: Network, curve: Curve, check_exists: bool = True):
 
     """
     if check_exists:
-        _check_exists(curve, network)
-    _add_component(curve, network.curves)
+        _check_exists(network, curve)
+    _add_component(curve, network._curves)
 
 
 def add_rule(network: Network, rule: Rule, check_exists: bool = True):
@@ -86,8 +92,8 @@ def add_rule(network: Network, rule: Rule, check_exists: bool = True):
 
     """
     if check_exists:
-        _check_exists(rule, network)
-    _add_component(rule, network.rules)
+        _check_exists(network, rule)
+    _add_component(rule, network._rules)
 
 
 def add_junction(network: Network, junction: Junction, check_exists: bool = True):
@@ -100,8 +106,8 @@ def add_junction(network: Network, junction: Junction, check_exists: bool = True
 
     """
     if check_exists:
-        _check_exists(junction, network)
-    _add_component(junction, network.junctions)
+        _check_exists(network, junction)
+    _add_component(junction, network._junctions)
 
 
 def add_reservoir(network: Network, reservoir: Reservoir, check_exists: bool = True):
@@ -114,8 +120,8 @@ def add_reservoir(network: Network, reservoir: Reservoir, check_exists: bool = T
 
     """
     if check_exists:
-        _check_exists(reservoir, network)
-    _add_component(reservoir, network.reservoirs)
+        _check_exists(network, reservoir)
+    _add_component(reservoir, network._reservoirs)
 
 
 def add_tank(network: Network, tank: Tank, check_exists: bool = True):
@@ -128,8 +134,8 @@ def add_tank(network: Network, tank: Tank, check_exists: bool = True):
 
     """
     if check_exists:
-        _check_exists(tank, network)
-    _add_component(tank, network.tanks)
+        _check_exists(network, tank)
+    _add_component(tank, network._tanks)
 
 
 def add_pipe(network: Network, pipe: Pipe, check_exists: bool = True):
@@ -142,8 +148,8 @@ def add_pipe(network: Network, pipe: Pipe, check_exists: bool = True):
 
     """
     if check_exists:
-        _check_exists(pipe, network)
-    _add_component(pipe, network.pipes)
+        _check_exists(network, pipe)
+    _add_component(pipe, network._pipes)
 
 
 def add_pump(network: Network, pump: Pump, check_exists: bool = True):
@@ -156,8 +162,8 @@ def add_pump(network: Network, pump: Pump, check_exists: bool = True):
 
     """
     if check_exists:
-        _check_exists(pump, network)
-    _add_component(pump, network.pumps)
+        _check_exists(network, pump)
+    _add_component(pump, network._pumps)
 
 
 def add_valve(network: Network, valve: Valve, check_exists: bool = True):
@@ -170,8 +176,8 @@ def add_valve(network: Network, valve: Valve, check_exists: bool = True):
 
     """
     if check_exists:
-        _check_exists(valve, network)
-    _add_component(valve, network.valves)
+        _check_exists(network, valve)
+    _add_component(valve, network._valves)
 
 
 def add_node(network: Network, node: Union[Junction, Reservoir, Tank], check_exists: bool = True):

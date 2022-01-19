@@ -1,22 +1,23 @@
 import unittest
 import os
+import shutil
 
-from base import set_root_dir, reset_root_dir
+from base import set_dir_examples, set_dir_testing
 
 
 class ExampleTest(unittest.TestCase):
     def setUp(self) -> None:
-        set_root_dir()
+        set_dir_examples()
 
     def tearDown(self) -> None:
-        reset_root_dir()
-        to_delete = ['bokehexample.html']
+        to_delete = ['bokehexample.html', 'oopnet.log']
         for file in to_delete:
             if os.path.isfile(file):
                 os.remove(file)
 
-        # if os.path.isdir('tmp'):
-        #     shutil.rmtree('tmp')
+        if os.path.isdir('tmp'):
+            shutil.rmtree('tmp')
+        set_dir_testing()
 
     def test_adders_and_removers(self):
         import examples.adders_and_removers

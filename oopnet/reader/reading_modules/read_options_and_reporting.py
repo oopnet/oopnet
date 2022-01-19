@@ -4,6 +4,7 @@ from abc import abstractmethod
 
 import datetime
 from typing import Union, TYPE_CHECKING
+import logging
 
 from oopnet.elements.options_and_reporting import Options
 from oopnet.elements import Pattern, Node
@@ -12,6 +13,9 @@ if TYPE_CHECKING:
     from oopnet.elements import Network
 from oopnet.utils.getters import get_pattern_ids, get_node, get_link, get_pattern
 from oopnet.reader.decorators import section_reader
+
+
+logger = logging.getLogger(__name__)
 
 
 def time2timedelta(vals: list) -> datetime.timedelta:
@@ -76,6 +80,7 @@ class OptionReportReader:
     # _
 
     def __new__(cls, network, block):
+        logger.debug('Reading Options')
         options = network.options
         for values in block:
             attr_name, attr_value = cls._parse_single(values, network)
@@ -185,6 +190,7 @@ def read_times(network: Network, block: list):
       block: EPANET input file block
 
     """
+    logger.debug('Reading times settings')
     t = network.times
     for vals in block:
         vals = vals['values']
@@ -234,6 +240,7 @@ def read_report(network: Network, block: list):
       block: EPANET input file block
 
     """
+    logger.debug('Reading report settings')
     r = network.report
     param = network.reportparameter
     precision = network.reportprecision

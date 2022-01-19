@@ -15,33 +15,33 @@ class BlankModelTest(unittest.TestCase):
     def test_add_simple_junction_object(self):
         add_junction(self.network, Junction(id='test', xcoordinate=1, ycoordinate=2, elevation=3, initialquality=0.1,
                      sourcequality=0.2, demand=10, comment='Test', emittercoefficient=0.2))
-        self.assertEqual(1, len(self.network.junctions))
+        self.assertEqual(1, len(self.network._junctions))
         j = get_junction(self.network, 'test')
         self.assertEqual(1, j.xcoordinate)
 
     def test_add_simple_reservoir_object(self):
         add_reservoir(self.network, Reservoir(id='test', xcoordinate=1, ycoordinate=2, initialquality=0.1,
                       sourcequality=0.2, head=10, comment='Test'))
-        self.assertEqual(1, len(self.network.reservoirs))
+        self.assertEqual(1, len(self.network._reservoirs))
         r = get_reservoir(self.network, 'test')
         self.assertEqual(1, r.xcoordinate)
 
     def test_add_simple_tank_object(self):
         add_tank(self.network, Tank(id='test', xcoordinate=1, ycoordinate=2, elevation=3, initialquality=0.1,
                  sourcequality=0.2, comment='Test', initlevel=0.3, maxlevel=2.0, minlevel=0.1, minvolume=1.0))
-        self.assertEqual(1, len(self.network.tanks))
+        self.assertEqual(1, len(self.network._tanks))
         t = get_tank(self.network, 'test')
         self.assertEqual(1, t.xcoordinate)
 
     def test_add_simple_pattern_object(self):
         add_pattern(self.network, Pattern(id='test', multipliers=[15, 10]))
-        self.assertEqual(1, len(self.network.patterns))
+        self.assertEqual(1, len(self.network._patterns))
         p = get_pattern(self.network, 'test')
         self.assertEqual([15, 10], p.multipliers)
 
     def test_add_simple_curve_object(self):
         add_curve(self.network, Curve(id='test', xvalues=[15, 10], yvalues=[10, 15]))
-        self.assertEqual(1, len(self.network.curves))
+        self.assertEqual(1, len(self.network._curves))
         p = get_curve(self.network, 'test')
         self.assertEqual([15, 10], p.xvalues)
 
@@ -56,7 +56,7 @@ class BlankModelLinkTest(unittest.TestCase):
         j2 = get_junction(self.network, 'J-2')
         add_pipe(self.network, Pipe(id='test', startnode=j1, endnode=j2, diameter=200, length=250, roughness=0.3,
                  minorloss=1.0, status='CLOSED', comment='Test'))
-        self.assertEqual(1, len(self.network.pipes))
+        self.assertEqual(1, len(self.network._pipes))
         p = get_pipe(self.network, 'test')
         self.assertEqual('CLOSED', p.status)
 
@@ -64,7 +64,7 @@ class BlankModelLinkTest(unittest.TestCase):
         j1 = get_junction(self.network, 'J-1')
         j2 = get_junction(self.network, 'J-2')
         add_pump(self.network, Pump(id='test', startnode=j1, endnode=j2, keyword='POWER', value=100, comment='Test'))
-        self.assertEqual(1, len(self.network.pumps))
+        self.assertEqual(1, len(self.network._pumps))
         p = get_pump(self.network, 'test')
         self.assertEqual(100, p.value)
 
@@ -73,7 +73,7 @@ class BlankModelLinkTest(unittest.TestCase):
         j2 = get_junction(self.network, 'J-2')
         add_valve(self.network, Valve(id='test', startnode=j1, endnode=j2, valvetype='TCV', diameter=150, minorloss=1.0,
                   comment='Test'))
-        self.assertEqual(1, len(self.network.valves))
+        self.assertEqual(1, len(self.network._valves))
         v = get_valve(self.network, 'test')
         self.assertEqual(150, v.diameter)
 

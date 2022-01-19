@@ -12,7 +12,7 @@ def get_pattern_ids(network: Network) -> list[str]:
       list of Pattern IDs
 
     """
-    return list(network.patterns.keys())
+    return list(network._patterns.keys())
 
 
 def get_curve_ids(network: Network) -> list[str]:
@@ -25,7 +25,7 @@ def get_curve_ids(network: Network) -> list[str]:
       list of Curve IDs
 
     """
-    return list(network.curves.keys())
+    return list(network._curves.keys())
 
 
 def get_rule_ids(network: Network) -> list[str]:
@@ -38,7 +38,7 @@ def get_rule_ids(network: Network) -> list[str]:
       list of Rule IDs
 
     """
-    return list(network.rules.keys())
+    return list(network._rules.keys())
 
 
 def get_junction_ids(network: Network) -> list[str]:
@@ -51,7 +51,7 @@ def get_junction_ids(network: Network) -> list[str]:
       list of Junction IDs
 
     """
-    return list(network.junctions.keys())
+    return list(network._junctions.keys())
 
 
 def get_tank_ids(network: Network) -> list[str]:
@@ -64,7 +64,7 @@ def get_tank_ids(network: Network) -> list[str]:
       list of Tank IDs
 
     """
-    return list(network.tanks.keys())
+    return list(network._tanks.keys())
 
 
 def get_reservoir_ids(network: Network) -> list[str]:
@@ -77,7 +77,7 @@ def get_reservoir_ids(network: Network) -> list[str]:
       list of Reservoir IDs
 
     """
-    return list(network.reservoirs.keys())
+    return list(network._reservoirs.keys())
 
 
 def get_node_ids(network: Network) -> list[str]:
@@ -103,7 +103,7 @@ def get_pipe_ids(network: Network) -> list[str]:
       list of Pipe IDs
 
     """
-    return list(network.pipes.keys())
+    return list(network._pipes.keys())
 
 
 def get_pump_ids(network: Network) -> list[str]:
@@ -116,7 +116,7 @@ def get_pump_ids(network: Network) -> list[str]:
       list of Pump IDs
 
     """
-    return list(network.pumps.keys())
+    return list(network._pumps.keys())
 
 
 def get_valve_ids(network: Network) -> list[str]:
@@ -129,7 +129,7 @@ def get_valve_ids(network: Network) -> list[str]:
       list of Valve IDs
 
     """
-    return list(network.valves.keys())
+    return list(network._valves.keys())
 
 
 def get_link_ids(network: Network) -> list[str]:
@@ -156,7 +156,7 @@ def get_pipes(network: Network) -> list[Pipe]:
       list of Pipes
 
     """
-    return list(network.pipes.values())
+    return list(network._pipes.values())
 
 
 def get_junctions(network: Network) -> list[Junction]:
@@ -169,7 +169,7 @@ def get_junctions(network: Network) -> list[Junction]:
       list of Junctions
 
     """
-    return list(network.junctions.values())
+    return list(network._junctions.values())
 
 
 def get_reservoirs(network: Network) -> list[Reservoir]:
@@ -182,7 +182,7 @@ def get_reservoirs(network: Network) -> list[Reservoir]:
       list of Reservoirs
 
     """
-    return list(network.reservoirs.values())
+    return list(network._reservoirs.values())
 
 
 def get_tanks(network: Network) -> list[Tank]:
@@ -195,7 +195,7 @@ def get_tanks(network: Network) -> list[Tank]:
       list of Tanks
 
     """
-    return list(network.tanks.values())
+    return list(network._tanks.values())
 
 
 def get_nodes(network: Network) -> list[Node]:
@@ -234,7 +234,7 @@ def get_pumps(network: Network) -> list[Pump]:
       list of Pumps
 
     """
-    return list(network.pumps.values())
+    return list(network._pumps.values())
 
 
 def get_valves(network: Network) -> list[Valve]:
@@ -247,7 +247,7 @@ def get_valves(network: Network) -> list[Valve]:
       list of Valves
 
     """
-    return list(network.valves.values())
+    return list(network._valves.values())
 
 
 def get_curves(network: Network) -> list[Curve]:
@@ -260,7 +260,7 @@ def get_curves(network: Network) -> list[Curve]:
       list of Curves
 
     """
-    return list(network.curves.values())
+    return list(network._curves.values())
 
 
 def get_patterns(network: Network) -> list[Pattern]:
@@ -273,10 +273,10 @@ def get_patterns(network: Network) -> list[Pattern]:
       list of Patterns
 
     """
-    return list(network.patterns.values())
+    return list(network._patterns.values())
 
 
-def get_energies(network: Network) -> list[Energy]:
+def get_energy_entries(network: Network) -> list[Energy]:
     """Gets all Energy entries in a network.
 
     Args:
@@ -312,4 +312,4 @@ def get_rules(network: Network) -> list[Rule]:
       list of Rules
 
     """
-    return list(network.rules.values())
+    return list(network._rules.values())

@@ -31,10 +31,10 @@ class SimplePropertyGetterTest(unittest.TestCase):
         self.assertIsInstance(coords, pd.DataFrame)
         self.assertEqual(self.model.n_links, len(coords))
 
-    def test_get_initialstatus(self):
-        status = get_initialstatus(self.model.network)
-        self.assertIsInstance(status, pd.Series)
-        self.assertEqual(self.model.n_pumps + self.model.n_valves, len(status))
+    # def test_get_initialstatus(self):
+    #     status = get_initialstatus(self.model.network)
+    #     self.assertIsInstance(status, pd.Series)
+    #     self.assertEqual(self.model.n_pumps + self.model.n_valves, len(status))
 
     def test_get_status(self):
         status = get_status(self.model.network)

@@ -1,6 +1,7 @@
 from __future__ import annotations
 import os
 from typing import Optional, TYPE_CHECKING
+from copy import deepcopy
 
 import numpy as np
 
@@ -99,9 +100,9 @@ def adddummyjunction(network, pipe, ce, dummyname='Dummy'):
     network.networkhash['node'][dummyname] = n
     network.networkhash['link'][pipe.id + '_a'] = p1
     network.networkhash['link'][pipe.id + '_b'] = p2
-    network.junctions.append(n)
-    network.pipes.append(p1)
-    network.pipes.append(p2)
+    network._junctions.append(n)
+    network._pipes.append(p1)
+    network._pipes.append(p2)
     return network, p1, p2
 
 
@@ -126,7 +127,7 @@ def length(link):
     return np.linalg.norm(b - a)
 
 
-
+# todo: check if functionality exists elsewhere; check for nodes with negative demands?
 def sources(network):
     """This function returns all sources (tanks and reservoirs) if an oopnet network
 
@@ -136,12 +137,12 @@ def sources(network):
     Returns:
 
     """
-    if network.tanks and network.reservoirs:
-        return network.reservoirs + network.tanks
-    if network.tanks:
-        return network.tanks
-    if network.reservoirs:
-        return network.reservoirs
+    if network._tanks and network._reservoirs:
+        return network._reservoirs + network._tanks
+    if network._tanks:
+        return network._tanks
+    if network._reservoirs:
+        return network._reservoirs
     return None
 
 
@@ -182,4 +183,4 @@ def copy(network):
       deepcopy of OOPNET network object
 
     """
-    return network.__deepcopy__()
+    return deepcopy(network)

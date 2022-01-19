@@ -11,13 +11,13 @@ if TYPE_CHECKING:
 @dataclass
 class Reaction:
     """Defines parameters related to chemical reactions occurring in the network."""
-    orderbulk: Optional[float] = None
-    orderwall: Optional[float] = None
-    ordertank: Optional[float] = None
-    globalbulk: Optional[float] = None
-    globalwall: Optional[float] = None
-    bulk: Union[None, Pipe, list[Pipe]] = None
-    wall: Union[None, Pipe, list[Pipe]] = None
-    tank: Union[None, Pipe, list[Pipe]] = None
+    orderbulk: float = 1.0
+    orderwall: float = 1.0
+    ordertank: float = 1.0
+    globalbulk: float = 0.0
+    globalwall: float = 0.0
+    bulk: Optional[list[Pipe]] = None
+    wall: Optional[list[Pipe]] = None
+    tank: Optional[list[Pipe]] = None
     limitingpotential: Optional[float] = None
     roughnesscorrelation: Optional[float] = None

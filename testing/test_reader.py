@@ -12,44 +12,44 @@ class PoulakisEnhancedReaderTest(unittest.TestCase):
         self.model = PoulakisEnhancedPDAModel()
 
     def test_junctions(self):
-        self.assertEqual(self.model.n_junctions, len(self.model.network.junctions))
-        for j in self.model.network.junctions.values():
+        self.assertEqual(self.model.n_junctions, len(self.model.network._junctions))
+        for j in self.model.network._junctions.values():
             self.assertIsInstance(j, Junction)
             self.assertEqual(50, j.demand)
             self.assertTrue('J' in j.id)
 
     def test_tanks(self):
-        self.assertEqual(self.model.n_tanks, len(self.model.network.tanks))
-        for t in self.model.network.tanks.values():
+        self.assertEqual(self.model.n_tanks, len(self.model.network._tanks))
+        for t in self.model.network._tanks.values():
             self.assertIsInstance(t, Tank)
             self.assertEqual(50, t.diam)
             self.assertTrue('J' in t.id)
 
     def test_reservoirs(self):
-        self.assertEqual(self.model.n_reservoirs, len(self.model.network.reservoirs))
-        for r in self.model.network.reservoirs.values():
+        self.assertEqual(self.model.n_reservoirs, len(self.model.network._reservoirs))
+        for r in self.model.network._reservoirs.values():
             self.assertIsInstance(r, Reservoir)
             self.assertEqual(52, r.head)
             self.assertTrue('J' in r.id)
 
     def test_pipes(self):
-        self.assertEqual(self.model.n_pipes, len(self.model.network.pipes))
-        for p in self.model.network.pipes.values():
+        self.assertEqual(self.model.n_pipes, len(self.model.network._pipes))
+        for p in self.model.network._pipes.values():
             self.assertIsInstance(p, Pipe)
             self.assertEqual(0.26, p.roughness)
             self.assertTrue(p.diameter in [600, 450, 300])
             self.assertTrue('P' in p.id)
 
     def test_pumps(self):
-        self.assertEqual(self.model.n_pumps, len(self.model.network.pumps))
-        for p in self.model.network.pumps.values():
+        self.assertEqual(self.model.n_pumps, len(self.model.network._pumps))
+        for p in self.model.network._pumps.values():
             self.assertIsInstance(p, Pump)
             self.assertEqual('HEAD', p.keyword)
             self.assertTrue('P' in p.id)
 
     def test_valves(self):
-        self.assertEqual(self.model.n_valves, len(self.model.network.valves))
-        for v in self.model.network.valves.values():
+        self.assertEqual(self.model.n_valves, len(self.model.network._valves))
+        for v in self.model.network._valves.values():
             self.assertIsInstance(v, Valve)
             self.assertEqual(500, v.diameter)
             self.assertTrue('P' in v.id)
@@ -107,7 +107,7 @@ class PoulakisEnhancedReaderTest(unittest.TestCase):
     # todo: add options, reportparameter, curve, pattern ... tests
 
 
-class MicorpolisReaderTest(unittest.TestCase):
+class MicropolisReaderTest(unittest.TestCase):
     def setUp(self) -> None:
         from testing.base import MicropolisModel
         self.model = MicropolisModel()
@@ -116,10 +116,10 @@ class MicorpolisReaderTest(unittest.TestCase):
         self.assertEqual(self.model.n_controls, len(self.model.network.controls))
 
     def test_rules(self):
-        self.assertEqual(self.model.n_rules, len(self.model.network.rules))
+        self.assertEqual(self.model.n_rules, len(self.model.network._rules))
 
     def test_patterns(self):
-        self.assertEqual(self.model.n_patterns, len(self.model.network.patterns))
+        self.assertEqual(self.model.n_patterns, len(self.model.network._patterns))
         for pat in get_patterns(self.model.network):
             self.assertEqual(24, len(pat.multipliers))
 
@@ -192,7 +192,7 @@ class RulesModelReaderTest(unittest.TestCase):
         Run(self.model.network)
 
     def test_rules(self):
-        self.assertEqual(self.model.n_rules, len(self.model.network.rules))
+        self.assertEqual(self.model.n_rules, len(self.model.network._rules))
 
 
 class CTownReaderTest(unittest.TestCase):

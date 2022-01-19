@@ -2,11 +2,15 @@ import pandas as pd
 from typing import Optional, Union
 import datetime
 import re
+import logging
 
 import xarray as xr
 from xarray import DataArray, Dataset
 
 from oopnet.report.error_manager import ErrorManager
+from oopnet.utils.oopnet_logging import logging_decorator
+
+logger = logging.getLogger(__name__)
 
 
 def str2hms(timestring: str) -> tuple[int, int, float]:
@@ -72,8 +76,10 @@ def lst2xray(lst: list) -> xr.DataArray:
 
 
 # todo: refactor
+@logging_decorator(logger)
 class ReportFileReader:
     def __new__(cls, filename: str, startdatetime: Optional[datetime.datetime] = None) -> tuple[Union[DataArray, Dataset, None], Union[DataArray, Dataset, None]]:
+        logger.debug('Reading Report File')
         with open(filename, 'r') as fid:
             content = fid.readlines()
             # print(content)

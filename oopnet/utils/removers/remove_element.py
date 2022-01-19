@@ -1,5 +1,18 @@
+import logging
+
 from oopnet.elements import Network, Junction, Tank, Reservoir, Pipe, Pump, Valve
 from oopnet.utils.getters import get_node, get_link
+from oopnet.utils.oopnet_logging import logging_decorator
+
+logger = logging.getLogger(__name__)
+
+
+@logging_decorator(logger)
+def _remove_object(hash_dict: dict, id: str):
+    if id not in hash_dict:
+        raise ValueError(f'No object with ID {id} found.')
+    logger.debug(f'Removing object with ID {id}')
+    hash_dict.pop(id)
 
 
 def remove_link(network: Network, id: str):
@@ -45,7 +58,7 @@ def remove_junction(network: Network, id: str):
       id: Junction ID
 
     """
-    network.junctions.pop(id)
+    _remove_object(network._junctions, id)
 
 
 def remove_reservoir(network: Network, id: str):
@@ -56,7 +69,7 @@ def remove_reservoir(network: Network, id: str):
       id: Reservoir ID
 
     """
-    network.reservoirs.pop(id)
+    _remove_object(network._reservoirs, id)
 
 
 def remove_tank(network: Network, id: str):
@@ -67,7 +80,7 @@ def remove_tank(network: Network, id: str):
       id: Tank ID
 
     """
-    network.tanks.pop(id)
+    _remove_object(network._tanks, id)
 
 
 def remove_pipe(network: Network, id: str):
@@ -78,7 +91,7 @@ def remove_pipe(network: Network, id: str):
       id: Pipe ID
 
     """
-    network.pipes.pop(id)
+    _remove_object(network._pipes, id)
 
 
 def remove_pump(network: Network, id: str):
@@ -89,7 +102,7 @@ def remove_pump(network: Network, id: str):
       id: Pump ID
 
     """
-    network.pumps.pop(id)
+    _remove_object(network._pumps, id)
 
 
 def remove_valve(network: Network, id: str):
@@ -100,4 +113,4 @@ def remove_valve(network: Network, id: str):
       id: Valve ID
 
     """
-    network.valves.pop(id)
+    _remove_object(network._valves, id)

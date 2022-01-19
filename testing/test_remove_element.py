@@ -15,42 +15,42 @@ class SimpleRemovalTest(unittest.TestCase):
         remove_junction(self.model.network, remove_id)
         ids = get_junction_ids(self.model.network)
         self.assertFalse(remove_id in ids)
-        self.assertEqual(self.model.n_junctions - 1, len(self.model.network.junctions))
+        self.assertEqual(self.model.n_junctions - 1, len(self.model.network._junctions))
 
     def test_remove_tank(self):
         remove_id = 'T-1'
         remove_tank(self.model.network, remove_id)
         ids = get_tank_ids(self.model.network)
         self.assertFalse(remove_id in ids)
-        self.assertEqual(self.model.n_tanks - 1, len(self.model.network.tanks))
+        self.assertEqual(self.model.n_tanks - 1, len(self.model.network._tanks))
 
     def test_remove_reservoir(self):
         remove_id = 'R-1'
         remove_reservoir(self.model.network, remove_id)
         ids = get_reservoir_ids(self.model.network)
         self.assertFalse(remove_id in ids)
-        self.assertEqual(self.model.n_reservoirs - 1, len(self.model.network.reservoirs))
+        self.assertEqual(self.model.n_reservoirs - 1, len(self.model.network._reservoirs))
 
     def test_remove_pipe(self):
         remove_id = 'P-1'
         remove_pipe(self.model.network, remove_id)
         ids = get_pipe_ids(self.model.network)
         self.assertFalse(remove_id in ids)
-        self.assertEqual(self.model.n_pipes - 1, len(self.model.network.pipes))
+        self.assertEqual(self.model.n_pipes - 1, len(self.model.network._pipes))
 
     def test_remove_pump(self):
         remove_id = 'PU-1'
         remove_pump(self.model.network, remove_id)
         ids = get_pump_ids(self.model.network)
         self.assertFalse(remove_id in ids)
-        self.assertEqual(self.model.n_pumps - 1, len(self.model.network.pumps))
+        self.assertEqual(self.model.n_pumps - 1, len(self.model.network._pumps))
 
     def test_remove_valve(self):
         remove_id = 'V-1'
         remove_valve(self.model.network, remove_id)
         ids = get_junction_ids(self.model.network)
         self.assertFalse(remove_id in ids)
-        self.assertEqual(self.model.n_valves - 1, len(self.model.network.valves))
+        self.assertEqual(self.model.n_valves - 1, len(self.model.network._valves))
 
     def test_remove_node(self):
         remove_ids = ['J-1', 'T-1', 'R-1']

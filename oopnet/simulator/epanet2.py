@@ -6,6 +6,7 @@ import uuid
 import shutil
 import re
 from typing import Union, Optional
+import logging
 
 from oopnet.elements import Network
 from oopnet.report.reportfile_reader import ReportFileReader
@@ -13,6 +14,9 @@ from oopnet.report.binaryfile_reader import BinaryFileReader
 from oopnet.utils import utils
 from oopnet.report.xrayreport import Report
 from oopnet.writer import Write
+from oopnet.utils.oopnet_logging import logging_decorator
+
+logger = logging.getLogger(__name__)
 
 
 def run(thing: Union[Network, str], filename: Optional[str] = None, delete: bool = True,
@@ -35,6 +39,7 @@ def run(thing: Union[Network, str], filename: Optional[str] = None, delete: bool
 
 
 # todo: add proper documentation
+@logging_decorator(logger)
 class ModelSimulator:
     """Runs an EPANET simulation by calling command line EPANET
 
@@ -104,6 +109,7 @@ class ModelSimulator:
         cmd.append(self.filename.replace('.inp', '.rpt'))
         cmd.append(self.filename.replace('.inp', '.out'))
         self.command = cmd
+        logger.debug(f'Running command {cmd}')
 
     def _execute(self):
         """Executes simulation and parses output."""
@@ -135,6 +141,7 @@ class ModelSimulator:
 
     def run(self):
         """Simulates a hydraulic model using EPANET."""
+        logging.info('Simulating model')
         self._set_path()
         self._set_filename()
         self._setup_report()
@@ -145,7 +152,10 @@ class ModelSimulator:
 
         if self.delete:
             os.remove(self.filename)
-            os.remove(self.filename.replace('.inp', '.rpt'))
-            os.remove(self.filename.replace('.inp', '.out'))
-
+            rpt_file = self.filename.replace('.inp', '.rpt')
+            out_file = self.filename.replace('.inp', '.out')
+            if os.path.isfile(rpt_file):
+                os.remove(rpt_file)
+            if os.path.isfile(out_file):
+                os.remove(out_file)
         return rpt

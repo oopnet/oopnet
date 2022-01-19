@@ -18,7 +18,7 @@ print(f'Diameter: {nx.diameter(G)}')
 print(f'Radius: {nx.radius(G)}')
 
 # Page Rank algorithm
-pr = nx.pagerank_numpy(G)
+pr = nx.pagerank(G)
 pr = pd.Series(pr)
 pr.sort_values(ascending=False, inplace=True)
 pr.name = 'Page Rank'
@@ -40,11 +40,11 @@ plt.xlabel('degree', fontsize=16)
 plt.ylabel('frequency', fontsize=16)
 
 # Calculate all shortest paths:
-paths = nx.all_pairs_dijkstra_path_length(G)
+paths = dict(nx.all_pairs_dijkstra_path_length(G))
 df = pd.DataFrame(paths)
 
 # Plot shortest paths between all nodes
 f, ax = plt.subplots()
-# todo: fix
+
 sns.heatmap(df, square=True, xticklabels=5, yticklabels=5, linewidths=.5)
 plt.show()

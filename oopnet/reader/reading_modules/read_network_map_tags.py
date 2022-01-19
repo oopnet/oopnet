@@ -1,10 +1,14 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
+import logging
 
 if TYPE_CHECKING:
     from oopnet.elements import Network
 from oopnet.utils.getters import get_node
 from oopnet.reader.decorators import section_reader
+
+
+logger = logging.getLogger(__name__)
 
 
 @section_reader('COORDINATES', 4)
@@ -16,6 +20,7 @@ def read_coordinates(network: Network, block: list):
       block: EPANET input file block
 
     """
+    logger.debug('Reading Coordinates section')
     for vals in block:
         vals = vals['values']
         j = get_node(network, vals[0])

@@ -1,9 +1,3 @@
-from dataclasses import dataclass
-
-import numpy as np
-
-from oopnet.utils.getters import get_junctions, get_tanks, get_reservoirs, get_pipes
-
 """
 Convert all units which are possible in the EPANET-Input file to LPS
 Possible: (This are the flow units)
@@ -18,8 +12,15 @@ Possible: (This are the flow units)
     CMH ... cubic meters per hour
     CMD ... cubic meters per day
 
-The Input of OOPNET is possible in all units, but OOPNET uses and returns SI-Units (LPS)
+The Input of OOPNET is possible in all units, but OOPNET uses and returns SI-Units (LPS).
 """
+import logging
+
+import numpy as np
+
+from oopnet.utils.getters import get_junctions, get_tanks, get_reservoirs, get_pipes
+
+logger = logging.getLogger(__name__)
 
 FEET2METER = 0.3048
 INCH2MILLIMETER = 25.4
@@ -56,7 +57,10 @@ class Converter:
 
     def __init__(self, network):
         if network.options.units == 'LPS':
+            logger.debug('Already using LPS as unit. Skipping conversion.')
             return
+
+        logger.debug(f'Converting units from {network.options.units} to LPS')
 
         us_units = ['CFS',
                     'GPM',

@@ -1,6 +1,6 @@
 import os
 
-from pathos.multiprocessing import ProcessingPool as Pool
+from multiprocessing import Pool
 
 from oopnet import *
 from oopnet.elements import Network

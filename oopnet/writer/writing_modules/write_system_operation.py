@@ -1,11 +1,14 @@
 import datetime
 from io import TextIOWrapper
+import logging
 
 from oopnet.elements.base import NetworkComponent
 from oopnet.elements import Network, Curve, Pattern
 from oopnet.utils.getters import get_curves, get_junctions, get_pipes, get_valves, get_pumps, \
-    get_patterns, get_energies, get_controls, get_rules
+    get_patterns, get_energy_entries, get_controls, get_rules
 from oopnet.writer.decorators import section_writer
+
+logger = logging.getLogger(__name__)
 
 
 @section_writer('CURVES', 3)
@@ -13,10 +16,11 @@ def write_curves(network: Network, fid: TextIOWrapper):
     """Writes curves to an EPANET input file.
 
     Args:
-      network: OOPNET network object to write
+      network: Network object to write
       fid: output object
 
     """
+    logger.debug('Writing Curves section')
     print('[CURVES]', file=fid)
     print(';id xvalue yvalue', file=fid)
     for c in get_curves(network):
@@ -30,10 +34,11 @@ def write_patterns(network: Network, fid: TextIOWrapper):
     """Writes patterns to an EPANET input file.
 
     Args:
-      network: OOPNET network object to write
+      network: Network object to write
       fid: output object
 
     """
+    logger.debug('Writing Patterns section')
     print('[PATTERNS]', file=fid)
     print(';id multipliers', file=fid)
     for p in get_patterns(network):
@@ -49,12 +54,13 @@ def write_energy(network: Network, fid: TextIOWrapper):
     """Writes energy section to an EPANET input file.
 
     Args:
-      network: OOPNET network object to write
+      network: Network object to write
       fid: output object
 
     """
+    logger.debug('Writing Energy section')
     print('[ENERGY]', file=fid)
-    for e in get_energies(network):
+    for e in get_energy_entries(network):
         keyword = e.keyword if e.keyword != 'DEMAND_CHARGE' else 'DEMAND CHARGE'
         print(keyword, end=' ', file=fid)
         if keyword == 'PUMP':
@@ -75,10 +81,11 @@ def write_status(network: Network, fid: TextIOWrapper):
     """Writes status section to an EPANET input file.
 
     Args:
-      network: OOPNET network object to write
+      network: Network object to write
       fid: output object
 
     """
+    logger.debug('Writing Status section')
     print('[STATUS]', file=fid)
     print(';id status/setting', file=fid)
     for l in get_pipes(network):
@@ -100,10 +107,11 @@ def write_controls(network: Network, fid: TextIOWrapper):
     """Writes controls section to an EPANET input file.
 
     Args:
-      network: OOPNET network object to write
+      network: Network object to write
       fid: output object
 
     """
+    logger.debug('Writing Controls section')
     print('[CONTROLS]', file=fid)
     for c in get_controls(network):
         print('LINK', c.action.object.id, c.action.value, end=' ', file=fid)
@@ -121,10 +129,11 @@ def write_rules(network: Network, fid: TextIOWrapper):
     """Writes rules to an EPANET input file.
 
     Args:
-      network: OOPNET network object to write
+      network: Network object to write
       fid: output object
 
     """
+    logger.debug('Writing Rules section')
     print('[RULES]', file=fid)
     for r in get_rules(network):
         print('RULE', r.id, file=fid)
@@ -148,10 +157,11 @@ def write_demands(network: Network, fid: TextIOWrapper):
     """Writes the demand section to an EPANET input file.
 
     Args:
-      network: OOPNET network object to write
+      network: Network object to write
       fid: output object
 
     """
+    logger.debug('Writing Demands section')
     print('[DEMANDS]', file=fid)
     print(';id demand pattern category', file=fid)
     for j in get_junctions(network):

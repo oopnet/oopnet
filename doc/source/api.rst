@@ -57,15 +57,15 @@ Element getter functions
 Get single elements by name
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. autofunction:: oopnet.utils.getters.get_by_id.get_node
 .. autofunction:: oopnet.utils.getters.get_by_id.get_junction
 .. autofunction:: oopnet.utils.getters.get_by_id.get_tank
 .. autofunction:: oopnet.utils.getters.get_by_id.get_reservoir
-.. autofunction:: oopnet.utils.getters.get_by_id.get_node
 
+.. autofunction:: oopnet.utils.getters.get_by_id.get_link
 .. autofunction:: oopnet.utils.getters.get_by_id.get_pipe
 .. autofunction:: oopnet.utils.getters.get_by_id.get_pump
 .. autofunction:: oopnet.utils.getters.get_by_id.get_valve
-.. autofunction:: oopnet.utils.getters.get_by_id.get_link
 
 .. autofunction:: oopnet.utils.getters.get_by_id.get_curve
 .. autofunction:: oopnet.utils.getters.get_by_id.get_pattern
@@ -75,17 +75,29 @@ Get single elements by name
 Retrieve element lists
 ^^^^^^^^^^^^^^^^^^^^^^
 
+.. autofunction:: oopnet.utils.getters.element_lists.get_node_ids
 .. autofunction:: oopnet.utils.getters.element_lists.get_junction_ids
 .. autofunction:: oopnet.utils.getters.element_lists.get_tank_ids
 .. autofunction:: oopnet.utils.getters.element_lists.get_reservoir_ids
-.. autofunction:: oopnet.utils.getters.element_lists.get_node_ids
+
+.. autofunction:: oopnet.utils.getters.element_lists.get_link_ids
 .. autofunction:: oopnet.utils.getters.element_lists.get_pipe_ids
 .. autofunction:: oopnet.utils.getters.element_lists.get_pump_ids
 .. autofunction:: oopnet.utils.getters.element_lists.get_valve_ids
-.. autofunction:: oopnet.utils.getters.element_lists.get_link_ids
 
 .. autofunction:: oopnet.utils.getters.element_lists.get_nodes
+.. autofunction:: oopnet.utils.getters.element_lists.get_junctions
+.. autofunction:: oopnet.utils.getters.element_lists.get_tanks
+.. autofunction:: oopnet.utils.getters.element_lists.get_reservoirs
+
 .. autofunction:: oopnet.utils.getters.element_lists.get_links
+.. autofunction:: oopnet.utils.getters.element_lists.get_pipes
+.. autofunction:: oopnet.utils.getters.element_lists.get_pumps
+.. autofunction:: oopnet.utils.getters.element_lists.get_valves
+
+.. autofunction:: oopnet.utils.getters.element_lists.get_curves
+.. autofunction:: oopnet.utils.getters.element_lists.get_patterns
+.. autofunction:: oopnet.utils.getters.element_lists.get_rules
 
 ^^^^^^^^^^^^^^^
 Special getters
@@ -100,6 +112,7 @@ Utils
 .. autofunction:: oopnet.api.Copy
 .. autofunction:: oopnet.api.tic
 .. autofunction:: oopnet.api.toc
+.. autofunction:: oopnet.api.time_it
 .. autofunction:: oopnet.api.make_measurement
 
 
@@ -108,12 +121,19 @@ Adding functions
 ^^^^^^^^^^^^^^^^
 For the parameters of the following functions the documentation of the following Network Components applies as well: :ref:`Node <node>`, :ref:`Tank <tank>`, :ref:`Reservoir <reservoir>`, :ref:`Pipe <pipe>`, :ref:`Pump <pump>` and :ref:`Valve <valve>`.
 
+.. autofunction:: oopnet.utils.adders.add_element.add_node
 .. autofunction:: oopnet.utils.adders.add_element.add_junction
 .. autofunction:: oopnet.utils.adders.add_element.add_tank
 .. autofunction:: oopnet.utils.adders.add_element.add_reservoir
+
+.. autofunction:: oopnet.utils.adders.add_element.add_link
 .. autofunction:: oopnet.utils.adders.add_element.add_pipe
 .. autofunction:: oopnet.utils.adders.add_element.add_pump
 .. autofunction:: oopnet.utils.adders.add_element.add_valve
+
+.. autofunction:: oopnet.utils.adders.add_element.add_pattern
+.. autofunction:: oopnet.utils.adders.add_element.add_curve
+.. autofunction:: oopnet.utils.adders.add_element.add_rule
 
 ^^^^^^^^^^^^^^^^^^
 Removing functions
@@ -133,6 +153,13 @@ Graph
 .. autoclass:: oopnet.graph.Graph
 .. autoclass:: oopnet.graph.DiGraph
 .. autoclass:: oopnet.graph.MultiGraph
+
+-------
+Logging
+-------
+
+.. autofunction:: oopnet.utils.oopnet_logging.logging_decorator
+.. autofunction:: oopnet.utils.oopnet_logging.start_logger
 
 ----------------------------
 Shortcuts for other packages

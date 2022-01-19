@@ -1,10 +1,14 @@
 import re
+import logging
 
 from oopnet.elements import Network
-from oopnet.utils.unit_converter.convert import convert
+from oopnet.reader.unit_converter.convert import convert
 from oopnet.reader.module_reader import list_section_reader_callables
-from oopnet.reader import read_water_quality, read_network_map_tags, read_options_and_reporting, \
-    read_network_components, read_system_operation
+from oopnet.reader.reading_modules import read_system_operation, read_options_and_reporting, read_network_components, \
+    read_network_map_tags, read_water_quality
+from oopnet.utils.oopnet_logging import logging_decorator
+
+logger = logging.getLogger(__name__)
 
 
 def filesplitter(filename: str) -> dict[str, list]:
@@ -38,6 +42,7 @@ def filesplitter(filename: str) -> dict[str, list]:
     return blocks
 
 
+@logging_decorator(logger)
 def read(filename: str) -> Network:
     """Function reads an EPANET input file and returns a network object.
 
@@ -48,14 +53,13 @@ def read(filename: str) -> Network:
       network object
 
     """
-
+    logger.info(f'Reading model from {filename!r}')
     modules = [read_network_components, read_network_map_tags, read_options_and_reporting,
                read_system_operation, read_water_quality]
 
     all_functions = list_section_reader_callables(modules)
 
     network = Network()
-
     blocks = filesplitter(filename)
 
     newlist = sorted(all_functions, key=lambda x: x.priority)

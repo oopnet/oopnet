@@ -1,9 +1,8 @@
 import os
 import pathlib
-from os.path import join
 from typing import List
 
-from oopnet.elements import Network, Junction, Pipe, Tank, Reservoir, Pump, Valve, Curve
+from oopnet.elements import Network, Junction, Pipe, Tank, Reservoir, Pump, Valve, Curve, PRV
 from oopnet.reader import Read
 from oopnet.utils.adders import add_junction, add_pipe, add_node, add_curve, add_link
 from oopnet.utils.getters import get_node
@@ -11,15 +10,15 @@ from oopnet.utils.getters import get_node
 
 def add_dummy_junctions(network: Network, n: int) -> Network:
     for i in range(1, n+1):
-        j = Junction(id=f'J-{i}', demand=10)
+        j = Junction(id=f'J-{i}', demand=10.0)
         add_junction(network, j)
     return network
 
 
-def add_dummy_pipes(network: Network, connectivity: List[tuple]) -> Network:
+def add_dummy_pipes(network: Network, connectivity: List[tuple[str, str]]) -> Network:
     for index, ids in enumerate(connectivity):
         start_id, end_id = ids
-        p = Pipe(id=f'P-{index}', diameter=200, roughness=0.1, startnode=get_node(network, start_id),
+        p = Pipe(id=f'P-{index}', diameter=200.0, roughness=0.1, startnode=get_node(network, start_id),
                  endnode=get_node(network, end_id))
         add_pipe(network, p)
     return network
@@ -33,7 +32,7 @@ def create_dummy_spa_network() -> Network:
     network = Network()
     add_dummy_junctions(network, 3)
     t = Tank(id='T-1')
-    r = Reservoir(id='R-1', head=50)
+    r = Reservoir(id='R-1', head=50.0)
 
     for obj in [t, r]:
         add_node(network, obj)
@@ -44,8 +43,8 @@ def create_dummy_spa_network() -> Network:
     add_dummy_pipes(network, [('J-1', 'T-1'), ('J-1', 'R-1')])
     pu = Pump(id='PU-1', keyword='HEAD', value='C-1', startnode=get_node(network, 'J-1'),
               endnode=get_node(network, 'J-2'))
-    v = Valve(id='V-1', valvetype='PRV', setting=5, startnode=get_node(network, 'J-1'),
-              endnode=get_node(network, 'J-3'))
+    v = PRV(id='V-1', valvetype='PRV', setting=5.0, startnode=get_node(network, 'J-1'),
+            endnode=get_node(network, 'J-3'))
 
     for obj in [pu, v]:
         add_link(network, obj)
@@ -88,7 +87,7 @@ class TestModel:
         return self.n_pipes + self.n_pumps + self.n_valves
 
     def __init__(self):
-        reset_root_dir()
+        set_dir_testing()
 
 
 class SimpleModel(TestModel):
@@ -114,13 +113,13 @@ class PoulakisEnhancedPDAModel(TestModel):
 
     def __init__(self):
         super().__init__()
-        self.network = Read(join('networks', 'Poulakis_enhanced_PDA.inp'))
+        self.network = Read(os.path.join('networks', 'Poulakis_enhanced_PDA.inp'))
 
 
 class CTownModel(TestModel):
     def __init__(self):
         super().__init__()
-        self.network = Read(join('..', 'examples', 'data', 'C-town.inp'))
+        self.network = Read(os.path.join('..', 'examples', 'data', 'C-town.inp'))
 
 
 class MicropolisModel(TestModel):
@@ -137,7 +136,7 @@ class MicropolisModel(TestModel):
 
     def __init__(self):
         super().__init__()
-        self.network = Read(join('..', 'examples', 'data', 'MICROPOLIS_v1.inp'))
+        self.network = Read(os.path.join('..', 'examples', 'data', 'MICROPOLIS_v1.inp'))
 
 
 class RulesModel(TestModel):
@@ -154,15 +153,15 @@ class RulesModel(TestModel):
 
     def __init__(self):
         super().__init__()
-        self.network = Read(join('networks', 'Rules_network.inp'))
+        self.network = Read(os.path.join('networks', 'Rules_network.inp'))
 
 
-def set_root_dir():
+def set_dir_examples():
     file_dir = pathlib.Path(__file__).parent.absolute()
     os.chdir(file_dir.parent / 'examples')
     print(os.getcwd())
 
 
-def reset_root_dir():
+def set_dir_testing():
     file_dir = pathlib.Path(__file__)
     os.chdir(file_dir.parent)

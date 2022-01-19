@@ -1,5 +1,6 @@
 import datetime
 import unittest
+from copy import deepcopy
 
 from oopnet.utils.getters import *
 
@@ -10,7 +11,7 @@ class SimpleDeepcopyTest(unittest.TestCase):
     def setUp(self) -> None:
         self.model = SimpleModel()
         self.old_network = self.model.network
-        self.new_network = self.model.network.__deepcopy__()
+        self.new_network = deepcopy(self.model.network)
 
     def test_junction(self):
         junction_old = get_junction(self.old_network, 'J-1')

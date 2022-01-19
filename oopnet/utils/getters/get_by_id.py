@@ -12,7 +12,7 @@ def get_junction(network: Network, id: str) -> Junction:
       Junction with property ID
 
     """
-    return network.junctions[id]
+    return network._junctions[id]
 
 
 def get_tank(network: Network, id: str) -> Tank:
@@ -26,7 +26,7 @@ def get_tank(network: Network, id: str) -> Tank:
       Tank with property ID
 
     """
-    return network.tanks[id]
+    return network._tanks[id]
 
 
 def get_reservoir(network: Network, id: str) -> Reservoir:
@@ -40,7 +40,7 @@ def get_reservoir(network: Network, id: str) -> Reservoir:
       Reservoir with property ID
 
     """
-    return network.reservoirs[id]
+    return network._reservoirs[id]
 
 
 def get_pipe(network: Network, id: str) -> Pipe:
@@ -54,7 +54,7 @@ def get_pipe(network: Network, id: str) -> Pipe:
       Pipe with property ID
 
     """
-    return network.pipes[id]
+    return network._pipes[id]
 
 
 def get_pump(network: Network, id: str) -> Pump:
@@ -68,7 +68,7 @@ def get_pump(network: Network, id: str) -> Pump:
       Pump with property ID
 
     """
-    return network.pumps[id]
+    return network._pumps[id]
 
 
 def get_valve(network: Network, id: str) -> Valve:
@@ -82,7 +82,7 @@ def get_valve(network: Network, id: str) -> Valve:
       Valve with property ID
 
     """
-    return network.valves[id]
+    return network._valves[id]
 
 
 def get_curve(network: Network, id: str) -> Curve:
@@ -96,7 +96,7 @@ def get_curve(network: Network, id: str) -> Curve:
       Curve with property ID
 
     """
-    return network.curves[id]
+    return network._curves[id]
 
 
 def get_pattern(network: Network, id: str) -> Pattern:
@@ -110,7 +110,7 @@ def get_pattern(network: Network, id: str) -> Pattern:
       Pattern with property ID
 
     """
-    return network.patterns[id]
+    return network._patterns[id]
 
 
 def get_rule(network: Network, id: str) -> Rule:
@@ -124,7 +124,7 @@ def get_rule(network: Network, id: str) -> Rule:
       Rule with property ID
 
     """
-    return network.rules[id]
+    return network._rules[id]
 
 
 def get_node(network: Network, id: str) -> Node:
@@ -138,7 +138,7 @@ def get_node(network: Network, id: str) -> Node:
       Node with property ID
 
     """
-    return network.nodes[id]
+    return network._nodes[id]
 
 
 def get_link(network: Network, id: str) -> Link:
@@ -152,4 +152,4 @@ def get_link(network: Network, id: str) -> Link:
       Link with property ID
 
     """
-    return network.links[id]
+    return network._links[id]

@@ -12,7 +12,7 @@ from oopnet.report import *
 
 from oopnet.utils.utils import make_measurement
 from oopnet.utils.utils import copy as Copy
-from oopnet.utils.timer import tic, toc
+from oopnet.utils.timer import tic, toc, time_it
 
 from oopnet.utils.getters import *
 from oopnet.utils.adders import *

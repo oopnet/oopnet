@@ -10,7 +10,7 @@ def getneighbor(self, pipe):
 
     """
     nodes = [pipe.startnode, pipe.endnode]
-    npipes = [x for x in self.pipes if (x.startnode in nodes or x.endnode in nodes) and x.id != pipe.id]
+    npipes = [x for x in self._pipes if (x.startnode in nodes or x.endnode in nodes) and x.id != pipe.id]
     return npipes
 
 def getnextneighbor(self, pipe):
@@ -37,12 +37,12 @@ def getnextneighbor(self, pipe):
 def getsourcelist(self):
     """This function returns all sources (tanks and reservoirs) of an oopnet network"""
     sourcelist = list()
-    if self.tanks and self.reservoirs:
-        sourcelist = self.tanks + self.reservoirs
-    elif self.tanks:
-        sourcelist = self.tanks
-    elif self.reservoirs:
-        sourcelist = self.reservoirs
+    if self._tanks and self._reservoirs:
+        sourcelist = self._tanks + self._reservoirs
+    elif self._tanks:
+        sourcelist = self._tanks
+    elif self._reservoirs:
+        sourcelist = self._reservoirs
     return sourcelist
 
 # def getneighbornode(self, nodelist):

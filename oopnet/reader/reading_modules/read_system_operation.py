@@ -1,6 +1,7 @@
 from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING
+import logging
 
 from oopnet.elements import Pipe, Pump, Curve, Pattern, Energy, Control, Controlcondition, Action, Rule, Condition
 from oopnet.utils.getters import get_curve, get_pump, get_pattern, get_link, get_node, get_junction, get_link_ids, \
@@ -9,6 +10,9 @@ from oopnet.reader.decorators import section_reader
 from oopnet.utils.adders import add_curve, add_pattern, add_rule
 if TYPE_CHECKING:
     from oopnet.elements import Network
+
+
+logger = logging.getLogger(__name__)
 
 
 @section_reader('CURVES', 0)
@@ -20,6 +24,7 @@ def read_curves(network: Network, block: list):
       block: EPANET input file block
 
     """
+    logger.debug('Reading Curves')
     for vals in block:
         vals = vals['values']
         exists = False
@@ -60,6 +65,7 @@ def read_patterns(network: Network, block: list):
       block: EPANET input file block
 
     """
+    logger.debug('Reading Patterns')
     for vals in block:
         m = None
         vals = vals['values']
@@ -107,6 +113,7 @@ def read_energy(network: Network, block: list):
       block: EPANET input file block
 
     """
+    logger.debug('Reading Energy')
     for vals in block:
         vals = vals['values']
         e = Energy()
@@ -149,6 +156,7 @@ def read_status(network: Network, block: list):
       block: EPANET input file block
 
     """
+    logger.debug('Reading status section')
     for vals in block:
         vals = vals['values']
         l = get_link(network, vals[0])
@@ -168,6 +176,7 @@ def read_controls(network: Network, block: list):
       block: EPANET input file block
 
     """
+    logger.debug('Reading Controls')
     for vals in block:
         vals = vals['values']
         condition = Controlcondition()
@@ -212,6 +221,7 @@ def read_rules(network: Network, block: list):
       block: EPANET input file block
 
     """
+    logger.debug('Reading Rules')
     for vals in block:
         vals = vals['values']
         if vals[0].upper() == 'RULE':
@@ -277,6 +287,7 @@ def read_demands(network: Network, block: list):
       block: EPANET input file block
 
     """
+    logger.debug('Reading demand section')
     for vals in block:
         vals = vals['values']
         j = get_junction(network, vals[0])

@@ -1,19 +1,23 @@
 from io import TextIOWrapper
+import logging
 
 from oopnet.elements import Network
 from oopnet.utils.getters import get_junctions, get_reservoirs, get_tanks, get_pipes, get_pumps, get_valves
 from oopnet.writer.decorators import section_writer
 
+logger = logging.getLogger(__name__)
+
 
 @section_writer('TITLE', 0)
 def write_title(network: Network, fid: TextIOWrapper):
-    """Writes the network title to an EPANET input file.
+    """Writes the Network title to an EPANET input file.
 
     Args:
-      network: OOPNET network object to write
+      network: Network object to write
       fid: output object
 
     """
+    logger.debug('Writing title')
     print('[TITLE]', file=fid)
     if network.title:
         print(network.title, file=fid)
@@ -22,13 +26,14 @@ def write_title(network: Network, fid: TextIOWrapper):
 
 @section_writer('JUNCTIONS', 1)
 def write_junctions(network: Network, fid: TextIOWrapper):
-    """Writes junctions to an EPANET input file.
+    """Writes Junctions to an EPANET input file.
 
     Args:
-      network: OOPNET network object to write
+      network: Network object to write
       fid: output object
 
     """
+    logger.debug('Writing Junctions section')
     print('[JUNCTIONS]', file=fid)
     print(';id elevation demand demandpattern', file=fid)
     for j in get_junctions(network):
@@ -51,13 +56,14 @@ def write_junctions(network: Network, fid: TextIOWrapper):
 
 @section_writer('RESERVOIRS', 1)
 def write_reservoirs(network: Network, fid: TextIOWrapper):
-    """Writes reservoirs to an EPANET input file.
+    """Writes Reservoirs to an EPANET input file.
 
     Args:
-      network: OOPNET network object to write
+      network: Network object to write
       fid: output object
 
     """
+    logger.debug('Writing Reservoirs section')
     print('[RESERVOIRS]', file=fid)
     print(';id head pattern', file=fid)
     for r in get_reservoirs(network):
@@ -76,10 +82,11 @@ def write_tanks(network: Network, fid: TextIOWrapper):
     """Writes tanks to an EPANET input file.
 
     Args:
-      network: OOPNET network object to write
+      network: Network object to write
       fid: output object
 
     """
+    logger.debug('Writing Tanks section')
     print('[TANKS]', file=fid)
     print(';id elevation initlevel minlevel maxlevel diam minvolume volumecurve', file=fid)
     for t in get_tanks(network):
@@ -104,10 +111,11 @@ def write_pipes(network: Network, fid: TextIOWrapper):
     """Writes pipes to an EPANET input file.
 
     Args:
-      network: OOPNET network object to write
+      network: Network object to write
       fid: output object
 
     """
+    logger.debug('Writing Pipes section')
     print('[PIPES]', file=fid)
     print(';id startnode endnode length diameter roughness minorloss', file=fid)  # status', file=fid)
     for p in get_pipes(network):
@@ -120,7 +128,7 @@ def write_pipes(network: Network, fid: TextIOWrapper):
         print(p.diameter, end=' ', file=fid)
         print(p.roughness, end=' ', file=fid)
         print(p.minorloss, end=' ', file=fid)
-        if p.status is not None:
+        if p.status == 'CV':
             print(p.status, end=' ', file=fid)
         if p.comment is not None:
             print(';', p.comment, end=' ', file=fid)
@@ -133,10 +141,11 @@ def write_pumps(network: Network, fid: TextIOWrapper):
     """Writes pumps to an EPANET input file.
 
     Args:
-      network: OOPNET network object to write
+      network: Network object to write
       fid: output object
 
     """
+    logger.debug('Writing Pumps section')
     print('[PUMPS]', file=fid)
     print(';id startnode endnode keyword value', file=fid)
     for p in get_pumps(network):
@@ -160,10 +169,11 @@ def write_valves(network: Network, fid: TextIOWrapper):
     """Writes valves to an EPANET input file.
 
     Args:
-      network: OOPNET network object to write
+      network: Network object to write
       fid: output object
 
     """
+    logger.debug('Writing Valves section')
     print('[VALVES]', file=fid)
     print(';id startnode endnode diameter valvetype setting minorloss', file=fid)
     for v in get_valves(network):
@@ -172,14 +182,10 @@ def write_valves(network: Network, fid: TextIOWrapper):
             print(v.startnode.id, end=' ', file=fid)
         if v.endnode is not None:
             print(v.endnode.id, end=' ', file=fid)
-        if v.diameter is not None:
-            print(v.diameter, end=' ', file=fid)
-        if v.valvetype is not None:
-            print(v.valvetype, end=' ', file=fid)
-        if v.setting is not None:
-            print(v.setting, end=' ', file=fid)
-        if v.minorloss is not None:
-            print(v.minorloss, end=' ', file=fid)
+        print(v.diameter, end=' ', file=fid)
+        print(v.valvetype, end=' ', file=fid)
+        print(v.setting, end=' ', file=fid)
+        print(v.minorloss, end=' ', file=fid)
         if v.comment is not None:
             print(';', v.comment, end=' ', file=fid)
         print('\n', end=' ', file=fid)
@@ -191,10 +197,11 @@ def write_emitter(network: Network, fid: TextIOWrapper):
     """Writes Junction emitters to an EPANET input file.
 
     Args:
-      network: OOPNET network object to write
+      network: Network object to write
       fid: output object
 
     """
+    logger.debug('Writing Emitter section')
     print('[EMITTERS]', file=fid)
     print(';id emittercoefficient', file=fid)
     for j in get_junctions(network):

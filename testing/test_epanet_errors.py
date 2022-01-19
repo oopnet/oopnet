@@ -33,6 +33,11 @@ class BlankSimulationErrorTest(unittest.TestCase):
             Run(self.network)
             self.assertTrue(InvalidCurveError in e.errors)
 
+
+class ExistingModelTest(unittest.TestCase):
+    def setUp(self) -> None:
+        self.network = create_dummy_spa_network()
+
     def test_node_not_connected(self):
         from oopnet.report.simulation_errors import UnconnectedNodeError
         add_tank(self.network, Tank('tank'))
@@ -40,11 +45,6 @@ class BlankSimulationErrorTest(unittest.TestCase):
         with self.assertRaises(EPANETSimulationError) as e:
             Run(self.network)
             self.assertTrue(UnconnectedNodeError in e.errors)
-
-
-class ExistingModelTest(unittest.TestCase):
-    def setUp(self) -> None:
-        self.network = create_dummy_spa_network()
 
     def test_illegal_node_property(self):
         from oopnet.report.simulation_errors import IllegalNodePropertyError

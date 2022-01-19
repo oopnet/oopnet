@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Union
+import logging
 
 import networkx as nx
 import pandas as pd
@@ -8,13 +9,17 @@ from oopnet.utils.getters import get_node_ids, get_links, get_pipes
 if TYPE_CHECKING:
     from oopnet.elements import Network
 
+logger = logging.getLogger(__name__)
+
 
 # todo: add documentation
 def _add_nodes(graph, network):
+    logger.debug('Adding Node objects to Network')
     graph.add_nodes_from(get_node_ids(network))
 
 
 def _add_links(graph, network, weight, default):
+    logger.debug('Adding Link objects to Network')
     for l in get_links(network):
         e = (l.startnode.id,
              l.endnode.id)
@@ -27,7 +32,7 @@ def _add_links(graph, network, weight, default):
         graph.add_edge(*e, weight=weight_value, id=l.id)
 
 
-class Graph(nx.Graph):
+class Graph:
     """Generates an undirected NetworkX graph from an OOPNET network.
 
         Note:
@@ -52,14 +57,15 @@ class Graph(nx.Graph):
             >>> g = Graph(network, flow)
 
         """
-    def __new__(cls, network: Network, weight: Union[str, pd.Series] = 'length', default: float = 0.00001) -> nx.Graph:
+    def __new__(cls, network: Network, weight: Union[str, pd.Series] = 'length', default: float = 0.00001):
+        logger.info('Creating Graph object from Network')
         graph = nx.Graph()
         _add_nodes(graph, network)
         _add_links(graph, network, weight, default)
         return graph
 
 
-class DiGraph(nx.DiGraph):
+class DiGraph:
     """Generates a directed NetworkX graph from an OOPNET network.
 
         Args:
@@ -81,14 +87,14 @@ class DiGraph(nx.DiGraph):
 
         """
     def __new__(cls, network: Network, weight: Union[str, pd.Series] = 'length', default: float = 0.00001) -> nx.DiGraph:
+        logger.info('Creating DiGraph object from Network')
+        graph = nx.DiGraph()
+        _add_nodes(graph, network)
+        _add_links(graph, network, weight, default)
+        return graph
 
-        g = nx.DiGraph()
-        _add_nodes(g, network)
-        _add_links(g, network, weight, default)
-        return g
 
-
-class MultiGraph(nx.MultiGraph):
+class MultiGraph:
     """Generates an undirected NetworkX graph from an OOPNET network
 
         Args:
@@ -110,10 +116,11 @@ class MultiGraph(nx.MultiGraph):
 
         """
     def __new__(cls, network: Network, weight: Union[str, pd.Series] = 'length', default: float = 0.00001) -> nx.MultiGraph:
-        g = nx.MultiGraph()
-        _add_nodes(g, network)
-        _add_links(g, network, weight, default)
-        return g
+        logger.info('Creating MultiGraph object from Network')
+        graph = nx.MultiGraph()
+        _add_nodes(graph, network)
+        _add_links(graph, network, weight, default)
+        return graph
 
 
 # todo: add documentation

@@ -88,7 +88,7 @@ class Reservoir(Node):
       mixingmodel: The type of water quality mixing that occurs within the tank. The choices include MIXED (fully mixed), 2COMP (two-compartment mixing), FIFO (first-in-first-out plug flow) and LIFO (last-in-first-out plug flow).
 
     """
-    head: float = None  # = Either(None, Float, ListFloat)
+    head: float = 0.0  # = Either(None, Float, ListFloat)
     headpattern: Optional[Pattern] = None  # = Either(None, Instance(Pattern), List(Instance(Pattern)))
 
 
@@ -108,11 +108,11 @@ class Tank(Node):
       mixingmodel: The type of water quality mixing that occurs within the tank. The choices include MIXED (fully mixed), 2COMP (two-compartment mixing), FIFO (first-in-first-out plug flow) and LIFO (last-in-first-out plug flow).
 
     """
-    initlevel: float = 10
-    minlevel: float = 0
-    maxlevel: float = 20
-    diam: float = 50
-    minvolume: float = 0
+    initlevel: float = 10.0
+    minlevel: float = 0.0
+    maxlevel: float = 20.0
+    diam: float = 50.0
+    minvolume: float = 0.0
     volumecurve: Optional[Curve] = None
     compartmentvolume: Optional[float] = None
     reactiontank: Optional[float] = None
@@ -132,11 +132,11 @@ class Pipe(Link):
       reactionwall: The wall reaction coefficient for the pipe. Time units are 1/days. Use a positive value for growth and a negative value for decay. Leave blank if the Global Wall reaction coefficient from the project's Reactions Options will apply. See Water Quality Reactions in the 'EPANET manual Section 3.4<https://epanet22.readthedocs.io/en/latest/3_network_model.html#water-quality-simulation-model>' for moreinformation.
 
     """
-    length: float = 1000
+    length: float = 1000.0
     # todo: decide on default values (if keeping D-W as default)
-    diameter: float = 12
-    roughness: float = 100
-    minorloss: float = 0
+    diameter: float = 12.0
+    roughness: float = 100.0
+    minorloss: float = 0.0
     reactionbulk: Optional[float] = None
     reactionwall: Optional[float] = None
 
@@ -171,9 +171,9 @@ class Valve(Link):
     """
     # todo: valvetype necessary?
     valvetype: str = 'PRV'
-    diameter: float = 12
-    minorloss: float = 0
-    setting: Union[float, str] = 0
+    diameter: float = 12.0
+    minorloss: float = 0.0
+    setting: Union[float, str] = 0.0
 
 
 @dataclass

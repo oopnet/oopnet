@@ -1,10 +1,14 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
+import logging
 
 if TYPE_CHECKING:
     from oopnet.elements import Network
 from oopnet.utils.getters import get_node, get_link, get_pattern
 from oopnet.reader.decorators import section_reader
+
+
+logger = logging.getLogger(__name__)
 
 
 @section_reader('QUALITY', 3)
@@ -16,6 +20,7 @@ def read_quality(network: Network, block: list):
       block: EPANET input file block
 
     """
+    logger.debug('Reading quality section')
     for vals in block:
         vals = vals['values']
         j = get_node(network, vals[0])
@@ -32,6 +37,7 @@ def read_reaction(network: Network, block: list):
       block: EPANET input file block
 
     """
+    logger.debug('Reading reactions')
     r = network.reactions
     for vals in block:
         vals = vals['values']
@@ -53,7 +59,7 @@ def read_reaction(network: Network, block: list):
         elif vals[0] == 'LIMITING' and vals[1].upper() == 'POTENTIAL':
             r.limitingpotential = float(vals[2])
         elif vals[0] == 'ROUGHNESS' and vals[1].upper() == 'CORRELATION':
-            r.limitingpotential = float(vals[2])
+            r.roughnesscorrelation = float(vals[2])
         elif vals[0] == 'BULK':
             p = get_link(network, vals[1])
             p.reactionbulk = float(vals[2])
@@ -86,6 +92,7 @@ def read_sources(network: Network, block: list):
       block: EPANET input file block
 
     """
+    logger.debug('Reading sources section')
     for vals in block:
         vals = vals['values']
         n = get_node(network, vals[0])
@@ -106,6 +113,7 @@ def read_mixing(network: Network, block: list):
       block: EPANET input file block
 
     """
+    logger.debug('Reading mixing section')
     for vals in block:
         vals = vals['values']
         t = get_node(network, vals[0])

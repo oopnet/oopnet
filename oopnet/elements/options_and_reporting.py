@@ -1,6 +1,6 @@
 from __future__ import annotations
 import datetime
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional, Union
 
 from oopnet.elements.network_components import Node, Pattern, Link
@@ -13,7 +13,7 @@ from oopnet.elements.network_components import Node, Pattern, Link
 class Options:
     """Defines various simulation options."""
     units: str = 'LPS'  # = 'GPM'  # = Enum('CFS', 'GPM', 'MGD', 'IMGD', 'AFD', 'LPS', 'LPM', 'MLD', 'CMH', 'CMD')
-    headloss: str = 'HW'  # str = 'H-W'  # = Enum('H-W', 'D-W', 'C-M')
+    headloss: str = 'H-W'  # str = 'H-W'  # = Enum('H-W', 'D-W', 'C-M')
     hydraulics: Optional[tuple[str, str]] = None  # = Either(None, List('USE', Str), List('SAVE', Str))
     quality: Union[str, tuple[str, str], tuple[str, str, str]] = 'NONE'  # = Any #Either(None, Enum('NONE', 'CHEMICAL', 'AGE'), List('TRACE', Instance(Node)), List('CHEMICAL', Str, Str))
     viscosity: float = 1.0
@@ -36,16 +36,16 @@ class Options:
 @dataclass
 class Times:
     """Defines various time step parameters used in the simulation."""
-    duration: datetime.timedelta = datetime.timedelta()
-    hydraulictimestep: datetime.timedelta = datetime.timedelta(hours=1)
+    duration: datetime.timedelta = field(default=datetime.timedelta())
+    hydraulictimestep: datetime.timedelta = field(default=datetime.timedelta(hours=1))
     qualitytimestep: Optional[datetime.timedelta] = None  # todo: correct qualitytimestep and ruletimestep
     # _qualitytimestep: datetime.timedelta = field(init=False, repr=False)
     ruletimestep: Optional[datetime.timedelta] = None
     patterntimestep: Optional[datetime.timedelta] = None
-    patternstart: datetime.timedelta = datetime.timedelta()
+    patternstart: datetime.timedelta = field(default=datetime.timedelta())
     reporttimestep: datetime.timedelta = datetime.timedelta(hours=1)
-    reportstart: datetime.timedelta = datetime.timedelta()
-    startclocktime: datetime.timedelta = datetime.timedelta()
+    reportstart: datetime.timedelta = field(default=datetime.timedelta())
+    startclocktime: datetime.timedelta = field(default=datetime.timedelta())
     statistic: str = 'NONE'  # = Enum('NONE', 'AVERAGED', 'MINIMUM', 'MAXIMUM', 'RANGE')
     
     # @property
