@@ -1,17 +1,17 @@
 import os
 
-from oopnet import *
+import oopnet as on
 
 filename = os.path.join('data', 'Poulakis.inp')
 
-network = Read(filename)
+network = on.Read(filename)
 
-for j in get_junctions(network):
+for j in on.get_junctions(network):
     print(j, j.demand, j.elevation)
 
-report = Run(network, delete=False)
+report = on.Run(network, delete=False)
 print(report)
 
-p = Pressure(report)
+p = on.Pressure(report)
 print(p)
 print(p.describe())

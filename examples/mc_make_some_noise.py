@@ -1,21 +1,24 @@
 import os
 
-from oopnet import *
+import numpy as np
+import pandas as pd
+from matplotlib import pyplot as plt
+import oopnet as on
 
 filename = os.path.join('data', 'Poulakis.inp')
 
-net = Read(filename)
+net = on.Read(filename)
 net.reportprecision.flow = 3
 net.reportprecision.pressure = 3
 mcruns = 1000
 p = []
 
 for _ in range(mcruns):
-    cnet = Copy(net)
-    for j in get_junctions(cnet):
+    cnet = on.Copy(net)
+    for j in on.get_junctions(cnet):
         j.demand += np.random.normal(0.0, 1.0)
-    rpt = Run(cnet)
-    p.append(Pressure(rpt))
+    rpt = on.Run(cnet)
+    p.append(on.Pressure(rpt))
 
 p = pd.DataFrame(p, index=list(range(len(p))))
 print(p)

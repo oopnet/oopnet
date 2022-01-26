@@ -1,14 +1,15 @@
 import os
 
-from oopnet import *
+from matplotlib import pyplot as plt
+import oopnet as on
 
 filename = os.path.join('data', 'anytown.inp')
 
-net = Read(filename)
+net = on.Read(filename)
 net.report.nodes = 'ALL'
 net.report.links = 'ALL'
-rpt = Run(net)
+rpt = on.Run(net)
 print(net.reportparameter.pressure)
-p = Pressure(rpt)
-Plot(net, nodes=p['1'])
+p = on.Pressure(rpt)
+on.Plot(net, nodes=p['1'])
 plt.show()

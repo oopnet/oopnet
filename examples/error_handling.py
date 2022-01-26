@@ -1,33 +1,33 @@
 import os
 
-from oopnet import *
+import oopnet as on
 
 filename = os.path.join('data', 'Poulakis.inp')
 
-net = Read(filename)
+net = on.Read(filename)
 
-add_junction(net, Junction(id='unconnected'))
+on.add_junction(net, on.Junction(id='unconnected'))
 
 try:
-    rpt = Run(net)
-except EPANETSimulationError as e:
+    rpt = on.Run(net)
+except on.EPANETSimulationError as e:
     print(e)
 
-    if e.check_contained_errors(UnconnectedNodeError):
+    if e.check_contained_errors(on.UnconnectedNodeError):
         print('Caught UnconnectedNodeError')
-    if e.check_contained_errors(InputDataError):
+    if e.check_contained_errors(on.InputDataError):
         print('Caught InputDataError')
-    if any(e.check_contained_errors([InputDataError, UnconnectedNodeError])):
+    if any(e.check_contained_errors([on.InputDataError, on.UnconnectedNodeError])):
         print('Caught UnconnectedNodeError and InputDataError')
 
-net = Read(filename)
-p = get_pipe(net, 'P-01')
+net = on.Read(filename)
+p = on.get_pipe(net, 'P-01')
 p.length = -100.0
 
 try:
-    rpt = Run(net)
-except EPANETSimulationError as e:
+    rpt = on.Run(net)
+except on.EPANETSimulationError as e:
     print(e)
 
-    if e.check_contained_errors(IllegalLinkPropertyError):
+    if e.check_contained_errors(on.IllegalLinkPropertyError):
         print('Illegal property encountered')

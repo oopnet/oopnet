@@ -1,15 +1,17 @@
 import os
 
 import networkx as nx
-
-from oopnet import *
+import pandas as pd
+from matplotlib import pyplot as plt
+import seaborn as sns
+import oopnet as on
 
 # Read file into OOPNET
 filename = os.path.join('data', 'anytown.inp')
-network = Read(filename)
+network = on.Read(filename)
 
 # Save graph to variable G
-G = Graph(network)
+G = on.Graph(network)
 print(type(G))
 
 # Some graph theoretic measurements:
@@ -28,7 +30,7 @@ f, ax = plt.subplots()
 pr.plot(kind='bar', ax=ax)
 
 # Plot PageRank in network
-Plot(network, nodes=pr)
+on.Plot(network, nodes=pr)
 
 # Histogram of degrees in the network
 deg = nx.degree_histogram(G)

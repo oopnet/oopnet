@@ -1,22 +1,22 @@
 import os
 import logging
 
-from oopnet import *
+import oopnet as on
 
-logger = start_logger()
+logger = on.start_logger()
 
 filename = os.path.join('data', 'Poulakis.inp')
 
-net = Read(filename)
+net = on.Read(filename)
 
 logger.setLevel(logging.DEBUG)
 
-net = Read(filename)
+net = on.Read(filename)
 
 logger = logging.getLogger('oopnet')
 
 
-@logging_decorator(logger)
+@on.logging_decorator(logger)
 def do_some_crazy_things():
     a = 0
     for b in [0, 1, 2, 'a']:
