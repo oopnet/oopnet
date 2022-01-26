@@ -165,3 +165,13 @@ def set_dir_examples():
 def set_dir_testing():
     file_dir = pathlib.Path(__file__)
     os.chdir(file_dir.parent)
+
+
+def activate_all_report_parameters(network: Network):
+    for param in network.reportparameter.__dict__.keys():
+        setattr(network.reportparameter, param, 'YES')
+
+
+if __name__ == '__main__':
+    j = Junction(id='1')
+    print()

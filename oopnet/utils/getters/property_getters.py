@@ -1,12 +1,16 @@
+from typing import TYPE_CHECKING
+
 import pandas as pd
 
 from oopnet.utils.getters import get_links, get_link_ids, get_pipes, get_pipe_ids, get_nodes, \
     get_node_ids, get_junction_ids, get_junctions, get_valve_ids, get_valves, get_pumps, get_pump_ids
-from oopnet.elements import Network
+
+if TYPE_CHECKING:
+    from oopnet.elements import Network
 
 
 # Links:
-def get_startnodes(network: Network) -> pd.Series:
+def get_startnodes(network: 'Network') -> pd.Series:
     """Gets all start nodes of all Links in the Network as a pandas Series.
 
     Args:
@@ -23,7 +27,7 @@ def get_startnodes(network: Network) -> pd.Series:
     return series
 
 
-def get_endnodes(network: Network) -> pd.Series:
+def get_endnodes(network: 'Network') -> pd.Series:
     """Gets all end nodes of all Links in the Network as a pandas Series..
 
     Args:
@@ -40,7 +44,7 @@ def get_endnodes(network: Network) -> pd.Series:
     return series
 
 
-def get_startendnodes(network: Network) -> pd.DataFrame:
+def get_startendnodes(network: 'Network') -> pd.DataFrame:
     """Gets all endnodes of all Links in the Network as a pandas DataFrame.
 
     Args:
@@ -55,7 +59,7 @@ def get_startendnodes(network: Network) -> pd.DataFrame:
     return pd.concat([s1, s2], axis=1)
 
 
-def get_startendcoordinates(network: Network) -> pd.DataFrame:
+def get_startendcoordinates(network: 'Network') -> pd.DataFrame:
     """Gets all start and end coordinates of all Links in the Network as a pandas DataFrame.
 
     Args:
@@ -77,7 +81,7 @@ def get_startendcoordinates(network: Network) -> pd.DataFrame:
                                          'end y-coordinate': ey})
 
 
-# def get_initialstatus(network: Network) -> pd.Series:
+# def get_initialstatus(network: 'Network') -> pd.Series:
 #     """Gets all initial status of all Links in the Network as a pandas Series.
 #
 #     Args:
@@ -94,7 +98,7 @@ def get_startendcoordinates(network: Network) -> pd.DataFrame:
 #     return series
 
 
-def get_status(network: Network) -> pd.Series:
+def get_status(network: 'Network') -> pd.Series:
     """Gets all status of all Links in the Network as a pandas Series.
 
     Args:
@@ -111,7 +115,7 @@ def get_status(network: Network) -> pd.Series:
     return series
 
 
-def get_setting(network: Network) -> pd.Series:
+def get_setting(network: 'Network') -> pd.Series:
     """Gets all settings of all Pumps and Valves in the Network as a pandas Series.
 
     Args:
@@ -128,7 +132,7 @@ def get_setting(network: Network) -> pd.Series:
     return series
 
 
-def get_linkcenter_coordinates(network: Network) -> pd.DataFrame:
+def get_linkcenter_coordinates(network: 'Network') -> pd.DataFrame:
     """Get the center coordinates of all Links in the Network as a pandas Dataframe.
 
     Args:
@@ -143,7 +147,7 @@ def get_linkcenter_coordinates(network: Network) -> pd.DataFrame:
     return pd.DataFrame(index=get_link_ids(network), data={'center x-coordinate': x, 'center y-coordinate': y})
 
 
-def get_link_comment(network: Network) -> pd.Series:
+def get_link_comment(network: 'Network') -> pd.Series:
     """Gets all comments of all Links in the Network as a pandas Series.
 
     Args:
@@ -161,7 +165,7 @@ def get_link_comment(network: Network) -> pd.Series:
 
 
 # Pipes
-def get_length(network: Network) -> pd.Series:
+def get_length(network: 'Network') -> pd.Series:
     """Gets all length values of all Pipes in the Network as a pandas Series.
 
     Args:
@@ -179,7 +183,7 @@ def get_length(network: Network) -> pd.Series:
     return series
 
 
-def get_diameter(network: Network) -> pd.Series:
+def get_diameter(network: 'Network') -> pd.Series:
     """Gets all diameter values of all Pipes and Valves in the Network as a pandas Series.
 
     Args:
@@ -201,7 +205,7 @@ def get_diameter(network: Network) -> pd.Series:
     return series
 
 
-def get_roughness(network: Network) -> pd.Series:
+def get_roughness(network: 'Network') -> pd.Series:
     """Gets all roughness values of all Pipes in the Network as a pandas Series.
 
     Args:
@@ -219,7 +223,7 @@ def get_roughness(network: Network) -> pd.Series:
     return series
 
 
-def get_minorloss(network: Network) -> pd.Series:
+def get_minorloss(network: 'Network') -> pd.Series:
     """Gets all minor loss coefficient values of all Pipes in the Network as a pandas Series.
 
     Args:
@@ -240,7 +244,7 @@ def get_minorloss(network: Network) -> pd.Series:
 # ToDo: Add quality parameters for Links
 
 # Nodes:
-def get_xcoordinate(network: Network) -> pd.Series:
+def get_xcoordinate(network: 'Network') -> pd.Series:
     """Gets all x coordinate values of all Nodes in the Network as a pandas Series.
 
     Args:
@@ -258,7 +262,7 @@ def get_xcoordinate(network: Network) -> pd.Series:
     return series
 
 
-def get_ycoordinate(network: Network) -> pd.Series:
+def get_ycoordinate(network: 'Network') -> pd.Series:
     """Gets all y coordinate values of all Nodes in the Network as a pandas Series.
 
     Args:
@@ -276,7 +280,7 @@ def get_ycoordinate(network: Network) -> pd.Series:
     return series
 
 
-def get_coordinates(network: Network) -> pd.DataFrame:
+def get_coordinates(network: 'Network') -> pd.DataFrame:
     """Gets all x and y coordinate values of all Nodes in the Network as a pandas Dataframe
 
     Args:
@@ -291,7 +295,7 @@ def get_coordinates(network: Network) -> pd.DataFrame:
     return pd.concat([s1, s2], axis=1)
 
 
-def get_elevation(network: Network) -> pd.Series:
+def get_elevation(network: 'Network') -> pd.Series:
     """Gets all elevation values of all Nodes in the Network as a pandas Series.
 
     Args:
@@ -309,7 +313,7 @@ def get_elevation(network: Network) -> pd.Series:
     return series
 
 
-def get_basedemand(network: Network) -> pd.Series:
+def get_basedemand(network: 'Network') -> pd.Series:
     """Gets all base demand values of all Junctions in the Network as a pandas Series.
     
     Builds the sum if more than one base demand exists for a single junction.
@@ -329,7 +333,7 @@ def get_basedemand(network: Network) -> pd.Series:
     return series
 
 
-def get_node_comment(network: Network) -> pd.Series:
+def get_node_comment(network: 'Network') -> pd.Series:
     """Gets all comments of all Nodes in the Network as a pandas Series.
 
     Args:

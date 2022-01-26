@@ -58,7 +58,7 @@ class JunctionFactory(ComponentFactory):
         logger.debug('Reading Junctions section')
         for values in block:
             j = cls._parse_single(values, network)
-            add_junction(network, j, False)
+            add_junction(network, j)
         logger.debug(f'Added {len(get_junctions(network))} Junctions')
 
     @classmethod
@@ -78,7 +78,7 @@ class ReservoirFactory(ComponentFactory):
         logger.debug('Reading Reservoirs section')
         for values in block:
             r = cls._parse_single(values, network)
-            add_reservoir(network, r, False)
+            add_reservoir(network, r)
         logger.debug(f'Added {len(get_reservoirs(network))} Reservoirs')
 
     @classmethod
@@ -98,7 +98,7 @@ class TankFactory(ComponentFactory):
         logger.debug('Reading Tanks section')
         for values in block:
             t = cls._parse_single(values, network)
-            add_tank(network, t, False)
+            add_tank(network, t)
         logger.debug(f'Added {len(get_tanks(network))} Tanks')
 
     @classmethod
@@ -118,7 +118,7 @@ class PipeFactory(ComponentFactory):
         logger.debug('Reading Pipes section')
         for values in block:
             p = cls._parse_single(values, network)
-            add_pipe(network, p, False)
+            add_pipe(network, p)
         logger.debug(f'Added {len(get_pipes(network))} Pipes')
 
     @classmethod
@@ -138,7 +138,7 @@ class PumpFactory(ComponentFactory):
         logger.debug('Reading Pumps section')
         for values in block:
             p = cls._parse_single(values, network)
-            add_pump(network, p, False)
+            add_pump(network, p)
         logger.debug(f'Added {len(get_pumps(network))} Pumps')
 
     @classmethod
@@ -167,7 +167,7 @@ class ValveFactory(ComponentFactory):
         logger.debug('Reading Valve section')
         for values in block:
             v = cls._parse_single(values, network)
-            add_valve(network, v, False)
+            add_valve(network, v)
         logger.debug(f'Added {len(get_valves(network))} Valves')
 
     @classmethod

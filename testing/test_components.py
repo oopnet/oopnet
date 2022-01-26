@@ -19,7 +19,6 @@ class TestLink(unittest.TestCase):
 
     def test_rename(self):
         p = get_link(self.model.network, 'P-0')
-        self.assertIsInstance(p._component_hash, dict)
         self.assertTrue('P-0' in get_link_ids(self.model.network))
         p.id = 'new-ID'
         self.assertTrue('new-ID' in get_link_ids(self.model.network))

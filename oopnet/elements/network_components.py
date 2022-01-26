@@ -1,6 +1,6 @@
 from typing import Union, Optional
 from dataclasses import dataclass
-from abc import abstractmethod
+from abc import ABC
 
 from oopnet.elements.base import NetworkComponent
 from oopnet.elements.system_operation import Pattern, Curve
@@ -31,10 +31,14 @@ class Node(NetworkComponent):
     sourcepattern: Optional[list[Pattern]] = None
 
     @property
-    def coordinates(self) -> tuple:
-        """Property returning node coordinates"""
-        return self.xcoordinate, self.ycoordinate, self.elevation
+    def coordinates(self) -> tuple[float, float, float]:
+        """Property returning node coordinates.
 
+        Returns:
+            x- and y-coordinate, and elevation
+
+        """
+        return self.xcoordinate, self.ycoordinate, self.elevation
 
 @dataclass
 class Link(NetworkComponent):
@@ -43,7 +47,6 @@ class Link(NetworkComponent):
     Attributes:
       startnode: Node-object at the start of the Link
       endnode: Node-object at the end of the Link
-      initialstatus: Status at the beginning of the simulation of the Link (OPEN, CLOSED, CV or ACTIVE)
       status: Current status of the Link (OPEN, CLOSED, CV or ACTIVE)
 
     """
@@ -77,6 +80,13 @@ class Junction(Node):
     demandpattern: Union[Pattern, list[Pattern], None] = None
     demand: Union[float, list[float]] = 0.0
 
+    @NetworkComponent.id.setter
+    def id(self, id: str):
+        """Sets ID of NetworkComponent and replaces key in network hash"""
+        if self._network:
+            self._rename(id=id, hashtable=self._network._nodes['junctions'])
+        self._id = id
+
 
 @dataclass
 class Reservoir(Node):
@@ -90,6 +100,13 @@ class Reservoir(Node):
     """
     head: float = 0.0  # = Either(None, Float, ListFloat)
     headpattern: Optional[Pattern] = None  # = Either(None, Instance(Pattern), List(Instance(Pattern)))
+
+    @NetworkComponent.id.setter
+    def id(self, id: str):
+        """Sets ID of NetworkComponent and replaces key in network hash"""
+        if self._network:
+            self._rename(id=id, hashtable=self._network._nodes['reservoirs'])
+        self._id = id
 
 
 @dataclass
@@ -118,6 +135,13 @@ class Tank(Node):
     reactiontank: Optional[float] = None
     mixingmodel: str = 'MIXED'  # = Enum('MIXED', '2COMP', 'FIFO', 'LIFO')
 
+    @NetworkComponent.id.setter
+    def id(self, id: str):
+        """Sets ID of NetworkComponent and replaces key in network hash"""
+        if self._network:
+            self._rename(id=id, hashtable=self._network._nodes['tanks'])
+        self._id = id
+
 
 @dataclass
 class Pipe(Link):
@@ -140,6 +164,13 @@ class Pipe(Link):
     reactionbulk: Optional[float] = None
     reactionwall: Optional[float] = None
 
+    @NetworkComponent.id.setter
+    def id(self, id: str):
+        """Sets ID of NetworkComponent and replaces key in network hash"""
+        if self._network:
+            self._rename(id=id, hashtable=self._network._links['pipes'])
+        self._id = id
+
 
 # todo: rethink keyword, value structure (what happens for multiple properties?)
 @dataclass
@@ -156,6 +187,13 @@ class Pump(Link):
     keyword: Optional[str] = None  # = Enum('POWER', 'HEAD', 'SPEED', 'PATTERN')
     value: Union[str, float, None] = None
     setting: Optional[float] = None
+
+    @NetworkComponent.id.setter
+    def id(self, id: str):
+        """Sets ID of NetworkComponent and replaces key in network hash"""
+        if self._network:
+            self._rename(id=id, hashtable=self._network._links['pumps'])
+        self._id = id
 
 
 @dataclass
@@ -174,6 +212,13 @@ class Valve(Link):
     diameter: float = 12.0
     minorloss: float = 0.0
     setting: Union[float, str] = 0.0
+
+    @NetworkComponent.id.setter
+    def id(self, id: str):
+        """Sets ID of NetworkComponent and replaces key in network hash"""
+        if self._network:
+            self._rename(id=id, hashtable=self._network._links['valves'])
+        self._id = id
 
 
 @dataclass

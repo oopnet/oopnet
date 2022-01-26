@@ -1,14 +1,14 @@
 """
 This module contains all the base classes of OOPNET
 """
+from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional
-
-from oopnet.exceptions import ComponentExistsError
+from abc import ABC, abstractmethod
 
 
 @dataclass
-class NetworkComponent:
+class NetworkComponent(ABC):
     """This is OOPNET's base class for all objects having a name (id) in EPANET Input files
 
     Attributes:
@@ -18,33 +18,35 @@ class NetworkComponent:
 
     """
     id: str
-    _id: str = field(init=False, repr=False)
+    _id: str = field(init=False, compare=False, hash=False, repr=False)
     comment: Optional[str] = None
     tag: Optional[str] = None
-    _component_hash: dict = field(default=None, init=False, compare=False, hash=False, repr=False)
+    _network_: Optional['Network'] = field(default=None, init=False, compare=False, hash=False, repr=False)
 
     def __hash__(self):
         return hash(self.id) + hash(type(self))
-
-    # def __getstate__(self):
-    #     # Copy the object's state from self.__dict__ which contains
-    #     # all our instance attributes. Always use the dict.copy()
-    #     # method to avoid modifying the original state.
-    #     state = self.__dict__.copy()
-    #     # Remove the unpicklable entries.
-    #     del state['_component_hash']
-    #     return state
 
     @property
     def id(self) -> str:
         return self._id
 
     @id.setter
-    def id(self, id: str):
-        """Sets ID of NetworkComponent and replaces key in network hash"""
-        if self._component_hash:
-            if id in self._component_hash:
-                raise ComponentExistsError(id)
-            self._component_hash[id] = self
-            del self._component_hash[self._id]
+    @abstractmethod
+    def id(self, value):
+        """Abstract method for setting a component's ID"""
+
+    @property
+    def _network(self):
+        return self._network_
+
+    @_network.setter
+    def _network(self, value):
+        if not self._network_:
+            self._network_ = value
+        else:
+            raise RuntimeError('NetworkComponents cannot be added to two different Networks.')
+
+    def _rename(self, id: str, hashtable: dict) -> None:
+        if hashtable:
+            hashtable[id] = hashtable.pop(self.id)
         self._id = id

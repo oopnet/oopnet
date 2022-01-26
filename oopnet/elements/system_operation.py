@@ -18,11 +18,24 @@ class Curve(NetworkComponent):
     xvalues: list[float] = field(default_factory=list)
     yvalues: list[float] = field(default_factory=list)
 
+    @NetworkComponent.id.setter
+    def id(self, id: str):
+        """Sets ID of NetworkComponent and replaces key in network hash"""
+        if self._network:
+            self._rename(id=id, hashtable=self._network._curves)
+        self._id = id
 
 @dataclass
 class Pattern(NetworkComponent):
     """Defines time patterns."""
     multipliers: list[float] = field(default_factory=list)
+
+    @NetworkComponent.id.setter
+    def id(self, id: str):
+        """Sets ID of NetworkComponent and replaces key in network hash"""
+        if self._network:
+            self._rename(id=id, hashtable=self._network._patterns)
+        self._id = id
 
 
 # todo: rethink implementation -> move pump specific settings to Pump class and global settings to Network?

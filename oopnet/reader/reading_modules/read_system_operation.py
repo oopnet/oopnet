@@ -53,7 +53,7 @@ def read_curves(network: Network, block: list):
                 c.yvalues.append(m)
 
         if not exists:
-            add_curve(network, c, False)
+            add_curve(network, c)
 
 
 @section_reader('PATTERNS', 0)
@@ -101,7 +101,7 @@ def read_patterns(network: Network, block: list):
         else:
             p.multipliers = m
         if not exists:
-            add_pattern(network, p, False)
+            add_pattern(network, p)
 
 
 @section_reader('ENERGY', 3)

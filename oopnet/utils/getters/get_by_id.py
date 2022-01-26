@@ -1,7 +1,10 @@
-from oopnet.elements import Network, Junction, Link, Node, Valve, Pump, Pipe, Reservoir, Tank, Rule, Pattern, Curve
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from oopnet.elements import Pipe, Junction, Reservoir, Tank, Node, Link, Pump, Valve, Curve, Pattern, Rule, Network
 
 
-def get_junction(network: Network, id: str) -> Junction:
+def get_junction(network: 'Network', id: str) -> 'Junction':
     """Gets a specific Junction from the network with a specific ID.
 
     Args:
@@ -12,10 +15,10 @@ def get_junction(network: Network, id: str) -> Junction:
       Junction with property ID
 
     """
-    return network._junctions[id]
+    return network._nodes['junctions'][id]
 
 
-def get_tank(network: Network, id: str) -> Tank:
+def get_tank(network: 'Network', id: str) -> 'Tank':
     """Gets a specific Tank from the network with a specific ID.
 
     Args:
@@ -26,10 +29,10 @@ def get_tank(network: Network, id: str) -> Tank:
       Tank with property ID
 
     """
-    return network._tanks[id]
+    return network._nodes['tanks'][id]
 
 
-def get_reservoir(network: Network, id: str) -> Reservoir:
+def get_reservoir(network: 'Network', id: str) -> 'Reservoir':
     """Gets a specific Reservoir from the network with a specific ID.
 
     Args:
@@ -40,10 +43,10 @@ def get_reservoir(network: Network, id: str) -> Reservoir:
       Reservoir with property ID
 
     """
-    return network._reservoirs[id]
+    return network._nodes['reservoirs'][id]
 
 
-def get_pipe(network: Network, id: str) -> Pipe:
+def get_pipe(network: 'Network', id: str) -> 'Pipe':
     """Gets a specific Pipe from the network with a specific ID.
 
     Args:
@@ -54,10 +57,10 @@ def get_pipe(network: Network, id: str) -> Pipe:
       Pipe with property ID
 
     """
-    return network._pipes[id]
+    return network._links['pipes'][id]
 
 
-def get_pump(network: Network, id: str) -> Pump:
+def get_pump(network: 'Network', id: str) -> 'Pump':
     """Gets a specific Pump from the network with a specific ID.
 
     Args:
@@ -68,10 +71,10 @@ def get_pump(network: Network, id: str) -> Pump:
       Pump with property ID
 
     """
-    return network._pumps[id]
+    return network._links['pumps'][id]
 
 
-def get_valve(network: Network, id: str) -> Valve:
+def get_valve(network: 'Network', id: str) -> 'Valve':
     """Gets a specific Valve from the network with a specific ID.
 
     Args:
@@ -82,10 +85,10 @@ def get_valve(network: Network, id: str) -> Valve:
       Valve with property ID
 
     """
-    return network._valves[id]
+    return network._links['valves'][id]
 
 
-def get_curve(network: Network, id: str) -> Curve:
+def get_curve(network: 'Network', id: str) -> 'Curve':
     """Gets a specific Curve from the network with a specific ID.
 
     Args:
@@ -99,7 +102,7 @@ def get_curve(network: Network, id: str) -> Curve:
     return network._curves[id]
 
 
-def get_pattern(network: Network, id: str) -> Pattern:
+def get_pattern(network: 'Network', id: str) -> 'Pattern':
     """Gets a specific Pattern from the network with a specific ID.
 
     Args:
@@ -113,7 +116,7 @@ def get_pattern(network: Network, id: str) -> Pattern:
     return network._patterns[id]
 
 
-def get_rule(network: Network, id: str) -> Rule:
+def get_rule(network: 'Network', id: str) -> 'Rule':
     """Gets a specific Rule from the network with a specific ID.
 
     Args:
@@ -127,7 +130,7 @@ def get_rule(network: Network, id: str) -> Rule:
     return network._rules[id]
 
 
-def get_node(network: Network, id: str) -> Node:
+def get_node(network: 'Network', id: str) -> 'Node':
     """Gets a specific Node from the network with a specific ID.
 
     Args:
@@ -138,10 +141,12 @@ def get_node(network: Network, id: str) -> Node:
       Node with property ID
 
     """
-    return network._nodes[id]
+    for vals in network._nodes.values():
+        if id in vals:
+            return vals[id]
 
 
-def get_link(network: Network, id: str) -> Link:
+def get_link(network: 'Network', id: str) -> 'Link':
     """Gets a specific Link from the network with a specific ID.
 
     Args:
@@ -152,4 +157,6 @@ def get_link(network: Network, id: str) -> Link:
       Link with property ID
 
     """
-    return network._links[id]
+    for vals in network._links.values():
+        if id in vals:
+            return vals[id]

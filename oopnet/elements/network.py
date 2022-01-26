@@ -1,15 +1,14 @@
 from __future__ import annotations
-from copy import deepcopy
 from typing import Optional, TYPE_CHECKING
 from dataclasses import dataclass, field
 
 import networkx as nx
 
+from oopnet.elements.component_registry import ComponentRegistry, SuperComponentRegistry, NodeRegistry, LinkRegistry
 from oopnet.elements.water_quality import Reaction
 from oopnet.elements.options_and_reporting import Options, Times, Report, Reportparameter, Reportprecision
 if TYPE_CHECKING:
     from oopnet.elements.system_operation import Energy, Control, Rule, Curve, Pattern
-    from oopnet.elements.network_components import Node, Junction, Tank, Reservoir, Link, Pump, Pipe, Valve
     from oopnet.elements.network_map_tags import Vertex, Label, Backdrop
 
 
@@ -61,23 +60,8 @@ class Network:
     energies: list[Energy] = field(default_factory=list)
     controls: list[Control] = field(default_factory=list)
 
-    _junctions: dict[str, Junction] = field(default_factory=dict)
-    _tanks: dict[str, Tank] = field(default_factory=dict)
-    _reservoirs: dict[str, Reservoir] = field(default_factory=dict)
-    _pipes: dict[str, Pipe] = field(default_factory=dict)
-    _pumps: dict[str, Pump] = field(default_factory=dict)
-    _valves: dict[str, Valve] = field(default_factory=dict)
-    _curves: dict[str, Curve] = field(default_factory=dict)
-    _patterns: dict[str, Pattern] = field(default_factory=dict)
-    _rules: dict[str, Rule] = field(default_factory=dict)
-
-    # todo: decide to keep or not (currently not in use)
-    @property
-    def _nodes(self) -> dict[str, Node]:
-        """Property returning all Junction, Reservoir and Tank objects from the model."""
-        return self._junctions | self._reservoirs | self._tanks
-
-    @property
-    def _links(self) -> dict[str, Link]:
-        """Property returning all Pipe, Pump, and Valve objects from the model."""
-        return self._pipes | self._pumps | self._valves
+    _nodes: SuperComponentRegistry = field(default_factory=NodeRegistry)
+    _links: SuperComponentRegistry = field(default_factory=LinkRegistry)
+    _curves: dict[str, Curve] = field(default_factory=ComponentRegistry)
+    _patterns: dict[str, Pattern] = field(default_factory=ComponentRegistry)
+    _rules: dict[str, Rule] = field(default_factory=ComponentRegistry)

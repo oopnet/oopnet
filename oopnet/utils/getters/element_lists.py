@@ -1,8 +1,11 @@
-from oopnet.elements import Network, Pipe, Junction, Reservoir, Tank, Node, Link, Pump, Valve, Curve, Pattern, Energy, \
-    Control, Rule
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from oopnet.elements import Pipe, Junction, Reservoir, Tank, Node, Link, Pump, Valve, Curve, Pattern, Energy, \
+        Control, Rule, Network
 
 
-def get_pattern_ids(network: Network) -> list[str]:
+def get_pattern_ids(network: 'Network') -> list[str]:
     """Gets all Pattern IDs in a network.
 
     Args:
@@ -15,7 +18,7 @@ def get_pattern_ids(network: Network) -> list[str]:
     return list(network._patterns.keys())
 
 
-def get_curve_ids(network: Network) -> list[str]:
+def get_curve_ids(network: 'Network') -> list[str]:
     """Gets all Curve IDs in a network.
 
     Args:
@@ -28,7 +31,7 @@ def get_curve_ids(network: Network) -> list[str]:
     return list(network._curves.keys())
 
 
-def get_rule_ids(network: Network) -> list[str]:
+def get_rule_ids(network: 'Network') -> list[str]:
     """Gets all Rule IDs in a network.
 
     Args:
@@ -41,7 +44,7 @@ def get_rule_ids(network: Network) -> list[str]:
     return list(network._rules.keys())
 
 
-def get_junction_ids(network: Network) -> list[str]:
+def get_junction_ids(network: 'Network') -> list[str]:
     """Gets all Junction IDs in a network.
 
     Args:
@@ -51,10 +54,10 @@ def get_junction_ids(network: Network) -> list[str]:
       list of Junction IDs
 
     """
-    return list(network._junctions.keys())
+    return list(network._nodes['junctions'].keys())
 
 
-def get_tank_ids(network: Network) -> list[str]:
+def get_tank_ids(network: 'Network') -> list[str]:
     """Gets all Tank IDs in a network.
 
     Args:
@@ -64,10 +67,10 @@ def get_tank_ids(network: Network) -> list[str]:
       list of Tank IDs
 
     """
-    return list(network._tanks.keys())
+    return list(network._nodes['tanks'].keys())
 
 
-def get_reservoir_ids(network: Network) -> list[str]:
+def get_reservoir_ids(network: 'Network') -> list[str]:
     """Gets all Reservoir IDs in a network.
 
     Args:
@@ -77,10 +80,10 @@ def get_reservoir_ids(network: Network) -> list[str]:
       list of Reservoir IDs
 
     """
-    return list(network._reservoirs.keys())
+    return list(network._nodes['reservoirs'].keys())
 
 
-def get_node_ids(network: Network) -> list[str]:
+def get_node_ids(network: 'Network') -> list[str]:
     """Gets all Node IDs in a network.
 
     Args:
@@ -93,7 +96,7 @@ def get_node_ids(network: Network) -> list[str]:
     return get_junction_ids(network) + get_tank_ids(network) + get_reservoir_ids(network)
 
 
-def get_pipe_ids(network: Network) -> list[str]:
+def get_pipe_ids(network: 'Network') -> list[str]:
     """Gets all Pipe IDs in a network.
 
     Args:
@@ -103,10 +106,10 @@ def get_pipe_ids(network: Network) -> list[str]:
       list of Pipe IDs
 
     """
-    return list(network._pipes.keys())
+    return list(network._links['pipes'].keys())
 
 
-def get_pump_ids(network: Network) -> list[str]:
+def get_pump_ids(network: 'Network') -> list[str]:
     """Gets all Pump IDs in a network.
 
     Args:
@@ -116,10 +119,10 @@ def get_pump_ids(network: Network) -> list[str]:
       list of Pump IDs
 
     """
-    return list(network._pumps.keys())
+    return list(network._links['pumps'].keys())
 
 
-def get_valve_ids(network: Network) -> list[str]:
+def get_valve_ids(network: 'Network') -> list[str]:
     """Gets all Valve IDs in a network.
 
     Args:
@@ -129,10 +132,10 @@ def get_valve_ids(network: Network) -> list[str]:
       list of Valve IDs
 
     """
-    return list(network._valves.keys())
+    return list(network._links['valves'].keys())
 
 
-def get_link_ids(network: Network) -> list[str]:
+def get_link_ids(network: 'Network') -> list[str]:
     """Gets all Link IDs in a network.
 
     Args:
@@ -146,7 +149,7 @@ def get_link_ids(network: Network) -> list[str]:
 
 
 # Retrieve all specific objects
-def get_pipes(network: Network) -> list[Pipe]:
+def get_pipes(network: 'Network') -> list['Pipe']:
     """Gets all Pipes in a network.
 
     Args:
@@ -156,10 +159,10 @@ def get_pipes(network: Network) -> list[Pipe]:
       list of Pipes
 
     """
-    return list(network._pipes.values())
+    return list(network._links['pipes'].values())
 
 
-def get_junctions(network: Network) -> list[Junction]:
+def get_junctions(network: 'Network') -> list['Junction']:
     """Gets all Junctions in a network.
 
     Args:
@@ -169,10 +172,10 @@ def get_junctions(network: Network) -> list[Junction]:
       list of Junctions
 
     """
-    return list(network._junctions.values())
+    return list(network._nodes['junctions'].values())
 
 
-def get_reservoirs(network: Network) -> list[Reservoir]:
+def get_reservoirs(network: 'Network') -> list['Reservoir']:
     """Gets all Reservoirs in a network.
 
     Args:
@@ -182,10 +185,10 @@ def get_reservoirs(network: Network) -> list[Reservoir]:
       list of Reservoirs
 
     """
-    return list(network._reservoirs.values())
+    return list(network._nodes['reservoirs'].values())
 
 
-def get_tanks(network: Network) -> list[Tank]:
+def get_tanks(network: 'Network') -> list['Tank']:
     """Gets all Tanks in a network.
 
     Args:
@@ -195,10 +198,10 @@ def get_tanks(network: Network) -> list[Tank]:
       list of Tanks
 
     """
-    return list(network._tanks.values())
+    return list(network._nodes['tanks'].values())
 
 
-def get_nodes(network: Network) -> list[Node]:
+def get_nodes(network: 'Network') -> list['Node']:
     """Gets all Nodes (Junctions, Reservoirs and Tanks) in a network.
 
     Args:
@@ -211,7 +214,7 @@ def get_nodes(network: Network) -> list[Node]:
     return get_junctions(network) + get_tanks(network) + get_reservoirs(network)
 
 
-def get_links(network: Network) -> list[Link]:
+def get_links(network: 'Network') -> list['Link']:
     """Gets all Links (Pipes, Pumps and Valves) in a network.
 
     Args:
@@ -224,7 +227,7 @@ def get_links(network: Network) -> list[Link]:
     return get_pipes(network) + get_pumps(network) + get_valves(network)
 
 
-def get_pumps(network: Network) -> list[Pump]:
+def get_pumps(network: 'Network') -> list['Pump']:
     """Gets all Pumps in a network.
 
     Args:
@@ -234,10 +237,10 @@ def get_pumps(network: Network) -> list[Pump]:
       list of Pumps
 
     """
-    return list(network._pumps.values())
+    return list(network._links['pumps'].values())
 
 
-def get_valves(network: Network) -> list[Valve]:
+def get_valves(network: 'Network') -> list['Valve']:
     """Gets all Valves in a network.
 
     Args:
@@ -247,10 +250,10 @@ def get_valves(network: Network) -> list[Valve]:
       list of Valves
 
     """
-    return list(network._valves.values())
+    return list(network._links['valves'].values())
 
 
-def get_curves(network: Network) -> list[Curve]:
+def get_curves(network: 'Network') -> list['Curve']:
     """Gets all Curves in a network.
 
     Args:
@@ -263,7 +266,7 @@ def get_curves(network: Network) -> list[Curve]:
     return list(network._curves.values())
 
 
-def get_patterns(network: Network) -> list[Pattern]:
+def get_patterns(network: 'Network') -> list['Pattern']:
     """Gets all Patterns in a network.
 
     Args:
@@ -276,7 +279,7 @@ def get_patterns(network: Network) -> list[Pattern]:
     return list(network._patterns.values())
 
 
-def get_energy_entries(network: Network) -> list[Energy]:
+def get_energy_entries(network: 'Network') -> list['Energy']:
     """Gets all Energy entries in a network.
 
     Args:
@@ -289,7 +292,7 @@ def get_energy_entries(network: Network) -> list[Energy]:
     return network.energies
 
 
-def get_controls(network: Network) -> list[Control]:
+def get_controls(network: 'Network') -> list['Control']:
     """Gets all Controls in a network.
 
     Args:
@@ -302,7 +305,7 @@ def get_controls(network: Network) -> list[Control]:
     return network.controls
 
 
-def get_rules(network: Network) -> list[Rule]:
+def get_rules(network: 'Network') -> list['Rule']:
     """Gets all Rules in a network.
 
     Args:
