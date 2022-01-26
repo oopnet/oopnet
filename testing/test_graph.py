@@ -2,7 +2,7 @@ import unittest
 
 import networkx as nx
 
-from oopnet import Graph, DiGraph, MultiGraph, Run, Headloss, get_link, Pipe
+from oopnet import Graph, DiGraph, MultiGraph, MultiDiGraph, Run, Headloss, get_link, Pipe
 from testing.base import PoulakisEnhancedPDAModel
 
 
@@ -18,13 +18,19 @@ class PoulakisEnhancedGraphTest(unittest.TestCase):
 
     def test_digraph(self):
         g = DiGraph(self.model.network)
-        self.assertIsInstance(g, nx.Graph)
+        self.assertIsInstance(g, nx.DiGraph)
         self.assertEqual(self.model.n_nodes, len(g.nodes))
         self.assertEqual(self.model.n_links, len(g.edges))
 
     def test_multigraph(self):
         g = MultiGraph(self.model.network)
-        self.assertIsInstance(g, nx.Graph)
+        self.assertIsInstance(g, nx.MultiGraph)
+        self.assertEqual(self.model.n_nodes, len(g.nodes))
+        self.assertEqual(self.model.n_links, len(g.edges))
+
+    def test_multidigraph(self):
+        g = MultiDiGraph(self.model.network)
+        self.assertIsInstance(g, nx.MultiDiGraph)
         self.assertEqual(self.model.n_nodes, len(g.nodes))
         self.assertEqual(self.model.n_links, len(g.edges))
 
