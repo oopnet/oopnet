@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Union
 import logging
+from warnings import warn
 
 import networkx as nx
 import pandas as pd
@@ -33,7 +34,7 @@ def _add_links(graph, network, weight, default):
 
 
 class Graph:
-    """Generates an undirected NetworkX graph from an OOPNET network.
+    """Generates an undirected NetworkX Graph from an OOPNET network.
 
         Note:
             NetworkX Graphs don't support parallel edges between two Nodes. Only one of the parallel edges will be
@@ -59,6 +60,7 @@ class Graph:
         """
     def __new__(cls, network: Network, weight: Union[str, pd.Series] = 'length', default: float = 0.00001):
         logger.info('Creating Graph object from Network')
+        warn('Trying to create a simple Graph from Network. Parallel pipes will be merged silently!')
         graph = nx.Graph()
         _add_nodes(graph, network)
         _add_links(graph, network, weight, default)
@@ -66,7 +68,11 @@ class Graph:
 
 
 class DiGraph:
-    """Generates a directed NetworkX graph from an OOPNET network.
+    """Generates a directed NetworkX DiGraph from an OOPNET network.
+
+        Note:
+            NetworkX Graphs don't support parallel edges between two Nodes. Only one of the parallel edges will be
+            present in the Graph object. To allow for parallel pipes, use :class:`oopnet.graph.MultiDiGraph` instead.
 
         Args:
           network: OOPNET network object
@@ -88,6 +94,7 @@ class DiGraph:
         """
     def __new__(cls, network: Network, weight: Union[str, pd.Series] = 'length', default: float = 0.00001) -> nx.DiGraph:
         logger.info('Creating DiGraph object from Network')
+        warn('Trying to create a DiGraph from Network. Parallel pipes will be merged silently!')
         graph = nx.DiGraph()
         _add_nodes(graph, network)
         _add_links(graph, network, weight, default)
@@ -95,7 +102,7 @@ class DiGraph:
 
 
 class MultiGraph:
-    """Generates an undirected NetworkX graph from an OOPNET network
+    """Generates an undirected NetworkX MultiGraph from an OOPNET network.
 
         Args:
           network: OOPNET network object
@@ -123,6 +130,35 @@ class MultiGraph:
         return graph
 
 
+class MultiDiGraph:
+    """Generates a directed NetworkX MultiGraph from an OOPNET network.
+
+        Args:
+          network: OOPNET network object
+          weight: name of pipe property as a string which is used as weight or a pandas Series with link IDs as index and weights as values.
+          default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects.
+
+        Returns:
+            NetworkX MultiGraph object containing all nodes and links in the passed Network.
+
+        Examples:
+            The following will create a MultiGraph with link lengths as edge weights (filename needs to be a valid EPANET input file):
+            >>> network = Network(filename)
+            >>> g = MultiDiGraph(network, 'length')
+            Using a simulation result as link weight:
+            >>> rpt = Run(network)
+            >>> flow = Flow(rpt)
+            >>> g = MultiGraph(network, flow)
+
+        """
+    def __new__(cls, network: Network, weight: Union[str, pd.Series] = 'length', default: float = 0.00001) -> nx.MultiGraph:
+        logger.info('Creating MultiGraph object from Network')
+        graph = nx.MultiDiGraph()
+        _add_nodes(graph, network)
+        _add_links(graph, network, weight, default)
+        return graph
+
+
 # todo: add documentation
 def onlinks2nxlinks(network: Network) -> list[tuple[str, str]]:
     """Converts OOPNET links to NetworkX graph edges.
@@ -132,6 +168,7 @@ def onlinks2nxlinks(network: Network) -> list[tuple[str, str]]:
 
     Returns:
         List of tuples in the format (link.startnode.id, link.endnode.id)
+
     """
     return [(l.startnode.id, l.endnode.id) for l in get_pipes(network)]
 
@@ -144,6 +181,7 @@ def nxlinks2onlinks(G: nx.Graph) -> list[str]:
 
     Returns:
         List of OOPNET Link IDs
+
     """
     return [G.get_edge_data(n1, n2)['id'] for n1, n2 in G.edges()]
 
@@ -157,6 +195,7 @@ def edge2pipeid(G: nx.Graph, edge: tuple[str, str]) -> Union[str, list[str]]:
 
     Returns:
         ID of corresponding OOPNET Link
+
     """
     if not isinstance(G, nx.MultiGraph):
         return G.get_edge_data(*edge)['id']
@@ -174,6 +213,7 @@ def edgeresult2pandas(G: nx.Graph, result: dict) -> pd.Series:
 
     Returns:
       transformed result into a pandas Series
+
     """
     return_dict = {}
     for edge in list(result.keys()):
