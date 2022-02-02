@@ -1,13 +1,13 @@
-from typing import Union
+from __future__ import annotations
+from typing import Union, TYPE_CHECKING
 import logging
 
-from oopnet.elements.component_registry import ComponentExistsError
-from oopnet.utils.getters import get_pattern_ids, get_node_ids, get_link_ids, get_curve_ids, get_rule_ids
-from oopnet.elements import Network, Junction, Reservoir, Tank, Pipe, Pump, Valve, Curve, Pattern, Node, \
-    Link
-from oopnet.elements.system_operation import Rule
-from oopnet.elements.base import NetworkComponent
 from oopnet.utils.oopnet_logging import logging_decorator
+from oopnet.elements import Junction, Reservoir, Tank, Pipe, Pump, Valve, Curve, Pattern
+if TYPE_CHECKING:
+    from oopnet.elements.system_operation import Rule
+    from oopnet.elements.base import NetworkComponent
+    from oopnet.elements import Network
 
 logger = logging.getLogger(__name__)
 

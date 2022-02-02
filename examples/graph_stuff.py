@@ -8,7 +8,7 @@ import oopnet as on
 
 # Read file into OOPNET
 filename = os.path.join('data', 'anytown.inp')
-network = on.Read(filename)
+network = on.Network.read(filename)
 
 # Save graph to variable G
 G = on.Graph(network)

@@ -1,1 +1,1 @@
-from .write import write as Write
+# from .write import write as Write

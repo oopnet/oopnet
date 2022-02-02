@@ -1,4 +1,3 @@
-from __future__ import annotations
 from dataclasses import dataclass
 
 from oopnet.elements.network_components import Node

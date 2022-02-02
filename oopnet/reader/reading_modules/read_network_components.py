@@ -7,12 +7,13 @@ from typing import TYPE_CHECKING
 from oopnet.reader.decorators import section_reader
 from oopnet.reader.factories.component_factory import ComponentFactory
 from oopnet.reader.factories.base import InvalidValveTypeError
-from oopnet.elements import Network, Tank, Reservoir, Pipe, Pump, Valve, Node, Pattern, Curve, Junction, TCV, FCV, \
-    PRV, PBV, PSV, GPV
-from oopnet.utils.getters import get_junctions, get_reservoirs, get_tanks, get_pipes, get_valves, get_pumps
-from oopnet.utils.adders import *
+from oopnet.elements.network_components import Tank, Reservoir, Pipe, Pump, Valve, Node, Pattern, Curve, Junction, TCV,\
+    FCV, PRV, PBV, PSV, GPV
+from oopnet.utils.getters.element_lists import get_junctions, get_reservoirs, get_tanks, get_pipes, get_valves, \
+    get_pumps
+from oopnet.utils.adders.add_element import add_junction, add_tank, add_reservoir, add_pipe, add_pump, add_valve
 if TYPE_CHECKING:
-    from oopnet.elements import Network
+    from oopnet.elements.network import Network
 
 
 logger = logging.getLogger(__name__)

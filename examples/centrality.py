@@ -7,7 +7,7 @@ import oopnet as on
 
 filename = os.path.join('data', 'C-town.inp')
 
-net = on.Read(filename)
+net = on.Network.read(filename)
 
 G = on.Graph(net)
 

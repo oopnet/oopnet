@@ -6,7 +6,7 @@ import oopnet as on
 
 filename = os.path.join('data', 'Poulakis.inp')
 
-net = on.Read(filename)
+net = on.Network.read(filename)
 
 on.add_junction(network=net, junction=on.Junction(id='J-32', xcoordinate=5500, ycoordinate=8000, demand=80))
 
@@ -32,6 +32,6 @@ on.add_reservoir(network=net, reservoir=on.Reservoir(id='J-53', head=2, xcoordin
 on.add_pump(network=net, pump=on.Pump(id='Pump1', keyword='POWER', value=50, startnode=on.get_node(net, 'J-53'),
                                       endnode=on.get_node(net, 'J-31')))
 
-rpt = on.Run(net, output=True)
+rpt = net.run()
 on.Plot(net, links=on.Flow(rpt), nodes=on.Pressure(rpt), robust=True)
 plt.show()

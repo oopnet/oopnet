@@ -1,9 +1,10 @@
 from __future__ import annotations
 import datetime
 from dataclasses import dataclass, field
-from typing import Optional, Union
+from typing import Optional, Union, TYPE_CHECKING
 
-from oopnet.elements.network_components import Node, Pattern, Link
+if TYPE_CHECKING:
+    from oopnet.elements.network_components import Node, Pattern, Link
 
 # todo: check default values
 # todo: add documentation

@@ -1,6 +1,5 @@
 import unittest
 
-from oopnet.simulator import Run
 from oopnet.report import *
 from testing.base import CTownModel, MicropolisModel, PoulakisEnhancedPDAModel, RulesModel, SimpleModel, \
     activate_all_report_parameters
@@ -10,7 +9,7 @@ class CTownSimulatorTest(unittest.TestCase):
     def setUp(self) -> None:
         self.model = CTownModel()
         activate_all_report_parameters(self.model.network)
-        self.rpt = Run(self.model.network)
+        self.rpt = self.model.network.run()
 
 
     def test_pressure(self):

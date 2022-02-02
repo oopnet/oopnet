@@ -1,8 +1,12 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 import logging
 
-from oopnet.elements import Network, Junction, Tank, Reservoir, Pipe, Pump, Valve
+from oopnet.elements.network_components import Junction, Tank, Reservoir, Pipe, Pump, Valve
 from oopnet.utils.getters import get_node, get_link
 from oopnet.utils.oopnet_logging import logging_decorator
+if TYPE_CHECKING:
+    from oopnet.elements.network import Network
 
 logger = logging.getLogger(__name__)
 

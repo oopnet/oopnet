@@ -2,7 +2,10 @@ import unittest
 
 import networkx as nx
 
-from oopnet import Graph, DiGraph, MultiGraph, MultiDiGraph, Run, Headloss, get_link, Pipe
+from oopnet.graph.graph import Graph, DiGraph, MultiGraph, MultiDiGraph
+from oopnet.elements.network_components import Pipe
+from oopnet.utils.getters.get_by_id import get_link
+from oopnet.report import Headloss
 from testing.base import PoulakisEnhancedPDAModel
 
 
@@ -37,7 +40,7 @@ class PoulakisEnhancedGraphTest(unittest.TestCase):
     def test_report_weight(self):
         self.model.network.reportparameter.headloss = 'YES'
         self.model.network.reportparameter.length = 'YES'
-        rpt = Run(self.model.network)
+        rpt = self.model.network.run()
         headloss = Headloss(rpt)
         g = MultiGraph(self.model.network, weight=headloss, default=0)
         self.assertIsInstance(g, nx.Graph)

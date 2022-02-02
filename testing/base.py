@@ -2,10 +2,10 @@ import os
 import pathlib
 from typing import List
 
-from oopnet.elements import Network, Junction, Pipe, Tank, Reservoir, Pump, Valve, Curve, PRV
-from oopnet.reader import Read
-from oopnet.utils.adders import add_junction, add_pipe, add_node, add_curve, add_link
-from oopnet.utils.getters import get_node
+from oopnet.elements.network import Network
+from oopnet.elements.network_components import Junction, Pipe, Tank, Reservoir, Pump, Valve, Curve, PRV
+from oopnet.utils.adders.add_element import add_junction, add_pipe, add_node, add_curve, add_link
+from oopnet.utils.getters.get_by_id import get_node
 
 
 def add_dummy_junctions(network: Network, n: int) -> Network:
@@ -113,13 +113,13 @@ class PoulakisEnhancedPDAModel(TestModel):
 
     def __init__(self):
         super().__init__()
-        self.network = Read(os.path.join('networks', 'Poulakis_enhanced_PDA.inp'))
+        self.network = Network.read(os.path.join('networks', 'Poulakis_enhanced_PDA.inp'))
 
 
 class CTownModel(TestModel):
     def __init__(self):
         super().__init__()
-        self.network = Read(os.path.join('..', 'examples', 'data', 'C-town.inp'))
+        self.network = Network.read(os.path.join('..', 'examples', 'data', 'C-town.inp'))
 
 
 class MicropolisModel(TestModel):
@@ -136,7 +136,7 @@ class MicropolisModel(TestModel):
 
     def __init__(self):
         super().__init__()
-        self.network = Read(os.path.join('..', 'examples', 'data', 'MICROPOLIS_v1.inp'))
+        self.network = Network.read(os.path.join('..', 'examples', 'data', 'MICROPOLIS_v1.inp'))
 
 
 class RulesModel(TestModel):
@@ -153,7 +153,7 @@ class RulesModel(TestModel):
 
     def __init__(self):
         super().__init__()
-        self.network = Read(os.path.join('networks', 'Rules_network.inp'))
+        self.network = Network.read(os.path.join('networks', 'Rules_network.inp'))
 
 
 def set_dir_examples():

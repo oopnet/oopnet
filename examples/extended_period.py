@@ -1,15 +1,16 @@
 import os
+from datetime import timedelta
 
 from matplotlib import pyplot as plt
 import oopnet as on
 
 filename = os.path.join('data', 'C-town.inp')
-net = on.Read(filename)
+net = on.Network.read(filename)
 
-net.times.duration = on.timedelta(hours=6)
-net.times.reporttimestep = on.timedelta(minutes=5)
+net.times.duration = timedelta(hours=6)
+net.times.reporttimestep = timedelta(minutes=5)
 
-rpt = on.Run(net)
+rpt = net.run()
 
 print(rpt)
 

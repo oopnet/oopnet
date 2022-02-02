@@ -1,10 +1,13 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 import datetime
 from io import TextIOWrapper
 from typing import Union
 import logging
 
-from oopnet.elements import Network
 from oopnet.writer.decorators import section_writer
+if TYPE_CHECKING:
+    from oopnet.elements.network import Network
 
 logger = logging.getLogger(__name__)
 

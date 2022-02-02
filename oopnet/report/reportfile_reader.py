@@ -1,9 +1,9 @@
-import pandas as pd
 from typing import Optional, Union
 import datetime
 import re
 import logging
 
+import pandas as pd
 import xarray as xr
 from xarray import DataArray, Dataset
 

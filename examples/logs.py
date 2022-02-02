@@ -7,11 +7,11 @@ logger = on.start_logger()
 
 filename = os.path.join('data', 'Poulakis.inp')
 
-net = on.Read(filename)
+net = on.Network.read(filename)
 
 logger.setLevel(logging.DEBUG)
 
-net = on.Read(filename)
+net = on.Network.read(filename)
 
 logger = logging.getLogger('oopnet')
 

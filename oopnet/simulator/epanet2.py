@@ -1,3 +1,4 @@
+from __future__ import annotations
 import datetime
 import os
 from sys import platform as _platform
@@ -5,40 +6,22 @@ import subprocess
 import uuid
 import shutil
 import re
-from typing import Union, Optional
+from typing import Union, Optional, TYPE_CHECKING
 import logging
 
-from oopnet.elements import Network
 from oopnet.report.reportfile_reader import ReportFileReader
 from oopnet.report.binaryfile_reader import BinaryFileReader
 from oopnet.utils import utils
 from oopnet.report.xrayreport import Report
-from oopnet.writer import Write
 from oopnet.utils.oopnet_logging import logging_decorator
+if TYPE_CHECKING:
+    from oopnet.elements.network import Network
 
 logger = logging.getLogger(__name__)
 
 
-def run(thing: Union[Network, str], filename: Optional[str] = None, delete: bool = True,
-        path: Optional[str] = None, startdatetime: Optional[datetime.datetime] = None, output: bool = False):
-    """Runs an EPANET simulation by calling command line EPANET
-
-    Args:
-      thing: either an OOPNET network object or the filename of an EPANET input file
-      filename: if thing is an OOPNET network, filename is an option to perform command line EPANET simulations with a specific filename. If filename is a Python None object then a file with a random UUID (universally unique identifier) is generated
-      delete: if delete is True the Epanet Input and Report file is deleted, if False then the simulation results won't be deleted and are stored in a folder named path
-      path: Path were  to perform the simulations. If path is a Python None object then a tmp-folder is generated
-
-    Returns:
-      OOPNET report object
-
-    """
-    simulator = ModelSimulator(thing=thing, filename=filename, delete=delete, path=path, startdatetime=startdatetime,
-                               output=output)
-    return simulator.run()
-
-
 # todo: add proper documentation
+# todo: enable running EPANET input files directly again
 @logging_decorator(logger)
 class ModelSimulator:
     """Runs an EPANET simulation by calling command line EPANET
@@ -81,16 +64,15 @@ class ModelSimulator:
         if isinstance(self.thing, str):
             self.filename = os.path.join(self.path, os.path.split(self.thing)[-1])
             shutil.copy(self.thing, self.filename)
-        elif isinstance(self.thing, Network):
+        else:
             self.filename = os.path.join(self.path, str(uuid.uuid4())+'.inp')  # generate filename with unique filename
             
     def _setup_report(self):
         """Sets up report."""
-        if isinstance(self.thing, Network):
-            if self.thing.report.nodes == 'NONE' or not self.thing.report.nodes:
-                self.thing.report.nodes = 'ALL'
-            if self.thing.report.links == 'NONE' or not self.thing.report.links:
-                self.thing.report.links = 'ALL'
+        if self.thing.report.nodes == 'NONE' or not self.thing.report.nodes:
+            self.thing.report.nodes = 'ALL'
+        if self.thing.report.links == 'NONE' or not self.thing.report.links:
+            self.thing.report.links = 'ALL'
 
     def _create_command(self):
         """Creates command for simulating model."""
@@ -129,8 +111,7 @@ class ModelSimulator:
             out = re.sub(pattern, '. ', out).strip()
             return out
 
-        if isinstance(self.thing, Network):
-            Write(self.thing, filename=self.filename)
+        self.thing.write(filename=self.filename)
 
         cmd = subprocess.run(self.command, capture_output=True, shell=False)
         out, err = cmd.stdout, cmd.stderr

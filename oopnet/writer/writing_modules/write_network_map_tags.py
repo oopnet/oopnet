@@ -1,9 +1,12 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 from io import TextIOWrapper
 import logging
 
-from oopnet.utils.getters import get_nodes
+from oopnet.utils.getters.element_lists import get_nodes
 from oopnet.writer.decorators import section_writer
-from oopnet.elements import Network
+if TYPE_CHECKING:
+    from oopnet.elements.network import Network
 
 logger = logging.getLogger(__name__)
 

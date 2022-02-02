@@ -7,7 +7,7 @@ from oopnet.graph.graph import onlinks2nxlinks
 
 filename = os.path.join('data', 'anytown.inp')
 
-net = on.Read(filename)
+net = on.Network.read(filename)
 
 G = on.Graph(net)
 

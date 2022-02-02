@@ -1,6 +1,5 @@
 from typing import Union, Optional
 from dataclasses import dataclass
-from abc import ABC
 
 from oopnet.elements.base import NetworkComponent
 from oopnet.elements.system_operation import Pattern, Curve
@@ -39,6 +38,7 @@ class Node(NetworkComponent):
 
         """
         return self.xcoordinate, self.ycoordinate, self.elevation
+
 
 @dataclass
 class Link(NetworkComponent):
@@ -157,7 +157,6 @@ class Pipe(Link):
 
     """
     length: float = 1000.0
-    # todo: decide on default values (if keeping D-W as default)
     diameter: float = 12.0
     roughness: float = 100.0
     minorloss: float = 0.0
@@ -207,11 +206,9 @@ class Valve(Link):
       setting: Setting value depending on valvetype.
 
     """
-    # todo: valvetype necessary?
-    valvetype: str = 'PRV'
     diameter: float = 12.0
     minorloss: float = 0.0
-    setting: Union[float, str] = 0.0
+    setting: Union[float] = 0.0
 
     @NetworkComponent.id.setter
     def id(self, id: str):
@@ -223,77 +220,60 @@ class Valve(Link):
 
 @dataclass
 class PRV(Valve):
-    """ """
-    # ToDo: Implement PRV (Pressure Reducing Valve)
-    """
-    .. warning::
+    """Pressure Reducing Valve
 
-        Not implemented yet
+     Attributes:
+         setting: pressure limit
 
-    """
-    pass
+     """
 
 
 @dataclass
 class TCV(Valve):
-    """ """
-    # ToDo: Implement TCV (Throttle Control Valve)
-    """
-    .. warning::
+    """Throttle Control Valve
 
-        Not implemented yet
+     Attributes:
+         setting: head loss coefficient
 
-    """
-    pass
+     """
 
 
 @dataclass
 class PSV(Valve):
-    """ """
-    # ToDo: Implement PSV (Pressure Sustaining Valve)
-    """
-    .. warning::
+    """Pressure Sustaining Valve
 
-        Not implemented yet
+     Attributes:
+         setting: pressure limit at upstream setting
 
-    """
-    pass
+     """
 
 
 @dataclass
 class GPV(Valve):
-    """ """
-    # ToDo: Implement GPV (General Purpose Valve)
-    """
-    .. warning::
+    """General Purpose Valve
 
-        Not implemented yet
+     Attributes:
+         setting: Curve representing flow-head loss relationship
 
-    """
-    pass
+     """
+    setting: Optional[Curve] = None
 
 
 @dataclass
 class PBV(Valve):
-    """ """
-    # ToDo: Implement PBV (Pressure Breaker Valve)
-    """
-    .. warning::
+    """Pressure Breaker Valve
 
-        Not implemented yet
+     Attributes:
+         setting: pressure drop
 
-    """
-    pass
+     """
 
 
 @dataclass
 class FCV(Valve):
-    """ """
-    # ToDo: Implement FCV (Flow Control Valve)
-    """
-    .. warning::
+    """Flow Control Valve
 
-        Not implemented yet
+     Attributes:
+         setting: maximum allow flow
 
-    """
-    pass
+     """

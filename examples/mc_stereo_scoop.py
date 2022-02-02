@@ -5,21 +5,20 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 import oopnet as on
-from oopnet.elements.network import Network
 
 
-def roll_the_dice(network: Network) -> pd.Series:
+def roll_the_dice(network: on.Network) -> pd.Series:
     cnet = on.Copy(network)
     for j in on.get_junctions(cnet):
         j.demand += np.random.normal(0.0, 1.0)
-    rpt = on.Run(cnet)
+    rpt = cnet.run()
     return on.Pressure(rpt)
 
 
 if __name__ == '__main__':
     filename = os.path.join('data', 'Poulakis.inp')
 
-    net = on.Read(filename)
+    net = on.Network.read(filename)
     net.reportprecision.flow = 3
     net.reportprecision.pressure = 3
     mcruns = 1_000

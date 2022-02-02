@@ -6,7 +6,7 @@ from copy import deepcopy
 import numpy as np
 
 if TYPE_CHECKING:
-    from oopnet.elements import Junction, Pipe
+    from oopnet.elements.network_components import Junction, Pipe
 from oopnet.report import Pressure, Flow
 from oopnet.report.xrayreport import Report
 

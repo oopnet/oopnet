@@ -7,7 +7,7 @@ import oopnet as on
 
 filename = os.path.join('data', 'Poulakis.inp')
 
-net = on.Read(filename)
+net = on.Network.read(filename)
 net.reportprecision.flow = 3
 net.reportprecision.pressure = 3
 mcruns = 1000
@@ -17,7 +17,7 @@ for _ in range(mcruns):
     cnet = on.Copy(net)
     for j in on.get_junctions(cnet):
         j.demand += np.random.normal(0.0, 1.0)
-    rpt = on.Run(cnet)
+    rpt = net.run()
     p.append(on.Pressure(rpt))
 
 p = pd.DataFrame(p, index=list(range(len(p))))

@@ -2,10 +2,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 import logging
 
-if TYPE_CHECKING:
-    from oopnet.elements import Network
-from oopnet.utils.getters import get_node, get_link, get_pattern
+from oopnet.utils.getters.get_by_id import get_node, get_link, get_pattern
 from oopnet.reader.decorators import section_reader
+if TYPE_CHECKING:
+    from oopnet.elements.network import Network
 
 
 logger = logging.getLogger(__name__)

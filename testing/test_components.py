@@ -1,6 +1,7 @@
 import unittest
 
-from oopnet.utils.getters import get_link, get_link_ids
+from oopnet.utils.getters.get_by_id import get_link
+from oopnet.utils.getters.element_lists import get_link_ids
 
 from testing.base import SimpleModel
 

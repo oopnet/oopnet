@@ -4,13 +4,12 @@ from datetime import timedelta
 from matplotlib import pyplot as plt
 import numpy as np
 import oopnet as on
-from oopnet.elements import Pattern
 
 filename = os.path.join('data', 'Poulakis.inp')
 
-network = on.Read(filename)
+network = on.Network.read(filename)
 
-pat1 = Pattern(id='1', multipliers=list(np.linspace(0.5, 1.5, 10)))
+pat1 = on.Pattern(id='1', multipliers=list(np.linspace(0.5, 1.5, 10)))
 on.add_pattern(network, pat1)
 # network.patterns = [pat1]
 
@@ -19,7 +18,7 @@ for j in on.get_junctions(network):
 network.times.duration = timedelta(hours=18)
 
 
-report = on.Run(network)
+report = network.run()
 
 on.Linkinfo(report, linkname='P-03').plot()
 plt.show()

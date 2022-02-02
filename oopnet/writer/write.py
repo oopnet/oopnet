@@ -1,10 +1,13 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 import logging
 
-from oopnet.elements.network import Network
 from oopnet.writer.module_reader import list_section_writer_callables
 from oopnet.writer.writing_modules import write_system_operation, write_network_map_tags, write_water_quality, \
     write_options_and_reporting, write_network_components
 from oopnet.utils.oopnet_logging import logging_decorator
+if TYPE_CHECKING:
+    from oopnet.elements.network import Network
 
 logger = logging.getLogger(__name__)
 

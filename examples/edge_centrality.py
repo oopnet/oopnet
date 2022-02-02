@@ -6,7 +6,7 @@ import oopnet as on
 
 filename = os.path.join('data', 'anytown.inp')
 
-net = on.Read(filename)
+net = on.Network.read(filename)
 
 G = on.MultiGraph(net)
 

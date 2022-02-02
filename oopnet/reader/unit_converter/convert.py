@@ -18,7 +18,7 @@ import logging
 
 import numpy as np
 
-from oopnet.utils.getters import get_junctions, get_tanks, get_reservoirs, get_pipes
+from oopnet.utils.getters.element_lists import get_junctions, get_tanks, get_reservoirs, get_pipes
 
 logger = logging.getLogger(__name__)
 

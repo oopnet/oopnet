@@ -1,9 +1,9 @@
 import unittest
 import datetime
 
-from oopnet.elements import Junction, Tank, Reservoir, Pipe, Pump, Valve
-from oopnet.simulator import Run
-from oopnet.utils.getters import get_curve, get_pattern, get_patterns
+from oopnet.elements.network_components import Junction, Tank, Reservoir, Pipe, Pump, Valve
+from oopnet.utils.getters.get_by_id import get_curve, get_pattern
+from oopnet.utils.getters.element_lists import get_patterns
 
 
 class PoulakisEnhancedReaderTest(unittest.TestCase):
@@ -102,7 +102,7 @@ class PoulakisEnhancedReaderTest(unittest.TestCase):
         self.assertEqual('NONE', times.statistic)
 
     def test_run(self):
-        Run(self.model.network, delete=False)
+        rpt = self.model.network.run()
 
     # todo: add options, reportparameter, curve, pattern ... tests
 
@@ -128,7 +128,7 @@ class MicropolisReaderTest(unittest.TestCase):
                           0.96, 0.96, 0.96, 0.96, 0.96, 1.065, 1.075, 1.065, 0.96], p.multipliers)
 
     def test_run(self):
-        Run(self.model.network)
+        rpt = self.model.network.run()
 
     def test_options(self):
         options = self.model.network.options
@@ -189,7 +189,7 @@ class RulesModelReaderTest(unittest.TestCase):
         self.assertEqual(0.01, options.tolerance)
 
     def test_run(self):
-        Run(self.model.network)
+        rpt = self.model.network.run()
 
     def test_rules(self):
         self.assertEqual(self.model.n_rules, len(self.model.network._rules))
@@ -201,7 +201,7 @@ class CTownReaderTest(unittest.TestCase):
         self.model = CTownModel()
 
     def test_run(self):
-        rpt = Run(self.model.network, delete=False)
+        rpt = self.model.network.run()
 
 
 if __name__ == '__main__':

@@ -1,12 +1,16 @@
 from __future__ import annotations
 from typing import Optional, TYPE_CHECKING
 from dataclasses import dataclass, field
+from datetime import datetime
 
 import networkx as nx
 
-from oopnet.elements.component_registry import ComponentRegistry, SuperComponentRegistry, NodeRegistry, LinkRegistry
+from oopnet.writer.write import write
+from oopnet.reader.read import read
+from oopnet.simulator.epanet2 import ModelSimulator
 from oopnet.elements.water_quality import Reaction
 from oopnet.elements.options_and_reporting import Options, Times, Report, Reportparameter, Reportprecision
+from oopnet.elements.component_registry import ComponentRegistry, SuperComponentRegistry, NodeRegistry, LinkRegistry
 if TYPE_CHECKING:
     from oopnet.elements.system_operation import Energy, Control, Rule, Curve, Pattern
     from oopnet.elements.network_map_tags import Vertex, Label, Backdrop
@@ -65,3 +69,43 @@ class Network:
     _curves: dict[str, Curve] = field(default_factory=ComponentRegistry)
     _patterns: dict[str, Pattern] = field(default_factory=ComponentRegistry)
     _rules: dict[str, Rule] = field(default_factory=ComponentRegistry)
+
+    @classmethod
+    def read(cls, filename=Optional[str], content=Optional[str]):
+        """Reads an EPANET input file.
+
+        Args:
+          filename: filename of the EPANET input file
+
+        """
+        network = cls()
+        return read(network=network, filename=filename, content=content)
+
+    def write(self, filename):
+        """Converts the Network to an EPANET input file and saves it with the desired filename.
+
+        Args:
+          filename: desired filename/path were the user wants to store the file
+
+        Returns:
+          0 if successful
+
+        """
+        return write(self, filename)
+
+    def run(self, filename: Optional[str] = None, delete: bool = True, path: Optional[str] = None,
+            startdatetime: Optional[datetime] = None, output: bool = False):
+        """Runs an EPANET simulation by calling command line EPANET
+
+        Attributes:
+          filename: if thing is an OOPNET network, filename is an option to perform command line EPANET simulations with a specific filename. If filename is a Python None object then a file with a random UUID (universally unique identifier) is generated
+          delete: if delete is True the EPANET Input and Report file is deleted, if False then the simulation results won't be deleted and are stored in a folder named path
+          path: Path were to perform the simulations. If path is a Python None object then a tmp-folder is generated
+
+        Returns:
+          OOPNET report object
+
+        """
+        sim = ModelSimulator(thing=self, filename=filename, delete=delete, path=path, startdatetime=startdatetime,
+                             output=output)
+        return sim.run()

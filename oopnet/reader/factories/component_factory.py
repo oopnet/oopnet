@@ -3,8 +3,10 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import TYPE_CHECKING
 
-from oopnet.elements import Network, Pattern, Curve, Node
-from oopnet.utils.getters import get_pattern, get_curve, get_node
+if TYPE_CHECKING:
+    from oopnet import Network
+from oopnet.elements import Pattern, Curve, Node
+from oopnet.utils.getters.get_by_id import get_pattern, get_curve, get_node
 from oopnet.elements.base import NetworkComponent
 from oopnet.reader.factories.base import ReadFactory
 

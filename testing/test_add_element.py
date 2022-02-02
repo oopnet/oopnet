@@ -1,6 +1,7 @@
 import unittest
 
-from oopnet.elements import Network, Junction, Reservoir, Tank, Pipe, Pump, Valve, Link, Node, Pattern, Curve, TCV
+from oopnet.elements.network import Network
+from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Pump, Valve, Link, Node, Pattern, Curve, TCV
 from oopnet.elements.component_registry import ComponentExistsError
 from oopnet.utils.getters import *
 from oopnet.utils.adders import *

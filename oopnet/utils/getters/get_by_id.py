@@ -1,10 +1,14 @@
+from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from oopnet.elements import Pipe, Junction, Reservoir, Tank, Node, Link, Pump, Valve, Curve, Pattern, Rule, Network
+    from oopnet.elements.network import Network
+    from oopnet.elements.network_components import Pipe, Junction, Reservoir, Tank, Node, Link, Pump, Valve, Curve, \
+        Pattern
+    from oopnet.elements.system_operation import Rule
 
 
-def get_junction(network: 'Network', id: str) -> 'Junction':
+def get_junction(network: Network, id: str) -> Junction:
     """Gets a specific Junction from the network with a specific ID.
 
     Args:
@@ -18,7 +22,7 @@ def get_junction(network: 'Network', id: str) -> 'Junction':
     return network._nodes['junctions'][id]
 
 
-def get_tank(network: 'Network', id: str) -> 'Tank':
+def get_tank(network: Network, id: str) -> Tank:
     """Gets a specific Tank from the network with a specific ID.
 
     Args:
@@ -32,7 +36,7 @@ def get_tank(network: 'Network', id: str) -> 'Tank':
     return network._nodes['tanks'][id]
 
 
-def get_reservoir(network: 'Network', id: str) -> 'Reservoir':
+def get_reservoir(network: Network, id: str) -> Reservoir:
     """Gets a specific Reservoir from the network with a specific ID.
 
     Args:
@@ -46,7 +50,7 @@ def get_reservoir(network: 'Network', id: str) -> 'Reservoir':
     return network._nodes['reservoirs'][id]
 
 
-def get_pipe(network: 'Network', id: str) -> 'Pipe':
+def get_pipe(network: Network, id: str) -> Pipe:
     """Gets a specific Pipe from the network with a specific ID.
 
     Args:
@@ -60,7 +64,7 @@ def get_pipe(network: 'Network', id: str) -> 'Pipe':
     return network._links['pipes'][id]
 
 
-def get_pump(network: 'Network', id: str) -> 'Pump':
+def get_pump(network: Network, id: str) -> Pump:
     """Gets a specific Pump from the network with a specific ID.
 
     Args:
@@ -74,7 +78,7 @@ def get_pump(network: 'Network', id: str) -> 'Pump':
     return network._links['pumps'][id]
 
 
-def get_valve(network: 'Network', id: str) -> 'Valve':
+def get_valve(network: Network, id: str) -> Valve:
     """Gets a specific Valve from the network with a specific ID.
 
     Args:
@@ -88,7 +92,7 @@ def get_valve(network: 'Network', id: str) -> 'Valve':
     return network._links['valves'][id]
 
 
-def get_curve(network: 'Network', id: str) -> 'Curve':
+def get_curve(network: Network, id: str) -> Curve:
     """Gets a specific Curve from the network with a specific ID.
 
     Args:
@@ -102,7 +106,7 @@ def get_curve(network: 'Network', id: str) -> 'Curve':
     return network._curves[id]
 
 
-def get_pattern(network: 'Network', id: str) -> 'Pattern':
+def get_pattern(network: Network, id: str) -> Pattern:
     """Gets a specific Pattern from the network with a specific ID.
 
     Args:
@@ -116,7 +120,7 @@ def get_pattern(network: 'Network', id: str) -> 'Pattern':
     return network._patterns[id]
 
 
-def get_rule(network: 'Network', id: str) -> 'Rule':
+def get_rule(network: Network, id: str) -> Rule:
     """Gets a specific Rule from the network with a specific ID.
 
     Args:
@@ -130,7 +134,7 @@ def get_rule(network: 'Network', id: str) -> 'Rule':
     return network._rules[id]
 
 
-def get_node(network: 'Network', id: str) -> 'Node':
+def get_node(network: Network, id: str) -> Node:
     """Gets a specific Node from the network with a specific ID.
 
     Args:
@@ -146,7 +150,7 @@ def get_node(network: 'Network', id: str) -> 'Node':
             return vals[id]
 
 
-def get_link(network: 'Network', id: str) -> 'Link':
+def get_link(network: Network, id: str) -> Link:
     """Gets a specific Link from the network with a specific ID.
 
     Args:

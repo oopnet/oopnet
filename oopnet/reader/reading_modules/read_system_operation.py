@@ -3,7 +3,8 @@ import datetime
 from typing import TYPE_CHECKING
 import logging
 
-from oopnet.elements import Pipe, Pump, Curve, Pattern, Energy, Control, Controlcondition, Action, Rule, Condition
+from oopnet.elements.network_components import Pipe, Pump, Curve, Pattern
+from oopnet.elements.system_operation import Energy, Control, Controlcondition, Action, Rule, Condition
 from oopnet.utils.getters import get_curve, get_pump, get_pattern, get_link, get_node, get_junction, get_link_ids, \
     get_node_ids, get_curve_ids, get_pattern_ids
 from oopnet.reader.decorators import section_reader

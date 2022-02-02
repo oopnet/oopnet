@@ -1,16 +1,14 @@
 import os
 import unittest
 
-from oopnet.elements import Network
-from oopnet.writer import Write
-from oopnet.reader import Read
+from oopnet.elements.network import Network
 from base import CTownModel, MicropolisModel, PoulakisEnhancedPDAModel, RulesModel, SimpleModel
 
 
 def write_read(network: Network) -> Network:
     filename = os.path.join('tmp', 'test.inp')
-    Write(network, filename)
-    new_network = Read(filename)
+    network.write(filename)
+    new_network = Network.read(filename)
     os.remove(filename)
     return new_network
 

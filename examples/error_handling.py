@@ -4,12 +4,12 @@ import oopnet as on
 
 filename = os.path.join('data', 'Poulakis.inp')
 
-net = on.Read(filename)
+net = on.Network.read(filename)
 
 on.add_junction(net, on.Junction(id='unconnected'))
 
 try:
-    rpt = on.Run(net)
+    rpt = net.run()
 except on.EPANETSimulationError as e:
     print(e)
 
@@ -20,12 +20,12 @@ except on.EPANETSimulationError as e:
     if any(e.check_contained_errors([on.InputDataError, on.UnconnectedNodeError])):
         print('Caught UnconnectedNodeError and InputDataError')
 
-net = on.Read(filename)
+net = on.Network.read(filename)
 p = on.get_pipe(net, 'P-01')
 p.length = -100.0
 
 try:
-    rpt = on.Run(net)
+    rpt = net.run()
 except on.EPANETSimulationError as e:
     print(e)
 
