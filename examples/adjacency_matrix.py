@@ -1,15 +1,17 @@
-from oopnet.api import *
-from oopnet.graph.graph import onlinks2nxlinks
 import os
+
 import networkx as nx
+from matplotlib import pyplot as plt
+import oopnet as on
+from oopnet.graph.graph import onlinks2nxlinks
 
-filename = os.path.join('..', 'examples', 'data', 'anytown.inp')
+filename = os.path.join('data', 'anytown.inp')
 
-net = Read(filename)
+net = on.Read(filename)
 
-G = Graph(net)
+G = on.Graph(net)
 
-nodes = get_node_ids(net)
+nodes = on.get_node_ids(net)
 links = onlinks2nxlinks(net)
 
 A = nx.incidence_matrix(G, nodelist=nodes, edgelist=links)
@@ -21,12 +23,12 @@ print('Incidence matrix - oriented')
 print(B)
 
 
-G = Graph(net, weight='length', default=0.0)
+G = on.Graph(net, weight='length', default=0.0)
 C = nx.adjacency_matrix(G, nodelist=nodes)
 print('Adjacency matrix; undirected graph')
 print(C)
 
-G = DiGraph(net, weight='length', default=0.0)
+G = on.DiGraph(net, weight='length', default=0.0)
 D = nx.adjacency_matrix(G, nodelist=nodes)
 print('Adjacency matrix; directed graph')
 print(D)
@@ -51,4 +53,4 @@ plt.imshow(D.todense(), cmap='viridis', interpolation='nearest')
 plt.title('Adjacency matrix; directed graph')
 plt.colorbar()
 
-Show()
+plt.show()

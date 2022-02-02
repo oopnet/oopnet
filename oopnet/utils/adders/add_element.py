@@ -1,284 +1,163 @@
-from ...elements.network_components import *
+from typing import Union
+import logging
+
+from oopnet.elements.component_registry import ComponentExistsError
+from oopnet.utils.getters import get_pattern_ids, get_node_ids, get_link_ids, get_curve_ids, get_rule_ids
+from oopnet.elements import Network, Junction, Reservoir, Tank, Pipe, Pump, Valve, Curve, Pattern, Node, \
+    Link
+from oopnet.elements.system_operation import Rule
+from oopnet.elements.base import NetworkComponent
+from oopnet.utils.oopnet_logging import logging_decorator
+
+logger = logging.getLogger(__name__)
 
 
-def add_pattern(network, pattern):
-    if network.patterns:
-        network.patterns.append(pattern)
+@logging_decorator(logger)
+def _add_component(obj: Union[NetworkComponent, Rule], network: Network, component_hash: dict):
+    """Adds a NetworkComponent to a registry.
+
+    Args:
+        obj: NetworkComponent that shall be added
+        network: Network to which the NetworkComponent is added
+        component_hash: hash table to which the NetworkComponent is added
+
+    """
+    obj._network = network
+    component_hash[obj.id] = obj
+
+
+def add_pattern(network: Network, pattern: Pattern):
+    """Adds a Pattern to an OOPNET network object.
+
+    Args:
+      network: OOPNET network
+      pattern: Pattern object to add to the network
+
+    """
+    _add_component(pattern, network, network._patterns)
+
+
+def add_curve(network: Network, curve: Curve):
+    """Adds a Curve to an OOPNET network object.
+
+    Args:
+      network: OOPNET network object
+      curve: Curve object to add to the network
+
+    """
+    _add_component(curve, network, network._curves)
+
+
+def add_rule(network: Network, rule: Rule):
+    """Adds a Rule to an OOPNET network object.
+
+    Args:
+      network: OOPNET network object
+      rule: Rule object to add to the network
+
+    """
+    _add_component(rule, network, network._rules)
+
+
+def add_junction(network: Network, junction: Junction):
+    """Adds a Junction to an OOPNET network object.
+
+    Args:
+      network: OOPNET network object
+      junction: Junction object to add to the network
+
+    """
+    _add_component(junction, network, network._nodes['junctions'])
+
+
+def add_reservoir(network: Network, reservoir: Reservoir):
+    """Adds a Reservoir to an OOPNET network object.
+
+    Args:
+      network: OOPNET network object
+      reservoir: Reservoir object to add to the network
+
+    """
+    _add_component(reservoir, network, network._nodes['reservoirs'])
+
+
+def add_tank(network: Network, tank: Tank):
+    """Adds a Tank to an OOPNET network object.
+
+    Args:
+      network: OOPNET network object
+      tank: Tank object to add to the network
+
+    """
+    _add_component(tank, network, network._nodes['tanks'])
+
+
+def add_pipe(network: Network, pipe: Pipe):
+    """Adds a Pipe to an OOPNET network object.
+
+    Args:
+      network: OOPNET network object
+      pipe: Pipe object to add to the network
+
+    """
+    _add_component(pipe, network, network._links['pipes'])
+
+
+def add_pump(network: Network, pump: Pump):
+    """Adds a Pump to an OOPNET network object.
+
+    Args:
+      network: OOPNET network object
+      pump: Pump object to add to the network
+
+    """
+    _add_component(pump, network, network._links['pumps'])
+
+
+def add_valve(network: Network, valve: Valve):
+    """Adds a Valve to an OOPNET network object.
+
+    Args:
+      network: OOPNET network object
+      valve: Valve object to add to the network
+
+    """
+    _add_component(valve, network, network._links['valves'])
+
+
+def add_node(network: Network, node: Union[Junction, Reservoir, Tank]):
+    """Adds a Node to an OOPNET network object.
+
+    Args:
+      network: OOPNET network object
+      node: Node object to add to the network
+
+    """
+    if isinstance(node, Junction):
+        add_junction(network, node)
+    elif isinstance(node, Reservoir):
+        add_reservoir(network, node)
+    elif isinstance(node, Tank):
+        add_tank(network, node)
     else:
-        network.patterns = [pattern]
+        raise TypeError(f'Only Node types (Junction, Tank, Reservoir) can be passed to this function but an object of '
+                        f'type {type(node)} was passed.')
 
 
-def add_junction(network, id, xcoordinate=0.0, ycoordinate=0.0, elevation=0.0, initialquality=0.0,
-                sourcequality=0.0, sourcetype=None, strength=0.0, sourcepattern=None, emittercoefficient=0.0,
-                demandpattern=None, demand=None, comment=None):
-    '''
-    This function adds a Junction to an OOPNET network.
+def add_link(network: Network, link: Union[Pipe, Pump, Valve]):
+    """Adds a Link to an OOPNET network object.
 
-    :param network: OOPNET network object
-    :param id: ID of the Junction
-    '''
-    j = None
-    if network.junctions:
-        try:
-            j = network.networkhash['node'][id]
-        except:
-            pass
-    if not j:
-        if comment:
-            j = Junction(id=id, comment=comment)
-        else:
-            j = Junction(id=id)
-    if xcoordinate:
-        j.xcoordinate = xcoordinate
-    if ycoordinate:
-        j.ycoordinate = ycoordinate
-    if elevation:
-        j.elevation = elevation
-    if initialquality:
-        j.initialquality = initialquality
-    if sourcequality:
-        j.sourcequality = sourcequality
-    if sourcetype:
-        j.sourcetype = sourcetype
-    if strength:
-        j.strength = strength
-    if sourcepattern:
-        j.sourcepattern = sourcepattern
-    if emittercoefficient:
-        j.emittercoefficient = emittercoefficient
-    if demandpattern:
-        j.demandpattern = demandpattern
-    if demand:
-        j.demand = demand
+    Args:
+      network: OOPNET network object
+      link: Link object to add to the network
 
-    if network.junctions is None:
-        network.junctions = [j]
+    """
+    if isinstance(link, Pipe):
+        add_pipe(network, link)
+    elif isinstance(link, Pump):
+        add_pump(network, link)
+    elif isinstance(link, Valve):
+        add_valve(network, link)
     else:
-        network.junctions.append(j)
-    network.networkhash['node'][id] = j
-
-
-def add_reservoir(network, id, xcoordinate=0.0, ycoordinate=0.0, elevation=0.0, initialquality=0.0,
-                 sourcequality=0.0, sourcetype=None, strength=0.0, sourcepattern=None, head=1.0, headpattern=None,
-                 mixingmodel=None, comment=None):
-    '''
-    This function adds a Reservoir to an OOPNET network.
-
-    :param network: OOPNET network object
-    :param id: ID of the Reservoir
-    '''
-    r = None
-    if network.reservoirs:
-        try:
-            r = network.networkhash['node'][id]
-        except:
-            pass
-    if not r:
-        if comment:
-            r = Reservoir(id=id, comment=comment)
-        else:
-            r = Reservoir(id=id)
-    if xcoordinate:
-        r.xcoordinate = xcoordinate
-    if ycoordinate:
-        r.ycoordinate = ycoordinate
-    if elevation:
-        r.elevation = elevation
-    if initialquality:
-        r.initialquality = initialquality
-    if sourcequality:
-        r.sourcequality = sourcequality
-    if sourcetype:
-        r.sourcetype = sourcetype
-    if strength:
-        r.strength = strength
-    if sourcepattern:
-        r.sourcepattern = sourcepattern
-    if head:
-        r.head = head
-    if headpattern:
-        r.headpattern = headpattern
-    if mixingmodel:
-        r.mixingmodel = mixingmodel
-
-    if network.reservoirs is None:
-        network.reservoirs = [r]
-    else:
-        network.reservoirs.append(r)
-    network.networkhash['node'][id] = r
-
-
-def add_tank(network, id, xcoordinate=0.0, ycoordinate=0.0, elevation=0.0, initialquality=0.0,
-            sourcequality=0.0, sourcetype=None, strength=0.0, sourcepattern=None, compartmentvolume=0.0,
-            initlevel=0.5, maxlevel=1.0, minlevel=0.0, minvolume=0.0, mixingmodel=None, reactiontank=0.0,
-            volumecurve=None, comment=None):
-    '''
-    This function adds a Tank to an OOPNET network.
-
-    :param network: OOPNET network object
-    :param id: ID of the tank
-    '''
-    t = None
-    if network.tanks:
-        try:
-            t = network.networkhash['node'][id]
-        except:
-            pass
-    if not t:
-        if comment:
-            t = Tank(id=id, comment=comment)
-        else:
-            t = Tank(id=id)
-    if xcoordinate:
-        t.xcoordinate = xcoordinate
-    if ycoordinate:
-        t.ycoordinate = ycoordinate
-    if elevation:
-        t.elevation = elevation
-    if initialquality:
-        t.initialquality = initialquality
-    if sourcequality:
-        t.sourcequality = sourcequality
-    if sourcetype:
-        t.sourcetype = sourcetype
-    if strength:
-        t.strength = strength
-    if sourcepattern:
-        t.sourcepattern = sourcepattern
-    if compartmentvolume:
-        t.compartmentvolume = compartmentvolume
-    if initlevel:
-        t.initlevel = initlevel
-    if maxlevel:
-        t.maxlevel = maxlevel
-    if minlevel:
-        t.minlevel = minlevel
-    if minvolume:
-        t.minvolume = minvolume
-    if mixingmodel:
-        t.mixingmodel = mixingmodel
-    if reactiontank:
-        t.reactiontank = reactiontank
-    if volumecurve:
-        t.volumecurve = volumecurve
-
-    if network.tanks is None:
-        network.tanks = [t]
-    else:
-        network.tanks.append(t)
-    network.networkhash['node'][id] = t
-
-
-def add_pipe(network, id, startnode, endnode, diameter=100.0, length=100.0, roughness=0.1,
-             minorloss=0.0, reactionbulk=0.0, reactionwall=0.0, comment=None, tag=None, status=None):
-    '''
-    This function adds a Pipe to an OOPNET network.
-
-    :param network: OOPNET network object
-    :param id: ID of the Pipe
-    '''
-    p = None
-    if network.pipes:
-        try:
-            p = network.networkhash['link'][id]
-        except:
-            pass
-    if not p:
-        if comment:
-            p = Pipe(id=id, comment=comment)
-        else:
-            p = Pipe(id=id)
-    p.startnode = startnode
-    p.endnode = endnode
-
-    if tag:
-        p.tag = tag
-    if diameter:
-        p.diameter = diameter
-    if length:
-        p.length = length
-    if minorloss:
-        p.minorloss = minorloss
-    if reactionbulk:
-        p.reactionbulk = reactionbulk
-    if reactionwall:
-        p.reactionwall = reactionwall
-    if roughness:
-        p.roughness = roughness
-    if status:
-        p.status = status
-
-    if network.pipes is None:
-        network.pipes = [p]
-    else:
-        network.pipes.append(p)
-    network.networkhash['link'][id] = p
-
-
-def add_pump(network, id, keyword, value, startnode, endnode, comment=None, tag=None):
-    '''
-    This function adds a Pump to an OOPNET network.
-
-    :param network: OOPNET network object
-    :param id: ID of the Pump
-    '''
-    p = None
-    if network.pumps:
-        try:
-            p = network.networkhash['link'][id]
-        except:
-            pass
-    if not p:
-        if comment:
-            p = Pump(id=id, comment=comment)
-        else:
-            p = Pump(id=id)
-    p.startnode = startnode
-    p.endnode = endnode
-    p.keyword = keyword
-    p.value = value
-
-    if tag:
-        p.tag = tag
-
-    if network.pumps is None:
-        network.pumps = [p]
-    else:
-        network.pumps.append(p)
-    network.networkhash['link'][id] = p
-
-
-def add_valve(network, id, startnode, endnode, valvetype, diameter=100.0, minorloss=0.0, comment=None, tag=None):
-    '''
-    This function adds a Valve to an OOPNET network.
-
-    :param network: OOPNET network object
-    :param id: ID of the Valve
-    '''
-    v = None
-    if network.valves:
-        try:
-            v = network.networkhash['link'][id]
-        except:
-            pass
-    if not v:
-        if comment:
-            v = Valve(id=id, comment=comment)
-        else:
-            v = Valve(id=id)
-    v.startnode = startnode
-    v.endnode = endnode
-    v.valvetype = valvetype
-
-    if tag:
-        v.tag = tag
-    if diameter:
-        v.diameter = diameter
-    if minorloss:
-        v.minorloss = minorloss
-
-    if network.valves is None:
-        network.valves = [v]
-    else:
-        network.valves.append(v)
-    network.networkhash['link'][id] = v
+        raise TypeError(f'Only Link types (Pipe, Pump, Valve) can be passed to this function but an object of '
+                        f'type {type(link)} was passed.')

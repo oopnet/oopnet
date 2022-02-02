@@ -17,3 +17,5 @@ Placeholder for OOPNET examples
     Matrices <examples/adjacency_matrix>
     Graph Weight <examples/graph_weight>
 	Adders and Removers <examples/adders_and_removers>
+    Error Handling <examples/error_handling>
+    Logging <examples/logs>

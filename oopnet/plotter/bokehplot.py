@@ -6,10 +6,20 @@ import numpy as np
 import pandas as pd
 import matplotlib.cm as cmx
 from matplotlib import pyplot as plt
-from ..utils.getters.element_lists import get_link_ids, get_node_ids
 
+from oopnet.utils.getters import get_link_ids, get_node_ids, get_junctions, get_tanks, get_reservoirs, get_pipes, \
+    get_pumps, get_valves
 
+# todo: refactor
 def convert_to_hex(rgba_color):
+    """
+
+    Args:
+      rgba_color: 
+
+    Returns:
+
+    """
     red = int(rgba_color[0]*255)
     green = int(rgba_color[1]*255)
     blue = int(rgba_color[2]*255)
@@ -17,6 +27,15 @@ def convert_to_hex(rgba_color):
 
 
 def colorfun(series, colormap='jet'):
+    """
+
+    Args:
+      series: 
+      colormap:  (Default value = 'jet')
+
+    Returns:
+
+    """
     values = series.values
     cm = plt.get_cmap(colormap)
     cNorm = colors.Normalize(vmin=np.nanmin(values), vmax=np.nanmax(values))
@@ -27,6 +46,15 @@ def colorfun(series, colormap='jet'):
 
 
 def outsidelist(element, colorhash):
+    """
+
+    Args:
+      element: 
+      colorhash: 
+
+    Returns:
+
+    """
     if element in colorhash:
         return colorhash[element]
     else:
@@ -34,6 +62,17 @@ def outsidelist(element, colorhash):
 
 
 def plotnode(f, elements, colors, marker='o'):
+    """
+
+    Args:
+      f: 
+      elements: 
+      colors: 
+      marker:  (Default value = 'o')
+
+    Returns:
+
+    """
     x = [x.xcoordinate for x in elements]
     y = [x.ycoordinate for x in elements]
     c = [outsidelist(x.id, colors) for x in elements]
@@ -47,6 +86,17 @@ def plotnode(f, elements, colors, marker='o'):
 
 
 def plotlink(f, elements, colors, marker='o'):
+    """
+
+    Args:
+      f: 
+      elements: 
+      colors: 
+      marker:  (Default value = 'o')
+
+    Returns:
+
+    """
 
     xs = [x.startnode.xcoordinate for x in elements]
     xe = [x.endnode.xcoordinate for x in elements]
@@ -69,19 +119,22 @@ def plotlink(f, elements, colors, marker='o'):
 
 
 class Plotsimulation(HasStrictTraits):
-    """
-    This function plots OOPNET networks with simulation results as a network plot with Bokehplot.
-
+    """This function plots OOPNET networks with simulation results as a network plot with Bokehplot.
+    
     Symbols for Nodes: Junctions are plotted as circles, Reservoirs as diamonds, Tanks as squares.
-
+    
     Symbols for Links: Pipes are plotted as lines with no markers, Valves are plotted as lines with triangulars standing on their top in the middle, Pumps are plotted as lines with triangulars standing on an edge
 
-    :param network: OOPNET network object one wants to plot
-    :param tools: tools used for the Bokeh plot (panning, zooming, ...)
-    :param nodes: Values related to the nodes as Pandas Series generated e.g. by one of OOPNET's Report functions (e.g. Pressure(rpt)). If nodes is None or specific nodes do not have  values, then the nodes are drawn as black circles
-    :param links: Values related to the links as Pandas Series generated e.g. by one of OOPNET's Report functions (e.g. Flow(rpt)). f links is None or specific links do not have  values, then the links are drawn as black lines
-    :param colormap: Colormap defining which colors are used for the simulation results (default is matplotlib's colormap jet). colormap can either be a string for matplotlib colormaps, a matplotlib.colors.LinearSegmentedColormap object or a matplotlib.colors.ListedColormap object. If one wants to use different colormaps for nodes and links, then make use of a dictionary with key 'node' for nodes respectively key 'link' for links (e.g. colormaps = {'node':'jet', 'link':'cool'} plots nodes with colormap jet and links using colormap cool)
-    :return: Bokehplot's figure handle
+    Args:
+      network: OOPNET network object one wants to plot
+      tools: tools used for the Bokeh plot (panning, zooming, ...)
+      nodes: Values related to the nodes as Pandas Series generated e.g. by one of OOPNET's Report functions (e.g. Pressure(rpt)). If nodes is None or specific nodes do not have  values, then the nodes are drawn as black circles
+      links: Values related to the links as Pandas Series generated e.g. by one of OOPNET's Report functions (e.g. Flow(rpt)). f links is None or specific links do not have  values, then the links are drawn as black lines
+      colormap: Colormap defining which colors are used for the simulation results (default is matplotlib's colormap jet). colormap can either be a string for matplotlib colormaps, a matplotlib.colors.LinearSegmentedColormap object or a matplotlib.colors.ListedColormap object. If one wants to use different colormaps for nodes and links, then make use of a dictionary with key 'node' for nodes respectively key 'link' for links (e.g. colormaps = {'node':'jet', 'link':'cool'} plots nodes with colormap jet and links using colormap cool)
+
+    Returns:
+      Bokehplot's figure handle
+
     """
     def __new__(self, network, tools=None, links=None, nodes=None, colormap='jet'):
 
@@ -93,7 +146,6 @@ class Plotsimulation(HasStrictTraits):
             n_cmap = colormap
             l_cmap = colormap
         elif isinstance(colormap, dict):
-
             if 'node' in colormap:
                 if isinstance(colormap['node'], str):
                     n_cmap = plt.get_cmap(colormap['node'])
@@ -117,52 +169,38 @@ class Plotsimulation(HasStrictTraits):
         else:
             f = figure()
 
-
         # Links
-
         if links is None:
-
             linklist = get_link_ids(network)
             linkcolors = pd.Series(['k'] * len(linklist), index=linklist)
 
         else:
-
             cnorm = colors.Normalize(vmin=np.nanmin(links.values), vmax=np.nanmax(links.values))
             scalar_map = cmx.ScalarMappable(norm=cnorm, cmap=l_cmap)
             scalar_map._A = []
             linkcolors = links.apply(scalar_map.to_rgba)
 
-        if network.pipes:
-            plotlink(f, network.pipes, linkcolors, marker=None)
+        plotlink(f, get_pipes(network), linkcolors, marker=None)
 
-        if network.valves:
-            plotlink(f, network.valves, linkcolors, marker='v')
+        plotlink(f, get_valves(network), linkcolors, marker='v')
 
-        if network.pumps:
-            plotlink(f, network.pumps, linkcolors, marker='p')
+        plotlink(f, get_pumps(network), linkcolors, marker='p')
 
         # Nodes
-
         if nodes is None:
-
             nodelist = get_node_ids(network)
             nodecolors = pd.Series(['k'] * len(nodelist), index=nodelist)
-
         else:
-
             cnorm = colors.Normalize(vmin=np.nanmin(nodes.values), vmax=np.nanmax(nodes.values))
             scalar_map = cmx.ScalarMappable(norm=cnorm, cmap=n_cmap)
             scalar_map._A = []
             nodecolors = nodes.apply(scalar_map.to_rgba)
 
-        if network.junctions:
-            plotnode(f, network.junctions, nodecolors, marker='o')
+        plotnode(f, get_junctions(network), nodecolors, marker='o')
 
-        if network.tanks:
-            plotnode(f, network.tanks, nodecolors, marker='s')
+        plotnode(f, get_tanks(network), nodecolors, marker='s')
 
-        if network.reservoirs:
-            plotnode(f, network.reservoirs, nodecolors, marker='D')
+        plotnode(f, get_reservoirs(network), nodecolors, marker='D')
 
-        f.axis.visible = None
+        f.axis.visible = False
         return f

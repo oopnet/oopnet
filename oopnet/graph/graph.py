@@ -1,224 +1,236 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING, Union
+import logging
+from warnings import warn
+
 import networkx as nx
 import pandas as pd
-from ..utils.getters.element_lists import get_node_ids, get_links
+
+from oopnet.utils.getters import get_node_ids, get_links, get_pipes
+if TYPE_CHECKING:
+    from oopnet.elements import Network
+
+logger = logging.getLogger(__name__)
 
 
-def graph(network, weight='length', default=0.00001):
-    """
-    This function generates an undirected NetworkX graph from an OOPNET network
-    :param network: OOPNET network object
-    :param weight: name of pipe property as a string which is used as weight
-    :param default: When a default argument is given, it is returned when the attribute doesn't
-    exist; without it, an exception is raised in that case.
-    :return: undirected graph (networkx.Graph()-object)
-    """
+# todo: add documentation
+def _add_nodes(graph, network):
+    logger.debug('Adding Node objects to Network')
+    graph.add_nodes_from(get_node_ids(network))
 
-    g = nx.Graph()
 
-    for n in get_node_ids(network):
-        g.add_node(n)
-
+def _add_links(graph, network, weight, default):
+    logger.debug('Adding Link objects to Network')
     for l in get_links(network):
         e = (l.startnode.id,
              l.endnode.id)
-        if l in network.pipes:
-            length = getattr(l, weight, default)
+        if isinstance(weight, str):
+            weight_value = getattr(l, weight, default)
+        elif isinstance(weight, pd.Series) and l.id in weight.index:
+            weight_value = weight[l.id]
         else:
-            length = 0.0
-        lid = l.id
-
-        g.add_edge(*e, weight=length, id=lid)
-
-    if network.pumps:
-        for p in network.pumps:
-            g.get_edge_data(p.startnode.id, p.endnode.id)[0]['weight'] = 0.00001
-
-    if network.valves:
-        for v in network.valves:
-            g.get_edge_data(v.startnode.id, v.endnode.id)[0]['weight'] = 0.00001
-
-    return g
+            weight_value = default
+        graph.add_edge(*e, weight=weight_value, id=l.id)
 
 
-def digraph(network, weight='length', default=0.00001):
+class Graph:
+    """Generates an undirected NetworkX Graph from an OOPNET network.
+
+        Note:
+            NetworkX Graphs don't support parallel edges between two Nodes. Only one of the parallel edges will be
+            present in the Graph object. To allow for parallel pipes, use :class:`oopnet.graph.MultiGraph` instead.
+
+        Args:
+          network: OOPNET network object
+          weight: name of pipe property as a string which is used as weight or a pandas Series with link IDs as index and weights as values.
+          default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects.
+
+        Returns:
+            NetworkX Graph object containing all nodes and links in the passed Network.
+
+        Examples:
+            The following will create a Graph with link lengths as edge weights (filename needs to be a valid EPANET input file):
+            >>> network = Network(filename)
+            >>> g = Graph(network, 'length')
+            Using a simulation result as link weight:
+            >>> rpt = Run(network)
+            >>> flow = Flow(rpt)
+            >>> g = Graph(network, flow)
+
+        """
+    def __new__(cls, network: Network, weight: Union[str, pd.Series] = 'length', default: float = 0.00001):
+        logger.info('Creating Graph object from Network')
+        warn('Trying to create a simple Graph from Network. Parallel pipes will be merged silently!')
+        graph = nx.Graph()
+        _add_nodes(graph, network)
+        _add_links(graph, network, weight, default)
+        return graph
+
+
+class DiGraph:
+    """Generates a directed NetworkX DiGraph from an OOPNET network.
+
+        Note:
+            NetworkX Graphs don't support parallel edges between two Nodes. Only one of the parallel edges will be
+            present in the Graph object. To allow for parallel pipes, use :class:`oopnet.graph.MultiDiGraph` instead.
+
+        Args:
+          network: OOPNET network object
+          weight: name of pipe property as a string which is used as weight or a pandas Series with link IDs as index and weights as values.
+          default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects.
+
+        Returns:
+            NetworkX DiGraph object containing all nodes and links in the passed Network.
+
+        Examples:
+            The following will create a DiGraph with link lengths as edge weights (filename needs to be a valid EPANET input file):
+            >>> network = Network(filename)
+            >>> g = DiGraph(network, 'length')
+            Using a simulation result as link weight:
+            >>> rpt = Run(network)
+            >>> flow = Flow(rpt)
+            >>> g = DiGraph(network, flow)
+
+        """
+    def __new__(cls, network: Network, weight: Union[str, pd.Series] = 'length', default: float = 0.00001) -> nx.DiGraph:
+        logger.info('Creating DiGraph object from Network')
+        warn('Trying to create a DiGraph from Network. Parallel pipes will be merged silently!')
+        graph = nx.DiGraph()
+        _add_nodes(graph, network)
+        _add_links(graph, network, weight, default)
+        return graph
+
+
+class MultiGraph:
+    """Generates an undirected NetworkX MultiGraph from an OOPNET network.
+
+        Args:
+          network: OOPNET network object
+          weight: name of pipe property as a string which is used as weight or a pandas Series with link IDs as index and weights as values.
+          default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects.
+
+        Returns:
+            NetworkX MultiGraph object containing all nodes and links in the passed Network.
+
+        Examples:
+            The following will create a MultiGraph with link lengths as edge weights (filename needs to be a valid EPANET input file):
+            >>> network = Network(filename)
+            >>> g = MultiGraph(network, 'length')
+            Using a simulation result as link weight:
+            >>> rpt = Run(network)
+            >>> flow = Flow(rpt)
+            >>> g = MultiGraph(network, flow)
+
+        """
+    def __new__(cls, network: Network, weight: Union[str, pd.Series] = 'length', default: float = 0.00001) -> nx.MultiGraph:
+        logger.info('Creating MultiGraph object from Network')
+        graph = nx.MultiGraph()
+        _add_nodes(graph, network)
+        _add_links(graph, network, weight, default)
+        return graph
+
+
+class MultiDiGraph:
+    """Generates a directed NetworkX MultiGraph from an OOPNET network.
+
+        Args:
+          network: OOPNET network object
+          weight: name of pipe property as a string which is used as weight or a pandas Series with link IDs as index and weights as values.
+          default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects.
+
+        Returns:
+            NetworkX MultiGraph object containing all nodes and links in the passed Network.
+
+        Examples:
+            The following will create a MultiGraph with link lengths as edge weights (filename needs to be a valid EPANET input file):
+            >>> network = Network(filename)
+            >>> g = MultiDiGraph(network, 'length')
+            Using a simulation result as link weight:
+            >>> rpt = Run(network)
+            >>> flow = Flow(rpt)
+            >>> g = MultiGraph(network, flow)
+
+        """
+    def __new__(cls, network: Network, weight: Union[str, pd.Series] = 'length', default: float = 0.00001) -> nx.MultiGraph:
+        logger.info('Creating MultiGraph object from Network')
+        graph = nx.MultiDiGraph()
+        _add_nodes(graph, network)
+        _add_links(graph, network, weight, default)
+        return graph
+
+
+# todo: add documentation
+def onlinks2nxlinks(network: Network) -> list[tuple[str, str]]:
+    """Converts OOPNET links to NetworkX graph edges.
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+        List of tuples in the format (link.startnode.id, link.endnode.id)
+
     """
-    This function generates an directed NetworkX graph from an OOPNET network
-    :param network: OOPNET network object
-    :param weight: name of pipe property as a string which is used as weight
-    :param default: When a default argument is given, it is returned when the attribute doesn't
-    exist; without it, an exception is raised in that case.
-    :return: directed graph (networkx.DiGraph()-object)
+    return [(l.startnode.id, l.endnode.id) for l in get_pipes(network)]
+
+
+def nxlinks2onlinks(G: nx.Graph) -> list[str]:
+    """Converts NetworkX graph edges to OOPNET link IDs.
+
+    Args:
+      G: NetworkX graph
+
+    Returns:
+        List of OOPNET Link IDs
+
     """
-
-    g = nx.DiGraph()
-
-    for n in get_node_ids(network):
-        g.add_node(n)
-
-    for l in get_links(network):
-        e = (l.startnode.id,
-             l.endnode.id)
-        if l in network.pipes:
-            length = getattr(l, weight, default)
-        else:
-            length = 0.0
-        lid = l.id
-
-        g.add_edge(*e, weight=length, id=lid)
-
-    if network.pumps:
-        for p in network.pumps:
-            g.get_edge_data(p.startnode.id, p.endnode.id)[0]['weight'] = 0.00001
-
-    if network.valves:
-        for v in network.valves:
-            g.get_edge_data(v.startnode.id, v.endnode.id)[0]['weight'] = 0.00001
-
-    return g
+    return [G.get_edge_data(n1, n2)['id'] for n1, n2 in G.edges()]
 
 
-def multigraph(network, weight='length', default=0.00001):
+def edge2pipeid(G: nx.Graph, edge: tuple[str, str]) -> Union[str, list[str]]:
+    """Converts an NetworkX edge in a graph to an OOPNET Link ID.
+
+    Args:
+      G: NetworkX graph
+      edge: NetworkX edge
+
+    Returns:
+        ID of corresponding OOPNET Link
+
     """
-    This function generates an undirected NetworkX graph from an OOPNET network
-    :param network: OOPNET network object
-    :param weight: name of pipe property as a string which is used as weight
-    :param default: When a default argument is given, it is returned when the attribute doesn't
-    exist; without it, an exception is raised in that case.
-    :return: undirected graph (networkx.Graph()-object)
+    if not isinstance(G, nx.MultiGraph):
+        return G.get_edge_data(*edge)['id']
+    edges = G.get_edge_data(*edge)
+    result = [edges[x]['id'] for x in edges]
+    return result if len(result) > 1 else result[0]
+
+
+def edgeresult2pandas(G: nx.Graph, result: dict) -> pd.Series:
+    """Transforms edge data retrieved e.g. from edge centric centrality measurements to a Pandas Series compatible with OOPNET.
+
+    Args:
+      G: networkx graph object
+      result: dictionary with link IDs as keys
+
+    Returns:
+      transformed result into a pandas Series
+
     """
-    g = nx.MultiGraph()
-
-    for n in get_node_ids(network):
-        g.add_node(n)
-
-    for l in get_links(network):
-        e = (l.startnode.id,
-             l.endnode.id)
-        if l in network.pipes:
-            length = getattr(l, weight, default)
-        else:
-            length = 0.0
-        lid = l.id
-
-        g.add_edge(*e, weight=length, id=lid)
-
-    if network.pumps:
-        for p in network.pumps:
-            g.get_edge_data(p.startnode.id, p.endnode.id)[0]['weight'] = 0.00001
-
-    if network.valves:
-        for v in network.valves:
-            g.get_edge_data(v.startnode.id, v.endnode.id)[0]['weight'] = 0.00001
-
-    return g
-
-
-def onlinks2nxlinks(network):
-    edges = []
-    for l in network.pipes:
-        edges.append((l.startnode.id, l.endnode.id))
-    return edges
-
-
-def nxlinks2onlinks(G):
-
-    pipelist = []
-    for n1, n2 in G.edges():
-        pipelist.append(G.get_edge_data(n1, n2)['id'])
-    return pipelist
-
-
-def edge2pipeid(G, edge):
-
-    return G.get_edge_data(edge[0], edge[1])['id']
-
-
-def edgeresult2pandas(G, result):
-    """
-    Transform edge data retrieved e.g. from edge centric centrality measurements to a Pandas Series compatible with OOPNET
-    :param G: networkx graph object
-    :param result: dictionary with nodeduple as keys
-    :return: transformed result into a pandas series
-    """
+    return_dict = {}
     for edge in list(result.keys()):
         pipe = edge2pipeid(G, edge)
-        result[pipe] = result.pop(edge)
-    return pd.Series(result)
+        if isinstance(pipe, list):
+            for lid in pipe:
+                return_dict[lid] = result[edge]
+        else:
+            return_dict[pipe] = result[edge]
+    return pd.Series(return_dict)
 
 
-# class Graph(HasStrictTraits):
-#
-#     def __init__(self, network):
-#         super(Graph, self).__init__()
-#
-#         g = nx.Graph()
-#
-#         for n in get_node_ids(network):
-#             g.add_node(n)
-#
-#         if network.pipes:
-#             for p in network.pipes:
-#                 e = (p.startnode.id, p.endnode.id, {'weight': p.length, 'id': p.id})
-#                 g.add_edge(*e)
-#
-#         if network.valves:
-#             for p in network.valves:
-#                 e = (p.startnode.id, p.endnode.id, {'weight': length(p), 'id': p.id})
-#                 g.add_edge(*e)
-#
-#         if network.pumps:
-#             for p in network.pumps:
-#                 e = (p.startnode.id, p.endnode.id, {'weight': length(p), 'id': p.id})
-#                 g.add_edge(*e)
-#
-#         network.graph = g
-#
-#
-# class DiGraph(HasStrictTraits):
-#
-#     def __init__(self, network):
-#         super(DiGraph, self).__init__()
-#
-#         g = nx.DiGraph()
-#
-#         for j in network.junctions:
-#             g.add_node(j.id)
-#
-#         for p in network.pipes:
-#             e = (p.startnode.id, p.endnode.id, {'weight': p.length, 'id': p.id})
-#             g.add_edge(*e)
-#
-#         if network.valves:
-#             for p in network.valves:
-#                 e = (p.startnode.id, p.endnode.id, {'weight': length(p), 'id': p.id})
-#                 g.add_edge(*e)
-#
-#         if network.pumps:
-#             for p in network.pumps:
-#                 e = (p.startnode.id, p.endnode.id, {'weight': length(p), 'id': p.id})
-#                 g.add_edge(*e)
-#
-#         network.graph = g
-#
-#
-# class FlowDiGraph(HasStrictTraits):
-#
-#     def __init__(self, network):
-#         super(FlowDiGraph, self).__init__()
-#         g = nx.DiGraph()
-#
-#         rpt = Run(network)
-#         flows = rpt.pivot_table('Flow', index='id').abs().dropna()
-#         for j in network.junctions:
-#             g.add_node(j.id)
-#
-#         for p in network.pipes:
-#
-#             if flows[p.id] >= 0.0:
-#                 e = (p.startnode.id, p.endnode.id, {'weight': p.length, 'id': p.id})
-#             else:
-#                 e = (p.endnode.id, p.startnode.id, {'weight': p.length, 'id': p.id})
-#
-#             g.add_edge(*e)
-#
-#         network.graph = g
+if __name__ == '__main__':
+    import os
+    from oopnet import *
+    filename = os.path.join('..', '..', 'testing', 'networks', 'Poulakis_enhanced_PDA.inp')
+    network = Read(filename)
+    g = Graph(network)
+    # nx.draw(g, nx.get_node_attributes(g, 'coordinates'))
+    print()

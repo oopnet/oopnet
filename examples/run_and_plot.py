@@ -1,15 +1,17 @@
-from oopnet.api import *
 import os
+
+from matplotlib import pyplot as plt
+import oopnet as on
 
 filename = os.path.join('data', 'C-town.inp')
 
-net = Read(filename)
-rpt = Run(net)
+net = on.Read(filename)
+rpt = on.Run(net)
 
-p = Pressure(rpt)
-f = Flow(rpt)
+p = on.Pressure(rpt)
+f = on.Flow(rpt)
 
-Plot(net, nodes=p, links=f, fignum=1)
+on.Plot(net, nodes=p, links=f, fignum=1)
 
-Plot(net, nodes=p, links=f, fignum=2, robust=True)
-Show()
+on.Plot(net, nodes=p, links=f, fignum=2, robust=True)
+plt.show()

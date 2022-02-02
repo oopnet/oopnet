@@ -1,74 +1,116 @@
-from oopnet.utils.getters.get_by_id import *
+import logging
+
+from oopnet.elements import Network, Junction, Tank, Reservoir, Pipe, Pump, Valve
+from oopnet.utils.getters import get_node, get_link
+from oopnet.utils.oopnet_logging import logging_decorator
+
+logger = logging.getLogger(__name__)
 
 
-def remove_junction(network, id):
-    '''
-    This function removes a specific Junction from an OOPNET network.
-
-    :param network: OOPNET network object
-    :param id: Junction ID
-    '''
-    j = get_junction(network, id)
-    network.junctions.remove(j)
-    del network.networkhash['node'][id]
+@logging_decorator(logger)
+def _remove_object(hash_dict: dict, id: str):
+    if id not in hash_dict:
+        raise ValueError(f'No object with ID {id} found.')
+    logger.debug(f'Removing object with ID {id}')
+    hash_dict.pop(id)
 
 
-def remove_reservoir(network, id):
-    '''
-    This function removes a specific Reservoir from an OOPNET network.
+def remove_link(network: Network, id: str):
+    """This function removes a specific Link from an OOPNET network.
 
-    :param network: OOPNET network object
-    :param id: Reservoir ID
-    '''
-    r = get_reservoir(network, id)
-    network.reservoirs.remove(r)
-    del network.networkhash['node'][id]
+    Args:
+      network: OOPNET network object
+      id: Link ID
 
-
-def remove_tank(network, id):
-    '''
-    This function removes a specific Tank from an OOPNET network.
-
-    :param network: OOPNET network object
-    :param id: Tank ID
-    '''
-    t = get_tank(network, id)
-    network.tanks.remove(t)
-    del network.networkhash['node'][id]
+    """
+    l = get_link(network, id)
+    if isinstance(l, Pipe):
+        remove_pipe(network, id)
+    elif isinstance(l, Pump):
+        remove_pump(network, id)
+    elif isinstance(l, Valve):
+        remove_valve(network, id)
 
 
-def remove_pipe(network, id):
-    '''
-    This function removes a specific Pipe from an OOPNET network.
+# todo: remove Links connected to Node?
+def remove_node(network: Network, id: str):
+    """This function removes a specific Node from an OOPNET network.
 
-    :param network: OOPNET network object
-    :param id: Pipe ID
+    Args:
+      network: OOPNET network object
+      id: Node ID
 
-    '''
-    p = get_pipe(network, id)
-    network.pipes.remove(p)
-    del network.networkhash['link'][id]
-
-
-def remove_pump(network, id):
-    '''
-    This function removes a specific Pump from an OOPNET network.
-
-    :param network: OOPNET network object
-    :param id: Pump ID
-    '''
-    p = get_pump(network, id)
-    network.pumps.remove(p)
-    del network.networkhash['link'][id]
+    """
+    n = get_node(network, id)
+    if isinstance(n, Junction):
+        remove_junction(network, id)
+    elif isinstance(n, Tank):
+        remove_tank(network, id)
+    elif isinstance(n, Reservoir):
+        remove_reservoir(network, id)
 
 
-def remove_valve(network, id):
-    '''
-    This function removes a specific Valve from an OOPNET network.
+def remove_junction(network: Network, id: str):
+    """This function removes a specific Junction from an OOPNET network.
 
-    :param network: OOPNET network object
-    :param id: Valve ID
-    '''
-    v = get_valve(network, id)
-    network.valves.remove(v)
-    del network.networkhash['link'][id]
+    Args:
+      network: OOPNET network object
+      id: Junction ID
+
+    """
+    _remove_object(network._nodes['junctions'], id)
+
+
+def remove_reservoir(network: Network, id: str):
+    """This function removes a specific Reservoir from an OOPNET network.
+
+    Args:
+      network: OOPNET network object
+      id: Reservoir ID
+
+    """
+    _remove_object(network._nodes['reservoirs'], id)
+
+
+def remove_tank(network: Network, id: str):
+    """This function removes a specific Tank from an OOPNET network.
+
+    Args:
+      network: OOPNET network object
+      id: Tank ID
+
+    """
+    _remove_object(network._nodes['tanks'], id)
+
+
+def remove_pipe(network: Network, id: str):
+    """This function removes a specific Pipe from an OOPNET network.
+
+    Args:
+      network: OOPNET network object
+      id: Pipe ID
+
+    """
+    _remove_object(network._links['pipes'], id)
+
+
+def remove_pump(network: Network, id: str):
+    """This function removes a specific Pump from an OOPNET network.
+
+    Args:
+      network: OOPNET network object
+      id: Pump ID
+
+    """
+    _remove_object(network._links['pumps'], id)
+
+
+def remove_valve(network: Network, id: str):
+    """This function removes a specific Valve from an OOPNET network.
+
+    Args:
+      network: OOPNET network object
+      id: Valve ID
+
+    """
+    _remove_object(network._links['valves'], id)

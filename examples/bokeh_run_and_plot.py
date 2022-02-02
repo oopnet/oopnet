@@ -1,15 +1,16 @@
-from oopnet.api import *
-from bokeh.plotting import output_file, show
 import os
 
-filename = os.path.join('..', 'examples', 'data', 'C-town.inp')
+from bokeh.plotting import output_file, show
+import oopnet as on
 
-net = Read(filename)
-rpt = Run(net)
+filename = os.path.join('data', 'C-town.inp')
 
-p = Pressure(rpt)
-f = Flow(rpt)
+net = on.Read(filename)
+rpt = on.Run(net)
 
-output_file("bokehexample.html")
-p = BPlot(net, nodes=p, links=f, colormap=dict(node='viridis', link='cool'))
+p = on.Pressure(rpt)
+f = on.Flow(rpt)
+
+output_file('bokehexample.html')
+p = on.BPlot(net, nodes=p, links=f, colormap=dict(node='viridis', link='cool'))
 show(p)

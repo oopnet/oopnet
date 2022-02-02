@@ -1,14 +1,28 @@
+from __future__ import annotations
 import os
+from typing import Optional, TYPE_CHECKING
+from copy import deepcopy
+
 import numpy as np
-from ..elements.network_components import Junction, Pipe
-from ..report.report_getter_functions import pressure, flow
+
+if TYPE_CHECKING:
+    from oopnet.elements import Junction, Pipe
+from oopnet.report import Pressure, Flow
+from oopnet.report.xrayreport import Report
 
 
-def mkdir(newdir):
-    """works the way a good mkdir should :)
-        - already exists, silently complete
-        - regular file in the way, raise an exception
-        - parent directory(ies) does not exist, make them as well
+def mkdir(newdir: str):
+    """Creates a new directory.
+
+    - already exists, silently complete
+    - regular file in the way, raise an exception
+    - parent directory(ies) does not exist, make them as well
+
+    Args:
+      newdir: path to be created
+
+    Returns:
+
     """
     if os.path.isdir(newdir):
         pass
@@ -18,12 +32,23 @@ def mkdir(newdir):
         head, tail = os.path.split(newdir)
         if head and not os.path.isdir(head):
             mkdir(head)
-        # print "_mkdir %s" % repr(newdir)
         if tail:
             os.mkdir(newdir)
 
 
+# todo: remove?
 def adddummyjunction(network, pipe, ce, dummyname='Dummy'):
+    """
+
+    Args:
+      network: 
+      pipe: 
+      ce: 
+      dummyname:  (Default value = 'Dummy')
+
+    Returns:
+
+    """
     x1 = pipe.startnode.xcoordinate
     x2 = pipe.endnode.xcoordinate
     y1 = pipe.startnode.ycoordinate
@@ -75,13 +100,21 @@ def adddummyjunction(network, pipe, ce, dummyname='Dummy'):
     network.networkhash['node'][dummyname] = n
     network.networkhash['link'][pipe.id + '_a'] = p1
     network.networkhash['link'][pipe.id + '_b'] = p2
-    network.junctions.append(n)
-    network.pipes.append(p1)
-    network.pipes.append(p2)
+    network._junctions.append(n)
+    network._pipes.append(p1)
+    network._pipes.append(p2)
     return network, p1, p2
 
 
 def length(link):
+    """
+
+    Args:
+      link: 
+
+    Returns:
+
+    """
     x1 = link.startnode.xcoordinate
     x2 = link.endnode.xcoordinate
     y1 = link.startnode.ycoordinate
@@ -94,55 +127,60 @@ def length(link):
     return np.linalg.norm(b - a)
 
 
-
+# todo: check if functionality exists elsewhere; check for nodes with negative demands?
 def sources(network):
+    """This function returns all sources (tanks and reservoirs) if an oopnet network
+
+    Args:
+      network: return:
+
+    Returns:
+
     """
-    This function returns all sources (tanks and reservoirs) if an oopnet network
-    :param network:
-    :return:
-    """
-    if network.tanks and network.reservoirs:
-        return network.reservoirs + network.tanks
-    if network.tanks and not network.reservoirs:
-        return network.tanks
-    if not network.tanks and network.reservoirs:
-        return network.reservoirs
-    if not network.tanks and not network.reservoirs:
-        return None
+    if network._tanks and network._reservoirs:
+        return network._reservoirs + network._tanks
+    if network._tanks:
+        return network._tanks
+    if network._reservoirs:
+        return network._reservoirs
+    return None
 
 
-def make_measurement(report, sensors, precision=None):
-    """
-    This function simulates a measurement in the system at predefined sensorpositions and returns a measurement vector
+def make_measurement(report: Report, sensors: dict, precision: Optional[dict] = None):
+    """This function simulates a measurement in the system at predefined sensorpositions and returns a measurement vector
 
-    :param report: OOPNET report object
-    :param sensors: dict with keys 'Flow' and/or 'Pressure' containing the node- resp. linkids as list
-                    -> {'Flow':['flowsensor1', 'flowsensor2], 'Pressure':['sensor1', 'sensor2', 'sensor3']}
-    :param precision: dict with keys 'Flow' and/or 'Pressure' and number of decimals -> {'Flow':3, 'Pressure':2}
-    :return: numpy vector containing the measurements
+    Args:
+      report: OOPNET report object
+      sensors: dict with keys 'Flow' and/or 'Pressure' containing the node- resp. linkids as list
+    -> {'Flow':['flowsensor1', 'flowsensor2], 'Pressure':['sensor1', 'sensor2', 'sensor3']}
+      precision: dict with keys 'Flow' and/or 'Pressure' and number of decimals -> {'Flow':3, 'Pressure':2}
+      report: Report: 
+      sensors: dict: 
+      precision: Optional[dict]:  (Default value = None)
+
+    Returns:
+      numpy vector containing the measurements
+
     """
     vec = np.ndarray(0)
     for what in sorted(sensors.keys()):
         if what == 'Flow':
-            if precision is None:
-                dec = 3
-            else:
-                dec = precision[what]
-            vec = np.around(np.concatenate((vec, flow(report)[sensors[what]].values)), decimals=dec)
+            dec = 3 if precision is None else precision[what]
+            vec = np.around(np.concatenate((vec, Flow(report)[sensors[what]].values)), decimals=dec)
         elif what == 'Pressure':
-            if precision is None:
-                dec = 2
-            else:
-                dec = precision[what]
-            vec = np.around(np.concatenate((vec, pressure(report)[sensors[what]].values)), decimals=dec)
+            dec = 2 if precision is None else precision[what]
+            vec = np.around(np.concatenate((vec, Pressure(report)[sensors[what]].values)), decimals=dec)
     return vec
 
 
 def copy(network):
-    """
-    This function makes a deepcopy of an OOPNET network object
+    """This function makes a deepcopy of an OOPNET network object
 
-    :param network: OOPNET network object
-    :return: deepcopy of OOPNET network object
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      deepcopy of OOPNET network object
+
     """
-    return network.__deepcopy__()
+    return deepcopy(network)

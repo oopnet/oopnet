@@ -1,144 +1,162 @@
-# Retrieve a specific instance of an object contained in the network with a specific id
-def get_junction(network, id):
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from oopnet.elements import Pipe, Junction, Reservoir, Tank, Node, Link, Pump, Valve, Curve, Pattern, Rule, Network
+
+
+def get_junction(network: 'Network', id: str) -> 'Junction':
+    """Gets a specific Junction from the network with a specific ID.
+
+    Args:
+      network: OOPNET network object
+      id: ID of the Junction
+
+    Returns:
+      Junction with property ID
+
     """
-    This function returns a specific Junction from the network with a specific id
+    return network._nodes['junctions'][id]
 
-    :param network: OOPNET network object
-    :param id: id of the Junction
-    :return: Junction with property id
+
+def get_tank(network: 'Network', id: str) -> 'Tank':
+    """Gets a specific Tank from the network with a specific ID.
+
+    Args:
+      network: OOPNET network object
+      id: ID of the Tank
+
+    Returns:
+      Tank with property ID
+
     """
-    return next(filter(lambda x: x.id == id, network.junctions))
+    return network._nodes['tanks'][id]
 
 
-def get_tank(network, id):
+def get_reservoir(network: 'Network', id: str) -> 'Reservoir':
+    """Gets a specific Reservoir from the network with a specific ID.
+
+    Args:
+      network: OOPNET network object
+      id: ID of the Reservoir
+
+    Returns:
+      Reservoir with property ID
+
     """
-    This function returns a specific Tank from the network with a specific id
+    return network._nodes['reservoirs'][id]
 
-    :param network: OOPNET network object
-    :param id: id of the Tank
-    :return: Tank with property id
+
+def get_pipe(network: 'Network', id: str) -> 'Pipe':
+    """Gets a specific Pipe from the network with a specific ID.
+
+    Args:
+      network: OOPNET network object
+      id: ID of the Pipe
+
+    Returns:
+      Pipe with property ID
+
     """
-    return next(filter(lambda x: x.id == id, network.tanks))
+    return network._links['pipes'][id]
 
 
-def get_reservoir(network, id):
+def get_pump(network: 'Network', id: str) -> 'Pump':
+    """Gets a specific Pump from the network with a specific ID.
+
+    Args:
+      network: OOPNET network object
+      id: ID of the Pump
+
+    Returns:
+      Pump with property ID
+
     """
-    This function returns a specific Reservoir from the network with a specific id
+    return network._links['pumps'][id]
 
-    :param network: OOPNET network object
-    :param id: id of the Resercvoir
-    :return: Reservoir with property id
+
+def get_valve(network: 'Network', id: str) -> 'Valve':
+    """Gets a specific Valve from the network with a specific ID.
+
+    Args:
+      network: OOPNET network object
+      id: ID of the Valve
+
+    Returns:
+      Valve with property ID
+
     """
-    return next(filter(lambda x: x.id == id, network.reservoirs))
+    return network._links['valves'][id]
 
 
-def get_pipe(network, id):
+def get_curve(network: 'Network', id: str) -> 'Curve':
+    """Gets a specific Curve from the network with a specific ID.
+
+    Args:
+      network: OOPNET network object
+      id: ID of the Curve
+
+    Returns:
+      Curve with property ID
+
     """
-    This function returns a specific Pipe from the network with a specific id
+    return network._curves[id]
 
-    :param network: OOPNET network object
-    :param id: id of the Pipe
-    :return: Pipe with property id
+
+def get_pattern(network: 'Network', id: str) -> 'Pattern':
+    """Gets a specific Pattern from the network with a specific ID.
+
+    Args:
+      network: OOPNET network object
+      id: ID of the Pattern
+
+    Returns:
+      Pattern with property ID
+
     """
-    return next(filter(lambda x: x.id == id, network.pipes))
+    return network._patterns[id]
 
 
-def get_pump(network, id):
+def get_rule(network: 'Network', id: str) -> 'Rule':
+    """Gets a specific Rule from the network with a specific ID.
+
+    Args:
+      network: OOPNET network object
+      id: ID of the Rule
+
+    Returns:
+      Rule with property ID
+
     """
-    This function returns a specific Pump from the network with a specific id
+    return network._rules[id]
 
-    :param network: OOPNET network object
-    :param id: id of the Pump
-    :return: Pump with property id
+
+def get_node(network: 'Network', id: str) -> 'Node':
+    """Gets a specific Node from the network with a specific ID.
+
+    Args:
+      network: OOPNET network object
+      id: ID of the Node
+
+    Returns:
+      Node with property ID
+
     """
-    return next(filter(lambda x: x.id == id, network.pumps))
+    for vals in network._nodes.values():
+        if id in vals:
+            return vals[id]
 
 
-def get_valve(network, id):
+def get_link(network: 'Network', id: str) -> 'Link':
+    """Gets a specific Link from the network with a specific ID.
+
+    Args:
+      network: OOPNET network object
+      id: ID of the Link
+
+    Returns:
+      Link with property ID
+
     """
-    This function returns a specific Valve from the network with a specific id
-
-    :param network: OOPNET network object
-    :param id: id of the Valve
-    :return: Valve with property id
-    """
-    return next(filter(lambda x: x.id == id, network.valves))
-
-
-def get_curve(network, id):
-    """
-    This function returns a specific Curve from the network with a specific id
-
-    :param network: OOPNET network object
-    :param id: id of the Curve
-    :return: Curve with property id
-    """
-    return next(filter(lambda x: x.id == id, network.curves))
-
-
-def get_pattern(network, id):
-    """
-    This function returns a specific Pattern from the network with a specific id
-
-    :param network: OOPNET network object
-    :param id: id of the Pattern
-    :return: Pattern with property id
-    """
-    return next(filter(lambda x: x.id == id, network.patterns))
-
-
-def get_rule(network, id):
-    """
-    This function returns a specific Rule from the network with a specific id
-
-    :param network: OOPNET network object
-    :param id: id of the Rule
-    :return: Rule with property id
-    """
-    return next(filter(lambda x: x.id == id, network.rules))
-
-
-def get_node(network, id):
-    """
-    This function returns a specific Node from the network with a specific id
-
-    :param network: OOPNET network object
-    :param id: id of the Node
-    :return: Node with property id
-    """
-    result = None
-    if network.junctions:
-        if id in [x.id for x in network.junctions]:
-            result = get_junction(network, id)
-    if network.tanks:
-        if not result:
-            if id in [x.id for x in network.tanks]:
-                result = get_tank(network, id)
-    if network.reservoirs:
-        if not result:
-            if id in [x.id for x in network.reservoirs]:
-                result = get_reservoir(network, id)
-    return result
-
-
-def get_link(network, id):
-    """
-    This function returns a specific Link from the network with a specific id
-
-    :param network: OOPNET network object
-    :param id: id of the Link
-    :return: Link with property id
-    """
-    result = None
-    if network.pipes:
-        if id in [x.id for x in network.pipes]:
-            result = get_pipe(network, id)
-    if network.pumps:
-        if not result:
-            if id in [x.id for x in network.pumps]:
-                result = get_pump(network, id)
-    if network.valves:
-        if not result:
-            if id in [x.id for x in network.valves]:
-                result = get_valve(network, id)
-    return result
+    for vals in network._links.values():
+        if id in vals:
+            return vals[id]

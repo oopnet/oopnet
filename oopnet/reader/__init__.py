@@ -1,1 +1,1 @@
-__author__ = 'davidsteffelbauer'
+from .read import read as Read

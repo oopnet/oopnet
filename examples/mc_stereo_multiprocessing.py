@@ -1,33 +1,38 @@
-from oopnet.api import *
-from multiprocessing import Pool
 import os
+from multiprocessing import Pool
 
-def roll_the_dice(network=None):
-    cnet = Copy(network)
-    for j in cnet.junctions:
+import numpy as np
+import pandas as pd
+import oopnet as on
+from matplotlib import pyplot as plt
+from oopnet.elements import Network
+
+
+def roll_the_dice(network: Network) -> pd.Series:
+    cnet = on.Copy(network)
+    for j in on.get_junctions(cnet):
         j.demand += np.random.normal(0.0, 1.0)
-    rpt = Run(cnet)
-    return Pressure(rpt)
+    rpt = on.Run(cnet)
+    return on.Pressure(rpt)
 
 
 if __name__ == '__main__':
-
-    pool = Pool()
     filename = os.path.join('data', 'Poulakis.inp')
 
-    net = Read(filename)
+    net = on.Read(filename)
+    mcruns = 1_000
+    networks = [net] * mcruns
 
-    mcruns = 1000
-    p = list(pool.map(roll_the_dice, [net] * mcruns))
+    p = Pool().map(roll_the_dice, networks)
 
     p = pd.DataFrame(p, index=list(range(len(p))))
     print(p)
 
-    pmean = p.mean()
-    print(pmean)
+    p_mean = p.mean()
+    print(p_mean)
 
-    psub = p.sub(pmean, axis=1)
+    p_sub = p.sub(p_mean, axis=1)
 
     x = np.linspace(-1.5, 1.5, 40)
-    psub[['J-03', 'J-31']].hist(bins=x, layout=(2, 1))
-    Show()
+    p_sub[['J-03', 'J-31']].hist(bins=x, layout=(2, 1))
+    plt.show()
