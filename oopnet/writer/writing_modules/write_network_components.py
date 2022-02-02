@@ -183,7 +183,7 @@ def write_valves(network: Network, fid: TextIOWrapper):
         if v.endnode is not None:
             print(v.endnode.id, end=' ', file=fid)
         print(v.diameter, end=' ', file=fid)
-        print(v.valvetype, end=' ', file=fid)
+        print(v.__class__.__name__, end=' ', file=fid)
         print(v.setting, end=' ', file=fid)
         print(v.minorloss, end=' ', file=fid)
         if v.comment is not None:

@@ -1,6 +1,6 @@
 import unittest
 
-from oopnet.elements import Network, Junction, Reservoir, Tank, Pipe, Pump, Valve, Link, Node, Pattern, Curve
+from oopnet.elements import Network, Junction, Reservoir, Tank, Pipe, Pump, Valve, Link, Node, Pattern, Curve, TCV
 from oopnet.elements.component_registry import ComponentExistsError
 from oopnet.utils.getters import *
 from oopnet.utils.adders import *
@@ -72,7 +72,7 @@ class BlankModelLinkTest(unittest.TestCase):
     def test_add_simple_valve_object(self):
         j1 = get_junction(self.network, 'J-1')
         j2 = get_junction(self.network, 'J-2')
-        add_valve(self.network, Valve(id='test', startnode=j1, endnode=j2, valvetype='TCV', diameter=150, minorloss=1.0,
+        add_valve(self.network, TCV(id='test', startnode=j1, endnode=j2, diameter=150, minorloss=1.0,
                                       comment='Test'))
         self.assertEqual(1, len(self.network._links['valves']))
         v = get_valve(self.network, 'test')

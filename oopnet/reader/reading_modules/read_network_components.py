@@ -175,14 +175,15 @@ class ValveFactory(ComponentFactory):
         comment = cls._read_comment(values)
         attr_values = values['values']
         valve_type = attr_values[4]
+        del attr_values[4]
         attr_values = cls._pad_list(values['values'], 7)
-        attr_names = ['id', 'startnode', 'endnode', 'diameter', 'valvetype', 'setting', 'minorloss']
+        attr_names = ['id', 'startnode', 'endnode', 'diameter', 'setting', 'minorloss']
 
         if valve_type in {'PRV', 'TCV', 'PSV', 'PBV', 'FCV'}:
-            attr_cls = [str, Node, Node, float, str, float, float]
+            attr_cls = [str, Node, Node, float, float, float]
         elif valve_type == 'GPV':
             # todo: switch GPV values to Curves
-            attr_cls = [str, Node, Node, float, str, str, float]
+            attr_cls = [str, Node, Node, float, str, float]
         else:
             raise InvalidValveTypeError(valve_type)
         attr_dict = cls._create_attr_dict(attr_names, attr_values, attr_cls, network)
