@@ -1,8 +1,14 @@
-from typing import Union, Optional
-from dataclasses import dataclass
+from __future__ import annotations
+from typing import Union, Optional, TYPE_CHECKING
+from dataclasses import dataclass, field
+from copy import deepcopy
+
+import numpy as np
 
 from oopnet.elements.base import NetworkComponent
-from oopnet.elements.system_operation import Pattern, Curve
+if TYPE_CHECKING:
+    from oopnet.elements.system_operation import Pattern, Curve
+    from oopnet.elements.network_map_tags import Vertex
 
 
 @dataclass
@@ -30,14 +36,14 @@ class Node(NetworkComponent):
     sourcepattern: Optional[list[Pattern]] = None
 
     @property
-    def coordinates(self) -> tuple[float, float, float]:
+    def coordinates(self) -> np.ndarray:
         """Property returning node coordinates.
 
         Returns:
             x- and y-coordinate, and elevation
 
         """
-        return self.xcoordinate, self.ycoordinate, self.elevation
+        return np.asarray([self.xcoordinate, self.ycoordinate, self.elevation])
 
 
 @dataclass
@@ -53,16 +59,23 @@ class Link(NetworkComponent):
     startnode: Optional[Node] = None
     endnode: Optional[Node] = None
     status: str = 'OPEN'
+    vertices: list[Vertex] = field(default_factory=list)
 
     @property
-    def coordinates(self) -> tuple[tuple[float, float, float], tuple[float, float, float]]:
+    def coordinates(self) -> np.ndarray:
         """Property returning start and end node coordinates"""
-        return (self.startnode.xcoordinate, self.startnode.ycoordinate, self.startnode.elevation), \
-               (self.endnode.xcoordinate, self.endnode.ycoordinate, self.endnode.elevation)
+        return np.asarray([self.startnode.coordinates] + [self.endnode.coordinates])
+
+    @property
+    def coordinates_2d(self) -> np.ndarray:
+        """Property returning start and end node coordinates with the vertices in between them"""
+        return np.asarray([self.startnode.coordinates[:2]] + [v.coordinates for v in self.vertices] +
+                          [self.endnode.coordinates[:2]])
 
     def revert(self):
-        """Switches the link's start and end nodes."""
+        """Switches the link's start and end nodes and it's vertices."""
         self.startnode, self.endnode = self.endnode, self.startnode
+        self.vertices = self.vertices[::-1]
 
 
 @dataclass
@@ -169,6 +182,52 @@ class Pipe(Link):
         if self._network:
             self._rename(id=id, hashtable=self._network._links['pipes'])
         self._id = id
+
+    def split(self, junction_id: str = None, pipe_id: str = None, split_ratio: float = 0.5) -> tuple[Junction, Pipe]:
+        """Splits the pipe into two parts with respective lengths based on the passed split_ratio.
+
+        Creates a new Junction with the ID junction_id and a new Pipe with identical Pipe attributes except for
+        xcoordinate, ycoordinate and elevation. These are defined by the split_ratio argument (measured from start to
+        end node). If junction_id or pipe_id is not specified, the new Junction's/Pipe's ID will be derived from the old
+        Junction and Pipe IDs.
+
+        Warning:
+            This will remove all vertices from the Pipe object.
+
+        Args:
+            junction_id: ID of newly created Junction
+            pipe_id: ID of newly creation Pipe
+            split_ratio: ratio from start to end node along the Pipe
+
+        Returns:
+            new Junction and Pipe objects
+
+        """
+        from oopnet.utils.adders import add_junction, add_pipe
+        from oopnet.utils.getters import get_link_ids, get_node_ids
+
+        def create_id(old_id: str, id_list: list[str]) -> str:
+            for i in range(1_000):
+                new_id = f'{old_id}_{i}'
+                if new_id not in id_list:
+                    return new_id
+            return create_id(new_id, id_list)
+
+        self.vertices = []
+        if not junction_id:
+            junction_id = create_id(self.id, get_node_ids(self._network))
+        if not pipe_id:
+            pipe_id = create_id(self.id, get_link_ids(self._network))
+        x, y, elevation = (self.coordinates[0] + self.coordinates[1]) * split_ratio
+        j = Junction(id=junction_id, xcoordinate=x, ycoordinate=y, elevation=elevation)
+        add_junction(self._network, j)
+        p = deepcopy(self)
+        p._network = None
+        p.id = pipe_id
+        p.startnode = j
+        add_pipe(self._network, p)
+        self.endnode = j
+        return j, p
 
 
 # todo: rethink keyword, value structure (what happens for multiple properties?)

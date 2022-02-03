@@ -3,7 +3,8 @@ import pathlib
 from typing import List
 
 from oopnet.elements.network import Network
-from oopnet.elements.network_components import Junction, Pipe, Tank, Reservoir, Pump, Valve, Curve, PRV
+from oopnet.elements.network_components import Junction, Pipe, Tank, Reservoir, Pump, Valve, PRV
+from oopnet.elements.system_operation import Curve
 from oopnet.utils.adders.add_element import add_junction, add_pipe, add_node, add_curve, add_link
 from oopnet.utils.getters.get_by_id import get_node
 
@@ -156,6 +157,12 @@ class RulesModel(TestModel):
         self.network = Network.read(os.path.join('networks', 'Rules_network.inp'))
 
 
+class ETownModel(TestModel):
+    def __init__(self):
+        super().__init__()
+        self.network = Network.read(os.path.join('..', 'examples', 'data', 'ETown.inp'))
+
+
 def set_dir_examples():
     file_dir = pathlib.Path(__file__).parent.absolute()
     os.chdir(file_dir.parent / 'examples')
@@ -173,5 +180,10 @@ def activate_all_report_parameters(network: Network):
 
 
 if __name__ == '__main__':
-    j = Junction(id='1')
-    print()
+    network = PoulakisEnhancedPDAModel().network
+    from oopnet.plotter.pyplot import Plotsimulation as Plot
+    from matplotlib import pyplot as plt
+    fig, ax = plt.subplots(figsize=(15, 15))
+    rpt = network.run()
+    Plot(network, ax=ax, links=rpt.flow)
+    plt.show()

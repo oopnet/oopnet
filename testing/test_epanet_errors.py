@@ -1,7 +1,8 @@
 import unittest
 
 from oopnet.elements.network import Network
-from oopnet.elements.network_components import Tank, Junction, Curve
+from oopnet.elements.network_components import Tank, Junction
+from oopnet.elements.system_operation import Curve
 from oopnet.utils.adders import add_junction, add_tank, add_curve
 from oopnet.utils.getters import get_pipe, get_tank
 from oopnet.report.simulation_errors import EPANETSimulationError

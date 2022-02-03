@@ -5,7 +5,7 @@ from io import TextIOWrapper
 import logging
 
 from oopnet.elements.base import NetworkComponent
-from oopnet.elements.network_components import Curve, Pattern
+from oopnet.elements.system_operation import Curve, Pattern
 from oopnet.utils.getters.element_lists import get_curves, get_junctions, get_pipes, get_valves, get_pumps, \
     get_patterns, get_energy_entries, get_controls, get_rules
 from oopnet.writer.decorators import section_writer

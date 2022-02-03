@@ -7,7 +7,8 @@ from typing import TYPE_CHECKING
 from oopnet.reader.decorators import section_reader
 from oopnet.reader.factories.component_factory import ComponentFactory
 from oopnet.reader.factories.base import InvalidValveTypeError
-from oopnet.elements.network_components import Tank, Reservoir, Pipe, Pump, Valve, Node, Pattern, Curve, Junction, TCV,\
+from oopnet.elements.system_operation import Pattern, Curve
+from oopnet.elements.network_components import Tank, Reservoir, Pipe, Pump, Valve, Node, Junction, TCV,\
     FCV, PRV, PBV, PSV, GPV
 from oopnet.utils.getters.element_lists import get_junctions, get_reservoirs, get_tanks, get_pipes, get_valves, \
     get_pumps
@@ -147,7 +148,10 @@ class PumpFactory(ComponentFactory):
         comment = cls._read_comment(values)
         attr_values = cls._pad_list(values['values'], 5)
         attr_names = ['id', 'startnode', 'endnode', 'keyword', 'value']
-        attr_cls = [str, Node, Node, str, str]
+        if attr_values[3] == 'HEAD':
+            attr_cls = [str, Node, Node, str, Curve]
+        else:
+            attr_cls = [str, Node, Node, str, str]
         attr_dict = cls._create_attr_dict(attr_names, attr_values, attr_cls, network)
         return Pump(**attr_dict, comment=comment)
 

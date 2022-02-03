@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Union, TYPE_CHECKING
 
 from oopnet.reader.factories.base import ReadFactory
-from oopnet.utils.getters import get_pattern
+from oopnet.utils.getters.get_by_id import get_pattern
 if TYPE_CHECKING:
     from oopnet.elements.network import Network
     from oopnet.elements.network_components import Pattern

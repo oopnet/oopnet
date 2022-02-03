@@ -1,6 +1,6 @@
 import unittest
 
-from oopnet.utils.getters.get_by_id import get_link
+from oopnet.utils.getters.get_by_id import get_link, get_pipe
 from oopnet.utils.getters.element_lists import get_link_ids
 
 from testing.base import SimpleModel
@@ -23,6 +23,10 @@ class TestLink(unittest.TestCase):
         self.assertTrue('P-0' in get_link_ids(self.model.network))
         p.id = 'new-ID'
         self.assertTrue('new-ID' in get_link_ids(self.model.network))
+
+    def test_split_simple(self):
+        p = get_pipe(self.model.network, 'P-0')
+        p.split()
 
 
 if __name__ == '__main__':

@@ -2,8 +2,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 import logging
 
+from oopnet.utils.getters import get_link
+
 from oopnet.utils.getters.get_by_id import get_node
 from oopnet.reader.decorators import section_reader
+from oopnet.elements.network_map_tags import Vertex
 if TYPE_CHECKING:
     from oopnet.elements.network import Network
 
@@ -33,17 +36,19 @@ def read_coordinates(network: Network, block: list):
 @section_reader('VERTICES', 4)
 # ToDo: Implement Vertices Reader
 def read_vertices(network: Network, block: list):
-    """
+    """Reads Link vertices from block.
 
     Args:
-      network: Network: 
-      block: list: 
-
-    Returns:
+      network: OOPNET network object where the coordinates shall be stored
+      block: EPANET input file block
 
     """
-    pass
-
+    logger.debug('Reading Vertices section')
+    for vals in block:
+        vals = vals['values']
+        j = get_link(network, vals[0])
+        v = Vertex(float(vals[1]), float(vals[2]))
+        j.vertices.append(v)
 
 @section_reader('LABELS', 4)
 # ToDo: Implement Labelreader

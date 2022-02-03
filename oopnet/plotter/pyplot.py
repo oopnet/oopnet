@@ -61,30 +61,16 @@ class Plotpipes:
     """ """
 
     def __new__(cls, network: Network, color):
-
         lines = []
-        pid = []
+        colors = []
 
         for pipe in get_pipes(network):
-            link = []
+            lines.append(pipe.coordinates_2d.tolist())
+            colors.append(color[pipe.id])
+            # if pipe.vertices:
+            #     colors += [color[pipe.id]] * len(pipe.vertices)
 
-            ps = pipe.startnode
-            pe = pipe.endnode
-
-            s = (ps.xcoordinate, ps.ycoordinate)
-            e = (pe.xcoordinate, pe.ycoordinate)
-
-            link.append(s)
-            link.append(e)
-
-            lines.append(link)
-            pid.append(pipe.id)
-
-        df = pd.DataFrame(data=lines, index=pid)
-        color = color[color.index.isin(df.index)]
-
-        concat = pd.concat([df, color], axis=1, sort=True).fillna('k')
-        lines = LineCollection(lines, color=concat.iloc[:, 2])
+        lines = LineCollection(lines, color=colors)
 
         return lines
 

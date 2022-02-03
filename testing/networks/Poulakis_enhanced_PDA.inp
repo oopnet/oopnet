@@ -122,12 +122,12 @@
 
 [CURVES]
 ;ID              	X-Value     	Y-Value
-;HEADLOSS: 
+;PUMP: HEADLOSS: 
  1               	50          	5           
  1               	100         	10          
-;PUMP: 
+;PUMP: PUMP: 
  2               	50          	50          
-;VOLUME: 
+;PUMP: VOLUME: 
  3               	2           	20          
  3               	5           	50          
 
@@ -136,7 +136,9 @@
 
 
 
+
 [RULES]
+
 
 
 
@@ -247,6 +249,8 @@ J-32            	5201.044          	7943.687
 
 [VERTICES]
 ;Link            	X-Coord           	Y-Coord
+P-07            	764.904           	7727.784          
+P-07            	1068.616          	7379.078          
 P-1             	4787.638          	5733.748          
 
 [LABELS]

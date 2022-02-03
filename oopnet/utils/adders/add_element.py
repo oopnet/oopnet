@@ -3,11 +3,12 @@ from typing import Union, TYPE_CHECKING
 import logging
 
 from oopnet.utils.oopnet_logging import logging_decorator
-from oopnet.elements import Junction, Reservoir, Tank, Pipe, Pump, Valve, Curve, Pattern
+from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Pump, Valve
+from oopnet.elements.system_operation import Curve, Pattern
 if TYPE_CHECKING:
     from oopnet.elements.system_operation import Rule
     from oopnet.elements.base import NetworkComponent
-    from oopnet.elements import Network
+    from oopnet.elements.network import Network
 
 logger = logging.getLogger(__name__)
 

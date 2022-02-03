@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from io import TextIOWrapper
 import logging
 
+from oopnet.elements.system_operation import Curve
 from oopnet.utils.getters.element_lists import get_junctions, get_reservoirs, get_tanks, get_pipes, get_pumps, \
     get_valves
 from oopnet.writer.decorators import section_writer
@@ -160,8 +161,10 @@ def write_pumps(network: Network, fid: TextIOWrapper):
             print(p.endnode.id, end=' ', file=fid)
         if p.keyword is not None:
             print(p.keyword, end=' ', file=fid)
-        if p.value is not None:
+        if p.value is not None and not isinstance(p.value, Curve):
             print(p.value, end=' ', file=fid)
+        elif isinstance(p.value, Curve):
+            print(p.value.id, end=' ', file=fid)
         if p.comment is not None:
             print(';', p.comment, end=' ', file=fid)
         print('\n', end=' ', file=fid)

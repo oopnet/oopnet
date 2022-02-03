@@ -12,7 +12,7 @@ import logging
 from oopnet.report.reportfile_reader import ReportFileReader
 from oopnet.report.binaryfile_reader import BinaryFileReader
 from oopnet.utils import utils
-from oopnet.report.xrayreport import Report
+from oopnet.report.report import Report
 from oopnet.utils.oopnet_logging import logging_decorator
 if TYPE_CHECKING:
     from oopnet.elements.network import Network

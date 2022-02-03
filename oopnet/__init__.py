@@ -1,4 +1,3 @@
-from oopnet.elements.network import Network
 from oopnet.elements import *
 from oopnet.graph import *
 from oopnet.plotter import *

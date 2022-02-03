@@ -7,8 +7,7 @@ import numpy as np
 
 if TYPE_CHECKING:
     from oopnet.elements.network_components import Junction, Pipe
-from oopnet.report import Pressure, Flow
-from oopnet.report.xrayreport import Report
+from oopnet.report.report import Report
 
 
 def mkdir(newdir: str):
@@ -34,97 +33,6 @@ def mkdir(newdir: str):
             mkdir(head)
         if tail:
             os.mkdir(newdir)
-
-
-# todo: remove?
-def adddummyjunction(network, pipe, ce, dummyname='Dummy'):
-    """
-
-    Args:
-      network: 
-      pipe: 
-      ce: 
-      dummyname:  (Default value = 'Dummy')
-
-    Returns:
-
-    """
-    x1 = pipe.startnode.xcoordinate
-    x2 = pipe.endnode.xcoordinate
-    y1 = pipe.startnode.ycoordinate
-    y2 = pipe.endnode.ycoordinate
-    z1 = pipe.startnode.elevation
-    z2 = pipe.endnode.elevation
-    a = np.asarray([x1, y1, z1])
-    b = np.asarray([x2, y2, z2])
-    c = np.asarray(a + 0.5 * (b - a))
-    n = Junction(id=dummyname,
-                 xcoordinate=c[0],
-                 ycoordinate=c[1],
-                 elevation=c[2],
-                 emittercoefficient=ce)
-    # p1 = Pipe(id=pipe.id + '_a',
-    #           startnode=pipe.startnode,
-    #           endnode=n,
-    #           length=0.5 * pipe.length,
-    #           diameter=pipe.diameter,
-    #           roughness=pipe.roughness,
-    #           minorloss=pipe.minorloss)
-
-    p1 = Pipe(id=pipe.id + '_a')
-    p1.startnode = pipe.startnode
-    p1.endnode = n
-    p1.length = 0.5 * pipe.length
-    p1.diameter = pipe.diameter
-    p1.roughness = pipe.roughness
-    p1.minorloss = pipe.minorloss
-
-    # p2 = Pipe(id=pipe.id + '_b',
-    #           startnode=n,
-    #           endnode=pipe.endnode,
-    #           length=0.5 * pipe.length,
-    #           diameter=pipe.diameter,
-    #           roughness=pipe.roughness,
-    #           minorloss=pipe.minorloss)
-
-    p2 = Pipe(id=pipe.id + '_b')
-    p2.startnode = n
-    p2.endnode = pipe.startnode
-    p2.length = 0.5 * pipe.length
-    p2.diameter = pipe.diameter
-    p2.roughness = pipe.roughness
-    p2.minorloss = pipe.minorloss
-
-
-    pipe.status = 'CLOSED'
-    network.networkhash['node'][dummyname] = n
-    network.networkhash['link'][pipe.id + '_a'] = p1
-    network.networkhash['link'][pipe.id + '_b'] = p2
-    network._junctions.append(n)
-    network._pipes.append(p1)
-    network._pipes.append(p2)
-    return network, p1, p2
-
-
-def length(link):
-    """
-
-    Args:
-      link: 
-
-    Returns:
-
-    """
-    x1 = link.startnode.xcoordinate
-    x2 = link.endnode.xcoordinate
-    y1 = link.startnode.ycoordinate
-    y2 = link.endnode.ycoordinate
-    z1 = link.startnode.elevation
-    z2 = link.endnode.elevation
-    a = np.asarray([x1, y1, z1])
-    b = np.asarray([x2, y2, z2])
-
-    return np.linalg.norm(b - a)
 
 
 # todo: check if functionality exists elsewhere; check for nodes with negative demands?
@@ -166,10 +74,10 @@ def make_measurement(report: Report, sensors: dict, precision: Optional[dict] = 
     for what in sorted(sensors.keys()):
         if what == 'Flow':
             dec = 3 if precision is None else precision[what]
-            vec = np.around(np.concatenate((vec, Flow(report)[sensors[what]].values)), decimals=dec)
+            vec = np.around(np.concatenate((vec, report.flow[sensors[what]].values)), decimals=dec)
         elif what == 'Pressure':
             dec = 2 if precision is None else precision[what]
-            vec = np.around(np.concatenate((vec, Pressure(report)[sensors[what]].values)), decimals=dec)
+            vec = np.around(np.concatenate((vec, report.pressure[sensors[what]].values)), decimals=dec)
     return vec
 
 

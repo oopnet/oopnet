@@ -1,6 +1,7 @@
 import unittest
 
-from oopnet.elements.network_components import Curve, Junction, Tank, Reservoir, Pipe, Pump, Valve, Node, Link
+from oopnet.elements.network_components import Junction, Tank, Reservoir, Pipe, Pump, Valve, Node, Link
+from oopnet.elements.system_operation import Curve
 from oopnet.utils.getters import *
 
 from testing.base import SimpleModel

@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from io import TextIOWrapper
 import logging
 
-from oopnet.utils.getters.element_lists import get_nodes
+from oopnet.utils.getters.element_lists import get_nodes, get_links
 from oopnet.writer.decorators import section_writer
 if TYPE_CHECKING:
     from oopnet.elements.network import Network
@@ -37,10 +37,12 @@ def write_vertices(network: Network, fid: TextIOWrapper):
       fid: output object
 
     """
-    # ToDo: Implement Printer for Vertices
-    # logger.debug('Writing Vertices section')
+    logger.debug('Writing Vertices section')
     print('[VERTICES]', file=fid)
     print(';linkkid xcoordinate ycoordinate', file=fid)
+    for l in get_links(network):
+        for v in l.vertices:
+            print(l.id, v.xcoordinate, v.ycoordinate, file=fid)
     print('\n', end=' ', file=fid)
 
 

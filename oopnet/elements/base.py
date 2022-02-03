@@ -3,9 +3,12 @@ This module contains all the base classes of OOPNET
 """
 from __future__ import annotations
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from abc import ABC, abstractmethod
 
+if TYPE_CHECKING:
+    from oopnet.elements.network import Network
+    
 
 @dataclass
 class NetworkComponent(ABC):
@@ -21,7 +24,7 @@ class NetworkComponent(ABC):
     _id: str = field(init=False, compare=False, hash=False, repr=False)
     comment: Optional[str] = None
     tag: Optional[str] = None
-    _network_: Optional['Network'] = field(default=None, init=False, compare=False, hash=False, repr=False)
+    _network_: Optional[Network] = field(default=None, init=False, compare=False, hash=False, repr=False)
 
     def __hash__(self):
         return hash(self.id) + hash(type(self))
@@ -40,8 +43,8 @@ class NetworkComponent(ABC):
         return self._network_
 
     @_network.setter
-    def _network(self, value):
-        if not self._network_:
+    def _network(self, value: Optional[Network]):
+        if not self._network_ or value is None:
             self._network_ = value
         else:
             raise RuntimeError('NetworkComponents cannot be added to two different Networks.')

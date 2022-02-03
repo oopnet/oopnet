@@ -1,18 +1,18 @@
 from dataclasses import dataclass
 
+import numpy as np
+
 from oopnet.elements.network_components import Node
 
 
 @dataclass
 class Vertex:
-    """ """
-    # ToDo: Implement Vertex
-    """
-    .. warning::
-        Not implemented yet
-    """
-    pass
+    xcoordinate: float
+    ycoordinate: float
 
+    @property
+    def coordinates(self):
+        return np.asarray([self.xcoordinate, self.ycoordinate])
 
 @dataclass
 class Label:
