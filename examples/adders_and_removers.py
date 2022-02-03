@@ -33,5 +33,5 @@ on.add_pump(network=net, pump=on.Pump(id='Pump1', keyword='POWER', value=50, sta
                                       endnode=on.get_node(net, 'J-31')))
 
 rpt = net.run()
-on.Plot(net, links=on.Flow(rpt), nodes=on.Pressure(rpt), robust=True)
+on.Plot(net, links=rpt.flow, nodes=rpt.pressure, robust=True)
 plt.show()

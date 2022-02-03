@@ -41,7 +41,7 @@ class PoulakisEnhancedGraphTest(unittest.TestCase):
         self.model.network.reportparameter.headloss = 'YES'
         self.model.network.reportparameter.length = 'YES'
         rpt = self.model.network.run()
-        headloss = Headloss(rpt)
+        headloss = rpt.headloss
         g = MultiGraph(self.model.network, weight=headloss, default=0)
         self.assertIsInstance(g, nx.Graph)
         self.assertEqual(self.model.n_nodes, len(g.nodes))

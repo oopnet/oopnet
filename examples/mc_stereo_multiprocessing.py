@@ -12,7 +12,7 @@ def roll_the_dice(network: on.Network) -> pd.Series:
     for j in on.get_junctions(cnet):
         j.demand += np.random.normal(0.0, 1.0)
     rpt = cnet.run()
-    return on.Pressure(rpt)
+    return rpt.pressure
 
 
 if __name__ == '__main__':

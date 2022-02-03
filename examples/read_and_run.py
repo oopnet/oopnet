@@ -12,6 +12,6 @@ for j in on.get_junctions(network):
 report = network.run()
 print(report)
 
-p = on.Pressure(report)
+p = report.pressure
 print(p)
 print(p.describe())

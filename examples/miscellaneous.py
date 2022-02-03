@@ -20,7 +20,8 @@ network.times.duration = timedelta(hours=18)
 
 report = network.run()
 
-on.Linkinfo(report, linkname='P-03').plot()
+# todo: enable after fixing linkinfo
+#on.Linkinfo(report, linkname='P-03').plot()
 plt.show()
 
 

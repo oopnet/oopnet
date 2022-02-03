@@ -18,7 +18,7 @@ for _ in range(mcruns):
     for j in on.get_junctions(cnet):
         j.demand += np.random.normal(0.0, 1.0)
     rpt = net.run()
-    p.append(on.Pressure(rpt))
+    p.append(rpt.pressure)
 
 p = pd.DataFrame(p, index=list(range(len(p))))
 print(p)

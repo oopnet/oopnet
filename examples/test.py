@@ -10,6 +10,6 @@ net.report.nodes = 'ALL'
 net.report.links = 'ALL'
 rpt = net.run()
 print(net.reportparameter.pressure)
-p = on.Pressure(rpt)
+p = rpt.pressure
 on.Plot(net, nodes=p['1'])
 plt.show()
