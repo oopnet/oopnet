@@ -18,10 +18,10 @@ def start_logger(level: Union[int, str] = logging.INFO) -> logging.Logger:
         logger object
 
     """
-    logger = logging.getLogger('oopnet')
+    logger = logging.getLogger("oopnet")
     logger.setLevel(level)
-    format = logging.Formatter('%(asctime)s:  %(name)s - %(levelname)s - %(message)s')
-    f_handler = RotatingFileHandler('oopnet.log', maxBytes=5_000_000)
+    format = logging.Formatter("%(asctime)s:  %(name)s - %(levelname)s - %(message)s")
+    f_handler = RotatingFileHandler("oopnet.log", maxBytes=5_000_000)
     f_handler.setFormatter(format)
     s_handler = logging.StreamHandler()
     s_handler.setFormatter(format)
@@ -39,13 +39,16 @@ def logging_decorator(logger: logging.Logger):
     Returns:
         decorated function
     """
+
     def decorate(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             try:
                 return func(*args, **kwargs)
             except Exception:
-                logger.exception(f'Error raised by {func.__name__!r}')
+                logger.exception(f"Error raised by {func.__name__!r}")
                 raise
+
         return wrapper
+
     return decorate

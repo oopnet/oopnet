@@ -3,8 +3,16 @@ from typing import Union, TYPE_CHECKING
 import logging
 
 from oopnet.utils.oopnet_logging import logging_decorator
-from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Pump, Valve
+from oopnet.elements.network_components import (
+    Junction,
+    Reservoir,
+    Tank,
+    Pipe,
+    Pump,
+    Valve,
+)
 from oopnet.elements.system_operation import Curve, Pattern
+
 if TYPE_CHECKING:
     from oopnet.elements.system_operation import Rule
     from oopnet.elements.base import NetworkComponent
@@ -14,7 +22,9 @@ logger = logging.getLogger(__name__)
 
 
 @logging_decorator(logger)
-def _add_component(obj: Union[NetworkComponent, Rule], network: Network, component_hash: dict):
+def _add_component(
+    obj: Union[NetworkComponent, Rule], network: Network, component_hash: dict
+):
     """Adds a NetworkComponent to a registry.
 
     Args:
@@ -68,7 +78,7 @@ def add_junction(network: Network, junction: Junction):
       junction: Junction object to add to the network
 
     """
-    _add_component(junction, network, network._nodes['junctions'])
+    _add_component(junction, network, network._nodes["junctions"])
 
 
 def add_reservoir(network: Network, reservoir: Reservoir):
@@ -79,7 +89,7 @@ def add_reservoir(network: Network, reservoir: Reservoir):
       reservoir: Reservoir object to add to the network
 
     """
-    _add_component(reservoir, network, network._nodes['reservoirs'])
+    _add_component(reservoir, network, network._nodes["reservoirs"])
 
 
 def add_tank(network: Network, tank: Tank):
@@ -90,7 +100,7 @@ def add_tank(network: Network, tank: Tank):
       tank: Tank object to add to the network
 
     """
-    _add_component(tank, network, network._nodes['tanks'])
+    _add_component(tank, network, network._nodes["tanks"])
 
 
 def add_pipe(network: Network, pipe: Pipe):
@@ -101,7 +111,7 @@ def add_pipe(network: Network, pipe: Pipe):
       pipe: Pipe object to add to the network
 
     """
-    _add_component(pipe, network, network._links['pipes'])
+    _add_component(pipe, network, network._links["pipes"])
 
 
 def add_pump(network: Network, pump: Pump):
@@ -112,7 +122,7 @@ def add_pump(network: Network, pump: Pump):
       pump: Pump object to add to the network
 
     """
-    _add_component(pump, network, network._links['pumps'])
+    _add_component(pump, network, network._links["pumps"])
 
 
 def add_valve(network: Network, valve: Valve):
@@ -123,7 +133,7 @@ def add_valve(network: Network, valve: Valve):
       valve: Valve object to add to the network
 
     """
-    _add_component(valve, network, network._links['valves'])
+    _add_component(valve, network, network._links["valves"])
 
 
 def add_node(network: Network, node: Union[Junction, Reservoir, Tank]):
@@ -141,8 +151,10 @@ def add_node(network: Network, node: Union[Junction, Reservoir, Tank]):
     elif isinstance(node, Tank):
         add_tank(network, node)
     else:
-        raise TypeError(f'Only Node types (Junction, Tank, Reservoir) can be passed to this function but an object of '
-                        f'type {type(node)} was passed.')
+        raise TypeError(
+            f"Only Node types (Junction, Tank, Reservoir) can be passed to this function but an object of "
+            f"type {type(node)} was passed."
+        )
 
 
 def add_link(network: Network, link: Union[Pipe, Pump, Valve]):
@@ -160,5 +172,7 @@ def add_link(network: Network, link: Union[Pipe, Pump, Valve]):
     elif isinstance(link, Valve):
         add_valve(network, link)
     else:
-        raise TypeError(f'Only Link types (Pipe, Pump, Valve) can be passed to this function but an object of '
-                        f'type {type(link)} was passed.')
+        raise TypeError(
+            f"Only Link types (Pipe, Pump, Valve) can be passed to this function but an object of "
+            f"type {type(link)} was passed."
+        )

@@ -4,11 +4,29 @@ from typing import TYPE_CHECKING
 import logging
 
 from oopnet.elements.system_operation import Curve, Pattern
-from oopnet.elements.system_operation import Energy, Control, Controlcondition, Action, Rule, Condition
-from oopnet.utils.getters import get_curve, get_pump, get_pattern, get_link, get_node, get_junction, get_link_ids, \
-    get_node_ids, get_curve_ids, get_pattern_ids
+from oopnet.elements.system_operation import (
+    Energy,
+    Control,
+    Controlcondition,
+    Action,
+    Rule,
+    Condition,
+)
+from oopnet.utils.getters import (
+    get_curve,
+    get_pump,
+    get_pattern,
+    get_link,
+    get_node,
+    get_junction,
+    get_link_ids,
+    get_node_ids,
+    get_curve_ids,
+    get_pattern_ids,
+)
 from oopnet.reader.decorators import section_reader
 from oopnet.utils.adders import add_curve, add_pattern, add_rule
+
 if TYPE_CHECKING:
     from oopnet.elements import Network
 
@@ -16,7 +34,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-@section_reader('CURVES', 0)
+@section_reader("CURVES", 0)
 def read_curves(network: Network, block: list):
     """Reads curves from block.
 
@@ -25,9 +43,9 @@ def read_curves(network: Network, block: list):
       block: EPANET input file block
 
     """
-    logger.debug('Reading Curves')
+    logger.debug("Reading Curves")
     for vals in block:
-        vals = vals['values']
+        vals = vals["values"]
         exists = False
 
         if vals[0] in get_curve_ids(network):
@@ -57,7 +75,7 @@ def read_curves(network: Network, block: list):
             add_curve(network, c)
 
 
-@section_reader('PATTERNS', 0)
+@section_reader("PATTERNS", 0)
 def read_patterns(network: Network, block: list):
     """Reads patterns from block.
 
@@ -66,10 +84,10 @@ def read_patterns(network: Network, block: list):
       block: EPANET input file block
 
     """
-    logger.debug('Reading Patterns')
+    logger.debug("Reading Patterns")
     for vals in block:
         m = None
-        vals = vals['values']
+        vals = vals["values"]
 
         exists = False
 
@@ -105,7 +123,7 @@ def read_patterns(network: Network, block: list):
             add_pattern(network, p)
 
 
-@section_reader('ENERGY', 3)
+@section_reader("ENERGY", 3)
 def read_energy(network: Network, block: list):
     """Reads energy from block.
 
@@ -114,32 +132,32 @@ def read_energy(network: Network, block: list):
       block: EPANET input file block
 
     """
-    logger.debug('Reading Energy')
+    logger.debug("Reading Energy")
     for vals in block:
-        vals = vals['values']
+        vals = vals["values"]
         e = Energy()
-        if vals[0].upper() == 'GLOBAL':
+        if vals[0].upper() == "GLOBAL":
             e.keyword = vals[0].upper()
-            param = 'EFFICIENCY' if 'EFF' in vals[1].upper() else vals[1].upper()
+            param = "EFFICIENCY" if "EFF" in vals[1].upper() else vals[1].upper()
             e.parameter = param
-            if e.parameter == 'PATTERN':
+            if e.parameter == "PATTERN":
                 p = get_pattern(network, vals[2])
                 e.value = p
             else:
                 e.value = float(vals[2])
-        elif vals[0].upper() == 'PUMP':
+        elif vals[0].upper() == "PUMP":
             e.keyword = vals[0].upper()
             e.pumpid = get_pump(network, vals[1])
-            param = 'EFFICIENCY' if 'EFF' in vals[2].upper() else vals[2].upper()
+            param = "EFFICIENCY" if "EFF" in vals[2].upper() else vals[2].upper()
             e.parameter = param
-            if e.parameter == 'PATTERN':
+            if e.parameter == "PATTERN":
                 e.value = get_pattern(network, vals[3])
-            elif e.parameter == 'EFFICIENCY':
+            elif e.parameter == "EFFICIENCY":
                 e.value = get_curve(network, vals[3])
             else:
                 e.value = float(vals[3])
-        elif vals[0].upper() == 'DEMAND' and vals[1].upper() == 'CHARGE':
-            e.keyword = 'DEMAND_CHARGE'
+        elif vals[0].upper() == "DEMAND" and vals[1].upper() == "CHARGE":
+            e.keyword = "DEMAND_CHARGE"
             e.value = float(vals[2])
         # todo: create add function
         if network.energies is None:
@@ -148,7 +166,7 @@ def read_energy(network: Network, block: list):
             network.energies.append(e)
 
 
-@section_reader('STATUS', 3)
+@section_reader("STATUS", 3)
 def read_status(network: Network, block: list):
     """Reads status information from block.
 
@@ -157,9 +175,9 @@ def read_status(network: Network, block: list):
       block: EPANET input file block
 
     """
-    logger.debug('Reading status section')
+    logger.debug("Reading status section")
     for vals in block:
-        vals = vals['values']
+        vals = vals["values"]
         l = get_link(network, vals[0])
         try:
             # todo: necessary? cast to roughness or equivalent possible?
@@ -168,7 +186,7 @@ def read_status(network: Network, block: list):
             l.status = vals[1].upper()
 
 
-@section_reader('CONTROLS', 3)
+@section_reader("CONTROLS", 3)
 def read_controls(network: Network, block: list):
     """Reads controls from block.
 
@@ -177,34 +195,47 @@ def read_controls(network: Network, block: list):
       block: EPANET input file block
 
     """
-    logger.debug('Reading Controls')
+    logger.debug("Reading Controls")
     for vals in block:
-        vals = vals['values']
+        vals = vals["values"]
         condition = Controlcondition()
-        if vals[2].upper() in ['OPEN', 'CLOSED']:
+        if vals[2].upper() in ["OPEN", "CLOSED"]:
             l = get_link(network, vals[1])
             action = Action(object=l, value=vals[2].upper())
         else:
             l = get_link(network, vals[1])
             action = Action(object=l, value=float(vals[2]))
-        if vals[3].upper() == 'IF':
+        if vals[3].upper() == "IF":
             n = get_node(network, vals[5])
-            condition = Controlcondition(object=n, relation=vals[6].upper(), value=float(vals[7]))
-        elif vals[3].upper() == 'AT':
-            if vals[4].upper() == 'TIME':
-                if ':' in vals[5]:
-                    dt = vals[5].split(':')
-                    condition = Controlcondition(time=datetime.timedelta(hours=float(dt[0]), minutes=float(dt[1])))
+            condition = Controlcondition(
+                object=n, relation=vals[6].upper(), value=float(vals[7])
+            )
+        elif vals[3].upper() == "AT":
+            if vals[4].upper() == "TIME":
+                if ":" in vals[5]:
+                    dt = vals[5].split(":")
+                    condition = Controlcondition(
+                        time=datetime.timedelta(
+                            hours=float(dt[0]), minutes=float(dt[1])
+                        )
+                    )
                 else:
-                    condition = Controlcondition(time=datetime.timedelta(hours=float(vals[5])))
-            elif vals[4].upper() == 'CLOCKTIME':
+                    condition = Controlcondition(
+                        time=datetime.timedelta(hours=float(vals[5]))
+                    )
+            elif vals[4].upper() == "CLOCKTIME":
                 if len(vals) == 6:
-                    timeformat = '%H:%M'
-                    condition = Controlcondition(clocktime=datetime.datetime.strptime(vals[5], timeformat))
+                    timeformat = "%H:%M"
+                    condition = Controlcondition(
+                        clocktime=datetime.datetime.strptime(vals[5], timeformat)
+                    )
                 elif len(vals) == 7:
-                    timeformat = '%I:%M%p' if ':' in vals[5] else '%I%p'
-                    condition = Controlcondition(clocktime=datetime.datetime.strptime(vals[5] + vals[6],
-                                                                                      timeformat))
+                    timeformat = "%I:%M%p" if ":" in vals[5] else "%I%p"
+                    condition = Controlcondition(
+                        clocktime=datetime.datetime.strptime(
+                            vals[5] + vals[6], timeformat
+                        )
+                    )
         c = Control(action=action, condition=condition)
         # todo: create adder function for controls
         if network.controls is None:
@@ -213,7 +244,7 @@ def read_controls(network: Network, block: list):
             network.controls.append(c)
 
 
-@section_reader('RULES', 3)
+@section_reader("RULES", 3)
 def read_rules(network: Network, block: list):
     """Reads rules from block.
 
@@ -222,13 +253,13 @@ def read_rules(network: Network, block: list):
       block: EPANET input file block
 
     """
-    logger.debug('Reading Rules')
+    logger.debug("Reading Rules")
     for vals in block:
-        vals = vals['values']
-        if vals[0].upper() == 'RULE':
+        vals = vals["values"]
+        if vals[0].upper() == "RULE":
             r = Rule(id=vals[1])
             add_rule(network, r)
-        elif vals[0].upper() == 'PRIORITY':
+        elif vals[0].upper() == "PRIORITY":
             r.priority = float(vals[1])
         else:
             ac = Condition(logical=vals[0].upper())
@@ -250,23 +281,27 @@ def read_rules(network: Network, block: list):
                     ac.value = float(vals[5])
                 except:
                     ac.value = vals[5].upper()
-            elif vals[1].upper() == 'SYSTEM':
-                ac.object = 'SYSTEM'
+            elif vals[1].upper() == "SYSTEM":
+                ac.object = "SYSTEM"
                 ac.attribute = vals[2].upper()
                 ac.relation = vals[3].upper()
-                if ac.attribute == 'TIME':
-                    if ':' in vals[4]:
-                        dt = vals[4].split(':')
-                        ac.value = datetime.timedelta(hours=float(dt[0]), minutes=float(dt[1]))
+                if ac.attribute == "TIME":
+                    if ":" in vals[4]:
+                        dt = vals[4].split(":")
+                        ac.value = datetime.timedelta(
+                            hours=float(dt[0]), minutes=float(dt[1])
+                        )
                     else:
                         ac.value = datetime.timedelta(hours=float(vals[4]))
-                elif ac.attribute == 'CLOCKTIME':
+                elif ac.attribute == "CLOCKTIME":
                     if len(vals) == 5:
-                        timeformat = '%H:%M' if ':' in vals[4] else '%H'
+                        timeformat = "%H:%M" if ":" in vals[4] else "%H"
                         ac.value = datetime.datetime.strptime(vals[4], timeformat)
                     if len(vals) == 6:
-                        timeformat = '%I:%M%p' if ':' in vals[4] else '%I%p'
-                        ac.value = datetime.datetime.strptime(vals[4] + vals[5], timeformat)
+                        timeformat = "%I:%M%p" if ":" in vals[4] else "%I%p"
+                        ac.value = datetime.datetime.strptime(
+                            vals[4] + vals[5], timeformat
+                        )
                 else:
                     try:
                         ac.value = float(vals[4])
@@ -279,7 +314,7 @@ def read_rules(network: Network, block: list):
                 r.condition.append(ac)
 
 
-@section_reader('DEMANDS', 2)
+@section_reader("DEMANDS", 2)
 def read_demands(network: Network, block: list):
     """Reads demands from block.
 
@@ -288,16 +323,12 @@ def read_demands(network: Network, block: list):
       block: EPANET input file block
 
     """
-    logger.debug('Reading demand section')
+    logger.debug("Reading demand section")
     for vals in block:
-        vals = vals['values']
+        vals = vals["values"]
         j = get_junction(network, vals[0])
         if len(vals) > 1:
-            if (
-                not j.demand
-                and isinstance(j.demand, float)
-                and abs(j.demand) > 0.0
-            ):
+            if not j.demand and isinstance(j.demand, float) and abs(j.demand) > 0.0:
                 j.demand = [j.demand, float(vals[1])]
             elif not j.demand and isinstance(j.demand, float) or j.demand:
                 j.demand = float(vals[1])

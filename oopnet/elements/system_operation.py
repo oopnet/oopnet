@@ -15,6 +15,7 @@ if TYPE_CHECKING:
 @dataclass
 class Curve(NetworkComponent):
     """Defines data curves and their X,Y points."""
+
     xvalues: list[float] = field(default_factory=list)
     yvalues: list[float] = field(default_factory=list)
 
@@ -25,9 +26,11 @@ class Curve(NetworkComponent):
             self._rename(id=id, hashtable=self._network._curves)
         self._id = id
 
+
 @dataclass
 class Pattern(NetworkComponent):
     """Defines time patterns."""
+
     multipliers: list[float] = field(default_factory=list)
 
     @NetworkComponent.id.setter
@@ -44,25 +47,37 @@ class Energy:
     """Defines parameters used to compute pumping energy and cost."""
 
     keyword: Optional[str] = None  # = Enum('GLOBAL', 'PUMP', 'DEMAND CHARGE')
-    pumpid: Optional[str] = None  # = Instance(NetworkComponent)  # ToDo: pipeid self referencing on pump class instead of NetworkComponent
-    parameter: Optional[str] = None  # = Either(None, Enum('PRICE', 'EFFIC', 'PATTERN', 'EFFICIENCY'))
-    value: Union[float, Pattern, Curve] = None  # = Either(Float, Instance(Pattern), Instance(Curve))
+    pumpid: Optional[
+        str
+    ] = None  # = Instance(NetworkComponent)  # ToDo: pipeid self referencing on pump class instead of NetworkComponent
+    parameter: Optional[
+        str
+    ] = None  # = Either(None, Enum('PRICE', 'EFFIC', 'PATTERN', 'EFFICIENCY'))
+    value: Union[
+        float, Pattern, Curve
+    ] = None  # = Either(Float, Instance(Pattern), Instance(Curve))
 
 
 @dataclass
 class Condition:
     """A condition clause in a rule-based control"""
+
     object: Union[Link, Node] = None
-    logical: Optional[str] = None # = Either('IF', 'AND', 'OR', 'THEN', 'ELSE')
-    attribute: str = None # = Enum('DEMAND', 'HEAD', 'PRESSURE', 'LEVEL', 'FILLTIME', 'DRAINTIME', 'FLOW', 'STATUS', 'SETTING',
-                   #    'TIME', 'CLOCKTIME')
-    relation: str = None  #  = Enum('=', '<>', '<', '>', '<=', '>=', 'IS', 'NOT', 'BELOW', 'ABOVE')
-    value: Union[float, str, datetime.datetime, datetime.timedelta] = None  # = Either(Float, Enum('OPEN', 'CLOSED'), Instance(datetime.datetime), Instance(datetime.timedelta))
+    logical: Optional[str] = None  # = Either('IF', 'AND', 'OR', 'THEN', 'ELSE')
+    attribute: str = None  # = Enum('DEMAND', 'HEAD', 'PRESSURE', 'LEVEL', 'FILLTIME', 'DRAINTIME', 'FLOW', 'STATUS', 'SETTING',
+    #    'TIME', 'CLOCKTIME')
+    relation: str = (
+        None  #  = Enum('=', '<>', '<', '>', '<=', '>=', 'IS', 'NOT', 'BELOW', 'ABOVE')
+    )
+    value: Union[
+        float, str, datetime.datetime, datetime.timedelta
+    ] = None  # = Either(Float, Enum('OPEN', 'CLOSED'), Instance(datetime.datetime), Instance(datetime.timedelta))
 
 
 @dataclass
 class Action:
     """An action clause in a rule-based control"""
+
     object: Union[Node, Link, str] = None  # = Either(NetworkComponent, 'SYSTEM')
     value: Union[float, str] = None  # = Either(Float, Enum('OPEN', 'CLOSED'))
 
@@ -70,14 +85,18 @@ class Action:
 @dataclass
 class Rule:
     """Defines rule-based controls that modify links based on a combination of conditions."""
+
     id: str
-    condition: Union[Condition, list[Condition]] = None  # = Either(Instance(Condition), List(Instance(Condition)))
+    condition: Union[
+        Condition, list[Condition]
+    ] = None  # = Either(Instance(Condition), List(Instance(Condition)))
     priority: float = None
 
 
 @dataclass
 class Controlcondition:
     """ """
+
     # ToDo: object attribute should be either instance of Node instead of Network Component
     object: Optional[NetworkComponent] = None
     # __object = Instance(Node)
@@ -90,5 +109,6 @@ class Controlcondition:
 @dataclass
 class Control:
     """Defines simple controls that modifiy links based on a single condition."""
+
     action: Action = None
     condition: Controlcondition = None

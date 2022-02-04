@@ -15,8 +15,20 @@ from oopnet.plotter.pyplot import Plotsimulation as PyPlot
 from oopnet.plotter.bokehplot import Plotsimulation as BokehPlot
 from oopnet.simulator.epanet2 import ModelSimulator
 from oopnet.elements.water_quality import Reaction
-from oopnet.elements.options_and_reporting import Options, Times, Report, Reportparameter, Reportprecision
-from oopnet.elements.component_registry import ComponentRegistry, SuperComponentRegistry, NodeRegistry, LinkRegistry
+from oopnet.elements.options_and_reporting import (
+    Options,
+    Times,
+    Report,
+    Reportparameter,
+    Reportprecision,
+)
+from oopnet.elements.component_registry import (
+    ComponentRegistry,
+    SuperComponentRegistry,
+    NodeRegistry,
+    LinkRegistry,
+)
+
 if TYPE_CHECKING:
     from oopnet.elements.system_operation import Energy, Control, Rule, Curve, Pattern
     from oopnet.elements.network_map_tags import Vertex, Label, Backdrop
@@ -26,9 +38,9 @@ if TYPE_CHECKING:
 @dataclass
 class Network:
     """EPANET hydraulic model representation.
-    
+
     An OOPNET Network object contains all the information stored in an EPANET input file. This ranges from physical
-    components like Junctions, Tanks or Pipes to non-physical components like Patterns, Curves or Controls. 
+    components like Junctions, Tanks or Pipes to non-physical components like Patterns, Curves or Controls.
     Furthermore, model settings and report parameter settings/precision settings are incorporated as well.
 
     Attributes:
@@ -56,6 +68,7 @@ class Network:
       _patterns: List of all Pattern objects belonging to the network
 
     """
+
     title: Optional[str] = None
     vertices: dict[str, Vertex] = field(default_factory=dict)
     labels: dict[str, Label] = field(default_factory=dict)
@@ -99,8 +112,14 @@ class Network:
         """
         return write(self, filename)
 
-    def run(self, filename: Optional[str] = None, delete: bool = True, path: Optional[str] = None,
-            startdatetime: Optional[datetime] = None, output: bool = False) -> SimulationReport:
+    def run(
+        self,
+        filename: Optional[str] = None,
+        delete: bool = True,
+        path: Optional[str] = None,
+        startdatetime: Optional[datetime] = None,
+        output: bool = False,
+    ) -> SimulationReport:
         """Runs an EPANET simulation by calling command line EPANET
 
         Attributes:
@@ -112,14 +131,29 @@ class Network:
           OOPNET report object
 
         """
-        sim = ModelSimulator(thing=self, filename=filename, delete=delete, path=path, startdatetime=startdatetime,
-                             output=output)
+        sim = ModelSimulator(
+            thing=self,
+            filename=filename,
+            delete=delete,
+            path=path,
+            startdatetime=startdatetime,
+            output=output,
+        )
         return sim.run()
 
-    def plot(self, fignum: Optional[int] = None, nodes: Optional[pd.Series] = None,
-             links: Optional[pd.Series] = None, colorbar: Union[bool, dict] = True,
-             colormap: Union[str, dict] = 'viridis', ax: Optional[Axes] = None,
-             markersize: float = 8.0, robust: bool = False, vlim=None, nodetruncate=None) -> PyPlotFigure:
+    def plot(
+        self,
+        fignum: Optional[int] = None,
+        nodes: Optional[pd.Series] = None,
+        links: Optional[pd.Series] = None,
+        colorbar: Union[bool, dict] = True,
+        colormap: Union[str, dict] = "viridis",
+        ax: Optional[Axes] = None,
+        markersize: float = 8.0,
+        robust: bool = False,
+        vlim=None,
+        nodetruncate=None,
+    ) -> PyPlotFigure:
         """Plots the Network with simulation results as a network plot with Matplotlib.
 
         Symbols for Nodes: Junctions are plotted as circles, Reservoirs as diamonds, Tanks as squares.
@@ -142,10 +176,23 @@ class Network:
           Matplotlib's figure handle
 
         """
-        return PyPlot(self, fignum=fignum, nodes=nodes, links=links, colorbar=colorbar, colormap=colormap,
-                      ax=ax, markersize=markersize, robust=robust, vlim=vlim, nodetruncate=nodetruncate)
+        return PyPlot(
+            self,
+            fignum=fignum,
+            nodes=nodes,
+            links=links,
+            colorbar=colorbar,
+            colormap=colormap,
+            ax=ax,
+            markersize=markersize,
+            robust=robust,
+            vlim=vlim,
+            nodetruncate=nodetruncate,
+        )
 
-    def bokehplot(self, tools=None, links=None, nodes=None, colormap='jet') -> BokehFigure:
+    def bokehplot(
+        self, tools=None, links=None, nodes=None, colormap="jet"
+    ) -> BokehFigure:
         """Plots the Network with simulation results as a network plot with Bokehplot.
 
         Symbols for Nodes: Junctions are plotted as circles, Reservoirs as diamonds, Tanks as squares.

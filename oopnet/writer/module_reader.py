@@ -14,7 +14,11 @@ def pred(c: Type[Callable]) -> bool:
     Returns:
         Returns True if the class or function is decorated with section_writer and False otherwise.
     """
-    return inspect.isfunction(c) and hasattr(c, 'decorator') and c.decorator == section_writer
+    return (
+        inspect.isfunction(c)
+        and hasattr(c, "decorator")
+        and c.decorator == section_writer
+    )
 
 
 def list_section_writer_callables(modules):
@@ -31,9 +35,11 @@ def list_section_writer_callables(modules):
     for module in modules:
         funcs = inspect.getmembers(module, pred)
         for f in funcs:
-            r = WriterDecorator(sectionname=f[1].decorator_args[0],
-                                functionname=f[0],
-                                priority=f[1].decorator_args[1],
-                                writerfunction=f[1])
+            r = WriterDecorator(
+                sectionname=f[1].decorator_args[0],
+                functionname=f[0],
+                priority=f[1].decorator_args[1],
+                writerfunction=f[1],
+            )
             all_functions.append(r)
     return all_functions

@@ -6,6 +6,7 @@ from copy import deepcopy
 import numpy as np
 
 from oopnet.elements.base import NetworkComponent
+
 if TYPE_CHECKING:
     from oopnet.elements.system_operation import Pattern, Curve
     from oopnet.elements.network_map_tags import Vertex
@@ -26,6 +27,7 @@ class Node(NetworkComponent):
       sourcepattern: Time Pattern object of source
 
     """
+
     xcoordinate: float = 0.0
     ycoordinate: float = 0.0
     elevation: float = 0.0
@@ -56,9 +58,10 @@ class Link(NetworkComponent):
       status: Current status of the Link (OPEN, CLOSED, CV or ACTIVE)
 
     """
+
     startnode: Optional[Node] = None
     endnode: Optional[Node] = None
-    status: str = 'OPEN'
+    status: str = "OPEN"
     vertices: list[Vertex] = field(default_factory=list)
 
     @property
@@ -69,8 +72,11 @@ class Link(NetworkComponent):
     @property
     def coordinates_2d(self) -> np.ndarray:
         """Property returning start and end node coordinates with the vertices in between them"""
-        return np.asarray([self.startnode.coordinates[:2]] + [v.coordinates for v in self.vertices] +
-                          [self.endnode.coordinates[:2]])
+        return np.asarray(
+            [self.startnode.coordinates[:2]]
+            + [v.coordinates for v in self.vertices]
+            + [self.endnode.coordinates[:2]]
+        )
 
     def revert(self):
         """Switches the link's start and end nodes and it's vertices."""
@@ -97,7 +103,7 @@ class Junction(Node):
     def id(self, id: str):
         """Sets ID of NetworkComponent and replaces key in network hash"""
         if self._network:
-            self._rename(id=id, hashtable=self._network._nodes['junctions'])
+            self._rename(id=id, hashtable=self._network._nodes["junctions"])
         self._id = id
 
 
@@ -111,14 +117,17 @@ class Reservoir(Node):
       mixingmodel: The type of water quality mixing that occurs within the tank. The choices include MIXED (fully mixed), 2COMP (two-compartment mixing), FIFO (first-in-first-out plug flow) and LIFO (last-in-first-out plug flow).
 
     """
+
     head: float = 0.0  # = Either(None, Float, ListFloat)
-    headpattern: Optional[Pattern] = None  # = Either(None, Instance(Pattern), List(Instance(Pattern)))
+    headpattern: Optional[
+        Pattern
+    ] = None  # = Either(None, Instance(Pattern), List(Instance(Pattern)))
 
     @NetworkComponent.id.setter
     def id(self, id: str):
         """Sets ID of NetworkComponent and replaces key in network hash"""
         if self._network:
-            self._rename(id=id, hashtable=self._network._nodes['reservoirs'])
+            self._rename(id=id, hashtable=self._network._nodes["reservoirs"])
         self._id = id
 
 
@@ -138,6 +147,7 @@ class Tank(Node):
       mixingmodel: The type of water quality mixing that occurs within the tank. The choices include MIXED (fully mixed), 2COMP (two-compartment mixing), FIFO (first-in-first-out plug flow) and LIFO (last-in-first-out plug flow).
 
     """
+
     initlevel: float = 10.0
     minlevel: float = 0.0
     maxlevel: float = 20.0
@@ -146,13 +156,13 @@ class Tank(Node):
     volumecurve: Optional[Curve] = None
     compartmentvolume: Optional[float] = None
     reactiontank: Optional[float] = None
-    mixingmodel: str = 'MIXED'  # = Enum('MIXED', '2COMP', 'FIFO', 'LIFO')
+    mixingmodel: str = "MIXED"  # = Enum('MIXED', '2COMP', 'FIFO', 'LIFO')
 
     @NetworkComponent.id.setter
     def id(self, id: str):
         """Sets ID of NetworkComponent and replaces key in network hash"""
         if self._network:
-            self._rename(id=id, hashtable=self._network._nodes['tanks'])
+            self._rename(id=id, hashtable=self._network._nodes["tanks"])
         self._id = id
 
 
@@ -169,6 +179,7 @@ class Pipe(Link):
       reactionwall: The wall reaction coefficient for the pipe. Time units are 1/days. Use a positive value for growth and a negative value for decay. Leave blank if the Global Wall reaction coefficient from the project's Reactions Options will apply. See Water Quality Reactions in the 'EPANET manual Section 3.4<https://epanet22.readthedocs.io/en/latest/3_network_model.html#water-quality-simulation-model>' for moreinformation.
 
     """
+
     length: float = 1000.0
     diameter: float = 12.0
     roughness: float = 100.0
@@ -180,10 +191,12 @@ class Pipe(Link):
     def id(self, id: str):
         """Sets ID of NetworkComponent and replaces key in network hash"""
         if self._network:
-            self._rename(id=id, hashtable=self._network._links['pipes'])
+            self._rename(id=id, hashtable=self._network._links["pipes"])
         self._id = id
 
-    def split(self, junction_id: str = None, pipe_id: str = None, split_ratio: float = 0.5) -> tuple[Junction, Pipe]:
+    def split(
+        self, junction_id: str = None, pipe_id: str = None, split_ratio: float = 0.5
+    ) -> tuple[Junction, Pipe]:
         """Splits the pipe into two parts with respective lengths based on the passed split_ratio.
 
         Creates a new Junction with the ID junction_id and a new Pipe with identical Pipe attributes except for
@@ -208,7 +221,7 @@ class Pipe(Link):
 
         def create_id(old_id: str, id_list: list[str]) -> str:
             for i in range(1_000):
-                new_id = f'{old_id}_{i}'
+                new_id = f"{old_id}_{i}"
                 if new_id not in id_list:
                     return new_id
             return create_id(new_id, id_list)
@@ -239,9 +252,10 @@ class Pump(Link):
     Attributes:
       keyword: Can either be POWER (power value for constant energy pump, hp (kW)), HEAD (ID of curve that describeshead versus flow for the pump), SPEED (relative speed setting (normal speed is 1.0, 0 means pump is off)),PATTERN(ID of time pattern that describes how speed setting varies with time). Either POWER or HEAD must be supplied for each pump. The other keywords are optional.
       value: Value according to the keyword attribute
-      status: 
+      status:
 
     """
+
     power: Optional[float] = None
     head: Optional[Curve] = None
     speed: float = 1.0
@@ -252,7 +266,7 @@ class Pump(Link):
     def id(self, id: str):
         """Sets ID of NetworkComponent and replaces key in network hash"""
         if self._network:
-            self._rename(id=id, hashtable=self._network._links['pumps'])
+            self._rename(id=id, hashtable=self._network._links["pumps"])
         self._id = id
 
 
@@ -267,6 +281,7 @@ class Valve(Link):
       setting: Setting value depending on valvetype.
 
     """
+
     diameter: float = 12.0
     minorloss: float = 0.0
     setting: Union[float] = 0.0
@@ -275,7 +290,7 @@ class Valve(Link):
     def id(self, id: str):
         """Sets ID of NetworkComponent and replaces key in network hash"""
         if self._network:
-            self._rename(id=id, hashtable=self._network._links['valves'])
+            self._rename(id=id, hashtable=self._network._links["valves"])
         self._id = id
 
 
@@ -283,40 +298,41 @@ class Valve(Link):
 class PRV(Valve):
     """Pressure Reducing Valve.
 
-     Attributes:
-         setting: pressure limit
+    Attributes:
+        setting: pressure limit
 
-     """
+    """
 
 
 @dataclass
 class TCV(Valve):
     """Throttle Control Valve.
 
-     Attributes:
-         setting: head loss coefficient
+    Attributes:
+        setting: head loss coefficient
 
-     """
+    """
 
 
 @dataclass
 class PSV(Valve):
     """Pressure Sustaining Valve.
 
-     Attributes:
-         setting: pressure limit at upstream setting
+    Attributes:
+        setting: pressure limit at upstream setting
 
-     """
+    """
 
 
 @dataclass
 class GPV(Valve):
     """General Purpose Valve.
 
-     Attributes:
-         setting: Curve representing flow-head loss relationship
+    Attributes:
+        setting: Curve representing flow-head loss relationship
 
-     """
+    """
+
     setting: Optional[Curve] = None
 
 
@@ -324,17 +340,17 @@ class GPV(Valve):
 class PBV(Valve):
     """Pressure Breaker Valve.
 
-     Attributes:
-         setting: pressure drop
+    Attributes:
+        setting: pressure drop
 
-     """
+    """
 
 
 @dataclass
 class FCV(Valve):
     """Flow Control Valve.
 
-     Attributes:
-         setting: maximum allow flow
+    Attributes:
+        setting: maximum allow flow
 
-     """
+    """

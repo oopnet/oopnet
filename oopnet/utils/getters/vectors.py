@@ -5,7 +5,14 @@ import numpy as np
 
 if TYPE_CHECKING:
     from oopnet.elements.network import Network
-from oopnet.utils.getters.element_lists import get_pipes, get_junctions, get_nodes, get_tanks, get_reservoirs, get_valves
+from oopnet.utils.getters.element_lists import (
+    get_pipes,
+    get_junctions,
+    get_nodes,
+    get_tanks,
+    get_reservoirs,
+    get_valves,
+)
 
 
 def v_length(network: Network) -> np.array:
@@ -175,6 +182,7 @@ def v_minvolume(network: Network) -> np.array:
 
     """
     return np.asarray([x.minvolume for x in get_tanks(network)])
+
 
 # todo: remove
 # if __name__ == '__main__':

@@ -6,8 +6,16 @@ import matplotlib.cm as cmx
 from matplotlib import pyplot as plt
 import matplotlib.colors as colors
 
-from oopnet.utils.getters import get_link_ids, get_node_ids, get_junctions, get_tanks, get_reservoirs, get_pipes, \
-    get_pumps, get_valves
+from oopnet.utils.getters import (
+    get_link_ids,
+    get_node_ids,
+    get_junctions,
+    get_tanks,
+    get_reservoirs,
+    get_pipes,
+    get_pumps,
+    get_valves,
+)
 
 
 # todo: refactor
@@ -15,22 +23,22 @@ def convert_to_hex(rgba_color):
     """
 
     Args:
-      rgba_color: 
+      rgba_color:
 
     Returns:
 
     """
-    red = int(rgba_color[0]*255)
-    green = int(rgba_color[1]*255)
-    blue = int(rgba_color[2]*255)
-    return '#{r:02x}{g:02x}{b:02x}'.format(r=red, g=green, b=blue)
+    red = int(rgba_color[0] * 255)
+    green = int(rgba_color[1] * 255)
+    blue = int(rgba_color[2] * 255)
+    return "#{r:02x}{g:02x}{b:02x}".format(r=red, g=green, b=blue)
 
 
-def colorfun(series, colormap='jet'):
+def colorfun(series, colormap="jet"):
     """
 
     Args:
-      series: 
+      series:
       colormap:  (Default value = 'jet')
 
     Returns:
@@ -49,8 +57,8 @@ def outsidelist(element, colorhash):
     """
 
     Args:
-      element: 
-      colorhash: 
+      element:
+      colorhash:
 
     Returns:
 
@@ -58,16 +66,16 @@ def outsidelist(element, colorhash):
     if element in colorhash:
         return colorhash[element]
     else:
-        return 'k'
+        return "k"
 
 
-def plotnode(f, elements, colors, marker='o'):
+def plotnode(f, elements, colors, marker="o"):
     """
 
     Args:
-      f: 
-      elements: 
-      colors: 
+      f:
+      elements:
+      colors:
       marker:  (Default value = 'o')
 
     Returns:
@@ -77,21 +85,21 @@ def plotnode(f, elements, colors, marker='o'):
     y = [x.ycoordinate for x in elements]
     c = [outsidelist(x.id, colors) for x in elements]
     c = [convert_to_hex(x) for x in c]
-    if marker == 'o':
+    if marker == "o":
         f.circle(x, y, color=c, size=8.0)
-    if marker == 's':
+    if marker == "s":
         f.square(x, y, color=c, size=8.0)
-    if marker == 'D':
-        f.square(x, y, color=c, size=8.0, angle=np.pi/4)
+    if marker == "D":
+        f.square(x, y, color=c, size=8.0, angle=np.pi / 4)
 
 
-def plotlink(f, elements, colors, marker='o'):
+def plotlink(f, elements, colors, marker="o"):
     """
 
     Args:
-      f: 
-      elements: 
-      colors: 
+      f:
+      elements:
+      colors:
       marker:  (Default value = 'o')
 
     Returns:
@@ -111,17 +119,17 @@ def plotlink(f, elements, colors, marker='o'):
 
     f.segment(x0=xs, x1=xe, y0=ys, y1=ye, color=c, line_width=2.0)
 
-    if marker == 'v':
+    if marker == "v":
         f.triangle(x, y, color=c, size=8.0)
-    if marker == 'p':
+    if marker == "p":
         f.inverted_triangle(x, y, color=c, size=8.0)
 
 
 class Plotsimulation:
     """This function plots OOPNET networks with simulation results as a network plot with Bokehplot.
-    
+
     Symbols for Nodes: Junctions are plotted as circles, Reservoirs as diamonds, Tanks as squares.
-    
+
     Symbols for Links: Pipes are plotted as lines with no markers, Valves are plotted as lines with triangulars standing on their top in the middle, Pumps are plotted as lines with triangulars standing on an edge
 
     Args:
@@ -135,33 +143,37 @@ class Plotsimulation:
       Bokehplot's figure handle
 
     """
-    def __new__(self, network, tools=None, links=None, nodes=None, colormap='jet'):
+
+    def __new__(self, network, tools=None, links=None, nodes=None, colormap="jet"):
 
         if isinstance(colormap, str):
             n_cmap = plt.get_cmap(colormap)
             l_cmap = plt.get_cmap(colormap)
-        elif isinstance(colormap, colors.LinearSegmentedColormap) or \
-                isinstance(colormap, colors.ListedColormap):
+        elif isinstance(colormap, colors.LinearSegmentedColormap) or isinstance(
+            colormap, colors.ListedColormap
+        ):
             n_cmap = colormap
             l_cmap = colormap
         elif isinstance(colormap, dict):
-            if 'node' in colormap:
-                if isinstance(colormap['node'], str):
-                    n_cmap = plt.get_cmap(colormap['node'])
-                elif isinstance(colormap['node'], colors.LinearSegmentedColormap) or \
-                        isinstance(colormap['node'], colors.ListedColormap):
-                    n_cmap = colormap['node']
+            if "node" in colormap:
+                if isinstance(colormap["node"], str):
+                    n_cmap = plt.get_cmap(colormap["node"])
+                elif isinstance(
+                    colormap["node"], colors.LinearSegmentedColormap
+                ) or isinstance(colormap["node"], colors.ListedColormap):
+                    n_cmap = colormap["node"]
             else:
-                n_cmap = plt.get_cmap('jet')
+                n_cmap = plt.get_cmap("jet")
 
-            if 'link' in colormap:
-                if isinstance(colormap['link'], str):
-                    l_cmap = plt.get_cmap(colormap['link'])
-                elif isinstance(colormap['link'], colors.LinearSegmentedColormap) or \
-                        isinstance(colormap['link'], colors.ListedColormap):
-                    l_cmap = colormap['link']
+            if "link" in colormap:
+                if isinstance(colormap["link"], str):
+                    l_cmap = plt.get_cmap(colormap["link"])
+                elif isinstance(
+                    colormap["link"], colors.LinearSegmentedColormap
+                ) or isinstance(colormap["link"], colors.ListedColormap):
+                    l_cmap = colormap["link"]
             else:
-                l_cmap = plt.get_cmap('jet')
+                l_cmap = plt.get_cmap("jet")
 
         if tools:
             f = figure(tools=tools)
@@ -171,35 +183,39 @@ class Plotsimulation:
         # Links
         if links is None:
             linklist = get_link_ids(network)
-            linkcolors = pd.Series(['k'] * len(linklist), index=linklist)
+            linkcolors = pd.Series(["k"] * len(linklist), index=linklist)
 
         else:
-            cnorm = colors.Normalize(vmin=np.nanmin(links.values), vmax=np.nanmax(links.values))
+            cnorm = colors.Normalize(
+                vmin=np.nanmin(links.values), vmax=np.nanmax(links.values)
+            )
             scalar_map = cmx.ScalarMappable(norm=cnorm, cmap=l_cmap)
             scalar_map._A = []
             linkcolors = links.apply(scalar_map.to_rgba)
 
         plotlink(f, get_pipes(network), linkcolors, marker=None)
 
-        plotlink(f, get_valves(network), linkcolors, marker='v')
+        plotlink(f, get_valves(network), linkcolors, marker="v")
 
-        plotlink(f, get_pumps(network), linkcolors, marker='p')
+        plotlink(f, get_pumps(network), linkcolors, marker="p")
 
         # Nodes
         if nodes is None:
             nodelist = get_node_ids(network)
-            nodecolors = pd.Series(['k'] * len(nodelist), index=nodelist)
+            nodecolors = pd.Series(["k"] * len(nodelist), index=nodelist)
         else:
-            cnorm = colors.Normalize(vmin=np.nanmin(nodes.values), vmax=np.nanmax(nodes.values))
+            cnorm = colors.Normalize(
+                vmin=np.nanmin(nodes.values), vmax=np.nanmax(nodes.values)
+            )
             scalar_map = cmx.ScalarMappable(norm=cnorm, cmap=n_cmap)
             scalar_map._A = []
             nodecolors = nodes.apply(scalar_map.to_rgba)
 
-        plotnode(f, get_junctions(network), nodecolors, marker='o')
+        plotnode(f, get_junctions(network), nodecolors, marker="o")
 
-        plotnode(f, get_tanks(network), nodecolors, marker='s')
+        plotnode(f, get_tanks(network), nodecolors, marker="s")
 
-        plotnode(f, get_reservoirs(network), nodecolors, marker='D')
+        plotnode(f, get_reservoirs(network), nodecolors, marker="D")
 
         f.axis.visible = False
         return f

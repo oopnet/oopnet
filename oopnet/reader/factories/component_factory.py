@@ -8,16 +8,18 @@ from oopnet.elements.network_components import Node
 from oopnet.elements.system_operation import Pattern, Curve
 from oopnet.utils.getters.get_by_id import get_pattern, get_curve, get_node
 from oopnet.reader.factories.base import ReadFactory
+
 if TYPE_CHECKING:
     from oopnet.elements.network import Network
 
 
 class ComponentFactory(ReadFactory):
     """Base Factory for creating NetworkComponents and adding them to a Network."""
+
     @staticmethod
     def _read_comment(values: dict) -> str:
         """Reads comment from values."""
-        return values['comments'] or None
+        return values["comments"] or None
 
     @classmethod
     @abstractmethod
@@ -30,7 +32,9 @@ class ComponentFactory(ReadFactory):
         """
 
     @staticmethod
-    def _create_attr_dict(attrs: list[str], values: list[str], cls_list: list, network: Network) -> dict:
+    def _create_attr_dict(
+        attrs: list[str], values: list[str], cls_list: list, network: Network
+    ) -> dict:
         """Creates a dictionary for instantiating a NetworkComponent object.
 
         Creates a dictionary that can then be unpacked when instantiating a NetworkComponent object. The function casts
@@ -58,7 +62,7 @@ class ComponentFactory(ReadFactory):
             elif attr_cls == Node:
                 value = get_node(network, value)
                 attr_dict[attr] = value
-            elif attr_cls == str and attr != 'id':
+            elif attr_cls == str and attr != "id":
                 attr_dict[attr] = attr_cls(value.upper())
             else:
                 attr_dict[attr] = attr_cls(value)

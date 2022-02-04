@@ -11,9 +11,15 @@ class WriterDecorator:
         writerfunction:
 
     """
+
     # todo: do None defaults make sense here?
-    def __init__(self, sectionname: Optional[str] = None, functionname: Optional[str] = None,
-                 priority: Optional[int] = None, writerfunction: Optional[Callable] = None):
+    def __init__(
+        self,
+        sectionname: Optional[str] = None,
+        functionname: Optional[str] = None,
+        priority: Optional[int] = None,
+        writerfunction: Optional[Callable] = None,
+    ):
         self.sectionname = sectionname
         self.functionname = functionname
         self.priority = priority
@@ -24,7 +30,7 @@ def make_registering_decorator_factory(foreign_decorator_factory):
     """
 
     Args:
-      foreign_decorator_factory: 
+      foreign_decorator_factory:
 
     Returns:
 
@@ -34,8 +40,8 @@ def make_registering_decorator_factory(foreign_decorator_factory):
         """
 
         Args:
-          *args: 
-          **kw: 
+          *args:
+          **kw:
 
         Returns:
 
@@ -46,7 +52,7 @@ def make_registering_decorator_factory(foreign_decorator_factory):
             """
 
             Args:
-              func: 
+              func:
 
             Returns:
 
@@ -79,7 +85,7 @@ def section_writer(title: str, priority: int):
         """
 
         Args:
-          f: 
+          f:
 
         Returns:
 
@@ -89,8 +95,8 @@ def section_writer(title: str, priority: int):
             """
 
             Args:
-              *args: 
-              **kw: 
+              *args:
+              **kw:
 
             Returns:
 
@@ -100,5 +106,6 @@ def section_writer(title: str, priority: int):
         return new_function
 
     return wrap
+
 
 section_writer = make_registering_decorator_factory(section_writer)

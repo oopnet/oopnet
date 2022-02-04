@@ -19,11 +19,18 @@ class SimulationReport:
         nodes: Node results
         links: Link results
     """
+
     nodes: DataArray
     links: DataArray
 
-    def __init__(self, filename: str, startdatetime: Optional[datetime.datetime] = None,
-                 reader: Union[Type[BinaryFileReader], Type[ReportFileReader]] = ReportFileReader):
+    def __init__(
+        self,
+        filename: str,
+        startdatetime: Optional[datetime.datetime] = None,
+        reader: Union[
+            Type[BinaryFileReader], Type[ReportFileReader]
+        ] = ReportFileReader,
+    ):
         """SimulationReport init method.
 
         Args:
@@ -32,15 +39,20 @@ class SimulationReport:
             reader: specifies whether the report or the binary file created by EPANET are read
 
         """
-        logger.debug('Creating report.')
+        logger.debug("Creating report.")
         self.nodes, self.links = reader(filename, startdatetime)
 
     @staticmethod
-    def _get(array: DataArray, var: str, unit: Optional[str] = None, calc: Optional[Callable] = None):
+    def _get(
+        array: DataArray,
+        var: str,
+        unit: Optional[str] = None,
+        calc: Optional[Callable] = None,
+    ):
         data = array.sel(vars=var).to_pandas()
         if calc:
             data = calc(data)
-        data.name = f'{var} ({unit})' if unit else var
+        data.name = f"{var} ({unit})" if unit else var
         return data
 
     @staticmethod
@@ -57,7 +69,7 @@ class SimulationReport:
           Pandas Series containing the elevations of the Nodes
 
         """
-        return self._get(self.nodes, 'Elevation',  'm')
+        return self._get(self.nodes, "Elevation", "m")
 
     @property
     def demand(self) -> pd.Series:
@@ -67,7 +79,7 @@ class SimulationReport:
           Pandas Series containing the demands of the Nodes
 
         """
-        return self._get(self.nodes, 'Demand', 'l/s')
+        return self._get(self.nodes, "Demand", "l/s")
 
     @property
     def head(self) -> pd.Series:
@@ -77,7 +89,7 @@ class SimulationReport:
           Pandas Series containing the heads of the Nodes
 
         """
-        return self._get(self.nodes, 'Head', 'm')
+        return self._get(self.nodes, "Head", "m")
 
     @property
     def pressure(self) -> pd.Series:
@@ -87,7 +99,7 @@ class SimulationReport:
           Pandas Series containing the pressures of the Nodes
 
         """
-        return self._get(self.nodes, 'Pressure', 'm')
+        return self._get(self.nodes, "Pressure", "m")
 
     @property
     def quality(self) -> pd.Series:
@@ -97,7 +109,7 @@ class SimulationReport:
           Pandas Series containing the qualities of the Nodes
 
         """
-        return self._get(self.nodes, 'Quality')
+        return self._get(self.nodes, "Quality")
 
     @property
     def length(self) -> pd.Series:
@@ -107,7 +119,7 @@ class SimulationReport:
           Pandas Series containing the lengths of the Links
 
         """
-        return self._get(self.links, 'Length', 'm')
+        return self._get(self.links, "Length", "m")
 
     @property
     def diameter(self) -> pd.Series:
@@ -117,7 +129,7 @@ class SimulationReport:
           Pandas Series containing the diameters of the Links
 
         """
-        return self._get(self.links, 'Diameter', 'm')
+        return self._get(self.links, "Diameter", "m")
 
     @property
     def flow(self) -> pd.Series:
@@ -127,7 +139,7 @@ class SimulationReport:
           Pandas Series containing the flows of the Links
 
         """
-        return self._get(self.links, 'Flow', 'l/s')
+        return self._get(self.links, "Flow", "l/s")
 
     @property
     def velocity(self) -> pd.Series:
@@ -137,7 +149,7 @@ class SimulationReport:
           Pandas Series containing the velocities of the Links
 
         """
-        return self._get(self.links, 'Velocity', 'm/s')
+        return self._get(self.links, "Velocity", "m/s")
 
     @property
     def headlossper1000m(self) -> pd.Series:
@@ -147,7 +159,7 @@ class SimulationReport:
           Pandas Series containing the headlosses of the Links
 
         """
-        return self._get(self.links, 'Headloss', '/1000m')
+        return self._get(self.links, "Headloss", "/1000m")
 
     @property
     def headloss(self) -> pd.Series:
@@ -159,9 +171,11 @@ class SimulationReport:
           Pandas Series containing the headlosses of the Links
 
         """
+
         def convert(data):
             return self.length * data / 1000.0
-        return self._get(self.links, 'Headloss', 'm', convert)
+
+        return self._get(self.links, "Headloss", "m", convert)
 
     @property
     def position(self) -> pd.Series:
@@ -171,7 +185,7 @@ class SimulationReport:
           Pandas Series containing the positions of the Links
 
         """
-        return self._get(self.links, 'Position')
+        return self._get(self.links, "Position")
 
     @property
     def settings(self):
@@ -181,7 +195,7 @@ class SimulationReport:
           Pandas Series containing the settings of the Links
 
         """
-        return self._get(self.links, 'Setting')
+        return self._get(self.links, "Setting")
 
     @property
     def reaction(self) -> pd.Series:
@@ -191,7 +205,7 @@ class SimulationReport:
           Pandas Series containing the reactions of the Links
 
         """
-        return self._get(self.links, 'Reaction', 'mass/L/day')
+        return self._get(self.links, "Reaction", "mass/L/day")
 
     @property
     def ffactor(self) -> pd.Series:
@@ -201,7 +215,7 @@ class SimulationReport:
           Pandas Series containing the ffactors of the Links
 
         """
-        return self._get(self.links, 'F-Factor')
+        return self._get(self.links, "F-Factor")
 
     def get_node_info(self, id: str) -> pd.Series:
         """Gets the Node information from a simulation report object.

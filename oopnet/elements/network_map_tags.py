@@ -18,6 +18,7 @@ class Vertex:
           ycoordinate: Vertex ycoordinate
 
     """
+
     xcoordinate: float
     ycoordinate: float
 
@@ -25,6 +26,7 @@ class Vertex:
     def coordinates(self):
         """Vertex x- and y-coordinate."""
         return np.asarray([self.xcoordinate, self.ycoordinate])
+
 
 @dataclass
 class Label:
@@ -49,6 +51,7 @@ class Backdrop:
 @dataclass
 class Tag:
     """Associates category labels (tags) with specific nodes and links."""
+
     id: str
     comment: str
     object: NetworkComponent

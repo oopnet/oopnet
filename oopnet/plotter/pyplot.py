@@ -10,9 +10,25 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 
-from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Pump, Valve
-from oopnet.utils.getters.element_lists import get_link_ids, get_node_ids, get_valves, get_pumps, get_junctions, \
-    get_reservoirs, get_tanks, get_pipes
+from oopnet.elements.network_components import (
+    Junction,
+    Reservoir,
+    Tank,
+    Pipe,
+    Pump,
+    Valve,
+)
+from oopnet.utils.getters.element_lists import (
+    get_link_ids,
+    get_node_ids,
+    get_valves,
+    get_pumps,
+    get_junctions,
+    get_reservoirs,
+    get_tanks,
+    get_pipes,
+)
+
 if TYPE_CHECKING:
     from oopnet.elements.network import Network
 
@@ -21,8 +37,15 @@ if TYPE_CHECKING:
 class Plotnodes:
     """ """
 
-    def __new__(cls, nodes: list, nodetype: Union[Type[Junction], Type[Reservoir], Type[Tank]], color: pd.Series,
-                ms: float, zorder: int, nodetruncate: bool = False):
+    def __new__(
+        cls,
+        nodes: list,
+        nodetype: Union[Type[Junction], Type[Reservoir], Type[Tank]],
+        color: pd.Series,
+        ms: float,
+        zorder: int,
+        nodetruncate: bool = False,
+    ):
         nid = []
         x = []
         y = []
@@ -33,30 +56,37 @@ class Plotnodes:
             y.append(node.ycoordinate)
 
         if nodetype == Junction:
-            marker = 'o'
+            marker = "o"
         elif nodetype == Reservoir:
-            marker = 'D'
+            marker = "D"
         elif nodetype == Tank:
-            marker = 's'
+            marker = "s"
         else:
-            raise TypeError(f'A nodetype of either Junction, Reservoir or Tank was expected but a type {nodetype} '
-                            f'was passed.')
+            raise TypeError(
+                f"A nodetype of either Junction, Reservoir or Tank was expected but a type {nodetype} "
+                f"was passed."
+            )
 
-        df = pd.DataFrame({'x': x,
-                          'y': y},
-                          index=nid)
+        df = pd.DataFrame({"x": x, "y": y}, index=nid)
         color = color[color.index.isin(df.index)]
-        color.name = 'color'
-        concat = pd.concat([df, color], axis=1, sort=True).fillna('k')
-        concat['ms'] = ms
+        color.name = "color"
+        concat = pd.concat([df, color], axis=1, sort=True).fillna("k")
+        concat["ms"] = ms
 
-        if len(concat['color'].unique()) == 1 and 'k' in concat['color'].unique():
+        if len(concat["color"].unique()) == 1 and "k" in concat["color"].unique():
             pass
         elif nodetruncate:
-            concat.loc[concat['color'] == 'k', 'ms'] = 0
+            concat.loc[concat["color"] == "k", "ms"] = 0
 
-        return plt.scatter(x=concat['x'], y=concat['y'], marker=marker, c=concat['color'], s=concat['ms'],
-                           zorder=zorder, label='_nolegend_')
+        return plt.scatter(
+            x=concat["x"],
+            y=concat["y"],
+            marker=marker,
+            c=concat["color"],
+            s=concat["ms"],
+            zorder=zorder,
+            label="_nolegend_",
+        )
 
 
 class Plotpipes:
@@ -86,8 +116,11 @@ class Plotlink:
         if isinstance(link, Pipe):
             return plt.plot(x, y, **kwargs)
         else:
-            symbol = kwargs.pop('marker')
-            return (plt.plot(x, y, marker=None, **kwargs), plt.plot(0.5 * (x1 + x2), 0.5 * (y1 + y2), marker=symbol, **kwargs))
+            symbol = kwargs.pop("marker")
+            return (
+                plt.plot(x, y, marker=None, **kwargs),
+                plt.plot(0.5 * (x1 + x2), 0.5 * (y1 + y2), marker=symbol, **kwargs),
+            )
 
 
 class Plotgraph:
@@ -102,9 +135,9 @@ class Plotgraph:
 
 class Plotsimulation:
     """This function plots OOPNET networks with simulation results as a network plot with Matplotlib.
-    
+
     Symbols for Nodes: Junctions are plotted as circles, Reservoirs as diamonds, Tanks as squares.
-    
+
     Symbols for Links: Pipes are plotted as lines with no markers, Valves are plotted as lines with triangulars in the middle, Pumps are plotted as lines with pentagons
 
     Args:
@@ -125,34 +158,52 @@ class Plotsimulation:
 
     """
 
-    def __new__(cls, network: Network, fignum: Optional[int] = None, nodes: Optional[pd.Series] = None,
-                links: Optional[pd.Series] = None, colorbar: Union[bool, dict] = True,
-                colormap: Union[str, dict] = 'viridis', ax: Optional[matplotlib.axes.Axes] = None,
-                markersize: float = 8.0, robust: bool = False, vlim=None, nodetruncate=None):
+    def __new__(
+        cls,
+        network: Network,
+        fignum: Optional[int] = None,
+        nodes: Optional[pd.Series] = None,
+        links: Optional[pd.Series] = None,
+        colorbar: Union[bool, dict] = True,
+        colormap: Union[str, dict] = "viridis",
+        ax: Optional[matplotlib.axes.Axes] = None,
+        markersize: float = 8.0,
+        robust: bool = False,
+        vlim=None,
+        nodetruncate=None,
+    ):
 
         if isinstance(colormap, str):
             n_cmap = plt.get_cmap(colormap)
             l_cmap = plt.get_cmap(colormap)
-        elif isinstance(colormap, (colors.LinearSegmentedColormap, colors.ListedColormap)):
+        elif isinstance(
+            colormap, (colors.LinearSegmentedColormap, colors.ListedColormap)
+        ):
             n_cmap = colormap
             l_cmap = colormap
         elif isinstance(colormap, dict):
 
-            if 'node' in colormap:
-                if isinstance(colormap['node'], str):
-                    n_cmap = plt.get_cmap(colormap['node'])
-                elif isinstance(colormap['node'], (colors.LinearSegmentedColormap, colors.ListedColormap)):
-                    n_cmap = colormap['node']
+            if "node" in colormap:
+                if isinstance(colormap["node"], str):
+                    n_cmap = plt.get_cmap(colormap["node"])
+                elif isinstance(
+                    colormap["node"],
+                    (colors.LinearSegmentedColormap, colors.ListedColormap),
+                ):
+                    n_cmap = colormap["node"]
             else:
-                n_cmap = plt.get_cmap('jet')
+                n_cmap = plt.get_cmap("jet")
 
-            if 'link' in colormap:
-                if isinstance(colormap['link'], str):
-                    l_cmap = plt.get_cmap(colormap['link'])
-                elif isinstance(colormap['link'], (colors.LinearSegmentedColormap, colors.ListedColormap)):
-                    l_cmap = colormap['link']
+            if "link" in colormap:
+                if isinstance(colormap["link"], str):
+                    l_cmap = plt.get_cmap(colormap["link"])
+                elif isinstance(
+                    colormap["link"],
+                    (colors.LinearSegmentedColormap, colors.ListedColormap),
+                ):
+                    l_cmap = colormap["link"]
             else:
-                l_cmap = plt.get_cmap('jet')
+                l_cmap = plt.get_cmap("jet")
 
         if ax:
             plt.sca(ax)
@@ -164,22 +215,22 @@ class Plotsimulation:
         # Nodes
         if nodes is None:
             nodelist = get_node_ids(network)
-            nodecolors = pd.Series(['k'] * len(nodelist), index=nodelist)
+            nodecolors = pd.Series(["k"] * len(nodelist), index=nodelist)
 
         else:
             if vlim:
                 vmin = vlim[0]
                 vmax = vlim[1]
-                extend = 'neither'
+                extend = "neither"
 
             elif robust:
                 vmin = np.percentile(nodes.values, 2)
                 vmax = np.percentile(nodes.values, 98)
-                extend = 'both'
+                extend = "both"
             else:
                 vmin = np.nanmin(nodes.values)
                 vmax = np.nanmax(nodes.values)
-                extend = 'neither'
+                extend = "neither"
             cnorm = colors.Normalize(vmin=vmin, vmax=vmax)
             scalar_map = cmx.ScalarMappable(norm=cnorm, cmap=n_cmap)
             scalar_map._A = []
@@ -187,7 +238,7 @@ class Plotsimulation:
 
             if (
                 isinstance(colorbar, dict)
-                and colorbar['node'] is True
+                and colorbar["node"] is True
                 or not isinstance(colorbar, dict)
                 and colorbar
             ):
@@ -198,22 +249,22 @@ class Plotsimulation:
         if links is None:
 
             linklist = get_link_ids(network)
-            linkcolors = pd.Series(['k'] * len(linklist), index=linklist)
+            linkcolors = pd.Series(["k"] * len(linklist), index=linklist)
 
         else:
             if vlim:
                 vmin = vlim[0]
                 vmax = vlim[1]
-                extend = 'neither'
+                extend = "neither"
 
             elif robust:
                 vmin = np.percentile(links.values, 2)
                 vmax = np.percentile(links.values, 98)
-                extend = 'both'
+                extend = "both"
             else:
                 vmin = np.nanmin(links.values)
                 vmax = np.nanmax(links.values)
-                extend = 'neither'
+                extend = "neither"
             cnorm = colors.Normalize(vmin=vmin, vmax=vmax)
             scalar_map = cmx.ScalarMappable(norm=cnorm, cmap=l_cmap)
             scalar_map._A = []
@@ -221,7 +272,7 @@ class Plotsimulation:
 
             if (
                 isinstance(colorbar, dict)
-                and colorbar['link'] is True
+                and colorbar["link"] is True
                 or not isinstance(colorbar, dict)
                 and colorbar
             ):
@@ -231,19 +282,52 @@ class Plotsimulation:
 
         ax.add_collection(Plotpipes(network, color=linkcolors))
 
-        list(map(lambda x: Plotlink(x, marker='v', color=outsidelist(x.id, linkcolors), ms=markersize), get_valves(network)))
+        list(
+            map(
+                lambda x: Plotlink(
+                    x, marker="v", color=outsidelist(x.id, linkcolors), ms=markersize
+                ),
+                get_valves(network),
+            )
+        )
 
-        list(map(lambda x: Plotlink(x, marker='p', color=outsidelist(x.id, linkcolors), ms=markersize), get_pumps(network)))
+        list(
+            map(
+                lambda x: Plotlink(
+                    x, marker="p", color=outsidelist(x.id, linkcolors), ms=markersize
+                ),
+                get_pumps(network),
+            )
+        )
 
-        Plotnodes(get_junctions(network), nodetype=Junction, color=nodecolors, ms=4*markersize, zorder=3, nodetruncate=nodetruncate)
+        Plotnodes(
+            get_junctions(network),
+            nodetype=Junction,
+            color=nodecolors,
+            ms=4 * markersize,
+            zorder=3,
+            nodetruncate=nodetruncate,
+        )
 
-        Plotnodes(get_reservoirs(network), nodetype=Reservoir, color=nodecolors, ms=4*markersize, zorder=4)
+        Plotnodes(
+            get_reservoirs(network),
+            nodetype=Reservoir,
+            color=nodecolors,
+            ms=4 * markersize,
+            zorder=4,
+        )
 
-        Plotnodes(get_tanks(network), nodetype=Tank, color=nodecolors, ms=4*markersize, zorder=5)
+        Plotnodes(
+            get_tanks(network),
+            nodetype=Tank,
+            color=nodecolors,
+            ms=4 * markersize,
+            zorder=5,
+        )
 
-        plt.grid('off')
-        plt.axis('equal')
-        plt.axis('off')
+        plt.grid("off")
+        plt.axis("equal")
+        plt.axis("off")
 
         # return linkcolors
         return fig
@@ -253,8 +337,8 @@ def outsidelist(element, colorhash):
     """
 
     Args:
-      element: 
-      colorhash: 
+      element:
+      colorhash:
 
     Returns:
 
@@ -262,7 +346,7 @@ def outsidelist(element, colorhash):
     if element in colorhash:
         return colorhash[element]
     else:
-        return 'k'
+        return "k"
 
 
 class Plotnodetext:
@@ -281,4 +365,3 @@ class Plotnodetext:
 #         if text:
 #             map(lambda x, y: Plotnodetext(x, y), sensors, text)
 #         return fig
-

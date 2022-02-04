@@ -25,9 +25,9 @@ class EPANETError(Exception):
             details: error details (if available)
 
         """
-        msg = f'Error {self.code} - {description}'
+        msg = f"Error {self.code} - {description}"
         if details:
-            msg += f' {details}'
+            msg += f" {details}"
         super().__init__(msg)
 
     @property
@@ -54,7 +54,9 @@ class EPANETSimulationError(Exception):
     def _compare_instances(self, errorcls: Type[EPANETError]):
         return any(isinstance(x, errorcls) for x in self.errors)
 
-    def check_contained_errors(self, errors: Union[Type[EPANETError], list[Type[EPANETError]]]):
+    def check_contained_errors(
+        self, errors: Union[Type[EPANETError], list[Type[EPANETError]]]
+    ):
         if isinstance(errors, list):
             return [self._compare_instances(error) for error in errors]
         return self._compare_instances(errors)
@@ -198,4 +200,8 @@ class ReportFileSavingError(EPANETError):
 
 def get_error_list() -> list[Type[EPANETError]]:
     """Lists all errors implemented."""
-    return [obj for name, obj in getmembers(modules[__name__]) if isclass(obj) and hasattr(obj, 'code')]
+    return [
+        obj
+        for name, obj in getmembers(modules[__name__])
+        if isclass(obj) and hasattr(obj, "code")
+    ]

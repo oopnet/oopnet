@@ -40,8 +40,12 @@ def get_neighbor_links(network: Network, query_link: Link) -> list[Link]:
 
     """
     nodes = [query_link.startnode, query_link.endnode]
-    return [link for link in get_links(network) if any(node in nodes for node in [link.startnode, link.endnode]) and
-            link != query_link]
+    return [
+        link
+        for link in get_links(network)
+        if any(node in nodes for node in [link.startnode, link.endnode])
+        and link != query_link
+    ]
 
 
 def get_next_neighbor_links(network: Network, query_link: Link) -> list[Link]:
@@ -56,7 +60,12 @@ def get_next_neighbor_links(network: Network, query_link: Link) -> list[Link]:
 
     """
     neigh_links = get_neighbor_links(network, query_link)
-    nextneigh_links = [x for link in neigh_links for x in get_neighbor_links(network, link) if x != query_link and x not in neigh_links]
+    nextneigh_links = [
+        x
+        for link in neigh_links
+        for x in get_neighbor_links(network, link)
+        if x != query_link and x not in neigh_links
+    ]
     return _filter_sort(nextneigh_links)
 
 
@@ -71,7 +80,9 @@ def get_adjacent_links(network: Network, query_node: Node) -> list[Link]:
         list of Links that are connected to the passed Node
 
     """
-    adj_links = [x for x in get_links(network) if query_node in [x.startnode, x.endnode]]
+    adj_links = [
+        x for x in get_links(network) if query_node in [x.startnode, x.endnode]
+    ]
     return _filter_sort(adj_links)
 
 
@@ -87,7 +98,9 @@ def get_neighbor_nodes(network: Network, query_node: Node) -> list[Node]:
 
     """
     adj_links = get_adjacent_links(network, query_node)
-    neigh_nodes = [x.startnode if x.startnode != query_node else x.endnode for x in adj_links]
+    neigh_nodes = [
+        x.startnode if x.startnode != query_node else x.endnode for x in adj_links
+    ]
     return _filter_sort(neigh_nodes)
 
 
@@ -103,7 +116,12 @@ def get_next_neighbor_nodes(network: Network, query_node: Node) -> list[Node]:
 
     """
     neigh_nodes = get_neighbor_nodes(network, query_node)
-    nextneigh_nodes = [x for node in neigh_nodes for x in get_neighbor_nodes(network, node) if x != query_node and x not in neigh_nodes]
+    nextneigh_nodes = [
+        x
+        for node in neigh_nodes
+        for x in get_neighbor_nodes(network, node)
+        if x != query_node and x not in neigh_nodes
+    ]
     return _filter_sort(nextneigh_nodes)
 
 

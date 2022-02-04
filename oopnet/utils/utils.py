@@ -26,7 +26,10 @@ def mkdir(newdir: str):
     if os.path.isdir(newdir):
         pass
     elif os.path.isfile(newdir):
-        raise OSError("a file with the same name as the desired dir, '%s', already exists." % newdir)
+        raise OSError(
+            "a file with the same name as the desired dir, '%s', already exists."
+            % newdir
+        )
     else:
         head, tail = os.path.split(newdir)
         if head and not os.path.isdir(head):
@@ -35,7 +38,9 @@ def mkdir(newdir: str):
             os.mkdir(newdir)
 
 
-def make_measurement(report: SimulationReport, sensors: dict, precision: Optional[dict] = None):
+def make_measurement(
+    report: SimulationReport, sensors: dict, precision: Optional[dict] = None
+):
     """This function simulates a measurement in the system at predefined sensorpositions and returns a measurement vector
 
     Args:
@@ -44,7 +49,7 @@ def make_measurement(report: SimulationReport, sensors: dict, precision: Optiona
     -> {'Flow':['flowsensor1', 'flowsensor2], 'Pressure':['sensor1', 'sensor2', 'sensor3']}
       precision: dict with keys 'Flow' and/or 'Pressure' and number of decimals -> {'Flow':3, 'Pressure':2}
       report: SimulationReport:
-      sensors: dict: 
+      sensors: dict:
       precision: Optional[dict]:  (Default value = None)
 
     Returns:
@@ -53,12 +58,17 @@ def make_measurement(report: SimulationReport, sensors: dict, precision: Optiona
     """
     vec = np.ndarray(0)
     for what in sorted(sensors.keys()):
-        if what == 'Flow':
+        if what == "Flow":
             dec = 3 if precision is None else precision[what]
-            vec = np.around(np.concatenate((vec, report.flow[sensors[what]].values)), decimals=dec)
-        elif what == 'Pressure':
+            vec = np.around(
+                np.concatenate((vec, report.flow[sensors[what]].values)), decimals=dec
+            )
+        elif what == "Pressure":
             dec = 2 if precision is None else precision[what]
-            vec = np.around(np.concatenate((vec, report.pressure[sensors[what]].values)), decimals=dec)
+            vec = np.around(
+                np.concatenate((vec, report.pressure[sensors[what]].values)),
+                decimals=dec,
+            )
     return vec
 
 

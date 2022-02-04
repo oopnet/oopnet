@@ -16,7 +16,7 @@ def make_registering_decorator_factory(foreign_decorator_factory):
     """
 
     Args:
-      foreign_decorator_factory: 
+      foreign_decorator_factory:
 
     Returns:
 
@@ -31,7 +31,9 @@ def make_registering_decorator_factory(foreign_decorator_factory):
             modified_func.decorator_args = args
             modified_func.decorator_kwargs = kw
             return modified_func
+
         return new_generated_decorator
+
     new_decorator_factory.__name__ = foreign_decorator_factory.__name__
     new_decorator_factory.__doc__ = foreign_decorator_factory.__doc__
     return new_decorator_factory
@@ -51,10 +53,13 @@ def section_reader(title: str, priority: int) -> Callable:
         section reader
 
     """
+
     def wrap(f: Callable):
         def new_function(*args, **kw):
             return f(*args, **kw)
+
         return new_function
+
     return wrap
 
 

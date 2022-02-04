@@ -2,9 +2,17 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 import logging
 
-from oopnet.elements.network_components import Junction, Tank, Reservoir, Pipe, Pump, Valve
+from oopnet.elements.network_components import (
+    Junction,
+    Tank,
+    Reservoir,
+    Pipe,
+    Pump,
+    Valve,
+)
 from oopnet.utils.getters import get_node, get_link
 from oopnet.utils.oopnet_logging import logging_decorator
+
 if TYPE_CHECKING:
     from oopnet.elements.network import Network
 
@@ -14,8 +22,8 @@ logger = logging.getLogger(__name__)
 @logging_decorator(logger)
 def _remove_object(hash_dict: dict, id: str):
     if id not in hash_dict:
-        raise ValueError(f'No object with ID {id} found.')
-    logger.debug(f'Removing object with ID {id}')
+        raise ValueError(f"No object with ID {id} found.")
+    logger.debug(f"Removing object with ID {id}")
     hash_dict.pop(id)
 
 
@@ -62,7 +70,7 @@ def remove_junction(network: Network, id: str):
       id: Junction ID
 
     """
-    _remove_object(network._nodes['junctions'], id)
+    _remove_object(network._nodes["junctions"], id)
 
 
 def remove_reservoir(network: Network, id: str):
@@ -73,7 +81,7 @@ def remove_reservoir(network: Network, id: str):
       id: Reservoir ID
 
     """
-    _remove_object(network._nodes['reservoirs'], id)
+    _remove_object(network._nodes["reservoirs"], id)
 
 
 def remove_tank(network: Network, id: str):
@@ -84,7 +92,7 @@ def remove_tank(network: Network, id: str):
       id: Tank ID
 
     """
-    _remove_object(network._nodes['tanks'], id)
+    _remove_object(network._nodes["tanks"], id)
 
 
 def remove_pipe(network: Network, id: str):
@@ -95,7 +103,7 @@ def remove_pipe(network: Network, id: str):
       id: Pipe ID
 
     """
-    _remove_object(network._links['pipes'], id)
+    _remove_object(network._links["pipes"], id)
 
 
 def remove_pump(network: Network, id: str):
@@ -106,7 +114,7 @@ def remove_pump(network: Network, id: str):
       id: Pump ID
 
     """
-    _remove_object(network._links['pumps'], id)
+    _remove_object(network._links["pumps"], id)
 
 
 def remove_valve(network: Network, id: str):
@@ -117,4 +125,4 @@ def remove_valve(network: Network, id: str):
       id: Valve ID
 
     """
-    _remove_object(network._links['valves'], id)
+    _remove_object(network._links["valves"], id)

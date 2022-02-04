@@ -11,6 +11,7 @@ if TYPE_CHECKING:
 @dataclass
 class Reaction:
     """Defines parameters related to chemical reactions occurring in the network."""
+
     orderbulk: float = 1.0
     orderwall: float = 1.0
     ordertank: float = 1.0

@@ -3,8 +3,18 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from oopnet.elements.network import Network
-    from oopnet.elements.network_components import Pipe, Junction, Reservoir, Tank, Node, Link, Pump, Valve, Curve, \
-        Pattern
+    from oopnet.elements.network_components import (
+        Pipe,
+        Junction,
+        Reservoir,
+        Tank,
+        Node,
+        Link,
+        Pump,
+        Valve,
+        Curve,
+        Pattern,
+    )
     from oopnet.elements.system_operation import Rule
 
 
@@ -19,7 +29,7 @@ def get_junction(network: Network, id: str) -> Junction:
       Junction with property ID
 
     """
-    return network._nodes['junctions'][id]
+    return network._nodes["junctions"][id]
 
 
 def get_tank(network: Network, id: str) -> Tank:
@@ -33,7 +43,7 @@ def get_tank(network: Network, id: str) -> Tank:
       Tank with property ID
 
     """
-    return network._nodes['tanks'][id]
+    return network._nodes["tanks"][id]
 
 
 def get_reservoir(network: Network, id: str) -> Reservoir:
@@ -47,7 +57,7 @@ def get_reservoir(network: Network, id: str) -> Reservoir:
       Reservoir with property ID
 
     """
-    return network._nodes['reservoirs'][id]
+    return network._nodes["reservoirs"][id]
 
 
 def get_pipe(network: Network, id: str) -> Pipe:
@@ -61,7 +71,7 @@ def get_pipe(network: Network, id: str) -> Pipe:
       Pipe with property ID
 
     """
-    return network._links['pipes'][id]
+    return network._links["pipes"][id]
 
 
 def get_pump(network: Network, id: str) -> Pump:
@@ -75,7 +85,7 @@ def get_pump(network: Network, id: str) -> Pump:
       Pump with property ID
 
     """
-    return network._links['pumps'][id]
+    return network._links["pumps"][id]
 
 
 def get_valve(network: Network, id: str) -> Valve:
@@ -89,7 +99,7 @@ def get_valve(network: Network, id: str) -> Valve:
       Valve with property ID
 
     """
-    return network._links['valves'][id]
+    return network._links["valves"][id]
 
 
 def get_curve(network: Network, id: str) -> Curve:

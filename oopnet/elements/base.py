@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 
 if TYPE_CHECKING:
     from oopnet.elements.network import Network
-    
+
 
 @dataclass
 class NetworkComponent(ABC):
@@ -20,11 +20,14 @@ class NetworkComponent(ABC):
       tag: Associates category labels (tags) with specific nodes and links. An optional text string (with no spaces) used to assign e.g. the node to a category, such as a pressure zone.
 
     """
+
     id: str
     _id: str = field(init=False, compare=False, hash=False, repr=False)
     comment: Optional[str] = None
     tag: Optional[str] = None
-    _network_: Optional[Network] = field(default=None, init=False, compare=False, hash=False, repr=False)
+    _network_: Optional[Network] = field(
+        default=None, init=False, compare=False, hash=False, repr=False
+    )
 
     @property
     def id(self) -> str:
@@ -44,7 +47,9 @@ class NetworkComponent(ABC):
         if not self._network_ or value is None:
             self._network_ = value
         else:
-            raise RuntimeError('NetworkComponents cannot be added to two different Networks.')
+            raise RuntimeError(
+                "NetworkComponents cannot be added to two different Networks."
+            )
 
     def _rename(self, id: str, hashtable: dict) -> None:
         if hashtable:

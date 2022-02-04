@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 class BinaryFileReader:
     def __new__(cls, filename: str, *args, **kwargs):
-        with open(filename, 'rb') as file:
+        with open(filename, "rb") as file:
             prolog = np.fromfile(file, dtype=np.int32, count=15)
             cls._read_prolog(prolog)
 

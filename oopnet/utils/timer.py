@@ -10,8 +10,10 @@ def tic():
 
 def toc():
     """Read elapsed time from stopwatch."""
-    if 'startTime_for_tictoc' in globals():
-        print("Elapsed time is " + str(time.time() - startTime_for_tictoc) + " seconds.")
+    if "startTime_for_tictoc" in globals():
+        print(
+            "Elapsed time is " + str(time.time() - startTime_for_tictoc) + " seconds."
+        )
     else:
         raise Exception("Toc: start time not set")
 
@@ -25,12 +27,14 @@ def time_it(func):
     Returns:
         decorated function
     """
+
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         t_start = time.time()
         result = func(*args, **kwargs)
         t_end = time.time()
         t_passed = t_end - t_start
-        print(f'{func.__name__} took {t_passed} s to complete.')
+        print(f"{func.__name__} took {t_passed} s to complete.")
         return result
+
     return wrapper

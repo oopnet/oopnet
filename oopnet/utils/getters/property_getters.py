@@ -3,8 +3,20 @@ from typing import TYPE_CHECKING
 
 import pandas as pd
 
-from oopnet.utils.getters.element_lists import get_links, get_link_ids, get_pipes, get_pipe_ids, get_nodes, \
-    get_node_ids, get_junction_ids, get_junctions, get_valve_ids, get_valves, get_pumps, get_pump_ids
+from oopnet.utils.getters.element_lists import (
+    get_links,
+    get_link_ids,
+    get_pipes,
+    get_pipe_ids,
+    get_nodes,
+    get_node_ids,
+    get_junction_ids,
+    get_junctions,
+    get_valve_ids,
+    get_valves,
+    get_pumps,
+    get_pump_ids,
+)
 
 if TYPE_CHECKING:
     from oopnet.elements.network import Network
@@ -24,7 +36,7 @@ def get_startnodes(network: Network) -> pd.Series:
     values = [x.startnode for x in get_links(network)]
     names = get_link_ids(network)
     series = pd.Series(data=values, index=names)
-    series.name = 'startnodes'
+    series.name = "startnodes"
     return series
 
 
@@ -41,7 +53,7 @@ def get_endnodes(network: Network) -> pd.Series:
     values = [x.endnode for x in get_links(network)]
     names = get_link_ids(network)
     series = pd.Series(data=values, index=names)
-    series.name = 'endnodes'
+    series.name = "endnodes"
     return series
 
 
@@ -72,14 +84,19 @@ def get_startendcoordinates(network: Network) -> pd.DataFrame:
     """
     se = get_startendnodes(network)
     ids = se.index
-    sx = [x.xcoordinate for x in se['startnodes']]
-    sy = [x.ycoordinate for x in se['startnodes']]
-    ex = [x.xcoordinate for x in se['endnodes']]
-    ey = [x.ycoordinate for x in se['endnodes']]
-    return pd.DataFrame(index=ids, data={'start x-coordinate': sx,
-                                         'start y-coordinate': sy,
-                                         'end x-coordinate': ex,
-                                         'end y-coordinate': ey})
+    sx = [x.xcoordinate for x in se["startnodes"]]
+    sy = [x.ycoordinate for x in se["startnodes"]]
+    ex = [x.xcoordinate for x in se["endnodes"]]
+    ey = [x.ycoordinate for x in se["endnodes"]]
+    return pd.DataFrame(
+        index=ids,
+        data={
+            "start x-coordinate": sx,
+            "start y-coordinate": sy,
+            "end x-coordinate": ex,
+            "end y-coordinate": ey,
+        },
+    )
 
 
 # def get_initialstatus(network: Network) -> pd.Series:
@@ -112,7 +129,7 @@ def get_status(network: Network) -> pd.Series:
     values = [x.status for x in get_links(network)]
     names = get_link_ids(network)
     series = pd.Series(data=values, index=names)
-    series.name = 'status'
+    series.name = "status"
     return series
 
 
@@ -129,7 +146,7 @@ def get_setting(network: Network) -> pd.Series:
     values = [x.setting for x in get_pumps(network) + get_valves(network)]
     names = get_pump_ids(network) + get_valve_ids(network)
     series = pd.Series(data=values, index=names)
-    series.name = 'setting'
+    series.name = "setting"
     return series
 
 
@@ -143,9 +160,18 @@ def get_linkcenter_coordinates(network: Network) -> pd.DataFrame:
       Pandas DataFrame with Link IDs as index and the Links' center x and y coordinates as columns.
 
     """
-    x = [(x.startnode.xcoordinate + x.endnode.xcoordinate) / 2 for x in get_links(network)]
-    y = [(x.startnode.ycoordinate + x.endnode.ycoordinate) / 2 for x in get_links(network)]
-    return pd.DataFrame(index=get_link_ids(network), data={'center x-coordinate': x, 'center y-coordinate': y})
+    x = [
+        (x.startnode.xcoordinate + x.endnode.xcoordinate) / 2
+        for x in get_links(network)
+    ]
+    y = [
+        (x.startnode.ycoordinate + x.endnode.ycoordinate) / 2
+        for x in get_links(network)
+    ]
+    return pd.DataFrame(
+        index=get_link_ids(network),
+        data={"center x-coordinate": x, "center y-coordinate": y},
+    )
 
 
 def get_link_comment(network: Network) -> pd.Series:
@@ -161,7 +187,7 @@ def get_link_comment(network: Network) -> pd.Series:
     values = [x.comment for x in get_links(network)]
     names = get_link_ids(network)
     series = pd.Series(data=values, index=names)
-    series.name = 'link comment'
+    series.name = "link comment"
     return series
 
 
@@ -179,8 +205,8 @@ def get_length(network: Network) -> pd.Series:
     values = [x.length for x in get_pipes(network)]
     names = get_pipe_ids(network)
     series = pd.Series(data=values, index=names)
-    series.name = 'pipe lengths'
-    series.units = 'm'
+    series.name = "pipe lengths"
+    series.units = "m"
     return series
 
 
@@ -201,8 +227,8 @@ def get_diameter(network: Network) -> pd.Series:
     ids.extend(get_valve_ids(network))
     diameters.extend([x.diameter for x in get_valves(network)])
     series = pd.Series(data=diameters, index=ids)
-    series.name = 'pipe diameters'
-    series.units = 'mm'
+    series.name = "pipe diameters"
+    series.units = "mm"
     return series
 
 
@@ -219,8 +245,8 @@ def get_roughness(network: Network) -> pd.Series:
     values = [x.roughness for x in get_pipes(network)]
     names = get_pipe_ids(network)
     series = pd.Series(data=values, index=names)
-    series.name = 'pipe roughness'
-    series.units = 'mm' if network.options.headloss == 'D-W' else '1'
+    series.name = "pipe roughness"
+    series.units = "mm" if network.options.headloss == "D-W" else "1"
     return series
 
 
@@ -237,8 +263,8 @@ def get_minorloss(network: Network) -> pd.Series:
     values = [x.minorloss for x in get_pipes(network)]
     names = get_pipe_ids(network)
     series = pd.Series(data=values, index=names)
-    series.name = 'pipe minor-losses'
-    series.units = '1'
+    series.name = "pipe minor-losses"
+    series.units = "1"
     return series
 
 
@@ -258,8 +284,8 @@ def get_xcoordinate(network: Network) -> pd.Series:
     values = [x.xcoordinate for x in get_nodes(network)]
     names = get_node_ids(network)
     series = pd.Series(data=values, index=names)
-    series.name = 'node x-coordinate'
-    series.units = '1'
+    series.name = "node x-coordinate"
+    series.units = "1"
     return series
 
 
@@ -276,8 +302,8 @@ def get_ycoordinate(network: Network) -> pd.Series:
     values = [x.ycoordinate for x in get_nodes(network)]
     names = get_node_ids(network)
     series = pd.Series(data=values, index=names)
-    series.name = 'node y-coordinate'
-    series.units = '1'
+    series.name = "node y-coordinate"
+    series.units = "1"
     return series
 
 
@@ -309,14 +335,14 @@ def get_elevation(network: Network) -> pd.Series:
     values = [x.elevation for x in get_nodes(network)]
     names = get_node_ids(network)
     series = pd.Series(data=values, index=names)
-    series.name = 'node elevation'
-    series.units = 'm'
+    series.name = "node elevation"
+    series.units = "m"
     return series
 
 
 def get_basedemand(network: Network) -> pd.Series:
     """Gets all base demand values of all Junctions in the Network as a pandas Series.
-    
+
     Builds the sum if more than one base demand exists for a single junction.
 
     Args:
@@ -326,11 +352,14 @@ def get_basedemand(network: Network) -> pd.Series:
       Pandas Series with Node IDs as index and base demands as values.
 
     """
-    values = [sum(x.demand) if isinstance(x.demand, list) else x.demand for x in get_junctions(network)]
+    values = [
+        sum(x.demand) if isinstance(x.demand, list) else x.demand
+        for x in get_junctions(network)
+    ]
     names = get_junction_ids(network)
     series = pd.Series(data=values, index=names)
-    series.name = 'base demand'
-    series.units = 'L/s'
+    series.name = "base demand"
+    series.units = "L/s"
     return series
 
 
@@ -347,5 +376,5 @@ def get_node_comment(network: Network) -> pd.Series:
     values = [x.comment for x in get_nodes(network)]
     names = get_node_ids(network)
     series = pd.Series(data=values, index=names)
-    series.name = 'node comment'
+    series.name = "node comment"
     return series

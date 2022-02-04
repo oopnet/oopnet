@@ -8,13 +8,14 @@ class LengthExceededError(Exception):
     from an EPANET input file must not exceed this predefined length.
 
     """
+
     def __init__(self, actual_length, target_length):
         """
         Args:
             actual_length: actual number of elements in the list
             target_length: number of predefined attributes
         """
-        msg = f'Maximum list length is {target_length} but the submitted list is of length {actual_length}.'
+        msg = f"Maximum list length is {target_length} but the submitted list is of length {actual_length}."
         super().__init__(msg)
 
 
@@ -25,13 +26,15 @@ class InvalidValveTypeError(Exception):
     an EPANET input file.
 
     """
+
     def __init__(self, received):
-        msg = f'An invalid Valve type {received} was passed.'
+        msg = f"An invalid Valve type {received} was passed."
         super().__init__(msg)
 
 
 class ReadFactory(ABC):
     """Abstract factory for EPANET input file reading."""
+
     @staticmethod
     def _pad_list(alist: list, target_length: int) -> list:
         """Extends a list to a certain length with None values.

@@ -7,6 +7,7 @@ import networkx as nx
 import pandas as pd
 
 from oopnet.utils.getters import get_node_ids, get_links
+
 if TYPE_CHECKING:
     from oopnet.elements import Network
 
@@ -22,11 +23,17 @@ def _add_nodes(graph: nx.Graph, network: Network):
         network: Network object
 
     """
-    logger.debug('Adding Node objects to Network')
+    logger.debug("Adding Node objects to Network")
     graph.add_nodes_from(get_node_ids(network))
 
 
-def _add_links(graph: nx.Graph, network: Network, weight: Union[str, pd.Series], default: float, switch_direction: bool):
+def _add_links(
+    graph: nx.Graph,
+    network: Network,
+    weight: Union[str, pd.Series],
+    default: float,
+    switch_direction: bool,
+):
     """Return all Links from a Network to a Graph.
 
     Args:
@@ -37,7 +44,7 @@ def _add_links(graph: nx.Graph, network: Network, weight: Union[str, pd.Series],
         switch_direction: If a Link's weight is <0 and switch_direction is True, the Links start and end nodes will be switched.
 
     """
-    logger.debug('Adding Link objects to Network')
+    logger.debug("Adding Link objects to Network")
     for l in get_links(network):
         if isinstance(weight, str):
             weight_value = getattr(l, weight, default)
@@ -55,32 +62,41 @@ def _add_links(graph: nx.Graph, network: Network, weight: Union[str, pd.Series],
 class Graph:
     """Generates an undirected NetworkX Graph from an OOPNET network.
 
-        Note:
-            NetworkX Graphs don't support parallel edges between two Nodes. Only one of the parallel edges will be
-            present in the Graph object. To allow for parallel pipes, use :class:`oopnet.graph.MultiGraph` instead.
+    Note:
+        NetworkX Graphs don't support parallel edges between two Nodes. Only one of the parallel edges will be
+        present in the Graph object. To allow for parallel pipes, use :class:`oopnet.graph.MultiGraph` instead.
 
-        Args:
-          network: OOPNET network object
-          weight: name of pipe property as a string which is used as weight or a pandas Series with link IDs as index and weights as values.
-          default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects.
-          switch_direction: If a Link's weight is <0 and switch_direction is True, the Links start and end nodes will be switched.
+    Args:
+      network: OOPNET network object
+      weight: name of pipe property as a string which is used as weight or a pandas Series with link IDs as index and weights as values.
+      default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects.
+      switch_direction: If a Link's weight is <0 and switch_direction is True, the Links start and end nodes will be switched.
 
-        Returns:
-            NetworkX Graph object containing all nodes and links in the passed Network.
+    Returns:
+        NetworkX Graph object containing all nodes and links in the passed Network.
 
-        Examples:
-            The following will create a Graph with link lengths as edge weights (filename needs to be a valid EPANET input file):
-            >>> network = Network(filename)
-            >>> g = Graph(network, 'length')
-            Using a simulation result as link weight:
-            >>> rpt = Run(network)
-            >>> flow = Flow(rpt)
-            >>> g = Graph(network, flow)
+    Examples:
+        The following will create a Graph with link lengths as edge weights (filename needs to be a valid EPANET input file):
+        >>> network = Network(filename)
+        >>> g = Graph(network, 'length')
+        Using a simulation result as link weight:
+        >>> rpt = Run(network)
+        >>> flow = Flow(rpt)
+        >>> g = Graph(network, flow)
 
-        """
-    def __new__(cls, network: Network, weight: Union[str, pd.Series] = 'length', default: float = 0.00001, switch_direction: bool = True):
-        logger.info('Creating Graph object from Network')
-        warn('Creating a simple Graph from Network. Parallel pipes will be merged silently!')
+    """
+
+    def __new__(
+        cls,
+        network: Network,
+        weight: Union[str, pd.Series] = "length",
+        default: float = 0.00001,
+        switch_direction: bool = True,
+    ):
+        logger.info("Creating Graph object from Network")
+        warn(
+            "Creating a simple Graph from Network. Parallel pipes will be merged silently!"
+        )
         graph = nx.Graph()
         _add_nodes(graph, network)
         _add_links(graph, network, weight, default, switch_direction)
@@ -90,33 +106,42 @@ class Graph:
 class DiGraph:
     """Generates a directed NetworkX DiGraph from an OOPNET network.
 
-        Note:
-            NetworkX DiGraphs don't support parallel edges pointing the same direction between two Nodes. Only one of
-            the parallel edges will be present in the Graph object in this case. To allow for parallel pipes, use
-            :class:`oopnet.graph.MultiDiGraph` instead.
+    Note:
+        NetworkX DiGraphs don't support parallel edges pointing the same direction between two Nodes. Only one of
+        the parallel edges will be present in the Graph object in this case. To allow for parallel pipes, use
+        :class:`oopnet.graph.MultiDiGraph` instead.
 
-        Args:
-          network: OOPNET network object
-          weight: name of pipe property as a string which is used as weight or a pandas Series with link IDs as index and weights as values.
-          default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects.
-          switch_direction: If a Link's weight is <0 and switch_direction is True, the Links start and end nodes will be switched.
+    Args:
+      network: OOPNET network object
+      weight: name of pipe property as a string which is used as weight or a pandas Series with link IDs as index and weights as values.
+      default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects.
+      switch_direction: If a Link's weight is <0 and switch_direction is True, the Links start and end nodes will be switched.
 
-        Returns:
-            NetworkX DiGraph object containing all nodes and links in the passed Network.
+    Returns:
+        NetworkX DiGraph object containing all nodes and links in the passed Network.
 
-        Examples:
-            The following will create a DiGraph with link lengths as edge weights (filename needs to be a valid EPANET input file):
-            >>> network = Network(filename)
-            >>> g = DiGraph(network, 'length')
-            Using a simulation result as link weight:
-            >>> rpt = Run(network)
-            >>> flow = Flow(rpt)
-            >>> g = DiGraph(network, flow)
+    Examples:
+        The following will create a DiGraph with link lengths as edge weights (filename needs to be a valid EPANET input file):
+        >>> network = Network(filename)
+        >>> g = DiGraph(network, 'length')
+        Using a simulation result as link weight:
+        >>> rpt = Run(network)
+        >>> flow = Flow(rpt)
+        >>> g = DiGraph(network, flow)
 
-        """
-    def __new__(cls, network: Network, weight: Union[str, pd.Series] = 'length', default: float = 0.00001, switch_direction: bool = True) -> nx.DiGraph:
-        logger.info('Creating DiGraph object from Network')
-        warn('Creating a DiGraph from Network. Parallel pipes might be merged silently!')
+    """
+
+    def __new__(
+        cls,
+        network: Network,
+        weight: Union[str, pd.Series] = "length",
+        default: float = 0.00001,
+        switch_direction: bool = True,
+    ) -> nx.DiGraph:
+        logger.info("Creating DiGraph object from Network")
+        warn(
+            "Creating a DiGraph from Network. Parallel pipes might be merged silently!"
+        )
         graph = nx.DiGraph()
         _add_nodes(graph, network)
         _add_links(graph, network, weight, default, switch_direction)
@@ -126,27 +151,34 @@ class DiGraph:
 class MultiGraph:
     """Generates an undirected NetworkX MultiGraph from an OOPNET network.
 
-        Args:
-          network: OOPNET network object
-          weight: name of pipe property as a string which is used as weight or a pandas Series with link IDs as index and weights as values.
-          default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects.
-          switch_direction: If a Link's weight is <0 and switch_direction is True, the Links start and end nodes will be switched.
+    Args:
+      network: OOPNET network object
+      weight: name of pipe property as a string which is used as weight or a pandas Series with link IDs as index and weights as values.
+      default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects.
+      switch_direction: If a Link's weight is <0 and switch_direction is True, the Links start and end nodes will be switched.
 
-        Returns:
-            NetworkX MultiGraph object containing all nodes and links in the passed Network.
+    Returns:
+        NetworkX MultiGraph object containing all nodes and links in the passed Network.
 
-        Examples:
-            The following will create a MultiGraph with link lengths as edge weights (filename needs to be a valid EPANET input file):
-            >>> network = Network(filename)
-            >>> g = MultiGraph(network, 'length')
-            Using a simulation result as link weight:
-            >>> rpt = Run(network)
-            >>> flow = Flow(rpt)
-            >>> g = MultiGraph(network, flow)
+    Examples:
+        The following will create a MultiGraph with link lengths as edge weights (filename needs to be a valid EPANET input file):
+        >>> network = Network(filename)
+        >>> g = MultiGraph(network, 'length')
+        Using a simulation result as link weight:
+        >>> rpt = Run(network)
+        >>> flow = Flow(rpt)
+        >>> g = MultiGraph(network, flow)
 
-        """
-    def __new__(cls, network: Network, weight: Union[str, pd.Series] = 'length', default: float = 0.00001, switch_direction: bool = True) -> nx.MultiGraph:
-        logger.info('Creating MultiGraph object from Network')
+    """
+
+    def __new__(
+        cls,
+        network: Network,
+        weight: Union[str, pd.Series] = "length",
+        default: float = 0.00001,
+        switch_direction: bool = True,
+    ) -> nx.MultiGraph:
+        logger.info("Creating MultiGraph object from Network")
         graph = nx.MultiGraph()
         _add_nodes(graph, network)
         _add_links(graph, network, weight, default, switch_direction)
@@ -156,27 +188,34 @@ class MultiGraph:
 class MultiDiGraph:
     """Generates a directed NetworkX MultiGraph from an OOPNET network.
 
-        Args:
-          network: OOPNET network object
-          weight: name of pipe property as a string which is used as weight or a pandas Series with link IDs as index and weights as values.
-          default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects.
-          switch_direction: If a Link's weight is <0 and switch_direction is True, the Links start and end nodes will be switched.
+    Args:
+      network: OOPNET network object
+      weight: name of pipe property as a string which is used as weight or a pandas Series with link IDs as index and weights as values.
+      default: When set, the default value is returned as weight for objects that don't have the defined weight attribute or that are missing in the weight pandas Series. Without it, an exception is raised for those objects.
+      switch_direction: If a Link's weight is <0 and switch_direction is True, the Links start and end nodes will be switched.
 
-        Returns:
-            NetworkX MultiGraph object containing all nodes and links in the passed Network.
+    Returns:
+        NetworkX MultiGraph object containing all nodes and links in the passed Network.
 
-        Examples:
-            The following will create a MultiGraph with link lengths as edge weights (filename needs to be a valid EPANET input file):
-            >>> network = Network(filename)
-            >>> g = MultiDiGraph(network, 'length')
-            Using a simulation result as link weight:
-            >>> rpt = Run(network)
-            >>> flow = Flow(rpt)
-            >>> g = MultiGraph(network, flow)
+    Examples:
+        The following will create a MultiGraph with link lengths as edge weights (filename needs to be a valid EPANET input file):
+        >>> network = Network(filename)
+        >>> g = MultiDiGraph(network, 'length')
+        Using a simulation result as link weight:
+        >>> rpt = Run(network)
+        >>> flow = Flow(rpt)
+        >>> g = MultiGraph(network, flow)
 
-        """
-    def __new__(cls, network: Network, weight: Union[str, pd.Series] = 'length', default: float = 0.00001, switch_direction: bool = True) -> nx.MultiGraph:
-        logger.info('Creating MultiGraph object from Network')
+    """
+
+    def __new__(
+        cls,
+        network: Network,
+        weight: Union[str, pd.Series] = "length",
+        default: float = 0.00001,
+        switch_direction: bool = True,
+    ) -> nx.MultiGraph:
+        logger.info("Creating MultiGraph object from Network")
         graph = nx.MultiDiGraph()
         _add_nodes(graph, network)
         _add_links(graph, network, weight, default, switch_direction)
@@ -211,9 +250,9 @@ def nxlinks2onlinks(graph: nx.Graph) -> list[str]:
         for n1, n2 in graph.edges():
             e_data = graph.get_edge_data(n1, n2)
             for values in e_data.values():
-                ids.append(values['id'])
+                ids.append(values["id"])
         return ids
-    return [graph.get_edge_data(n1, n2)['id'] for n1, n2 in graph.edges()]
+    return [graph.get_edge_data(n1, n2)["id"] for n1, n2 in graph.edges()]
 
 
 def nxedge2onlink_id(graph: nx.Graph, edge: tuple[str, str]) -> Union[str, list[str]]:
@@ -228,9 +267,9 @@ def nxedge2onlink_id(graph: nx.Graph, edge: tuple[str, str]) -> Union[str, list[
 
     """
     if not isinstance(graph, nx.MultiGraph):
-        return graph.get_edge_data(*edge)['id']
+        return graph.get_edge_data(*edge)["id"]
     edges = graph.get_edge_data(*edge)
-    result = [edges[x]['id'] for x in edges]
+    result = [edges[x]["id"] for x in edges]
     return result if len(result) > 1 else result[0]
 
 

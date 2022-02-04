@@ -14,8 +14,10 @@ class ComponentRegistry(dict):
     when trying to look up a not exiting Component (instead of default KeyErrors).
 
     """
-    super_registry: Optional[SuperComponentRegistry] = field(default=None, compare=False, hash=False,
-                                                             repr=False)
+
+    super_registry: Optional[SuperComponentRegistry] = field(
+        default=None, compare=False, hash=False, repr=False
+    )
 
     def __setitem__(self, key, value: NetworkComponent):
         if self.super_registry and self.super_registry.check_id_exists(key):
@@ -35,9 +37,10 @@ class ComponentRegistry(dict):
 class SuperComponentRegistry(dict):
     """Registry for Link and Node components.
 
-     Components are stored in ComponentRegistries for the individual subclasses (junctions, pipes, tanks, ...).
+    Components are stored in ComponentRegistries for the individual subclasses (junctions, pipes, tanks, ...).
 
-     """
+    """
+
     def __init__(self, classes: list):
         """SuperComponentRegistry init method.
 
@@ -85,18 +88,21 @@ class SuperComponentRegistry(dict):
 
 class NodeRegistry:
     """SuperComponentRegistry factory for Node components."""
+
     def __new__(cls, *args, **kwargs):
-        return SuperComponentRegistry(['junctions', 'tanks', 'reservoirs'])
+        return SuperComponentRegistry(["junctions", "tanks", "reservoirs"])
 
 
 class LinkRegistry:
     """SuperComponentRegistry factory for Link components."""
+
     def __new__(cls, *args, **kwargs):
-        return SuperComponentRegistry(['pipes', 'pumps', 'valves'])
+        return SuperComponentRegistry(["pipes", "pumps", "valves"])
 
 
 class ComponentExistsError(Exception):
     """Raised when a component with the same ID already exists in the network."""
+
     def __init__(self, id, message=None):
         if not message:
             self.message = f'A conflicting component with the ID "{id}" already exists in the network.'
@@ -105,6 +111,7 @@ class ComponentExistsError(Exception):
 
 class ComponentNotExistingError(Exception):
     """Raised when a no component with the ID exists in the network."""
+
     def __init__(self, id, message=None):
         if not message:
             self.message = f'No Component with ID "{id}" found in the network.'
