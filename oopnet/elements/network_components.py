@@ -80,7 +80,7 @@ class Link(NetworkComponent):
 
 @dataclass
 class Junction(Node):
-    """Defines Junction nodes contained in the network.
+    """Junction node.
 
     Attributes:
       emittercoefficient: Discharge coefficient for emitter (sprinkler or nozzle) placed at junction. The coefficient represents the flow (in current flow units) that occurs at a pressure drop of 1 meter. Leave blank if no emitter is present. See the Emitters topic in the 'EPANET Manual Section 3.1 <https://epanet22.readthedocs.io/en/latest/3_network_model.html#physical-components>' for more details.
@@ -103,7 +103,7 @@ class Junction(Node):
 
 @dataclass
 class Reservoir(Node):
-    """Defines all reservoir nodes contained in the network.
+    """Reservoir nodes.
 
     Attributes:
       head: The hydraulic head (elevation + pressure head) of water in the reservoir in meters. This is a required property.
@@ -124,7 +124,7 @@ class Reservoir(Node):
 
 @dataclass
 class Tank(Node):
-    """Defines all tank nodes contained in the network.
+    """Tank node.
 
     Attributes:
       initlevel: Height in meters of the water surface above the bottom elevation of the tank at the start of the simulation.
@@ -158,7 +158,7 @@ class Tank(Node):
 
 @dataclass
 class Pipe(Link):
-    """Defines all pipe links contained in the network.
+    """Pipe link.
 
     Attributes:
       length: The actual length of the pipe in meters.
@@ -233,7 +233,7 @@ class Pipe(Link):
 # todo: rethink keyword, value structure (what happens for multiple properties?)
 @dataclass
 class Pump(Link):
-    """Defines all pump links contained in the network.
+    """Pump link.
 
     todo: implement multiple keyword and value combinations
     Attributes:
@@ -242,8 +242,10 @@ class Pump(Link):
       status: 
 
     """
-    keyword: Optional[str] = None  # = Enum('POWER', 'HEAD', 'SPEED', 'PATTERN')
-    value: Union[str, float, None] = None
+    power: Optional[float] = None
+    head: Optional[Curve] = None
+    speed: float = 1.0
+    pattern: Optional[Pattern] = None
     setting: Optional[float] = None
 
     @NetworkComponent.id.setter
@@ -256,7 +258,7 @@ class Pump(Link):
 
 @dataclass
 class Valve(Link):
-    """Defines all control valve links contained in the network
+    """Valve link.
 
     Attributes:
       valvetype: A required parameter that describes the valve's operational setting (PRV, PSV, PBV, FCV, TCV, GPV).
@@ -279,7 +281,7 @@ class Valve(Link):
 
 @dataclass
 class PRV(Valve):
-    """Pressure Reducing Valve
+    """Pressure Reducing Valve.
 
      Attributes:
          setting: pressure limit
@@ -289,7 +291,7 @@ class PRV(Valve):
 
 @dataclass
 class TCV(Valve):
-    """Throttle Control Valve
+    """Throttle Control Valve.
 
      Attributes:
          setting: head loss coefficient
@@ -299,7 +301,7 @@ class TCV(Valve):
 
 @dataclass
 class PSV(Valve):
-    """Pressure Sustaining Valve
+    """Pressure Sustaining Valve.
 
      Attributes:
          setting: pressure limit at upstream setting
@@ -309,7 +311,7 @@ class PSV(Valve):
 
 @dataclass
 class GPV(Valve):
-    """General Purpose Valve
+    """General Purpose Valve.
 
      Attributes:
          setting: Curve representing flow-head loss relationship
@@ -320,7 +322,7 @@ class GPV(Valve):
 
 @dataclass
 class PBV(Valve):
-    """Pressure Breaker Valve
+    """Pressure Breaker Valve.
 
      Attributes:
          setting: pressure drop
@@ -330,7 +332,7 @@ class PBV(Valve):
 
 @dataclass
 class FCV(Valve):
-    """Flow Control Valve
+    """Flow Control Valve.
 
      Attributes:
          setting: maximum allow flow

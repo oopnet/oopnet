@@ -26,9 +26,6 @@ class NetworkComponent(ABC):
     tag: Optional[str] = None
     _network_: Optional[Network] = field(default=None, init=False, compare=False, hash=False, repr=False)
 
-    def __hash__(self):
-        return hash(self.id) + hash(type(self))
-
     @property
     def id(self) -> str:
         return self._id

@@ -40,8 +40,8 @@ class SimpleDeepcopyTest(unittest.TestCase):
     def test_pump(self):
         pump_old = get_pump(self.old_network, 'PU-1')
         pump_new = get_pump(self.new_network, 'PU-1')
-        pump_old.value = 100
-        self.assertFalse(pump_old.value == pump_new.value)
+        pump_old.power = 100
+        self.assertFalse(pump_old.power == pump_new.power)
 
     def test_valve(self):
         valve_old = get_valve(self.old_network, 'V-1')

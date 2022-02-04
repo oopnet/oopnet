@@ -7,7 +7,7 @@ import numpy as np
 
 if TYPE_CHECKING:
     from oopnet.elements.network_components import Junction, Pipe
-from oopnet.report.report import Report
+from oopnet.report.report import SimulationReport
 
 
 def mkdir(newdir: str):
@@ -35,26 +35,7 @@ def mkdir(newdir: str):
             os.mkdir(newdir)
 
 
-# todo: check if functionality exists elsewhere; check for nodes with negative demands?
-def sources(network):
-    """This function returns all sources (tanks and reservoirs) if an oopnet network
-
-    Args:
-      network: return:
-
-    Returns:
-
-    """
-    if network._tanks and network._reservoirs:
-        return network._reservoirs + network._tanks
-    if network._tanks:
-        return network._tanks
-    if network._reservoirs:
-        return network._reservoirs
-    return None
-
-
-def make_measurement(report: Report, sensors: dict, precision: Optional[dict] = None):
+def make_measurement(report: SimulationReport, sensors: dict, precision: Optional[dict] = None):
     """This function simulates a measurement in the system at predefined sensorpositions and returns a measurement vector
 
     Args:
@@ -62,7 +43,7 @@ def make_measurement(report: Report, sensors: dict, precision: Optional[dict] = 
       sensors: dict with keys 'Flow' and/or 'Pressure' containing the node- resp. linkids as list
     -> {'Flow':['flowsensor1', 'flowsensor2], 'Pressure':['sensor1', 'sensor2', 'sensor3']}
       precision: dict with keys 'Flow' and/or 'Pressure' and number of decimals -> {'Flow':3, 'Pressure':2}
-      report: Report: 
+      report: SimulationReport:
       sensors: dict: 
       precision: Optional[dict]:  (Default value = None)
 

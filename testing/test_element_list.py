@@ -9,7 +9,6 @@ from testing.base import SimpleModel
 class SimpleListTest(unittest.TestCase):
     def setUp(self) -> None:
         self.model = SimpleModel()
-        print()
 
     def test_get_junction_ids(self):
         jids = get_junction_ids(self.model.network)

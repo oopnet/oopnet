@@ -6,7 +6,7 @@ from oopnet.elements.network import Network
 from oopnet.elements.network_components import Junction, Pipe, Tank, Reservoir, Pump, Valve, PRV
 from oopnet.elements.system_operation import Curve
 from oopnet.utils.adders.add_element import add_junction, add_pipe, add_node, add_curve, add_link
-from oopnet.utils.getters.get_by_id import get_node
+from oopnet.utils.getters.get_by_id import get_node, get_curve, get_junction
 
 
 def add_dummy_junctions(network: Network, n: int) -> Network:
@@ -34,6 +34,8 @@ def create_dummy_spa_network() -> Network:
     add_dummy_junctions(network, 3)
     t = Tank(id='T-1')
     r = Reservoir(id='R-1', head=50.0)
+    j = get_junction(network, 'J-1')
+    j.demand = -1
 
     for obj in [t, r]:
         add_node(network, obj)
@@ -42,7 +44,7 @@ def create_dummy_spa_network() -> Network:
     add_curve(network, c)
 
     add_dummy_pipes(network, [('J-1', 'T-1'), ('J-1', 'R-1')])
-    pu = Pump(id='PU-1', keyword='HEAD', value='C-1', startnode=get_node(network, 'J-1'),
+    pu = Pump(id='PU-1', head=get_curve(network, 'C-1'), startnode=get_node(network, 'J-1'),
               endnode=get_node(network, 'J-2'))
     v = PRV(id='V-1', setting=5.0, startnode=get_node(network, 'J-1'),
             endnode=get_node(network, 'J-3'))
@@ -118,9 +120,17 @@ class PoulakisEnhancedPDAModel(TestModel):
 
 
 class CTownModel(TestModel):
+    n_junctions = 388
+    n_tanks = 7
+    n_reservoirs = 1
+    n_pipes = 432
+    n_valves = 1
+    n_pumps = 11
+
     def __init__(self):
         super().__init__()
         self.network = Network.read(os.path.join('..', 'examples', 'data', 'C-town.inp'))
+        print()
 
 
 class MicropolisModel(TestModel):
@@ -158,6 +168,17 @@ class RulesModel(TestModel):
 
 
 class ETownModel(TestModel):
+    n_junctions = 11075
+    n_tanks = 17
+    n_reservoirs = 5
+    n_pipes = 13913
+    n_valves = 11
+    n_controls = 0
+    n_pumps = 3
+    n_rules = 0
+    n_curves = 3
+    n_patterns = 1
+
     def __init__(self):
         super().__init__()
         self.network = Network.read(os.path.join('..', 'examples', 'data', 'ETown.inp'))

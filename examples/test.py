@@ -11,5 +11,5 @@ net.report.links = 'ALL'
 rpt = net.run()
 print(net.reportparameter.pressure)
 p = rpt.pressure
-on.Plot(net, nodes=p['1'])
+net.plot(nodes=p['1'])
 plt.show()

@@ -159,12 +159,14 @@ def write_pumps(network: Network, fid: TextIOWrapper):
             print(p.startnode.id, end=' ', file=fid)
         if p.endnode is not None:
             print(p.endnode.id, end=' ', file=fid)
-        if p.keyword is not None:
-            print(p.keyword, end=' ', file=fid)
-        if p.value is not None and not isinstance(p.value, Curve):
-            print(p.value, end=' ', file=fid)
-        elif isinstance(p.value, Curve):
-            print(p.value.id, end=' ', file=fid)
+        if p.power is not None:
+            print('POWER', p.power, end=' ', file=fid)
+        if p.head is not None:
+            print('HEAD', p.head.id, end=' ', file=fid)
+        if p.speed is not None:
+            print('SPEED', p.speed, end=' ', file=fid)
+        if p.pattern is not None:
+            print('PATTERN', p.pattern.id, end=' ', file=fid)
         if p.comment is not None:
             print(';', p.comment, end=' ', file=fid)
         print('\n', end=' ', file=fid)
@@ -191,7 +193,10 @@ def write_valves(network: Network, fid: TextIOWrapper):
             print(v.endnode.id, end=' ', file=fid)
         print(v.diameter, end=' ', file=fid)
         print(v.__class__.__name__, end=' ', file=fid)
-        print(v.setting, end=' ', file=fid)
+        if isinstance(v.setting, Curve):
+            print(v.setting.id, end=' ', file=fid)
+        else:
+            print(v.setting, end=' ', file=fid)
         print(v.minorloss, end=' ', file=fid)
         if v.comment is not None:
             print(';', v.comment, end=' ', file=fid)

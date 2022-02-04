@@ -7,4 +7,4 @@ from .simulation_errors import EPANETSimulationError, EPANETError, InsufficientM
     NotEnoughSourcesError, InvalidTankLevelError, InvalidPumpError, InvalidCurveError, UnconnectedNodeError, \
     TempInputFileAccessError, ReportFileAccessError, BinaryOutputFileAccessError, ResultFileSavingError, \
     ReportFileSavingError
-from .report import Report
+from .report import SimulationReport

@@ -11,7 +11,8 @@ rpt = net.run()
 p = rpt.pressure
 f = rpt.flow
 
-on.Plot(net, nodes=p, links=f, fignum=1)
+net.plot(nodes=p, links=f, fignum=1)
 
-on.Plot(net, nodes=p, links=f, fignum=2, robust=True)
+net.plot(nodes=p, links=f, fignum=2, robust=True)
 plt.show()
+

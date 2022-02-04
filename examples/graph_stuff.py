@@ -30,7 +30,7 @@ f, ax = plt.subplots()
 pr.plot(kind='bar', ax=ax)
 
 # Plot PageRank in network
-on.Plot(network, nodes=pr)
+network.plot(nodes=pr)
 
 # Histogram of degrees in the network
 deg = nx.degree_histogram(G)

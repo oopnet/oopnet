@@ -14,13 +14,11 @@ on.add_pipe(network=net, pipe=on.Pipe(id='P-51', length=1000, diameter=400, roug
                                       startnode=on.get_node(net, 'J-32'), endnode=on.get_node(net, 'J-26')))
 
 rjid = 'J-24'
-G = on.MultiGraph(network=net)
-nn = nx.neighbors(G, rjid)
+rj = on.get_node(net, rjid)
+neighbor_links = on.get_adjacent_links(net, rj)
 
-for neighbour in nn:
-    np = G.get_edge_data(u=neighbour, v=rjid)[0]
-    npid = np['id']
-    on.remove_pipe(network=net, id=npid)
+for neighbour in neighbor_links:
+    on.remove_pipe(network=net, id=neighbour.id)
 
 on.remove_junction(network=net, id=rjid)
 
@@ -29,9 +27,9 @@ on.add_pipe(network=net, pipe=on.Pipe(id='P-52', length=2000, diameter=400, roug
 
 on.add_reservoir(network=net, reservoir=on.Reservoir(id='J-53', head=2, xcoordinate=5500, ycoordinate=4500))
 
-on.add_pump(network=net, pump=on.Pump(id='Pump1', keyword='POWER', value=50, startnode=on.get_node(net, 'J-53'),
+on.add_pump(network=net, pump=on.Pump(id='Pump1', power=50, startnode=on.get_node(net, 'J-53'),
                                       endnode=on.get_node(net, 'J-31')))
 
 rpt = net.run()
-on.Plot(net, links=rpt.flow, nodes=rpt.pressure, robust=True)
+net.plot(links=rpt.flow, nodes=rpt.pressure, robust=True)
 plt.show()

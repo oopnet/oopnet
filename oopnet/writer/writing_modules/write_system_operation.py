@@ -101,8 +101,8 @@ def write_status(network: Network, fid: TextIOWrapper):
     for pu in get_pumps(network):
         if pu.status == 'CLOSED':
             print(pu.id, pu.status, file=fid)
-        elif pu.keyword == 'SPEED':
-            print(pu.id, pu, file=fid)
+        # elif pu.keyword == 'SPEED':
+        #     print(pu.id, pu, file=fid)
     print('\n', end=' ', file=fid)
 
 

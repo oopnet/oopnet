@@ -15,5 +15,5 @@ c = nx.edge_betweenness_centrality(G)
 c = on.edgeresult2pandas(G, c)
 c.name = 'Edge-betweenness Centrality'
 print(c)
-on.Plot(net, links=c)
+net.plot(links=c)
 plt.show()

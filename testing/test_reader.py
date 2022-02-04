@@ -2,7 +2,8 @@ import unittest
 import datetime
 
 from oopnet.elements.network_components import Junction, Tank, Reservoir, Pipe, Pump, Valve
-from oopnet.utils.getters.get_by_id import get_curve, get_pattern
+from oopnet.elements.system_operation import Curve
+from oopnet.utils.getters.get_by_id import get_curve, get_pattern, get_link
 from oopnet.utils.getters.element_lists import get_patterns
 
 
@@ -44,7 +45,7 @@ class PoulakisEnhancedReaderTest(unittest.TestCase):
         self.assertEqual(self.model.n_pumps, len(self.model.network._links['pumps']))
         for p in self.model.network._links['pumps'].values():
             self.assertIsInstance(p, Pump)
-            self.assertEqual('HEAD', p.keyword)
+            self.assertIsInstance(p.head, Curve)
             self.assertTrue('P' in p.id)
 
     def test_valves(self):
@@ -202,6 +203,16 @@ class CTownReaderTest(unittest.TestCase):
 
     def test_run(self):
         rpt = self.model.network.run()
+
+
+class ETownReaderTest(unittest.TestCase):
+    def setUp(self) -> None:
+        from testing.base import ETownModel
+        self.model = ETownModel()
+
+    def test_vertices(self):
+        l = get_link(self.model.network, '3569')
+        self.assertEqual(3, len(l.vertices))
 
 
 if __name__ == '__main__':

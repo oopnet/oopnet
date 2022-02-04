@@ -66,10 +66,10 @@ class BlankModelLinkTest(unittest.TestCase):
     def test_add_simple_pump_object(self):
         j1 = get_junction(self.network, 'J-1')
         j2 = get_junction(self.network, 'J-2')
-        add_pump(self.network, Pump(id='test', startnode=j1, endnode=j2, keyword='POWER', value=100, comment='Test'))
+        add_pump(self.network, Pump(id='test', startnode=j1, endnode=j2, power=100, comment='Test'))
         self.assertEqual(1, len(self.network._links['pumps']))
         p = get_pump(self.network, 'test')
-        self.assertEqual(100, p.value)
+        self.assertEqual(100, p.power)
 
     def test_add_simple_valve_object(self):
         j1 = get_junction(self.network, 'J-1')

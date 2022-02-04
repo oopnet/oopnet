@@ -3,8 +3,6 @@ import os
 import networkx as nx
 import oopnet as on
 
-# todo: fix
-
 filename = os.path.join('data', 'C-town.inp')
 
 net = on.Network.read(filename)

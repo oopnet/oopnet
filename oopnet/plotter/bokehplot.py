@@ -1,14 +1,14 @@
-from traits.api import HasStrictTraits
-from bokeh.plotting import figure
-from bokeh.models import HoverTool, ColumnDataSource
-import matplotlib.colors as colors
 import numpy as np
 import pandas as pd
+from bokeh.plotting import figure
+from bokeh.models import HoverTool, ColumnDataSource
 import matplotlib.cm as cmx
 from matplotlib import pyplot as plt
+import matplotlib.colors as colors
 
 from oopnet.utils.getters import get_link_ids, get_node_ids, get_junctions, get_tanks, get_reservoirs, get_pipes, \
     get_pumps, get_valves
+
 
 # todo: refactor
 def convert_to_hex(rgba_color):
@@ -117,8 +117,7 @@ def plotlink(f, elements, colors, marker='o'):
         f.inverted_triangle(x, y, color=c, size=8.0)
 
 
-
-class Plotsimulation(HasStrictTraits):
+class Plotsimulation:
     """This function plots OOPNET networks with simulation results as a network plot with Bokehplot.
     
     Symbols for Nodes: Junctions are plotted as circles, Reservoirs as diamonds, Tanks as squares.
@@ -128,8 +127,8 @@ class Plotsimulation(HasStrictTraits):
     Args:
       network: OOPNET network object one wants to plot
       tools: tools used for the Bokeh plot (panning, zooming, ...)
-      nodes: Values related to the nodes as Pandas Series generated e.g. by one of OOPNET's Report functions (e.g. Pressure(rpt)). If nodes is None or specific nodes do not have  values, then the nodes are drawn as black circles
-      links: Values related to the links as Pandas Series generated e.g. by one of OOPNET's Report functions (e.g. Flow(rpt)). f links is None or specific links do not have  values, then the links are drawn as black lines
+      nodes: Values related to the nodes as Pandas Series generated e.g. by one of OOPNET's SimulationReport functions (e.g. Pressure(rpt)). If nodes is None or specific nodes do not have  values, then the nodes are drawn as black circles
+      links: Values related to the links as Pandas Series generated e.g. by one of OOPNET's SimulationReport functions (e.g. Flow(rpt)). f links is None or specific links do not have  values, then the links are drawn as black lines
       colormap: Colormap defining which colors are used for the simulation results (default is matplotlib's colormap jet). colormap can either be a string for matplotlib colormaps, a matplotlib.colors.LinearSegmentedColormap object or a matplotlib.colors.ListedColormap object. If one wants to use different colormaps for nodes and links, then make use of a dictionary with key 'node' for nodes respectively key 'link' for links (e.g. colormaps = {'node':'jet', 'link':'cool'} plots nodes with colormap jet and links using colormap cool)
 
     Returns:

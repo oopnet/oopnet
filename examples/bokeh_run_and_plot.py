@@ -12,5 +12,5 @@ p = rpt.pressure
 f = rpt.flow
 
 output_file('bokehexample.html')
-p = on.BPlot(net, nodes=p, links=f, colormap=dict(node='viridis', link='cool'))
-show(p)
+plot = net.bokehplot(nodes=p, links=f, colormap=dict(node='viridis', link='cool'))
+show(plot)

@@ -50,6 +50,7 @@ def read_vertices(network: Network, block: list):
         v = Vertex(float(vals[1]), float(vals[2]))
         j.vertices.append(v)
 
+
 @section_reader('LABELS', 4)
 # ToDo: Implement Labelreader
 def read_labels(network: Network, block: list):

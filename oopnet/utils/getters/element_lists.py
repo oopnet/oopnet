@@ -319,3 +319,29 @@ def get_rules(network: Network) -> list[Rule]:
 
     """
     return list(network._rules.values())
+
+
+def get_inflow_nodes(network: Network) -> list[Node]:
+    """Gets all Nodes that act is inflows into the system.
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      list of Tanks, Reservoirs and Junctions with a base demand < 0
+
+    """
+    return get_tanks(network) + get_reservoirs(network) + [x for x in get_junctions(network) if x.demand < 0]
+
+
+def get_inflow_node_ids(network: Network) -> list[str]:
+    """Gets all IDs of Nodes that act is inflows into the system.
+
+    Args:
+      network: OOPNET network object
+
+    Returns:
+      ID list of Tanks, Reservoirs and Junctions with a base demand < 0
+
+    """
+    return [x.id for x in get_inflow_nodes(network)]

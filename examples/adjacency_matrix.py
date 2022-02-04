@@ -3,7 +3,6 @@ import os
 import networkx as nx
 from matplotlib import pyplot as plt
 import oopnet as on
-from oopnet.graph.graph import onlinks2nxlinks
 
 filename = os.path.join('data', 'anytown.inp')
 
@@ -12,7 +11,7 @@ net = on.Network.read(filename)
 G = on.Graph(net)
 
 nodes = on.get_node_ids(net)
-links = onlinks2nxlinks(net)
+links = on.onlinks2nxlinks(net)
 
 A = nx.incidence_matrix(G, nodelist=nodes, edgelist=links)
 print('Incidence Matrix - not oriented')

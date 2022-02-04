@@ -12,7 +12,7 @@ import logging
 from oopnet.report.reportfile_reader import ReportFileReader
 from oopnet.report.binaryfile_reader import BinaryFileReader
 from oopnet.utils import utils
-from oopnet.report.report import Report
+from oopnet.report.report import SimulationReport
 from oopnet.utils.oopnet_logging import logging_decorator
 if TYPE_CHECKING:
     from oopnet.elements.network import Network
@@ -129,7 +129,7 @@ class ModelSimulator:
         self._create_command()
         self._execute()
 
-        rpt = Report(self.filename.replace('.inp', '.rpt'), startdatetime=self.startdatetime, reader=ReportFileReader)
+        rpt = SimulationReport(self.filename.replace('.inp', '.rpt'), startdatetime=self.startdatetime, reader=ReportFileReader)
 
         if self.delete:
             os.remove(self.filename)

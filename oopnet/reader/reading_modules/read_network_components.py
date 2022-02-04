@@ -146,14 +146,37 @@ class PumpFactory(ComponentFactory):
     @classmethod
     def _parse_single(cls, values: dict, network: Network) -> Pump:
         comment = cls._read_comment(values)
-        attr_values = cls._pad_list(values['values'], 5)
-        attr_names = ['id', 'startnode', 'endnode', 'keyword', 'value']
-        if attr_values[3] == 'HEAD':
-            attr_cls = [str, Node, Node, str, Curve]
-        else:
-            attr_cls = [str, Node, Node, str, str]
-        attr_dict = cls._create_attr_dict(attr_names, attr_values, attr_cls, network)
+        attr_values = values['values'][:3]
+        attr_names = ['id', 'startnode', 'endnode']
+        attr_cls = [str, Node, Node]
+
+        prop_names, prop_vals, prop_cls = cls._parse_keywords(values['values'][3:])
+
+        attr_dict = cls._create_attr_dict(attr_names+prop_names, attr_values+prop_vals, attr_cls+prop_cls, network)
         return Pump(**attr_dict, comment=comment)
+
+    @staticmethod
+    def _parse_keywords(keywords):
+        values = []
+        names = []
+        cls = []
+        for i in range(0, len(keywords), 2):
+            try:
+                keyword = keywords[i]
+                value = keywords[i + 1]
+            except IndexError:
+                continue
+            if keyword in {'POWER', 'SPEED'}:
+                names.append(keyword.lower())
+                cls.append(float)
+            elif keyword == 'HEAD':
+                names.append('head')
+                cls.append(Curve)
+            elif keyword == 'PATTERN':
+                names.append('pattern')
+                cls.append(Pattern)
+            values.append(value)
+        return names, values, cls
 
     @staticmethod
     def _pad_list(alist: list, target_length: int, pump_value_index=4) -> list:
@@ -187,8 +210,7 @@ class ValveFactory(ComponentFactory):
         if valve_type in {'PRV', 'TCV', 'PSV', 'PBV', 'FCV'}:
             attr_cls = [str, Node, Node, float, float, float]
         elif valve_type == 'GPV':
-            # todo: switch GPV values to Curves
-            attr_cls = [str, Node, Node, float, str, float]
+            attr_cls = [str, Node, Node, float, Curve, float]
         else:
             raise InvalidValveTypeError(valve_type)
         attr_dict = cls._create_attr_dict(attr_names, attr_values, attr_cls, network)

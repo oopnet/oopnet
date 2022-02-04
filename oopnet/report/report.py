@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 # todo: add documentation
-class Report:
+class SimulationReport:
     """Class for storing stimulation results.
 
     Attributes:
@@ -24,7 +24,7 @@ class Report:
 
     def __init__(self, filename: str, startdatetime: Optional[datetime.datetime] = None,
                  reader: Union[Type[BinaryFileReader], Type[ReportFileReader]] = ReportFileReader):
-        """Report init method.
+        """SimulationReport init method.
 
         Args:
             filename: name of EPANET input file be simulated
@@ -153,7 +153,7 @@ class Report:
     def headloss(self) -> pd.Series:
         """Headlosses from the simulation report object.
 
-        WARNING: If one wants to work with headloss, then the length has to be defined in the report
+        WARNING: If one wants to work with headloss, then the length reportparameter has to be set to 'YES' in the Network's Reportparameter settings.
 
         Returns:
           Pandas Series containing the headlosses of the Links

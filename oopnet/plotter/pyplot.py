@@ -1,4 +1,5 @@
-from typing import Union, Optional, Type
+from __future__ import annotations
+from typing import Union, Optional, Type, TYPE_CHECKING
 
 import matplotlib.axes
 from matplotlib import pyplot as plt
@@ -10,9 +11,10 @@ import numpy as np
 import pandas as pd
 
 from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Pump, Valve
-from oopnet.elements.network import Network
 from oopnet.utils.getters.element_lists import get_link_ids, get_node_ids, get_valves, get_pumps, get_junctions, \
     get_reservoirs, get_tanks, get_pipes
+if TYPE_CHECKING:
+    from oopnet.elements.network import Network
 
 
 # todo: refactor
@@ -63,15 +65,10 @@ class Plotpipes:
     def __new__(cls, network: Network, color):
         lines = []
         colors = []
-
         for pipe in get_pipes(network):
             lines.append(pipe.coordinates_2d.tolist())
             colors.append(color[pipe.id])
-            # if pipe.vertices:
-            #     colors += [color[pipe.id]] * len(pipe.vertices)
-
         lines = LineCollection(lines, color=colors)
-
         return lines
 
 
@@ -113,8 +110,8 @@ class Plotsimulation:
     Args:
       network: OOPNET network object one wants to plot
       fignum: figure number, where to plot the network
-      nodes: Values related to the nodes as Pandas Series generated e.g. by one of OOPNET's Report functions (e.g. Pressure(rpt)). If nodes is None or specific nodes do not have  values, then the nodes are drawn as black circles
-      links: Values related to the links as Pandas Series generated e.g. by one of OOPNET's Report functions (e.g. Flow(rpt)). If links is None or specific links do not have  values, then the links are drawn as black lines
+      nodes: Values related to the nodes as Pandas Series generated e.g. by one of OOPNET's SimulationReport functions (e.g. Pressure(rpt)). If nodes is None or specific nodes do not have  values, then the nodes are drawn as black circles
+      links: Values related to the links as Pandas Series generated e.g. by one of OOPNET's SimulationReport functions (e.g. Flow(rpt)). If links is None or specific links do not have  values, then the links are drawn as black lines
       colorbar: If True a colorbar is created, if False there is no colorbar in the plot. If one wants to set this setting for nodes and links seperatly, make use of a dictionary with key 'node' for nodes respectively key 'link' for links (e.g. colorbar = {'node':True, 'link':False} plots a colorbar for nodes but not for links)
       colormap: Colormap defining which colors are used for the simulation results (default is matplotlib's colormap viridis). colormap can either be a string for matplotlib colormaps, a matplotlib.colors.LinearSegmentedColormap object or a matplotlib.colors.ListedColormap object. If one wants to use different colormaps for nodes and links, then make use of a dictionary with key 'node' for nodes respectively key 'link' for links (e.g. colormaps = {'node':'jet', 'link':'cool'} plots nodes with colormap jet and links using colormap cool)
       ax: Matplotlib Axes object
