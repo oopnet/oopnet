@@ -2,7 +2,8 @@ import os
 import unittest
 
 from oopnet.elements.network import Network
-from base import CTownModel, MicropolisModel, PoulakisEnhancedPDAModel, RulesModel, SimpleModel
+
+from testing.base import CTownModel, MicropolisModel, PoulakisEnhancedPDAModel, RulesModel, SimpleModel
 
 
 def write_read(network: Network) -> Network:

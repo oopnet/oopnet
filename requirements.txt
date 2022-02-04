@@ -4,3 +4,4 @@ networkx
 numpy
 pandas
 xarray
+seaborn

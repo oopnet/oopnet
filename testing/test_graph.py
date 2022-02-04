@@ -6,6 +6,7 @@ from oopnet.graph.graph import Graph, DiGraph, MultiGraph, MultiDiGraph, onlinks
     nxedge2onlink_id, edgeresult2pandas
 from oopnet.elements.network_components import Pipe
 from oopnet.utils.getters.get_by_id import get_link
+
 from testing.base import ETownModel, CTownModel, PoulakisEnhancedPDAModel
 
 

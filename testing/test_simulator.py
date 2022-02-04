@@ -1,6 +1,7 @@
 import unittest
 
 from oopnet.report import *
+
 from testing.base import CTownModel, MicropolisModel, PoulakisEnhancedPDAModel, RulesModel, SimpleModel, \
     activate_all_report_parameters
 

@@ -3,7 +3,8 @@ import unittest
 from matplotlib import pyplot as plt
 
 from oopnet.plotter.pyplot import Plotsimulation
-from base import ETownModel
+
+from testing.base import ETownModel
 
 
 class ETownModelPlottingTest(unittest.TestCase):

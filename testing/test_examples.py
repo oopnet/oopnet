@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from matplotlib import pyplot as plt
 
-from base import set_dir_examples, set_dir_testing
+from testing.base import set_dir_examples, set_dir_testing
 
 
 @patch('matplotlib.pyplot.show')

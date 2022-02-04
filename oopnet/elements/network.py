@@ -3,7 +3,6 @@ from typing import Optional, TYPE_CHECKING, Union
 from dataclasses import dataclass, field
 from datetime import datetime
 
-import networkx as nx
 if TYPE_CHECKING:
     from bokeh.plotting import Figure as BokehFigure
     from matplotlib.pyplot import Figure as PyPlotFigure
@@ -67,7 +66,6 @@ class Network:
     report: Report = field(default_factory=Report)
     reportparameter: Reportparameter = field(default_factory=Reportparameter)
     reportprecision: Reportprecision = field(default_factory=Reportprecision)
-    graph: Optional[nx.Graph] = None  # todo: discuss Graph as Network attribute
 
     energies: list[Energy] = field(default_factory=list)
     controls: list[Control] = field(default_factory=list)
