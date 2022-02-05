@@ -20,6 +20,7 @@ jobs:
     - name: Checkout linux_epanet_2.2
       uses: actions/checkout@v2
       with:
+        token: ${{ secrets.OOPNET_TOKEN }}
         repository: oopnet/linux_epanet_2.2
         path: linux_epanet_2.2
     - name: Setup EPANET
