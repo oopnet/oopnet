@@ -38,11 +38,6 @@ jobs:
       uses: lgeiger/black-action@v1.0.1
       with:
         args: "oopnet"
-    - name: Check out my other private repo
-      uses: actions/checkout@master
-      with:
-        repository: oopnet/linux_epanet_2.2
-        token: ${{ secrets.GITHUB_TOKEN }}
     - name: Test with pytest
       run: |
         pytest
