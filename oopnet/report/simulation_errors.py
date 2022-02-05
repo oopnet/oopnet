@@ -126,8 +126,8 @@ class IllegalAnalysisOptionError(EPANETError):
     code = 213
 
 
-class TooManyCharactersError(EPANETError):
-    code = 214
+class InvalidIDError(EPANETError):
+    code = 252
 
 
 class SharedIDError(EPANETError):

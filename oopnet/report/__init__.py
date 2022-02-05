@@ -17,7 +17,7 @@ from .simulation_errors import (
     IllegalLinkPropertyError,
     UndefinedTraceNodeError,
     IllegalAnalysisOptionError,
-    TooManyCharactersError,
+    InvalidIDError,
     SharedIDError,
     UndefinedPumpError,
     InvalidEnergyDataError,
