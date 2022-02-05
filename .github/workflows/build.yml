@@ -29,23 +29,23 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: "3.9"
-#     - name: Install dependencies
-#       run: |
-#         python -m pip install --upgrade pip
-#         pip install pytest scoop
-#         if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest scoop
+        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
     - name: Black Code Formatter
       uses: lgeiger/black-action@v1.0.1
       with:
         args: "oopnet"
-#     - name: Check out my other private repo
-#       uses: actions/checkout@master
-#       with:
-#         repository: oopnet/linux_epanet_2.2
-#         token: ${{ secrets.GITHUB_TOKEN }}
-#     - name: Test with pytest
-#       run: |
-#         pytest
+    - name: Check out my other private repo
+      uses: actions/checkout@master
+      with:
+        repository: oopnet/linux_epanet_2.2
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Test with pytest
+      run: |
+        pytest
     - name: Python Semantic Release
       uses: relekang/python-semantic-release@master
       with:
