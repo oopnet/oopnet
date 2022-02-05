@@ -1,3 +1,6 @@
+import importlib.metadata
+__version__ = importlib.metadata.version('oopnet')
+
 from oopnet.elements import *
 from oopnet.graph import *
 from oopnet.plotter import *
