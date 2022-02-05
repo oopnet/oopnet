@@ -19,21 +19,21 @@ class BlankSimulationErrorTest(unittest.TestCase):
         from oopnet.report.simulation_errors import NotEnoughNodesError
         with self.assertRaises(EPANETSimulationError) as e:
             self.network.run(output=True)
-            self.assertTrue(NotEnoughNodesError in e.errors)
+            self.assertTrue(e.exception.check_contained_errors(NotEnoughNodesError))
 
     def test_not_enough_sources(self):
         from oopnet.report.simulation_errors import NotEnoughSourcesError
         add_junction(self.network, Junction(id='test'))
         with self.assertRaises(EPANETSimulationError) as e:
             self.network.run(output=True)
-            self.assertTrue(NotEnoughSourcesError in e.arrors)
+            self.assertTrue(e.exception.check_contained_errors(NotEnoughSourcesError))
 
     def test_invalid_curve(self):
         from oopnet.report.simulation_errors import InvalidCurveError
         add_curve(self.network, Curve(id='curve', xvalues=[3, 2, 1], yvalues=[1, 2, 3]))
         with self.assertRaises(EPANETSimulationError) as e:
             self.network.run(output=True)
-            self.assertTrue(InvalidCurveError in e.errors)
+            self.assertTrue(e.exception.check_contained_errors(InvalidCurveError))
 
 
 class ExistingModelTest(unittest.TestCase):
@@ -46,7 +46,7 @@ class ExistingModelTest(unittest.TestCase):
         add_junction(self.network, Junction('junction'))
         with self.assertRaises(EPANETSimulationError) as e:
             self.network.run(output=True)
-            self.assertTrue(UnconnectedNodeError in e.errors)
+            self.assertTrue(e.exception.check_contained_errors(UnconnectedNodeError))
 
     def test_illegal_node_property(self):
         from oopnet.report.simulation_errors import IllegalNodePropertyError
@@ -54,7 +54,7 @@ class ExistingModelTest(unittest.TestCase):
         t.diam = -100
         with self.assertRaises(EPANETSimulationError) as e:
             self.network.run(output=True)
-            self.assertTrue(IllegalNodePropertyError in e.errors)
+            self.assertTrue(e.exception.check_contained_errors(IllegalNodePropertyError))
 
     def test_illegal_link_property(self):
         from oopnet.report.simulation_errors import IllegalLinkPropertyError
@@ -62,7 +62,7 @@ class ExistingModelTest(unittest.TestCase):
         j.diameter = -100
         with self.assertRaises(EPANETSimulationError) as e:
             self.network.run(output=True)
-            self.assertTrue(IllegalLinkPropertyError in e.errors)
+            self.assertTrue(e.exception.check_contained_errors(IllegalLinkPropertyError))
 
     def test_too_many_characters(self):
         from oopnet.report.simulation_errors import TooManyCharactersError
@@ -70,7 +70,7 @@ class ExistingModelTest(unittest.TestCase):
         j.id = 300 * 'a'
         with self.assertRaises(EPANETSimulationError) as e:
             self.network.run(output=True)
-            self.assertTrue(TooManyCharactersError in e.errors)
+            self.assertTrue(e.exception.check_contained_errors(TooManyCharactersError))
 
     def test_id_duplicate(self):
         from oopnet.report.simulation_errors import SharedIDError
