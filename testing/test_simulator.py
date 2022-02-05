@@ -10,7 +10,7 @@ class CTownSimulatorTest(unittest.TestCase):
     def setUp(self) -> None:
         self.model = CTownModel()
         activate_all_report_parameters(self.model.network)
-        self.rpt = self.model.network.run()
+        self.rpt = self.model.network.run(output=True)
 
     def test_pressure(self):
         # p = Pressure()

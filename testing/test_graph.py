@@ -41,7 +41,7 @@ class CTownModelGraphTest(unittest.TestCase):
     def test_report_weight(self):
         self.model.network.reportparameter.headloss = 'YES'
         self.model.network.reportparameter.length = 'YES'
-        rpt = self.model.network.run()
+        rpt = self.model.network.run(output=True)
         headloss = rpt.headloss
         g = MultiGraph(self.model.network, weight=headloss, default=0)
         self.assertIsInstance(g, nx.Graph)

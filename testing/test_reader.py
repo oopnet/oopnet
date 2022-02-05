@@ -103,7 +103,7 @@ class PoulakisEnhancedReaderTest(unittest.TestCase):
         self.assertEqual('NONE', times.statistic)
 
     def test_run(self):
-        rpt = self.model.network.run()
+        rpt = self.model.network.run(output=True)
 
     # todo: add options, reportparameter, curve, pattern ... tests
 
@@ -129,7 +129,7 @@ class MicropolisReaderTest(unittest.TestCase):
                           0.96, 0.96, 0.96, 0.96, 0.96, 1.065, 1.075, 1.065, 0.96], p.multipliers)
 
     def test_run(self):
-        rpt = self.model.network.run()
+        rpt = self.model.network.run(output=True)
 
     def test_options(self):
         options = self.model.network.options
@@ -190,7 +190,7 @@ class RulesModelReaderTest(unittest.TestCase):
         self.assertEqual(0.01, options.tolerance)
 
     def test_run(self):
-        rpt = self.model.network.run()
+        rpt = self.model.network.run(output=True)
 
     def test_rules(self):
         self.assertEqual(self.model.n_rules, len(self.model.network._rules))
@@ -202,7 +202,7 @@ class CTownReaderTest(unittest.TestCase):
         self.model = CTownModel()
 
     def test_run(self):
-        rpt = self.model.network.run()
+        rpt = self.model.network.run(output=True)
 
 
 class ETownReaderTest(unittest.TestCase):

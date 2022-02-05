@@ -130,9 +130,9 @@ class ModelSimulator:
         cmd = subprocess.run(self.command, capture_output=True, shell=False)
         out, err = cmd.stdout, cmd.stderr
         if out and self.output:
-            print(decorate_string(out))
+            logger.info(decorate_string(out))
         if err and self.output:
-            print(decorate_string(err))
+            logger.info(decorate_string(err))
 
     def run(self):
         """Simulates a hydraulic model using EPANET."""

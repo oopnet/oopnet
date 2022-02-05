@@ -126,6 +126,7 @@ class Network:
           filename: if thing is an OOPNET network, filename is an option to perform command line EPANET simulations with a specific filename. If filename is a Python None object then a file with a random UUID (universally unique identifier) is generated
           delete: if delete is True the EPANET Input and SimulationReport file is deleted, if False then the simulation results won't be deleted and are stored in a folder named path
           path: Path were to perform the simulations. If path is a Python None object then a tmp-folder is generated
+          output: If True, stdout and strerr will be printed to console and logged.
 
         Returns:
           OOPNET report object
