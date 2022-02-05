@@ -18,6 +18,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Checkout linux_epanet_2.2
+      uses: actions/checkout@v2
       with:
         repository: oopnet/linux_epanet_2.2
         path: linux_epanet_2.2
