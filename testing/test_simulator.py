@@ -7,7 +7,7 @@ import pandas as pd
 from oopnet.report import *
 
 from testing.base import CTownModel, MicropolisModel, PoulakisEnhancedPDAModel, RulesModel, SimpleModel, \
-    activate_all_report_parameters
+    activate_all_report_parameters, set_dir_testing
 
 
 class SimulatorTest(unittest.TestCase):
@@ -20,6 +20,7 @@ class SimulatorTest(unittest.TestCase):
         def replace_invalid_vals(df):
             return df.replace('#N\/A\s+', np.nan, regex=True)
 
+        set_dir_testing()
         node_results = pd.read_excel(filename, sheet_name='nodes', engine='openpyxl', index_col=0)
         node_results = replace_invalid_vals(node_results)
         self.node_results = strip_index_columns(node_results)
