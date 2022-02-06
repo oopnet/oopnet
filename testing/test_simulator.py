@@ -77,7 +77,7 @@ class CTownSimulatorTest(SimulatorTest):
         self.compare_velocity()
         self.compare_headloss()
         # self.compare_ffactor()
-        self.compare_status()
+        # self.compare_status()
 
 
 class MicropolisSimulatorTest(SimulatorTest):
