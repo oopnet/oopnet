@@ -6,3 +6,4 @@ pandas
 xarray
 seaborn
 scoop
+openpyxl
