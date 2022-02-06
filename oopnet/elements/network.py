@@ -57,15 +57,10 @@ class Network:
       report: SimulationReport object representing model report settings
       reportparameter: Reportparameter object representing model report parameter settings
       reportprecision: Reportprecision object representing model report parameter precision settings
-      graph: Contains the networkx graph of the network
-      _junctions: List of all Junction objects in the network
-      _tanks: List of all Tank objects in the network
-      _reservoirs: List of all Reservoir objects in the network
-      _pipes: List of all Pipe objects in the network
-      _pumps: List of all Pump objects in the network
-      _valves: List of all Valve objects in the network
-      _curves: List of all Curve objects belonging to the network
-      _patterns: List of all Pattern objects belonging to the network
+      _nodes: SuperComponentRegistry for all Node objects in the network
+      _links: SuperComponentRegistry for all Link objects in the network
+      _curves: ComponentRegistry of for Curve objects belonging to the network
+      _patterns: ComponentRegistry of for Pattern objects belonging to the network
 
     """
 
@@ -95,6 +90,7 @@ class Network:
 
         Args:
           filename: filename of the EPANET input file
+          content: EPANET input file content as string
 
         """
         network = cls()

@@ -275,7 +275,6 @@ class Valve(Link):
     """Valve link.
 
     Attributes:
-      valvetype: A required parameter that describes the valve's operational setting (PRV, PSV, PBV, FCV, TCV, GPV).
       diameter: The valve diameter in mm.
       minorloss: Unitless minor loss coefficient that applies when the valve is completely opened. Assumed 0 if left blank.
       setting: Setting value depending on valvetype.

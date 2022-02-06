@@ -58,6 +58,7 @@ def read(
 
     Args:
       filename: filename of the EPANET input file
+      content: EPANET input file content as string
 
     Returns:
       network object
