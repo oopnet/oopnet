@@ -263,14 +263,22 @@ class ValveFactory(ComponentFactory):
         attr_values[4] = None
         attr_values = cls._pad_list(values["values"], 7)
         setting_name = {
-            'PRV': 'maximum_pressure',
-            'TCV': 'headloss_coefficient',
-            'PSV': 'pressure_limit',
-            'GPV': 'headloss_curve',
-            'PBV': 'pressure_drop',
-            'FCV': 'maximum_flow'
+            "PRV": "maximum_pressure",
+            "TCV": "headloss_coefficient",
+            "PSV": "pressure_limit",
+            "GPV": "headloss_curve",
+            "PBV": "pressure_drop",
+            "FCV": "maximum_flow",
         }
-        attr_names = ["id", "startnode", "endnode", "diameter", "valvetype", setting_name[valve_type], "minorloss"]
+        attr_names = [
+            "id",
+            "startnode",
+            "endnode",
+            "diameter",
+            "valvetype",
+            setting_name[valve_type],
+            "minorloss",
+        ]
 
         if valve_type in {"PRV", "TCV", "PSV", "PBV", "FCV"}:
             attr_cls = [str, Node, Node, float, None, float, float]
@@ -280,15 +288,15 @@ class ValveFactory(ComponentFactory):
             raise InvalidValveTypeError(valve_type)
         attr_dict = cls._create_attr_dict(attr_names, attr_values, attr_cls, network)
 
-        if valve_type == 'PRV':
+        if valve_type == "PRV":
             return PRV(**attr_dict, comment=comment)
-        elif valve_type == 'TCV':
+        elif valve_type == "TCV":
             return TCV(**attr_dict, comment=comment)
-        elif valve_type == 'PSV':
+        elif valve_type == "PSV":
             return PSV(**attr_dict, comment=comment)
-        elif valve_type == 'PBV':
+        elif valve_type == "PBV":
             return PBV(**attr_dict, comment=comment)
-        elif valve_type == 'FCV':
+        elif valve_type == "FCV":
             return FCV(**attr_dict, comment=comment)
-        elif valve_type == 'GPV':
+        elif valve_type == "GPV":
             return GPV(**attr_dict, comment=comment)

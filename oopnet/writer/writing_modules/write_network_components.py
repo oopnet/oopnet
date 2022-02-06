@@ -3,14 +3,7 @@ from typing import TYPE_CHECKING
 from io import TextIOWrapper
 import logging
 
-from oopnet.elements.network_components import (
-    GPV,
-    TCV,
-    PSV,
-    PRV,
-    PBV,
-    FCV
-)
+from oopnet.elements.network_components import GPV, TCV, PSV, PRV, PBV, FCV
 
 from oopnet.utils.getters.element_lists import (
     get_junctions,

@@ -299,6 +299,7 @@ class PRV(Valve):
         maximum_pressure: pressure limit
 
     """
+
     maximum_pressure: float = 0.0
 
     @property
@@ -318,6 +319,7 @@ class TCV(Valve):
         headloss_coefficient: head loss coefficient
 
     """
+
     headloss_coefficient: float = 0.0
 
     @property
@@ -337,6 +339,7 @@ class PSV(Valve):
         setting: pressure limit at upstream setting
 
     """
+
     pressure_limit: float = 0.0
 
     @property
@@ -356,6 +359,7 @@ class GPV(Valve):
         headloss_curve: Curve representing flow-head loss relationship
 
     """
+
     headloss_curve: Curve = None
 
     @property
@@ -375,6 +379,7 @@ class PBV(Valve):
         pressure_drop: pressure drop
 
     """
+
     pressure_drop: float = 0.0
 
     @property
@@ -394,6 +399,7 @@ class FCV(Valve):
         maximum_flow: maximum allow flow
 
     """
+
     maximum_flow: float = 0.0
 
     @property
