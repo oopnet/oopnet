@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.3 (2022-02-06)
+### Fix
+* Moved requirements from requirements.txt to setup.cfg to enable autoinstall of missing packages ([`eb119cd`](https://github.com/oopnet/oopnet/commit/eb119cd954d35f4ad49b1625651d3a2167e5c7a7))
+
 ## v0.1.2 (2022-02-06)
 ### Fix
 * Fixed setup.cfg package_data ([`c3f7122`](https://github.com/oopnet/oopnet/commit/c3f71223641b51a31b4e6e9282436480190a598b))
