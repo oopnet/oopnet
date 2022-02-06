@@ -1,7 +1,0 @@
-bokeh
-matplotlib
-networkx
-numpy
-pandas
-xarray
-seaborn
