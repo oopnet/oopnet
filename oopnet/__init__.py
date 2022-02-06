@@ -1,10 +1,10 @@
 __version__ = "0.1.3"
 
-from oopnet.elements import *
-from oopnet.graph import *
-from oopnet.plotter import *
-from oopnet.report import *
-from oopnet.utils.adders import *
-from oopnet.utils.getters import *
-from oopnet.utils.removers import *
-from oopnet.utils import *
+from .elements import *
+from .graph import *
+from .plotter import *
+from .report import *
+from .utils.adders import *
+from .utils.getters import *
+from .utils.removers import *
+from .utils import *
