@@ -3,7 +3,15 @@ from typing import TYPE_CHECKING
 from io import TextIOWrapper
 import logging
 
-from oopnet.elements.system_operation import Curve
+from oopnet.elements.network_components import (
+    GPV,
+    TCV,
+    PSV,
+    PRV,
+    PBV,
+    FCV
+)
+
 from oopnet.utils.getters.element_lists import (
     get_junctions,
     get_reservoirs,
@@ -204,10 +212,18 @@ def write_valves(network: Network, fid: TextIOWrapper):
             print(v.endnode.id, end=" ", file=fid)
         print(v.diameter, end=" ", file=fid)
         print(v.__class__.__name__, end=" ", file=fid)
-        if isinstance(v.setting, Curve):
-            print(v.setting.id, end=" ", file=fid)
-        else:
-            print(v.setting, end=" ", file=fid)
+        if isinstance(v, PRV):
+            print(v.maximum_pressure, end=" ", file=fid)
+        elif isinstance(v, TCV):
+            print(v.headloss_coefficient, end=" ", file=fid)
+        elif isinstance(v, PSV):
+            print(v.pressure_limit, end=" ", file=fid)
+        elif isinstance(v, GPV):
+            print(v.headloss_curve.id, end=" ", file=fid)
+        elif isinstance(v, PBV):
+            print(v.pressure_drop, end=" ", file=fid)
+        elif isinstance(v, FCV):
+            print(v.maximum_flow, end=" ", file=fid)
         print(v.minorloss, end=" ", file=fid)
         if v.comment is not None:
             print(";", v.comment, end=" ", file=fid)

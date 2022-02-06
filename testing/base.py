@@ -46,7 +46,7 @@ def create_dummy_spa_network() -> Network:
     add_dummy_pipes(network, [('J-1', 'T-1'), ('J-1', 'R-1')])
     pu = Pump(id='PU-1', head=get_curve(network, 'C-1'), startnode=get_node(network, 'J-1'),
               endnode=get_node(network, 'J-2'))
-    v = PRV(id='V-1', setting=5.0, startnode=get_node(network, 'J-1'),
+    v = PRV(id='V-1', maximum_pressure=5.0, startnode=get_node(network, 'J-1'),
             endnode=get_node(network, 'J-3'))
 
     for obj in [pu, v]:

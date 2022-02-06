@@ -277,13 +277,11 @@ class Valve(Link):
     Attributes:
       diameter: The valve diameter in mm.
       minorloss: Unitless minor loss coefficient that applies when the valve is completely opened. Assumed 0 if left blank.
-      setting: Setting value depending on valvetype.
 
     """
 
     diameter: float = 12.0
     minorloss: float = 0.0
-    setting: Union[float] = 0.0
 
     @NetworkComponent.id.setter
     def id(self, id: str):
@@ -298,9 +296,18 @@ class PRV(Valve):
     """Pressure Reducing Valve.
 
     Attributes:
-        setting: pressure limit
+        maximum_pressure: pressure limit
 
     """
+    maximum_pressure: float = 0.0
+
+    @property
+    def setting(self):
+        return self.maximum_pressure
+
+    @setting.setter
+    def setting(self, value):
+        self.maximum_pressure = value
 
 
 @dataclass
@@ -308,9 +315,18 @@ class TCV(Valve):
     """Throttle Control Valve.
 
     Attributes:
-        setting: head loss coefficient
+        headloss_coefficient: head loss coefficient
 
     """
+    headloss_coefficient: float = 0.0
+
+    @property
+    def setting(self):
+        return self.headloss_coefficient
+
+    @setting.setter
+    def setting(self, value):
+        self.headloss_coefficient = value
 
 
 @dataclass
@@ -321,6 +337,15 @@ class PSV(Valve):
         setting: pressure limit at upstream setting
 
     """
+    pressure_limit: float = 0.0
+
+    @property
+    def setting(self):
+        return self.pressure_limit
+
+    @setting.setter
+    def setting(self, value):
+        self.pressure_limit = value
 
 
 @dataclass
@@ -328,11 +353,18 @@ class GPV(Valve):
     """General Purpose Valve.
 
     Attributes:
-        setting: Curve representing flow-head loss relationship
+        headloss_curve: Curve representing flow-head loss relationship
 
     """
+    headloss_curve: Curve = None
 
-    setting: Optional[Curve] = None
+    @property
+    def setting(self):
+        return self.headloss_curve
+
+    @setting.setter
+    def setting(self, value):
+        self.headloss_curve = value
 
 
 @dataclass
@@ -340,9 +372,18 @@ class PBV(Valve):
     """Pressure Breaker Valve.
 
     Attributes:
-        setting: pressure drop
+        pressure_drop: pressure drop
 
     """
+    pressure_drop: float = 0.0
+
+    @property
+    def setting(self):
+        return self.pressure_drop
+
+    @setting.setter
+    def setting(self, value):
+        self.pressure_drop = value
 
 
 @dataclass
@@ -350,6 +391,15 @@ class FCV(Valve):
     """Flow Control Valve.
 
     Attributes:
-        setting: maximum allow flow
+        maximum_flow: maximum allow flow
 
     """
+    maximum_flow: float = 0.0
+
+    @property
+    def setting(self):
+        return self.maximum_flow
+
+    @setting.setter
+    def setting(self, value):
+        self.maximum_flow = value

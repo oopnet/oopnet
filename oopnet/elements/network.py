@@ -93,8 +93,7 @@ class Network:
           content: EPANET input file content as string
 
         """
-        network = cls()
-        return read(network=network, filename=filename, content=content)
+        return read(network=cls(), filename=filename, content=content)
 
     def write(self, filename):
         """Converts the Network to an EPANET input file and saves it with the desired filename.

@@ -51,7 +51,7 @@ class ComponentFactory(ReadFactory):
         """
         attr_dict = {}
         for attr, value, attr_cls in zip(attrs, values, cls_list):
-            if value is None:
+            if value is None or attr_cls is None:
                 continue
             if attr_cls == Pattern:
                 value = get_pattern(network, value)

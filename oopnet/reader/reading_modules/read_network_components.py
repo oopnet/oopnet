@@ -260,15 +260,35 @@ class ValveFactory(ComponentFactory):
         comment = cls._read_comment(values)
         attr_values = values["values"]
         valve_type = attr_values[4]
-        del attr_values[4]
+        attr_values[4] = None
         attr_values = cls._pad_list(values["values"], 7)
-        attr_names = ["id", "startnode", "endnode", "diameter", "setting", "minorloss"]
+        setting_name = {
+            'PRV': 'maximum_pressure',
+            'TCV': 'headloss_coefficient',
+            'PSV': 'pressure_limit',
+            'GPV': 'headloss_curve',
+            'PBV': 'pressure_drop',
+            'FCV': 'maximum_flow'
+        }
+        attr_names = ["id", "startnode", "endnode", "diameter", "valvetype", setting_name[valve_type], "minorloss"]
 
         if valve_type in {"PRV", "TCV", "PSV", "PBV", "FCV"}:
-            attr_cls = [str, Node, Node, float, float, float]
+            attr_cls = [str, Node, Node, float, None, float, float]
         elif valve_type == "GPV":
-            attr_cls = [str, Node, Node, float, Curve, float]
+            attr_cls = [str, Node, Node, float, None, Curve, float]
         else:
             raise InvalidValveTypeError(valve_type)
         attr_dict = cls._create_attr_dict(attr_names, attr_values, attr_cls, network)
-        return eval(valve_type)(**attr_dict, comment=comment)
+
+        if valve_type == 'PRV':
+            return PRV(**attr_dict, comment=comment)
+        elif valve_type == 'TCV':
+            return TCV(**attr_dict, comment=comment)
+        elif valve_type == 'PSV':
+            return PSV(**attr_dict, comment=comment)
+        elif valve_type == 'PBV':
+            return PBV(**attr_dict, comment=comment)
+        elif valve_type == 'FCV':
+            return FCV(**attr_dict, comment=comment)
+        elif valve_type == 'GPV':
+            return GPV(**attr_dict, comment=comment)

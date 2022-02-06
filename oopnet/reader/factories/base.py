@@ -46,5 +46,6 @@ class ReadFactory(ABC):
         length = len(alist)
         if length > target_length:
             raise LengthExceededError(actual_length=length, target_length=target_length)
-        alist.extend([None] * (target_length - length))
+        elif length < target_length:
+            alist.extend([None] * (target_length - length))
         return alist

@@ -106,7 +106,7 @@ def write_status(network: Network, fid: TextIOWrapper):
         if l.status == "CLOSED":
             print(l.id, l.status, file=fid)
     for v in get_valves(network):
-        if v.status == "CLOSED" or v.setting == 1:
+        if v.status == "CLOSED":
             print(v.id, v.status, file=fid)
     for pu in get_pumps(network):
         if pu.status == "CLOSED":

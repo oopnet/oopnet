@@ -1,7 +1,7 @@
 import unittest
 
 from oopnet.elements.network import Network
-from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Pump, Valve, Link, Node, TCV
+from oopnet.elements.network_components import Junction, Reservoir, Tank, Pipe, Pump, PRV, Link, Node, TCV
 from oopnet.elements.system_operation import Pattern, Curve
 from oopnet.elements.component_registry import ComponentExistsError
 from oopnet.utils.getters import *
@@ -109,7 +109,7 @@ class ExistingModelTest(unittest.TestCase):
 
     def test_add_existing_valve(self):
         with self.assertRaises(ComponentExistsError):
-            add_valve(self.network, Valve(id='V-1'))
+            add_valve(self.network, PRV(id='V-1'))
 
     def test_invalid_node(self):
         with self.assertRaises(TypeError):
