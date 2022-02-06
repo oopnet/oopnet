@@ -1,6 +1,5 @@
 import os
 
-import networkx as nx
 from matplotlib import pyplot as plt
 import oopnet as on
 
