@@ -74,11 +74,11 @@ def read(
 
     all_functions = list_section_reader_callables(modules)
 
-    if filename:
+    if filename is not None:
         logger.info(f"Reading model from {filename!r}")
         with open(filename, "r") as fid:
             content = fid.readlines()
-    elif content:
+    elif content is not None:
         logger.info("Reading model from passed string")
         content = content.splitlines()
     else:

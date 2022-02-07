@@ -1,10 +1,36 @@
 import unittest
 import datetime
+import os
 
 from oopnet.elements.network_components import Junction, Tank, Reservoir, Pipe, Pump, Valve
 from oopnet.elements.system_operation import Curve
-from oopnet.utils.getters.get_by_id import get_curve, get_pattern, get_link
+from oopnet.utils.getters import *
 from oopnet.utils.getters.element_lists import get_patterns
+from testing.base import set_dir_testing, PoulakisEnhancedPDAModel
+
+
+class InvalidFilenameReaderTest(unittest.TestCase):
+    def test_invalid_filename(self):
+        from oopnet import Network
+        with self.assertRaises(FileNotFoundError):
+            Network.read(filename='nonsense.abc')
+
+
+class ContentReaderTest(unittest.TestCase):
+    def setUp(self) -> None:
+        set_dir_testing()
+        with open(os.path.join('networks', 'Poulakis_string.txt')) as f:
+            self.content = f.read()
+
+    def test_content(self):
+        from oopnet import Network
+        net = Network.read(filename=None, content=self.content)
+        self.assertEqual(PoulakisEnhancedPDAModel.n_junctions, len(get_junctions(net)))
+        self.assertEqual(PoulakisEnhancedPDAModel.n_tanks, len(get_tanks(net)))
+        self.assertEqual(PoulakisEnhancedPDAModel.n_reservoirs, len(get_reservoirs(net)))
+        self.assertEqual(PoulakisEnhancedPDAModel.n_pipes, len(get_pipes(net)))
+        self.assertEqual(PoulakisEnhancedPDAModel.n_pumps, len(get_pumps(net)))
+        self.assertEqual(PoulakisEnhancedPDAModel.n_valves, len(get_valves(net)))
 
 
 class PoulakisEnhancedReaderTest(unittest.TestCase):
