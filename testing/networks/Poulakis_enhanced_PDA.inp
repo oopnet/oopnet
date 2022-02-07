@@ -50,7 +50,7 @@
  P-04            	J-04            	J-05            	1000        	450         	0.26        	0           	Open  	;
  P-05            	J-05            	J-06            	1000        	450         	0.26        	0           	Open  	;
  P-06            	J-06            	J-07            	1000        	300         	0.26        	0           	Open  	;
- P-07            	J-02            	J-08            	2000        	600         	0.26        	0           	Closed	;
+ P-07            	J-02            	J-08            	2000        	600         	0.26        	0           	Open  	;
  P-08            	J-03            	J-09            	2000        	600         	0.26        	0           	Open  	;
  P-09            	J-04            	J-10            	2000        	450         	0.26        	0           	Open  	;
  P-10            	J-05            	J-11            	2000        	450         	0.26        	0           	Open  	;
@@ -122,12 +122,12 @@
 
 [CURVES]
 ;ID              	X-Value     	Y-Value
-;PUMP: HEADLOSS: 
+;PUMP: PUMP: HEADLOSS: 
  1               	50          	5           
  1               	100         	10          
-;PUMP: PUMP: 
+;PUMP: PUMP: PUMP: 
  2               	50          	50          
-;PUMP: VOLUME: 
+;PUMP: PUMP: VOLUME: 
  3               	2           	20          
  3               	5           	50          
 
@@ -137,7 +137,9 @@
 
 
 
+
 [RULES]
+
 
 
 

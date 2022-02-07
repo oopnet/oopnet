@@ -88,7 +88,25 @@ class MicropolisSimulatorTest(SimulatorTest):
 class PoulakisEnhancedPDASimulatorTest(SimulatorTest):
     def setUp(self) -> None:
         self.model = PoulakisEnhancedPDAModel()
-        self.rpt = self.model.network.run()
+        activate_all_report_parameters(self.model.network)
+        self.rpt = self.model.network.run(output=True)
+        self.read_data(os.path.join('networks', 'Poulakis_enhanced_PDA.xlsx'))
+
+    def test_pump_headloss(self):
+        p_pump = self.rpt.headloss['P-1']
+        self.assertEqual(-5.30, p_pump)
+
+    def test_data(self):
+        self.compare_elevation()
+        self.compare_pressure()
+        self.compare_demand()
+        self.compare_head()
+        self.compare_length()
+        self.compare_flow()
+        self.compare_velocity()
+        self.compare_headloss()
+        # self.compare_ffactor()
+        # self.compare_status()
 
 
 class RulesModelSimulatorTest(SimulatorTest):
