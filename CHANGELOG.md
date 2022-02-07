@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.6 (2022-02-07)
+### Fix
+* Minor changes to setup.cfg to trigger release ([`18b3df2`](https://github.com/oopnet/oopnet/commit/18b3df2a166bd0ae575b128d0f5753755428acc1))
+
 ## v0.1.5 (2022-02-07)
 ### Fix
 * Fix CI ([`98053e7`](https://github.com/oopnet/oopnet/commit/98053e7775ce0d87a239ea991e4905070f8a463f))
