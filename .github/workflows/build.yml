@@ -12,7 +12,7 @@ on:
       - main
 
 jobs:
-  prepare:
+  test:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -34,11 +34,6 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install pytest
         if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
-
-  test:
-    runs-on: ubuntu-latest
-    needs: prepare
-    steps:
     - name: Test with pytest
       run: |
         pytest
