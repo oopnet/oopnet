@@ -65,7 +65,6 @@ class Network:
     """
 
     title: Optional[str] = None
-    vertices: dict[str, Vertex] = field(default_factory=dict)
     labels: dict[str, Label] = field(default_factory=dict)
     backdrop: Optional[Backdrop] = None
     reactions: Reaction = field(default_factory=Reaction)
