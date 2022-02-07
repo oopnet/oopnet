@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
+import numpy as np
 import pandas as pd
 
 from oopnet.utils.getters.element_lists import (
@@ -35,7 +36,7 @@ def get_startnodes(network: Network) -> pd.Series:
     """
     values = [x.startnode for x in get_links(network)]
     names = get_link_ids(network)
-    series = pd.Series(data=values, index=names)
+    series = pd.Series(data=values, index=names, dtype=object)
     series.name = "startnodes"
     return series
 
@@ -52,13 +53,13 @@ def get_endnodes(network: Network) -> pd.Series:
     """
     values = [x.endnode for x in get_links(network)]
     names = get_link_ids(network)
-    series = pd.Series(data=values, index=names)
+    series = pd.Series(data=values, index=names, dtype=object)
     series.name = "endnodes"
     return series
 
 
 def get_startendnodes(network: Network) -> pd.DataFrame:
-    """Gets all endnodes of all Links in the Network as a pandas DataFrame.
+    """Gets all start and endnodes of all Links in the Network as a pandas DataFrame.
 
     Args:
       network: OOPNET Network object
@@ -111,7 +112,7 @@ def get_startendcoordinates(network: Network) -> pd.DataFrame:
 #     """
 #     values = [x.initialstatus for x in get_pumps(network) + get_valves(network)]
 #     names = get_pump_ids(network) + get_valve_ids(network)
-#     series = pd.Series(data=values, index=names)
+#     series = pd.Series(data=values, index=names, dtype=str)
 #     series.name = 'intial status'
 #     return series
 
@@ -128,7 +129,7 @@ def get_status(network: Network) -> pd.Series:
     """
     values = [x.status for x in get_links(network)]
     names = get_link_ids(network)
-    series = pd.Series(data=values, index=names)
+    series = pd.Series(data=values, index=names, dtype=str)
     series.name = "status"
     return series
 
@@ -145,7 +146,7 @@ def get_setting(network: Network) -> pd.Series:
     """
     values = [x.setting for x in get_pumps(network) + get_valves(network)]
     names = get_pump_ids(network) + get_valve_ids(network)
-    series = pd.Series(data=values, index=names)
+    series = pd.Series(data=values, index=names, dtype=np.float64)
     series.name = "setting"
     return series
 
@@ -186,7 +187,7 @@ def get_link_comment(network: Network) -> pd.Series:
     """
     values = [x.comment for x in get_links(network)]
     names = get_link_ids(network)
-    series = pd.Series(data=values, index=names)
+    series = pd.Series(data=values, index=names, dtype=str)
     series.name = "link comment"
     return series
 
@@ -204,7 +205,7 @@ def get_length(network: Network) -> pd.Series:
     """
     values = [x.length for x in get_pipes(network)]
     names = get_pipe_ids(network)
-    series = pd.Series(data=values, index=names)
+    series = pd.Series(data=values, index=names, dtype=np.float64)
     series.name = "pipe lengths"
     series.units = "m"
     return series
@@ -220,13 +221,9 @@ def get_diameter(network: Network) -> pd.Series:
       Pandas Series with Pipe/Valve IDs as index and diameters as values.
 
     """
-    ids = []
-    diameters = []
-    ids.extend(get_pipe_ids(network))
-    diameters.extend([x.diameter for x in get_pipes(network)])
-    ids.extend(get_valve_ids(network))
-    diameters.extend([x.diameter for x in get_valves(network)])
-    series = pd.Series(data=diameters, index=ids)
+    ids = get_pipe_ids(network) + get_valve_ids(network)
+    diameters = [x.diameter for x in get_pipes(network)] + [x.diameter for x in get_valves(network)]
+    series = pd.Series(data=diameters, index=ids, dtype=np.float64)
     series.name = "pipe diameters"
     series.units = "mm"
     return series
@@ -244,7 +241,7 @@ def get_roughness(network: Network) -> pd.Series:
     """
     values = [x.roughness for x in get_pipes(network)]
     names = get_pipe_ids(network)
-    series = pd.Series(data=values, index=names)
+    series = pd.Series(data=values, index=names, dtype=np.float64)
     series.name = "pipe roughness"
     series.units = "mm" if network.options.headloss == "D-W" else "1"
     return series
@@ -262,7 +259,7 @@ def get_minorloss(network: Network) -> pd.Series:
     """
     values = [x.minorloss for x in get_pipes(network)]
     names = get_pipe_ids(network)
-    series = pd.Series(data=values, index=names)
+    series = pd.Series(data=values, index=names, dtype=np.float64)
     series.name = "pipe minor-losses"
     series.units = "1"
     return series
@@ -283,7 +280,7 @@ def get_xcoordinate(network: Network) -> pd.Series:
     """
     values = [x.xcoordinate for x in get_nodes(network)]
     names = get_node_ids(network)
-    series = pd.Series(data=values, index=names)
+    series = pd.Series(data=values, index=names, dtype=np.float64)
     series.name = "node x-coordinate"
     series.units = "1"
     return series
@@ -301,7 +298,7 @@ def get_ycoordinate(network: Network) -> pd.Series:
     """
     values = [x.ycoordinate for x in get_nodes(network)]
     names = get_node_ids(network)
-    series = pd.Series(data=values, index=names)
+    series = pd.Series(data=values, index=names, dtype=np.float64)
     series.name = "node y-coordinate"
     series.units = "1"
     return series
@@ -334,7 +331,7 @@ def get_elevation(network: Network) -> pd.Series:
     """
     values = [x.elevation for x in get_nodes(network)]
     names = get_node_ids(network)
-    series = pd.Series(data=values, index=names)
+    series = pd.Series(data=values, index=names, dtype=np.float64)
     series.name = "node elevation"
     series.units = "m"
     return series
@@ -357,7 +354,7 @@ def get_basedemand(network: Network) -> pd.Series:
         for x in get_junctions(network)
     ]
     names = get_junction_ids(network)
-    series = pd.Series(data=values, index=names)
+    series = pd.Series(data=values, index=names, dtype=np.float64)
     series.name = "base demand"
     series.units = "L/s"
     return series
@@ -375,6 +372,6 @@ def get_node_comment(network: Network) -> pd.Series:
     """
     values = [x.comment for x in get_nodes(network)]
     names = get_node_ids(network)
-    series = pd.Series(data=values, index=names)
+    series = pd.Series(data=values, index=names, dtype=str)
     series.name = "node comment"
     return series
