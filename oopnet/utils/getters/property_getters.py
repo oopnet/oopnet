@@ -222,7 +222,9 @@ def get_diameter(network: Network) -> pd.Series:
 
     """
     ids = get_pipe_ids(network) + get_valve_ids(network)
-    diameters = [x.diameter for x in get_pipes(network)] + [x.diameter for x in get_valves(network)]
+    diameters = [x.diameter for x in get_pipes(network)] + [
+        x.diameter for x in get_valves(network)
+    ]
     series = pd.Series(data=diameters, index=ids, dtype=np.float64)
     series.name = "pipe diameters"
     series.units = "mm"
