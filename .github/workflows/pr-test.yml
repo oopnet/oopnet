@@ -1,0 +1,36 @@
+# This workflow will install Python dependencies, run tests, lint (black), applies semantic releases and pushed to PyPi with a single version of Python
+
+name: OOPNET PR test
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  code-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Checkout linux_epanet_2.2
+      uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.OOPNET_TOKEN }}
+        repository: oopnet/linux_epanet_2.2
+        path: linux_epanet_2.2
+    - name: Setup EPANET
+      run: ./linux_epanet_2.2/setup.sh
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.9"
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install pytest
+        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+    - name: Test with pytest
+      run: |
+        pytest
