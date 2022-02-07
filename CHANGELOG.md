@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.5 (2022-02-07)
+### Fix
+* Fix CI ([`98053e7`](https://github.com/oopnet/oopnet/commit/98053e7775ce0d87a239ea991e4905070f8a463f))
+
 ## v0.1.4 (2022-02-06)
 ### Fix
 * Another setup.cfg fix ([`40e8eb8`](https://github.com/oopnet/oopnet/commit/40e8eb81d6a87839029de4566861539cd6d067c6))
