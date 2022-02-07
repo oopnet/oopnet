@@ -173,7 +173,9 @@ class SimulationReport:
         """
 
         def convert(data):
-            return self.length * data / 1000.0
+            l = self.length
+            l = l.replace(0, 1000.0)
+            return l * data / 1000.0
 
         return self._get(self.links, "Headloss", "m", convert)
 
