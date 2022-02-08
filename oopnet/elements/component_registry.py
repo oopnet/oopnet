@@ -21,9 +21,9 @@ class ComponentRegistry(dict):
 
     def __setitem__(self, key, value: NetworkComponent):
         if self.super_registry and self.super_registry.check_id_exists(key):
-            raise ComponentExistsError(key)
+            raise IdenticalIDError(key)
         elif not self.super_registry and key in self:
-            raise ComponentExistsError(key)
+            raise IdenticalIDError(key)
         else:
             super().__setitem__(key, value)
 
@@ -100,12 +100,12 @@ class LinkRegistry:
         return SuperComponentRegistry(["pipes", "pumps", "valves"])
 
 
-class ComponentExistsError(Exception):
+class IdenticalIDError(Exception):
     """Raised when a component with the same ID already exists in the network."""
 
     def __init__(self, id, message=None):
         if not message:
-            self.message = f'A conflicting component with the ID "{id}" already exists in the network.'
+            self.message = f'A conflicting component with the ID {id} already exists in the network.'
         super().__init__(self.message)
 
 
@@ -114,5 +114,5 @@ class ComponentNotExistingError(Exception):
 
     def __init__(self, id, message=None):
         if not message:
-            self.message = f'No Component with ID "{id}" found in the network.'
+            self.message = f'No Component with ID {id} found in the network.'
         super().__init__(self.message)
