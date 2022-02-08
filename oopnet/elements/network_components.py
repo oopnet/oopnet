@@ -2,14 +2,18 @@ from __future__ import annotations
 from typing import Union, Optional, TYPE_CHECKING
 from dataclasses import dataclass, field
 from copy import deepcopy
+import logging
 
 import numpy as np
 
 from oopnet.elements.base import NetworkComponent
+from oopnet.utils.oopnet_logging import logging_decorator
 
 if TYPE_CHECKING:
     from oopnet.elements.system_operation import Pattern, Curve
     from oopnet.elements.network_map_tags import Vertex
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -194,6 +198,7 @@ class Pipe(Link):
             self._rename(id=id, hashtable=self._network._links["pipes"])
         self._id = id
 
+    @logging_decorator(logger)
     def split(
         self, junction_id: str = None, pipe_id: str = None, split_ratio: float = 0.5
     ) -> tuple[Junction, Pipe]:
@@ -217,6 +222,7 @@ class Pipe(Link):
 
         """
         from oopnet.utils.adders import add_junction, add_pipe
+
         from oopnet.utils.getters import get_link_ids, get_node_ids
 
         def create_id(old_id: str, id_list: list[str]) -> str:
@@ -226,20 +232,25 @@ class Pipe(Link):
                     return new_id
             return create_id(new_id, id_list)
 
+        if split_ratio <= 0 or split_ratio >= 1:
+            raise ValueError(f'Split ratio must be 0 < x < 1 but a value of {split_ratio} was passed.')
+
         self.vertices = []
         if not junction_id:
             junction_id = create_id(self.id, get_node_ids(self._network))
         if not pipe_id:
             pipe_id = create_id(self.id, get_link_ids(self._network))
-        x, y, elevation = (self.coordinates[0] + self.coordinates[1]) * split_ratio
+        x, y, elevation = np.add(self.coordinates[0], self.coordinates[1]) * split_ratio
         j = Junction(id=junction_id, xcoordinate=x, ycoordinate=y, elevation=elevation)
         add_junction(self._network, j)
+        self.length *= split_ratio
         p = deepcopy(self)
         p._network = None
         p.id = pipe_id
         p.startnode = j
         add_pipe(self._network, p)
         self.endnode = j
+        logger.debug(f'Split Pipe {self.id} with split ratio {split_ratio}.')
         return j, p
 
 
