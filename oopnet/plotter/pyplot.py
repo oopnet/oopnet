@@ -97,7 +97,10 @@ class Plotpipes:
         colors = []
         for pipe in get_pipes(network):
             lines.append(pipe.coordinates_2d.tolist())
-            colors.append(color[pipe.id])
+            try:
+                colors.append(color[pipe.id])
+            except KeyError:
+                colors.append('k')
         lines = LineCollection(lines, color=colors)
         return lines
 
