@@ -92,38 +92,41 @@ class Plotnodes:
 class Plotpipes:
     """ """
 
-    def __new__(cls, network: Network, color):
+    def __new__(cls, network: Network, color, linkwidth: Optional[pd.Series] = None):
         lines = []
         colors = []
+        attrs = []
         for pipe in get_pipes(network):
             lines.append(pipe.coordinates_2d.tolist())
             try:
                 colors.append(color[pipe.id])
             except KeyError:
                 colors.append('k')
-        lines = LineCollection(lines, color=colors)
-        return lines
+            if isinstance(linkwidth, pd.Series):
+                attrs.append(linkwidth.loc[pipe.id])
+
+        if isinstance(linkwidth, pd.Series):
+            attrs = np.divide(attrs, np.max(attrs)) * 5
+            return LineCollection(lines, color=colors, linewidths=attrs)
+        else:
+            return LineCollection(lines, color=colors)
 
 
 class Plotlink:
     """ """
 
-    def __new__(cls, link: Union[Pipe, Pump, Valve], **kwargs):
-
+    def __new__(cls, link: Union[Pump, Valve], **kwargs):
         x1 = link.startnode.xcoordinate
         x2 = link.endnode.xcoordinate
         y1 = link.startnode.ycoordinate
         y2 = link.endnode.ycoordinate
         x = np.asarray([x1, x2])
         y = np.asarray([y1, y2])
-        if isinstance(link, Pipe):
-            return plt.plot(x, y, **kwargs)
-        else:
-            symbol = kwargs.pop("marker")
-            return (
-                plt.plot(x, y, marker=None, **kwargs),
-                plt.plot(0.5 * (x1 + x2), 0.5 * (y1 + y2), marker=symbol, **kwargs),
-            )
+        symbol = kwargs.pop("marker")
+        return (
+            plt.plot(x, y, marker=None, **kwargs),
+            plt.plot(0.5 * (x1 + x2), 0.5 * (y1 + y2), marker=symbol, **kwargs),
+        )
 
 
 class Plotgraph:
@@ -148,6 +151,7 @@ class Plotsimulation:
       fignum: figure number, where to plot the network
       nodes: Values related to the nodes as Pandas Series generated e.g. by one of OOPNET's SimulationReport functions (e.g. Pressure(rpt)). If nodes is None or specific nodes do not have  values, then the nodes are drawn as black circles
       links: Values related to the links as Pandas Series generated e.g. by one of OOPNET's SimulationReport functions (e.g. Flow(rpt)). If links is None or specific links do not have  values, then the links are drawn as black lines
+      linkwidth: Values describing the link width as Pandas Series generated e.g. by one of OOPNET's SimulationReport functions (e.g. Flow(rpt)).
       colorbar: If True a colorbar is created, if False there is no colorbar in the plot. If one wants to set this setting for nodes and links seperatly, make use of a dictionary with key 'node' for nodes respectively key 'link' for links (e.g. colorbar = {'node':True, 'link':False} plots a colorbar for nodes but not for links)
       colormap: Colormap defining which colors are used for the simulation results (default is matplotlib's colormap viridis). colormap can either be a string for matplotlib colormaps, a matplotlib.colors.LinearSegmentedColormap object or a matplotlib.colors.ListedColormap object. If one wants to use different colormaps for nodes and links, then make use of a dictionary with key 'node' for nodes respectively key 'link' for links (e.g. colormaps = {'node':'jet', 'link':'cool'} plots nodes with colormap jet and links using colormap cool)
       ax: Matplotlib Axes object
@@ -167,6 +171,7 @@ class Plotsimulation:
         fignum: Optional[int] = None,
         nodes: Optional[pd.Series] = None,
         links: Optional[pd.Series] = None,
+        linkwidth: Optional[pd.Series] = None,
         colorbar: Union[bool, dict] = True,
         colormap: Union[str, dict] = "viridis",
         ax: Optional[matplotlib.axes.Axes] = None,
@@ -283,7 +288,7 @@ class Plotsimulation:
                 cb.set_label(links.name, size=22)
                 cb.ax.tick_params(labelsize=20)
 
-        ax.add_collection(Plotpipes(network, color=linkcolors))
+        ax.add_collection(Plotpipes(network, color=linkcolors, linkwidth=linkwidth))
 
         list(
             map(
@@ -328,7 +333,7 @@ class Plotsimulation:
             zorder=5,
         )
 
-        plt.grid("off")
+        plt.grid(False)
         plt.axis("equal")
         plt.axis("off")
 
