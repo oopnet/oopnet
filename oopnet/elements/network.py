@@ -141,6 +141,7 @@ class Network:
         fignum: Optional[int] = None,
         nodes: Optional[pd.Series] = None,
         links: Optional[pd.Series] = None,
+        linkwidth: Optional[pd.Series] = None,
         colorbar: Union[bool, dict] = True,
         colormap: Union[str, dict] = "viridis",
         ax: Optional[Axes] = None,
@@ -159,6 +160,7 @@ class Network:
           fignum: figure number, where to plot the network
           nodes: Values related to the nodes as Pandas Series generated e.g. by one of OOPNET's SimulationReport functions (e.g. Pressure(rpt)). If nodes is None or specific nodes do not have  values, then the nodes are drawn as black circles
           links: Values related to the links as Pandas Series generated e.g. by one of OOPNET's SimulationReport functions (e.g. Flow(rpt)). If links is None or specific links do not have  values, then the links are drawn as black lines
+          linkwidth: Values describing the link width as Pandas Series generated e.g. by one of OOPNET's SimulationReport functions (e.g. Flow(rpt)).
           colorbar: If True a colorbar is created, if False there is no colorbar in the plot. If one wants to set this setting for nodes and links seperatly, make use of a dictionary with key 'node' for nodes respectively key 'query_link' for links (e.g. colorbar = {'node':True, 'query_link':False} plots a colorbar for nodes but not for links)
           colormap: Colormap defining which colors are used for the simulation results (default is matplotlib's colormap viridis). colormap can either be a string for matplotlib colormaps, a matplotlib.colors.LinearSegmentedColormap object or a matplotlib.colors.ListedColormap object. If one wants to use different colormaps for nodes and links, then make use of a dictionary with key 'node' for nodes respectively key 'query_link' for links (e.g. colormaps = {'node':'jet', 'query_link':'cool'} plots nodes with colormap jet and links using colormap cool)
           ax: Matplotlib Axes object
@@ -176,6 +178,7 @@ class Network:
             fignum=fignum,
             nodes=nodes,
             links=links,
+            linkwidth=linkwidth,
             colorbar=colorbar,
             colormap=colormap,
             ax=ax,
