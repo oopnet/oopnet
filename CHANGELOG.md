@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.2.0 (2022-02-14)
+### Feature
+* Added linkwidth argument to Network.plot ([`f749a48`](https://github.com/oopnet/oopnet/commit/f749a4803e5583bea126791ed2c54e28a1059b6f))
+
 ## v0.1.6 (2022-02-07)
 ### Fix
 * Minor changes to setup.cfg to trigger release ([`18b3df2`](https://github.com/oopnet/oopnet/commit/18b3df2a166bd0ae575b128d0f5753755428acc1))
