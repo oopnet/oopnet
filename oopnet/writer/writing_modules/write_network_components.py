@@ -114,7 +114,7 @@ def write_tanks(network: Network, fid: TextIOWrapper):
         if t.minvolume is not None:
             print(t.minvolume, end=" ", file=fid)
         if t.volumecurve is not None:
-            print(t.volumecurve, end=" ", file=fid)
+            print(t.volumecurve.id, end=" ", file=fid)
         if t.comment is not None:
             print(";", t.comment, end=" ", file=fid)
         print("\n", end=" ", file=fid)
