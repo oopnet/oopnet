@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.2.1 (2022-02-17)
+### Fix
+* Fixed writing Tank volumecurves ([`960a232`](https://github.com/oopnet/oopnet/commit/960a23287042eb8f20012748c4fbbca38f959a7e))
+
 ## v0.2.0 (2022-02-14)
 ### Feature
 * Added linkwidth argument to Network.plot ([`f749a48`](https://github.com/oopnet/oopnet/commit/f749a4803e5583bea126791ed2c54e28a1059b6f))
