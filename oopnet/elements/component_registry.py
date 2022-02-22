@@ -17,10 +17,11 @@ class ComponentRegistry(dict):
         super().__init__()
         self.super_registry = super_registry
 
-    def __setitem__(self, key, value: NetworkComponent):
+    def __setitem__(self, key: str, value: NetworkComponent):
         if (
             key in self
-            or self.super_registry
+            or hasattr(self, 'super_registry')
+            and self.super_registry is not None
             and self.super_registry.check_id_exists(key)
         ):
             raise IdenticalIDError(key)
