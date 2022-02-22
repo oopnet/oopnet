@@ -1,12 +1,10 @@
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Optional, TYPE_CHECKING, Union
+from typing import Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from oopnet.elements.base import NetworkComponent
 
 
-@dataclass
 class ComponentRegistry(dict):
     """Class for storing NetworkComponents in a Network object or a SuperComponentRegistry.
 
@@ -14,10 +12,9 @@ class ComponentRegistry(dict):
     when trying to look up a not exiting Component (instead of default KeyErrors).
 
     """
-
-    super_registry: Optional[SuperComponentRegistry] = field(
-        default=None, compare=False, hash=False, repr=False
-    )
+    def __init__(self, super_registry: Optional[SuperComponentRegistry] = None):
+        super().__init__()
+        self.super_registry = super_registry
 
     def __setitem__(self, key, value: NetworkComponent):
         if self.super_registry and self.super_registry.check_id_exists(key):
