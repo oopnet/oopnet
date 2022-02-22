@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.2.3 (2022-02-22)
+### Fix
+* Fixed ComponentRegistry pickling ([`fbe2900`](https://github.com/oopnet/oopnet/commit/fbe290064dd353fdca969630cbfa6acac525c106))
+
 ## v0.2.2 (2022-02-22)
 ### Fix
 * Disabled testing the mc stereo scoop example ([`003f249`](https://github.com/oopnet/oopnet/commit/003f249099a40d6b5c647571c0b8ef48f3be8fca))
