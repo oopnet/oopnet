@@ -184,6 +184,20 @@ class ETownModel(TestModel):
         self.network = Network.read(os.path.join('..', 'examples', 'data', 'ETown.inp'))
 
 
+class PatternCurveModel(TestModel):
+    n_junctions = 1
+    n_tanks = 1
+    n_pumps = 1
+    n_pipes = 1
+    n_rules = 2
+    n_curves = 2
+    n_patterns = 1
+
+    def __init__(self):
+        super().__init__()
+        self.network = Network.read(os.path.join('networks', 'Pattern_Curve_network.inp'))
+
+
 def set_dir_examples():
     file_dir = pathlib.Path(__file__).parent.absolute()
     os.chdir(file_dir.parent / 'examples')

@@ -7,7 +7,7 @@ import pandas as pd
 from oopnet.report import *
 
 from testing.base import CTownModel, MicropolisModel, PoulakisEnhancedPDAModel, RulesModel, SimpleModel, \
-    activate_all_report_parameters, set_dir_testing
+    activate_all_report_parameters, set_dir_testing, PatternCurveModel
 
 
 class SimulatorTest(unittest.TestCase):
@@ -117,6 +117,14 @@ class RulesModelSimulatorTest(SimulatorTest):
 class SimpleModelSimulatorTest(SimulatorTest):
     def setUp(self) -> None:
         self.model = SimpleModel()
+
+
+class PatternCurveModelSimulatorTest(SimulatorTest):
+    def setUp(self) -> None:
+        self.model = PatternCurveModel()
+
+    def test_run(self):
+        self.model.network.run()
 
 
 if __name__ == '__main__':
