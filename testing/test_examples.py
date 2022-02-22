@@ -56,8 +56,8 @@ class ExampleTest(unittest.TestCase):
     def test_mc_stereo_multiprocessing(self, mock_show):
         import examples.mc_stereo_multiprocessing
 
-    def test_mc_stereo_scoop(self, mock_show):
-        import examples.mc_stereo_scoop
+    # def test_mc_stereo_scoop(self, mock_show):
+    #     import examples.mc_stereo_scoop
 
     def test_miscellaneous(self, mock_show):
         import examples.miscellaneous
