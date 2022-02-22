@@ -101,7 +101,7 @@ class Plotpipes:
             try:
                 colors.append(color[pipe.id])
             except KeyError:
-                colors.append('k')
+                colors.append("k")
             if isinstance(linkwidth, pd.Series):
                 attrs.append(linkwidth.loc[pipe.id])
 

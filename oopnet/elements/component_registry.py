@@ -12,12 +12,17 @@ class ComponentRegistry(dict):
     when trying to look up a not exiting Component (instead of default KeyErrors).
 
     """
+
     def __init__(self, super_registry: Optional[SuperComponentRegistry] = None):
         super().__init__()
         self.super_registry = super_registry
 
     def __setitem__(self, key, value: NetworkComponent):
-        if key in self or self.super_registry and self.super_registry.check_id_exists(key):
+        if (
+            key in self
+            or self.super_registry
+            and self.super_registry.check_id_exists(key)
+        ):
             raise IdenticalIDError(key)
         else:
             super().__setitem__(key, value)
@@ -79,7 +84,7 @@ class IdenticalIDError(Exception):
 
     def __init__(self, id, message=None):
         if not message:
-            self.message = f'A conflicting component with the ID {id} already exists in the network.'
+            self.message = f"A conflicting component with the ID {id} already exists in the network."
         super().__init__(self.message)
 
 
@@ -88,5 +93,5 @@ class ComponentNotExistingError(Exception):
 
     def __init__(self, id, message=None):
         if not message:
-            self.message = f'No Component with ID {id} found in the network.'
+            self.message = f"No Component with ID {id} found in the network."
         super().__init__(self.message)

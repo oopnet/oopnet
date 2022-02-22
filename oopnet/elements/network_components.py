@@ -233,7 +233,9 @@ class Pipe(Link):
             return create_id(new_id, id_list)
 
         if split_ratio <= 0 or split_ratio >= 1:
-            raise ValueError(f'Split ratio must be 0 < x < 1 but a value of {split_ratio} was passed.')
+            raise ValueError(
+                f"Split ratio must be 0 < x < 1 but a value of {split_ratio} was passed."
+            )
 
         self.vertices = []
         if not junction_id:
@@ -250,7 +252,7 @@ class Pipe(Link):
         p.startnode = j
         add_pipe(self._network, p)
         self.endnode = j
-        logger.debug(f'Split Pipe {self.id} with split ratio {split_ratio}.')
+        logger.debug(f"Split Pipe {self.id} with split ratio {split_ratio}.")
         return j, p
 
 

@@ -25,7 +25,4 @@ from .system_operation import (
     Controlcondition,
     Energy,
 )
-from .component_registry import (
-    ComponentNotExistingError,
-    IdenticalIDError
-)
+from .component_registry import ComponentNotExistingError, IdenticalIDError
