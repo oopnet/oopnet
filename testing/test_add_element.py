@@ -128,6 +128,14 @@ class ExistingModelTest(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             add_junction(net2, j)
 
+    def test_add_existing_id_junction(self):
+        with self.assertRaises(IdenticalIDError):
+            add_tank(self.network, Tank(id='J-1'))
+
+    def test_add_existing_id_pump(self):
+        with self.assertRaises(IdenticalIDError):
+            add_pump(self.network, Pump(id='P-1'))
+
 
 if __name__ == '__main__':
     unittest.main()
