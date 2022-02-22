@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.2.2 (2022-02-22)
+### Fix
+* Disabled testing the mc stereo scoop example ([`003f249`](https://github.com/oopnet/oopnet/commit/003f249099a40d6b5c647571c0b8ef48f3be8fca))
+* Fixed CI pipeline ([`50f2650`](https://github.com/oopnet/oopnet/commit/50f2650ea56249cb58d247210d41443c2d194283))
+* Fixed CI pipeline ([`b79726c`](https://github.com/oopnet/oopnet/commit/b79726cbda8e37cd1cd9c675146f3b43cf67b15a))
+* Fixed ComponentRegistry initialization ([`1cd7d64`](https://github.com/oopnet/oopnet/commit/1cd7d64184856de6b2633a1ceda4dbc2038e3ebe))
+
 ## v0.2.1 (2022-02-17)
 ### Fix
 * Fixed writing Tank volumecurves ([`960a232`](https://github.com/oopnet/oopnet/commit/960a23287042eb8f20012748c4fbbca38f959a7e))
