@@ -1,4 +1,4 @@
-# This workflow will install Python dependencies, run tests, lint (black), applies semantic releases and pushed to PyPi with a single version of Python
+# This workflow will install Python dependencies, run tests, lint (black), apply semantic releases, build a Python package and push it to PyPI
 
 name: OOPNET build
 
@@ -11,6 +11,10 @@ on:
 jobs:
   code-test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ 3.9, 3.10]
+
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -22,10 +26,10 @@ jobs:
         path: linux_epanet_2.2
     - name: Setup EPANET
       run: ./linux_epanet_2.2/setup.sh
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
       with:
-        python-version: "3.9"
+        python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -41,6 +45,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - name: Black Code Formatter
       uses: lgeiger/black-action@v1.0.1
       with:
@@ -48,8 +54,9 @@ jobs:
     - name: Python Semantic Release
       uses: relekang/python-semantic-release@master
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        PyPI_token: ${{ secrets.PyPI_TOKEN }}
+        github_token: ${{ secrets.OOPNET_TOKEN }}
+        repository_username: __token__
+        repository_password: ${{ secrets.PyPI_TOKEN }}
     - name: Check for modified files
       id: git-check
       run: echo ::set-output name=modified::$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)
