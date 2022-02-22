@@ -79,9 +79,9 @@ class Network:
 
     _nodes: SuperComponentRegistry = field(default_factory=NodeRegistry)
     _links: SuperComponentRegistry = field(default_factory=LinkRegistry)
-    _curves: dict[str, Curve] = field(default_factory=ComponentRegistry)
-    _patterns: dict[str, Pattern] = field(default_factory=ComponentRegistry)
-    _rules: dict[str, Rule] = field(default_factory=ComponentRegistry)
+    _curves: ComponentRegistry = field(default_factory=ComponentRegistry)
+    _patterns: ComponentRegistry = field(default_factory=ComponentRegistry)
+    _rules: ComponentRegistry = field(default_factory=ComponentRegistry)
 
     @classmethod
     def read(cls, filename=Optional[str], content=Optional[str]):

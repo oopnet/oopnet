@@ -17,9 +17,7 @@ class ComponentRegistry(dict):
         self.super_registry = super_registry
 
     def __setitem__(self, key, value: NetworkComponent):
-        if self.super_registry and self.super_registry.check_id_exists(key):
-            raise IdenticalIDError(key)
-        elif not self.super_registry and key in self:
+        if key in self or self.super_registry and self.super_registry.check_id_exists(key):
             raise IdenticalIDError(key)
         else:
             super().__setitem__(key, value)
@@ -48,27 +46,6 @@ class SuperComponentRegistry(dict):
         super().__init__()
         for cls in classes:
             self[cls] = ComponentRegistry(super_registry=self)
-
-    def __getitem__(self, item) -> Union[NetworkComponent, ComponentRegistry]:
-        """Getter method.
-
-        If item is a key in SuperComponentRegistry, the method returns the corresponding ComponentRegistry. If not,
-        it looks for the key in the individual ComponentRegistries themselves.
-
-        Raises:
-            ComponentNotExistingError is raised, if the item is not found.
-
-        Returns:
-            Either a ComponentRegistry or a NetworkComponent is returned.
-
-        """
-        if item in self:
-            return super().__getitem__(item)
-
-        for values in self.values():
-            if item in values:
-                return values[item]
-        raise ComponentNotExistingError(item)
 
     def check_id_exists(self, id) -> bool:
         """Checks if a component with the specified ID already exists in one of the ComponentRegistries.
