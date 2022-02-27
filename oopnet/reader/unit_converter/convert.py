@@ -141,7 +141,7 @@ def convert(network):
             j.elevation *= converter.f_elevation
 
     for t in get_tanks(network):
-        t.diam *= converter.f_diameter_tanks
+        t.diameter *= converter.f_diameter_tanks
         t.elevation *= converter.f_elevation
         t.initlevel *= converter.f_elevation
         t.minlevel *= converter.f_elevation

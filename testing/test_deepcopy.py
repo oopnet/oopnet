@@ -92,8 +92,8 @@ class SimpleDeepcopyTest(DeepcopyTest):
         self.compare_tanks(self.old_network, self.new_network)
         tank_old = get_tank(self.old_network, 'T-1')
         tank_new = get_tank(self.new_network, 'T-1')
-        tank_old.diam = 1
-        self.assertFalse(tank_old.diam == tank_new.diam)
+        tank_old.diameter = 1
+        self.assertFalse(tank_old.diameter == tank_new.diameter)
 
     def test_reservoir(self):
         self.compare_reservoirs(self.old_network, self.new_network)

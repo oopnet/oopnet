@@ -1,5 +1,6 @@
 import unittest
 
+from oopnet.elements.component_registry import ComponentNotExistingError
 from oopnet.elements.network_components import Junction, Tank, Reservoir, Pipe, Pump, Valve, Node, Link
 from oopnet.elements.system_operation import Curve
 from oopnet.utils.getters import *
@@ -71,6 +72,46 @@ class SimpleElementGetterTest(unittest.TestCase):
 
     def test_get_rule(self):
         pass
+    
+    def test_get_junction_nonexists(self):
+        with self.assertRaises(ComponentNotExistingError):
+            get_junction(self.model.network, 'test')
+
+    def test_get_tank_nonexists(self):
+        with self.assertRaises(ComponentNotExistingError):
+            get_tank(self.model.network, 'test')
+
+    def test_get_reservoir_nonexists(self):
+        with self.assertRaises(ComponentNotExistingError):
+            get_reservoir(self.model.network, 'test')
+
+    def test_get_pipe_nonexists(self):
+        with self.assertRaises(ComponentNotExistingError):
+            get_pipe(self.model.network, 'test')
+            
+    def test_get_pump_nonexists(self):
+        with self.assertRaises(ComponentNotExistingError):
+            get_pump(self.model.network, 'test')
+
+    def test_get_valve_nonexists(self):
+        with self.assertRaises(ComponentNotExistingError):
+            get_valve(self.model.network, 'test')
+
+    def test_get_curve_nonexists(self):
+        with self.assertRaises(ComponentNotExistingError):
+            get_curve(self.model.network, 'test')
+
+    def test_get_pattern_nonexists(self):
+        with self.assertRaises(ComponentNotExistingError):
+            get_pattern(self.model.network, 'test')
+
+    def test_get_node_nonexists(self):
+        with self.assertRaises(ComponentNotExistingError):
+            get_node(self.model.network, 'test')
+
+    def test_get_link_nonexists(self):
+        with self.assertRaises(ComponentNotExistingError):
+            get_link(self.model.network, 'test')
 
 
 if __name__ == '__main__':
