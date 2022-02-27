@@ -137,6 +137,7 @@ class ETownModelGraphTest(unittest.TestCase):
         g = MultiGraph(self.model.network)
         for edge in [('40144', '40143'), ('40170', '40169')]:
             lids = nxedge2onlink_id(g, edge)
+            lids = [lids] if isinstance(lids, str) else lids
             for lid in lids:
                 get_link(self.model.network, lid)
 
@@ -144,6 +145,7 @@ class ETownModelGraphTest(unittest.TestCase):
         g = Graph(self.model.network)
         for edge in [('40144', '40143'), ('40170', '40169')]:
             lids = nxedge2onlink_id(g, edge)
+            lids = [lids] if isinstance(lids, str) else lids
             for lid in lids:
                 get_link(self.model.network, lid)
 

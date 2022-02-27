@@ -168,7 +168,7 @@ def v_tankdiameter(network: Network) -> np.array:
       tank diameters as numpy.ndarray
 
     """
-    return np.asarray([x.diam for x in get_tanks(network)])
+    return np.asarray([x.diameter for x in get_tanks(network)])
 
 
 def v_minvolume(network: Network) -> np.array:

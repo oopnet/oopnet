@@ -102,7 +102,7 @@ def write_tanks(network: Network, fid: TextIOWrapper):
     logger.debug("Writing Tanks section")
     print("[TANKS]", file=fid)
     print(
-        ";id elevation initlevel minlevel maxlevel diam minvolume volumecurve", file=fid
+        ";id elevation initlevel minlevel maxlevel diameter minvolume volumecurve", file=fid
     )
     for t in get_tanks(network):
         print(t.id, end=" ", file=fid)
@@ -110,7 +110,7 @@ def write_tanks(network: Network, fid: TextIOWrapper):
         print(t.initlevel, end=" ", file=fid)
         print(t.minlevel, end=" ", file=fid)
         print(t.maxlevel, end=" ", file=fid)
-        print(t.diam, end=" ", file=fid)
+        print(t.diameter, end=" ", file=fid)
         if t.minvolume is not None:
             print(t.minvolume, end=" ", file=fid)
         if t.volumecurve is not None:

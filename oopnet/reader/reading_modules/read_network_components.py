@@ -144,7 +144,7 @@ class TankFactory(ComponentFactory):
             "initlevel",
             "minlevel",
             "maxlevel",
-            "diam",
+            "diameter",
             "minvolume",
             "volumecurve",
         ]

@@ -49,7 +49,7 @@ class PoulakisEnhancedReaderTest(unittest.TestCase):
         self.assertEqual(self.model.n_tanks, len(self.model.network._nodes['tanks']))
         for t in self.model.network._nodes['tanks'].values():
             self.assertIsInstance(t, Tank)
-            self.assertEqual(50, t.diam)
+            self.assertEqual(50, t.diameter)
             self.assertTrue('J' in t.id)
 
     def test_reservoirs(self):

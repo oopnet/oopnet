@@ -145,7 +145,7 @@ class Tank(Node):
       initlevel: Height in meters of the water surface above the bottom elevation of the tank at the start of the simulation.
       minlevel: Minimum height in meters of the water surface above the bottom elevation that will be maintained. The water level in the tank will not be allowed to drop below this level.
       maxlevel: Maximum height in meters of the water surface above the bottom elevation that will be maintained. The water level in the tank will not be allowed to rise above this level.
-      diam: The diameter of the tank in meters. For cylindrical tanks this is the actual diameter. For square or rectangular tanks it can be an equivalent diameter equal to 1.128 times the square root of the cross-sectional area. For tanks whose geometry will be described by a curve (see below) it can be set to any value.
+      diameter: The diameter of the tank in meters. For cylindrical tanks this is the actual diameter. For square or rectangular tanks it can be an equivalent diameter equal to 1.128 times the square root of the cross-sectional area. For tanks whose geometry will be described by a curve (see below) it can be set to any value.
       minvolume: The volume of water in the tank when it is at its minimum level, in cubic meter. This is an optional property, useful mainly for describing the bottom geometry of non-cylindrical tanks where a full volume versus depth curve will not be supplied (see below).
       volumecurve: Curve object used to describe the relation between tank volume and water level. If no value is supplied then the tank is assumed to be cylindrical.
       compartmentvolume: The fraction of the tank’s total volume that comprises the inlet-outlet compartment of the two-compartment (2COMP) mixing model. Can be left blank if another type of mixing model is employed.
@@ -157,7 +157,7 @@ class Tank(Node):
     initlevel: float = 10.0
     minlevel: float = 0.0
     maxlevel: float = 20.0
-    diam: float = 50.0
+    diameter: float = 50.0
     minvolume: float = 0.0
     volumecurve: Optional[Curve] = None
     compartmentvolume: Optional[float] = None

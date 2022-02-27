@@ -48,7 +48,7 @@ class ExistingModelTest(unittest.TestCase):
     def test_illegal_node_property(self):
         from oopnet.report.simulation_errors import IllegalNodePropertyError
         t = get_tank(self.network, 'T-1')
-        t.diam = -100
+        t.diameter = -100
         self._check_exception_raised(IllegalNodePropertyError)
 
     def test_illegal_link_property(self):
