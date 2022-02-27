@@ -65,6 +65,25 @@ class SuperComponentRegistry(dict):
         """
         return any(id in x for x in self.values())
 
+    def get_by_id(self, id: str) -> NetworkComponent:
+        """Returns a component with a specified ID from the ComponentRegistries.
+
+         Args:
+             id: NetworkComponent ID
+
+        Raises:
+            ComponentNotExistingError if no NetworkComponent with the specified ID is found.
+
+        Returns:
+            Requested NetworkComponent
+
+         """
+        self.check_id_exists(id=id)
+        for registry in self.values():
+            if id in registry:
+                return registry[id]
+        raise ComponentNotExistingError(id=id)
+
 
 class NodeRegistry:
     """SuperComponentRegistry factory for Node components."""

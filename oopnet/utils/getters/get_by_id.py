@@ -155,9 +155,7 @@ def get_node(network: Network, id: str) -> Node:
       Node with property ID
 
     """
-    for vals in network._nodes.values():
-        if id in vals:
-            return vals[id]
+    return network._nodes.get_by_id(id=id)  # type: ignore
 
 
 def get_link(network: Network, id: str) -> Link:
@@ -171,6 +169,4 @@ def get_link(network: Network, id: str) -> Link:
       Link with property ID
 
     """
-    for vals in network._links.values():
-        if id in vals:
-            return vals[id]
+    return network._links.get_by_id(id=id)  # type: ignore
