@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.0 (2022-02-28)
+### Feature
+* Added get_by_id method to SuperComponentRegistry for NetworkComponent lookup ([`d89c8cc`](https://github.com/oopnet/oopnet/commit/d89c8cc88bb7ab979ec73a0a7b8e3d18c1c40d49))
+
+### Fix
+* Renamed Tank attribute diam to diameter ([`0f6801d`](https://github.com/oopnet/oopnet/commit/0f6801d03d755ba2e5ef85773309a2e0af5fed03))
+* Fixed some type hints ([`91b3a6e`](https://github.com/oopnet/oopnet/commit/91b3a6eda9fae12a07e36adcbb91b527cab3c9ed))
+
 ## v0.2.3 (2022-02-22)
 ### Fix
 * Fixed ComponentRegistry pickling ([`fbe2900`](https://github.com/oopnet/oopnet/commit/fbe290064dd353fdca969630cbfa6acac525c106))
