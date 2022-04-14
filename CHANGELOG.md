@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.1 (2022-04-14)
+### Fix
+* Fixed a bug where networkx get_edge_data returning a dict instead of a list breaks nxedge2onlink_id ([`8377d16`](https://github.com/oopnet/oopnet/commit/8377d16a09b0e9a23820db2af7820fa627242a1f))
+
 ## v0.3.0 (2022-02-28)
 ### Feature
 * Added get_by_id method to SuperComponentRegistry for NetworkComponent lookup ([`d89c8cc`](https://github.com/oopnet/oopnet/commit/d89c8cc88bb7ab979ec73a0a7b8e3d18c1c40d49))
