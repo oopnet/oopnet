@@ -269,6 +269,8 @@ def nxedge2onlink_id(graph: nx.Graph, edge: tuple[str, str]) -> Union[str, list[
     if not isinstance(graph, nx.MultiGraph):
         return graph.get_edge_data(*edge)["id"]
     edges = graph.get_edge_data(*edge)
+    if "id" in edges:
+        return edges["id"]
     result = [edges[x]["id"] for x in edges]
     return result if len(result) > 1 else result[0]
 
