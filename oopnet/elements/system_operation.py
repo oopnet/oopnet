@@ -87,9 +87,7 @@ class Rule:
     """Defines rule-based controls that modify links based on a combination of conditions."""
 
     id: str
-    condition: Union[
-        Condition, list[Condition]
-    ] = None  # = Either(Instance(Condition), List(Instance(Condition)))
+    condition: list[Condition] = field(default_factory=list)
     priority: float = None
 
 

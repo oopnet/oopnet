@@ -3,6 +3,7 @@ from typing import Union, Optional, TYPE_CHECKING
 from dataclasses import dataclass, field
 from copy import deepcopy
 import logging
+import math
 
 import numpy as np
 
@@ -82,6 +83,28 @@ class Link(NetworkComponent):
             + [self.endnode.coordinates[:2]]
         )
 
+    @property
+    def center(self):
+        """Returns the Link's center based on its start and end nodes as well as its vertices."""
+        if not self.vertices:
+            return np.add(self.coordinates[0], self.coordinates[1])[0:2] * 0.5
+
+        length = 0
+        for index, coords in enumerate(self.coordinates_2d):
+            if index == len(self.coordinates_2d) - 1:
+                break
+            next_coords = self.coordinates_2d[index + 1]
+            length += math.dist(coords, next_coords)
+
+        passed_length = 0
+        for index, coords in enumerate(self.coordinates_2d):
+            next_coords = self.coordinates_2d[index + 1]
+            segment_length = math.dist(coords, next_coords)
+            if passed_length + segment_length >= length / 2:
+                length_factor = (length / 2 - passed_length) / segment_length
+                return np.add(coords, next_coords) * length_factor
+            passed_length += segment_length
+
     def revert(self):
         """Switches the link's start and end nodes and it's vertices."""
         self.startnode, self.endnode = self.endnode, self.startnode
@@ -124,9 +147,7 @@ class Reservoir(Node):
 
     head: Union[float, list[float]] = 0.0  # = Either(None, Float, ListFloat)
     headpattern: Union[
-        None,
-        Pattern,
-        list[Pattern]
+        None, Pattern, list[Pattern]
     ] = None  # = Either(None, Instance(Pattern), List(Instance(Pattern)))
 
     @NetworkComponent.id.setter

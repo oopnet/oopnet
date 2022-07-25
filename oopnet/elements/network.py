@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 from oopnet.writer.write import write
 from oopnet.reader.read import read
-from oopnet.plotter.pyplot import Plotsimulation as PyPlot
+from oopnet.plotter.pyplot import NetworkPlotter
 from oopnet.plotter.bokehplot import Plotsimulation as BokehPlot
 from oopnet.simulator.epanet2 import ModelSimulator
 from oopnet.elements.water_quality import Reaction
@@ -44,8 +44,7 @@ class Network:
     Furthermore, model settings and report parameter settings/precision settings are incorporated as well.
 
     Attributes:
-      title: Contains the networkx graph of the network
-      vertices: List of all Vertex objects in the network
+      title: Network name
       labels: List of all Labels in the network
       backdrop: Contains the Backdrop object of the network
       energies: List of all Energy curves in the network
@@ -147,8 +146,9 @@ class Network:
         ax: Optional[Axes] = None,
         markersize: float = 8.0,
         robust: bool = False,
-        vlim=None,
-        nodetruncate=None,
+        nodes_vlim=None,
+        links_vlim=None,
+        truncate_nodes=None,
     ) -> PyPlotFigure:
         """Plots the Network with simulation results as a network plot with Matplotlib.
 
@@ -165,27 +165,31 @@ class Network:
           colormap: Colormap defining which colors are used for the simulation results (default is matplotlib's colormap viridis). colormap can either be a string for matplotlib colormaps, a matplotlib.colors.LinearSegmentedColormap object or a matplotlib.colors.ListedColormap object. If one wants to use different colormaps for nodes and links, then make use of a dictionary with key 'node' for nodes respectively key 'query_link' for links (e.g. colormaps = {'node':'jet', 'query_link':'cool'} plots nodes with colormap jet and links using colormap cool)
           ax: Matplotlib Axes object
           markersize: size of markers
-          vlim: todo: add description
+          nodes_vlim: todo: add description
+          links_vlim:
           robust: If True, 2nd and 98th percentiles are used as limits for the colorbar, else the minima and maxima are used.
-          nodetruncate: If True, only junctions for which a value was submitted using the nodes parameter are plotted. If the nodes parameters isn't being used, all junctions are plotted. If not set True, junctions for which no value was submitted using the nodes parameters are plotted in black. This only applies to junctions and not to tanks and reservoirs, which are always plotted.
+          truncate_nodes: If True, only junctions for which a value was submitted using the nodes parameter are plotted. If the nodes parameters isn't being used, all junctions are plotted. If not set True, junctions for which no value was submitted using the nodes parameters are plotted in black. This only applies to junctions and not to tanks and reservoirs, which are always plotted.
 
         Returns:
           Matplotlib's figure handle
 
         """
-        return PyPlot(
-            self,
+        plotter = NetworkPlotter(
+            colorbar=colorbar,
+            colormap=colormap,
+            markersize=markersize,
+            robust=robust,
+            truncate_nodes=truncate_nodes
+        )
+        return plotter.plot(
+            network=self,
             fignum=fignum,
             nodes=nodes,
             links=links,
-            linkwidth=linkwidth,
-            colorbar=colorbar,
-            colormap=colormap,
+            link_width=linkwidth,
             ax=ax,
-            markersize=markersize,
-            robust=robust,
-            vlim=vlim,
-            nodetruncate=nodetruncate,
+            nodes_vlim=nodes_vlim,
+            links_vlim=links_vlim
         )
 
     def bokehplot(

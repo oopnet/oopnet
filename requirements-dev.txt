@@ -7,3 +7,9 @@ xarray
 seaborn
 scoop
 openpyxl
+
+# doc building
+sphinx
+sphinx_autodoc_typehints
+sphinx_mdinclude
+sphinx_material

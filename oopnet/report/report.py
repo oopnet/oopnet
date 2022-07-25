@@ -3,10 +3,10 @@ from typing import Optional, Union, Type, Callable
 import logging
 
 import pandas as pd
-from xarray import DataArray, Dataset
+from xarray import DataArray
 
-from oopnet.report.binaryfile_reader import BinaryFileReader
-from oopnet.report.reportfile_reader import ReportFileReader
+from oopnet.simulator.binaryfile_reader import BinaryFileReader
+from oopnet.simulator.reportfile_reader import ReportFileReader
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +49,7 @@ class SimulationReport:
         unit: Optional[str] = None,
         calc: Optional[Callable] = None,
     ):
-        data = array.sel(vars=var).to_pandas()
+        data = array.sel(vars=var).to_pandas().sort_index()
         if calc:
             data = calc(data)
         data.name = f"{var} ({unit})" if unit else var

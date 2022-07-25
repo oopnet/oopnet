@@ -9,8 +9,8 @@ import re
 from typing import Union, Optional, TYPE_CHECKING
 import logging
 
-from oopnet.report.reportfile_reader import ReportFileReader
-from oopnet.report.binaryfile_reader import BinaryFileReader
+from oopnet.simulator.reportfile_reader import ReportFileReader
+from oopnet.simulator.binaryfile_reader import BinaryFileReader
 from oopnet.utils import utils
 from oopnet.report.report import SimulationReport
 from oopnet.utils.oopnet_logging import logging_decorator
@@ -143,18 +143,20 @@ class ModelSimulator:
         self._create_command()
         self._execute()
 
-        rpt = SimulationReport(
-            self.filename.replace(".inp", ".rpt"),
-            startdatetime=self.startdatetime,
-            reader=ReportFileReader,
-        )
-
-        if self.delete:
-            os.remove(self.filename)
-            rpt_file = self.filename.replace(".inp", ".rpt")
-            out_file = self.filename.replace(".inp", ".out")
-            if os.path.isfile(rpt_file):
-                os.remove(rpt_file)
-            if os.path.isfile(out_file):
-                os.remove(out_file)
-        return rpt
+        try:
+            rpt = SimulationReport(
+                self.filename.replace(".inp", ".rpt"),
+                startdatetime=self.startdatetime,
+                reader=ReportFileReader,
+            )
+        finally:
+            if self.delete:
+                os.remove(self.filename)
+                rpt_file = self.filename.replace(".inp", ".rpt")
+                out_file = self.filename.replace(".inp", ".out")
+                if os.path.isfile(rpt_file):
+                    os.remove(rpt_file)
+                if os.path.isfile(out_file):
+                    os.remove(out_file)
+        if rpt:
+            return rpt
