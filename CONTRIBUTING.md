@@ -67,7 +67,7 @@ Versions look like this: MAJOR.MINOR.PATCH
 For now, MAJOR is set to 0 until OOPNET is deemed stable.
 
 ## Code of Conduct
-Please read our [Code of Conduct] before interacting with us or the community. Violations will be met with clear
+Please read our [Code of Conduct](https://github.com/oopnet/oopnet/blob/main/CODE_OF_CONDUCT.md) before interacting with us or the community. Violations will be met with clear
 consequences.
 
 ## License
