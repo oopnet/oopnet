@@ -44,18 +44,18 @@ possible, provide a code snippet that describes your use case. If you already ha
 please add this to the issue as well.
 
 ## Security issues
-If you find a security vulnerability, do NOT open an issue. Email XXXX instead.
+If you find a security vulnerability, do NOT open an issue. Email oopnet@gmail.com instead.
 
 ## Style and standards
-OOPNET uses a few standards to simplify its development.
+OOPNET uses a few standards to simplify its development. Please adhere to them.
 
 ### Coding Style
 Codes will be linted by [black](https://github.com/psf/black) as part of the CI pipeline. This means, that in general 
 you don't have to concern yourself with linting.
 
 ### Github issue labels
-[StandardIssueLabels](https://github.com/wagenet/StandardIssueLabels#standardissuelabels) are used for labeling. Please 
-read the description to choose the correct label.
+[StandardIssueLabels](https://github.com/wagenet/StandardIssueLabels#standardissuelabels) are used for labeling issues. 
+Please read the description to choose the correct label(s) for your issue.
 
 ### Git commit messages
 Semantic Versioning is used to calculate the next version number based of the commits and their corresponding commit 
@@ -67,13 +67,12 @@ Versions look like this: MAJOR.MINOR.PATCH
 For now, MAJOR is set to 0 until OOPNET is deemed stable.
 
 ## Code of Conduct
-Please read our [Code of Conduct] before interacting with us or the community. Violations will be met with clear
-consequences.
+Please read our [Code of Conduct](https://github.com/oopnet/oopnet/blob/main/CODE_OF_CONDUCT.md) before interacting with
+the OOPNET team or the community. Violations will be met with clear consequences.
 
 ## License
 In short, when you submit code changes, your submissions are understood to be under the same 
-[MIT License](http://choosealicense.com/licenses/mit/) that covers the project. Feel free to contact the maintainers if 
-that's a concern.
+[MIT License](http://choosealicense.com/licenses/mit/) that covers the project.
 
 ## References
 This document was adapted from the open-source contribution guidelines by 
