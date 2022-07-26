@@ -21,19 +21,19 @@ Although it is a little bit more, as you will see reading this documentation, si
 * is easy to run in parallel
 * makes beautiful, paper ready plots
 
-The vision of oopnet is to build an open-source community around it, connect programmers and wanna-be programmers in
+The vision of OOPNET is to build an open-source community around it, connect programmers and wanna-be programmers in
 the water distribution related community and build a stand-alone hydraulic solver resulting in a totally in Python
 written water distribution system software making it nice and shiny from the same mould.
 
 .. warning::
     Be warned, that OOPNET is still changing a lot. Until it's marked as 1.0.0, you should assume that it is unstable
-    and act accordingly. We are trying to avert any breaking changes but they can and will occur!
+    and act accordingly. We are trying to avoid breaking changes but they can and will occur!
 
 -------------
 Citing OOPNET
 -------------
 
-If you publish something that uses OOPNET, we greatly appreciate a citation of one of the following references:
+If you publish something that uses OOPNET, we greatly appreciate a citation of the following reference:
 
 - Steffelbauer, D., Fuchs-Hanusch, D., 2015. OOPNET: an object-oriented EPANET in Python. Procedia Eng. 119, 710e718. https://doi.org/10.1016/j.proeng.2015.08.924.
 
