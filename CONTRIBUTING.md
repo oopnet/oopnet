@@ -44,7 +44,7 @@ possible, provide a code snippet that describes your use case. If you already ha
 please add this to the issue as well.
 
 ## Security issues
-If you find a security vulnerability, do NOT open an issue. Email oopnet@gmail.com instead.
+If you find a security vulnerability, do NOT open an issue. Email oopnet.contact@gmail.com instead.
 
 ## Style and standards
 OOPNET uses a few standards to simplify its development. Please adhere to them.
