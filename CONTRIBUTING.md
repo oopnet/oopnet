@@ -55,7 +55,7 @@ you don't have to concern yourself with linting.
 
 ### Github issue labels
 [StandardIssueLabels](https://github.com/wagenet/StandardIssueLabels#standardissuelabels) are used for labeling issues. 
-Please read the description to choose the correct label(s) for you issue.
+Please read the description to choose the correct label(s) for your issue.
 
 ### Git commit messages
 Semantic Versioning is used to calculate the next version number based of the commits and their corresponding commit 
