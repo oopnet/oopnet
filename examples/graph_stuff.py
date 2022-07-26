@@ -12,7 +12,6 @@ network = on.Network.read(filename)
 
 # Save graph to variable G
 G = on.Graph(network)
-print(type(G))
 
 # Some graph theoretic measurements:
 print(f'Center: {nx.center(G)}')
