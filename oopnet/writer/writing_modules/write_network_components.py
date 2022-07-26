@@ -102,7 +102,8 @@ def write_tanks(network: Network, fid: TextIOWrapper):
     logger.debug("Writing Tanks section")
     print("[TANKS]", file=fid)
     print(
-        ";id elevation initlevel minlevel maxlevel diameter minvolume volumecurve", file=fid
+        ";id elevation initlevel minlevel maxlevel diameter minvolume volumecurve",
+        file=fid,
     )
     for t in get_tanks(network):
         print(t.id, end=" ", file=fid)

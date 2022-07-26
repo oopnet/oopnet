@@ -77,7 +77,7 @@ class SuperComponentRegistry(dict):
         Returns:
             Requested NetworkComponent
 
-         """
+        """
         self.check_id_exists(id=id)
         for registry in self.values():
             if id in registry:

@@ -124,9 +124,7 @@ class Reservoir(Node):
 
     head: Union[float, list[float]] = 0.0  # = Either(None, Float, ListFloat)
     headpattern: Union[
-        None,
-        Pattern,
-        list[Pattern]
+        None, Pattern, list[Pattern]
     ] = None  # = Either(None, Instance(Pattern), List(Instance(Pattern)))
 
     @NetworkComponent.id.setter
