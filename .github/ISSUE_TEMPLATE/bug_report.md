@@ -7,6 +7,11 @@ assignees: ''
 
 ---
 
+## Checks
+- [ ] I added a descriptive title to this issue
+- [ ] I have searched (Google, GitHub) for similar issues and couldn't find anything
+- [ ] I have read and followed the docs and still think this is a bug
+
 # Bug Description
 A clear and concise description of what the bug is.
 
