@@ -44,8 +44,7 @@ class Network:
     Furthermore, model settings and report parameter settings/precision settings are incorporated as well.
 
     Attributes:
-      title: Contains the networkx graph of the network
-      vertices: List of all Vertex objects in the network
+      title: Network name
       labels: List of all Labels in the network
       backdrop: Contains the Backdrop object of the network
       energies: List of all Energy curves in the network
