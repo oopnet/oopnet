@@ -3,10 +3,10 @@ from typing import Optional, Union, Type, Callable
 import logging
 
 import pandas as pd
-from xarray import DataArray, Dataset
+from xarray import DataArray
 
-from oopnet.report.binaryfile_reader import BinaryFileReader
-from oopnet.report.reportfile_reader import ReportFileReader
+from oopnet.simulator.binaryfile_reader import BinaryFileReader
+from oopnet.simulator.reportfile_reader import ReportFileReader
 
 logger = logging.getLogger(__name__)
 
