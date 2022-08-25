@@ -11,6 +11,7 @@ on:
 jobs:
   code-test:
     runs-on: ubuntu-latest
+    if: $GITLAB_USER_LOGIN != "OOPNET-bot"
     strategy:
       matrix:
         python-version: [ 3.9, "3.10"]
