@@ -2,12 +2,13 @@ from typing import Optional, Union
 import datetime
 import re
 import logging
+from collections import Counter
 
 import pandas as pd
 import xarray as xr
 from xarray import DataArray, Dataset
 
-from oopnet.report.error_manager import ErrorManager
+from oopnet.simulator.error_manager import ErrorManager
 from oopnet.utils.oopnet_logging import logging_decorator
 
 logger = logging.getLogger(__name__)
@@ -70,12 +71,38 @@ def lst2xray(lst: list) -> xr.DataArray:
     Returns:
 
     """
+    def split_item(item):
+        new_entries = []
+        new_entry = ""
+        for index, char in enumerate(item):
+            if char in ['+', '-'] and new_entry and index != 0 and item[index - 1] != 'e':
+                new_entries.append(new_entry)
+                new_entry = ""
+            new_entry += char
+        if new_entry:
+            new_entries.append(new_entry)
+        return new_entries
+
+    # check for invalid values
+    for entry_index, entry in enumerate(lst):
+        # skip if list length is correct
+        if len(entry) == len(lst[0]):
+            continue
+        # otherwise look for faulty entries
+        for index, item in enumerate(entry):
+            c = Counter(item)
+            if '+' in c and '-' in c or \
+                '+' in c and c['+'] > 1 or \
+                '-' in c and c['-'] > 1:
+                new_items = split_item(item)
+                new_entry = entry[:index] + new_items + entry[index + 1:]
+                lst[entry_index] = new_entry
+
     lst[2:] = [x[: len(lst[0]) + 1] for x in lst[2:]]
     frame = pd.DataFrame.from_dict(lst[2:])
     frame.columns = ["id"] + lst[0]
     frame[lst[0]] = frame[lst[0]].applymap(float)
     frame.set_index("id", inplace=True)
-
     return xr.DataArray(frame)
 
 
