@@ -1,6 +1,6 @@
 from re import compile
 
-from oopnet.report.simulation_errors import get_error_list, EPANETSimulationError
+from oopnet.simulator.simulation_errors import get_error_list, EPANETSimulationError
 
 
 class ErrorManager:
