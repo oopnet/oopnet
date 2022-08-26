@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.2 (2022-08-26)
+### Fix
+* Fixed concatenated large number parsing error in report file reader ([`1685835`](https://github.com/oopnet/oopnet/commit/1685835e1d16bf7eaa605e829486ddde07e4d5de))
+* Moved parts of report module to simulator module for better consistency ([`41ca790`](https://github.com/oopnet/oopnet/commit/41ca7907043fd718c40fc0c5bf060bdba37be7e9))
+
+### Documentation
+* Corrected Network attribute documentation ([`3a71dd9`](https://github.com/oopnet/oopnet/commit/3a71dd9c26ee3aae277b80cc524dc313d662dd8c))
+
 ## v0.3.1 (2022-04-14)
 ### Fix
 * Fixed a bug where networkx get_edge_data returning a dict instead of a list breaks nxedge2onlink_id ([`8377d16`](https://github.com/oopnet/oopnet/commit/8377d16a09b0e9a23820db2af7820fa627242a1f))
