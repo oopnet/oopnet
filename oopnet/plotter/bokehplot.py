@@ -1,3 +1,6 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 import numpy as np
 import pandas as pd
 from bokeh.plotting import figure
@@ -16,7 +19,8 @@ from oopnet.utils.getters import (
     get_pumps,
     get_valves,
 )
-
+if TYPE_CHECKING:
+    from oopnet.elements.network import Pipe
 
 # todo: refactor
 def convert_to_hex(rgba_color):
@@ -125,6 +129,27 @@ def plotlink(f, elements, colors, marker="o"):
         f.inverted_triangle(x, y, color=c, size=8.0)
 
 
+def plotpipe(f, elements: list[Pipe], colors):
+    xs_list = []
+    ys_list = []
+    xe_list = []
+    ye_list = []
+    color_list = []
+
+    for pipe in elements:
+        coords = pipe.coordinates_2d.tolist()
+        for i in range(len(coords) - 1):
+            xs, ys = coords[i]
+            xe, ye = coords[i + 1]
+            xs_list.append(xs)
+            ys_list.append(ys)
+            xe_list.append(xe)
+            ye_list.append(ye)
+            c = convert_to_hex(outsidelist(pipe.id, colors))
+            color_list.append(c)
+    f.segment(x0=xs_list, x1=xe_list, y0=ys_list, y1=ye_list, color=color_list, line_width=2.0)
+
+
 class Plotsimulation:
     """This function plots OOPNET networks with simulation results as a network plot with Bokehplot.
 
@@ -193,7 +218,7 @@ class Plotsimulation:
             scalar_map._A = []
             linkcolors = links.apply(scalar_map.to_rgba)
 
-        plotlink(f, get_pipes(network), linkcolors, marker=None)
+        plotpipe(f, get_pipes(network), linkcolors)
 
         plotlink(f, get_valves(network), linkcolors, marker="v")
 
