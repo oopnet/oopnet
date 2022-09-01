@@ -219,14 +219,21 @@ def read_times(network: Network, block: list):
         elif vals[0] == "REPORT" and vals[1].upper() == "START":
             t.reportstart = time2timedelta(vals[2:])
         elif vals[0] == "START" and vals[1].upper() == "CLOCKTIME":
-            if ":" in vals[2]:
-                h, m = list(
-                    map(int, vals[2].split(":"))
-                )  # todo: catch seconds, then three values are there to unpack
+            clock = vals[2]
+            if ":" in clock:
+                if len(clock.split(":")) == 2:
+                    h, m = list(
+                        map(int, clock.split(":"))
+                    )
+                    s = 0
+                else:
+                    h, m, s = list(
+                        map(int, clock.split(":"))
+                    )
                 h = h if h != 12 or len(vals) == 4 and vals[3].upper() != "AM" else 0
                 if len(vals) > 3 and vals[3].upper() == "PM":
                     h += 12
-                t.startclocktime = datetime.timedelta(hours=h, minutes=m)
+                t.startclocktime = datetime.timedelta(hours=h, minutes=m, seconds=s)
                 # timeformat = '%I:%M %p'
                 # t.startclocktime = datetime.datetime.strptime(vals[2] + ' ' + vals[3], timeformat)
             else:
