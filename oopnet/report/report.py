@@ -49,7 +49,7 @@ class SimulationReport:
         unit: Optional[str] = None,
         calc: Optional[Callable] = None,
     ):
-        data = array.sel(vars=var).to_pandas()
+        data = array.sel(vars=var).to_pandas().sort_index()
         if calc:
             data = calc(data)
         data.name = f"{var} ({unit})" if unit else var
