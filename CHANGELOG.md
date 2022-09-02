@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.4.1 (2022-09-02)
+### Fix
+* Added sort_index() call to pandas results ([`53545ca`](https://github.com/oopnet/oopnet/commit/53545ca621afce3b6f36663100e9228e306c788f))
+
 ## v0.4.0 (2022-09-01)
 ### Feature
 * Added vertex plotting to Bokeh plot ([`4ebe022`](https://github.com/oopnet/oopnet/commit/4ebe02261672f06268f9d666f869e62ffcb5b73c))
