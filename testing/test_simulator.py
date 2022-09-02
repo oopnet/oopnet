@@ -21,15 +21,15 @@ class SimulatorTest(unittest.TestCase):
             return df.replace('#N\/A\s+', np.nan, regex=True)
 
         set_dir_testing()
-        node_results = pd.read_excel(filename, sheet_name='nodes', engine='openpyxl', index_col=0)
+        node_results = pd.read_excel(filename, sheet_name='nodes', engine='openpyxl', index_col=0).sort_index()
         node_results = replace_invalid_vals(node_results)
         self.node_results = strip_index_columns(node_results)
-        link_results = pd.read_excel(filename, sheet_name='links', engine='openpyxl', index_col=0)
+        link_results = pd.read_excel(filename, sheet_name='links', engine='openpyxl', index_col=0).sort_index()
         link_results = replace_invalid_vals(link_results)
         self.link_results = strip_index_columns(link_results)
 
     def compare_elevation(self):
-        self.assertTrue(all(self.node_results['Elevation'] == self.rpt.elevation))
+        self.assertTrue(all(self.node_results['Elevation'].sort_index() == self.rpt.elevation))
 
     def compare_demand(self):
         self.assertTrue(all(self.node_results['Demand'] == self.rpt.demand))
