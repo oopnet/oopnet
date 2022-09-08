@@ -9,7 +9,7 @@ import re
 from typing import Union, Optional, TYPE_CHECKING
 import logging
 
-from oopnet.simulator.reportfile_reader import ReportFileReader
+from oopnet.simulator.reportfile_reader import read_report_file
 from oopnet.simulator.binaryfile_reader import BinaryFileReader
 from oopnet.utils import utils
 from oopnet.report.report import SimulationReport
@@ -147,7 +147,7 @@ class ModelSimulator:
             rpt = SimulationReport(
                 self.filename.replace(".inp", ".rpt"),
                 startdatetime=self.startdatetime,
-                reader=ReportFileReader,
+                reader=read_report_file,
             )
         finally:
             if self.delete:

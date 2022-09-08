@@ -14,10 +14,10 @@ def pred(c: Type[Callable]) -> bool:
     Returns:
         Returns True if the class or function is decorated with section_reader and False otherwise.
     """
-    return hasattr(c, "decorator") and c.decorator == section_reader
+    return hasattr(c, "decorator") and getattr(c, "decorator") == section_reader
 
 
-def list_section_reader_callables(modules) -> list[Type[Callable]]:
+def list_section_reader_callables(modules) -> list[ReaderDecorator]:
     """Lists all callables decorated with the section_reader decorator from a list of modules.
 
     Args:

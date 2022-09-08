@@ -226,7 +226,7 @@ def get_nodes(network: Network) -> list[Node]:
       list of Nodes
 
     """
-    return get_junctions(network) + get_tanks(network) + get_reservoirs(network)
+    return [*get_junctions(network), *get_tanks(network), *get_reservoirs(network)]
 
 
 def get_links(network: Network) -> list[Link]:
@@ -239,7 +239,7 @@ def get_links(network: Network) -> list[Link]:
       list of Links
 
     """
-    return get_pipes(network) + get_pumps(network) + get_valves(network)
+    return [*get_pipes(network), *get_pumps(network), *get_valves(network)]
 
 
 def get_pumps(network: Network) -> list[Pump]:
@@ -343,11 +343,13 @@ def get_inflow_nodes(network: Network) -> list[Node]:
       list of Tanks, Reservoirs and Junctions with a base demand < 0
 
     """
-    return (
-        get_tanks(network)
-        + get_reservoirs(network)
-        + [x for x in get_junctions(network) if x.demand < 0]
-    )
+    inflow_nodes = []
+    for j in get_junctions(network):
+        if isinstance(j.demand, list) and any(demand < 0 for demand in j.demand):
+            inflow_nodes.append(j)
+        elif isinstance(j.demand, float) and j.demand < 0:
+            inflow_nodes.append(j)
+    return [*get_tanks(network), *get_reservoirs(network), *inflow_nodes]
 
 
 def get_inflow_node_ids(network: Network) -> list[str]:

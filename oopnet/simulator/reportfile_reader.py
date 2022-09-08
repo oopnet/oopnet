@@ -32,7 +32,7 @@ def str2hms(timestring: str) -> tuple[int, int, float]:
 
 def blockkey2typetime(
     blockkey: str, startdatetime: Optional[datetime.datetime] = None
-) -> tuple[str, datetime.datetime]:
+) -> tuple[str, Optional[datetime.datetime]]:
     """
 
     Args:
@@ -47,8 +47,8 @@ def blockkey2typetime(
     kind = vals[0]
 
     if len(vals) > 3:
-        time = vals[3]
-        hours, minutes, seconds = str2hms(time)
+        time_vals = vals[3]
+        hours, minutes, seconds = str2hms(time_vals)
         if startdatetime is None:
             today = datetime.datetime(
                 year=2016, month=1, day=1, hour=0, minute=0, second=0
@@ -108,70 +108,56 @@ def lst2xray(lst: list) -> xr.DataArray:
 
 # todo: refactor
 @logging_decorator(logger)
-class ReportFileReader:
-    def __new__(
-        cls, filename: str, startdatetime: Optional[datetime.datetime] = None
-    ) -> tuple[Union[DataArray, Dataset, None], Union[DataArray, Dataset, None]]:
-        logger.debug("Reading Report File")
-        with open(filename, "r") as fid:
-            content = fid.readlines()
-            # print(content)
-            block = {}
-            key = "start"
-            block[key] = []
-            error_manager = ErrorManager()
-            error_found = False
-
-            for linenumber, line in enumerate(content):
-                if error_found and len(line.strip()) != 0:
-                    error_manager.append_error_details(line)
-
-                error_found = error_manager.check_line(line)
-                if len(line.strip()) == 0:
-                    key = content[linenumber + 1]
-                    key = re.sub(r"\s+", " ", key.replace("\n", "").strip())
-                    block[key] = []
-                else:
-                    line = re.sub(r"\s+", " ", line.replace("\n", "").strip())
-                    if line not in key and (
-                        line in key or not line.startswith("---------")
-                    ):
-                        block[key].append(line.split(" "))
-        error_manager.raise_errors()
-        links = None
-        nodes = None
-        data = None
-
-        format = "%y.%m.%d %H:%M:%S"
-        for k in list(block.keys()):
-            if "Node" not in k and "Link" not in k:
-                block.pop(k)
-
-        for kind in ["Node", "Link"]:
-            times = []
-            # for key in sorted(block.iterkeys(), key=lambda x: x.split(' ')[3].zfill(8)):
-            for key in sorted(block.keys()):
-                if key.startswith(kind):
-                    kind, time = blockkey2typetime(key, startdatetime=startdatetime)
-                    if time is not None:
-                        times.append(time)
-
-            frames = []
-            for key in sorted(block.keys()):
-                if key.startswith(kind):
-                    lst = block[key]
-                    x = lst2xray(lst)
-                    frames.append(x)
-            if frames:
-                if times:
-                    data = xr.concat(frames, times)
-                    data = data.rename({"concat_dim": "time", "dim_1": "vars"})
-                else:
-                    data = frames[0]
-                    data = data.rename({"dim_1": "vars"})
-            if kind == "Node":
-                nodes = data
+def read_report_file(filename: str, startdatetime: Optional[datetime.datetime] = None) -> \
+        tuple[Union[DataArray, Dataset, None], Union[DataArray, Dataset, None]]:
+    logger.debug("Reading Report File")
+    with open(filename, "r") as fid:
+        content = fid.readlines()
+        key = "start"
+        block: dict[str, list] = {key: []}
+        error_manager = ErrorManager()
+        error_found = False
+        for linenumber, line in enumerate(content):
+            if error_found and len(line.strip()) != 0:
+                error_manager.append_error_details(line)
+            error_found = error_manager.check_line(line)
+            if len(line.strip()) == 0:
+                key = content[linenumber + 1]
+                key = re.sub("\s+", " ", key.replace("\n", "").strip())
+                block[key] = []
             else:
-                links = data
-
-        return nodes, links
+                line = re.sub("\s+", " ", line.replace("\n", "").strip())
+                if line not in key and (line in key or not line.startswith("---------")):
+                    block[key].append(line.split(" "))
+    error_manager.raise_errors()
+    links = None
+    nodes = None
+    data = None
+    for k in list(block.keys()):
+        if "Node" not in k and "Link" not in k:
+            block.pop(k)
+    for kind in ["Node", "Link"]:
+        times = []
+        for key in sorted(block.keys()):
+            if key.startswith(kind):
+                kind, time = blockkey2typetime(key, startdatetime=startdatetime)
+                if time is not None:
+                    times.append(time)
+        frames = []
+        for key in sorted(block.keys()):
+            if key.startswith(kind):
+                lst = block[key]
+                x = lst2xray(lst)
+                frames.append(x)
+        if frames:
+            if times:
+                data = xr.concat(frames, times)
+                data = data.rename({"concat_dim": "time", "dim_1": "vars"})
+            else:
+                data = frames[0]
+                data = data.rename({"dim_1": "vars"})
+        if kind == "Node":
+            nodes = data
+        else:
+            links = data
+    return nodes, links

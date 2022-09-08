@@ -144,8 +144,8 @@ def get_setting(network: Network) -> pd.Series:
       Pandas Series with Pump/Valve IDs as index and settings as values.
 
     """
-    values = [x.setting for x in get_pumps(network) + get_valves(network)]
-    names = get_pump_ids(network) + get_valve_ids(network)
+    values = [x.setting for x in [*get_pumps(network), *get_valves(network)]]
+    names = [*get_pump_ids(network), *get_valve_ids(network)]
     series = pd.Series(data=values, index=names, dtype=np.float64)
     series.name = "setting"
     return series
@@ -162,11 +162,11 @@ def get_linkcenter_coordinates(network: Network) -> pd.DataFrame:
 
     """
     x = [
-        (x.startnode.xcoordinate + x.endnode.xcoordinate) / 2
+        (x.startnode.xcoordinate + x.endnode.xcoordinate) / 2 if x.startnode and x.endnode else None
         for x in get_links(network)
     ]
     y = [
-        (x.startnode.ycoordinate + x.endnode.ycoordinate) / 2
+        (x.startnode.ycoordinate + x.endnode.ycoordinate) / 2 if x.startnode and x.endnode else None
         for x in get_links(network)
     ]
     return pd.DataFrame(

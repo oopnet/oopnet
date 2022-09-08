@@ -68,14 +68,27 @@ class Link(NetworkComponent):
     status: str = "OPEN"
     vertices: list[Vertex] = field(default_factory=list)
 
+    def _check_connected_nodes(self):
+        """Checks if a Link is connected with both a start and an end node.
+
+        Raises:
+            ValueError if either the start or end node attribute of the Link instance is None.
+        """
+        if not self.startnode:
+            raise ValueError(f"Cannot return coordinates of Link {self.id} because it has no start node.")
+        elif not self.endnode:
+            raise ValueError(f"Cannot return coordinates of Link {self.id} because it has no end node.")
+
     @property
     def coordinates(self) -> np.ndarray:
         """Property returning start and end node coordinates"""
+        self._check_connected_nodes()
         return np.asarray([self.startnode.coordinates] + [self.endnode.coordinates])
 
     @property
     def coordinates_2d(self) -> np.ndarray:
         """Property returning start and end node coordinates with the vertices in between them"""
+        self._check_connected_nodes()
         return np.asarray(
             [self.startnode.coordinates[:2]]
             + [v.coordinates for v in self.vertices]
@@ -256,7 +269,6 @@ class Pipe(Link):
         return j, p
 
 
-# todo: rethink keyword, value structure (what happens for multiple properties?)
 @dataclass
 class Pump(Link):
     """Pump link.

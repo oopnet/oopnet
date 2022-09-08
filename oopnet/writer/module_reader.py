@@ -17,7 +17,7 @@ def pred(c: Type[Callable]) -> bool:
     return (
         inspect.isfunction(c)
         and hasattr(c, "decorator")
-        and c.decorator == section_writer
+        and getattr(c, "decorator") == section_writer
     )
 
 
@@ -30,7 +30,6 @@ def list_section_writer_callables(modules):
     Returns:
         List of callables decorated with section_writer.
     """
-
     all_functions = []
     for module in modules:
         funcs = inspect.getmembers(module, pred)

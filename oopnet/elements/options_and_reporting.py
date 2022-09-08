@@ -30,7 +30,7 @@ class Options:
     unbalanced: Union[
         str, tuple[str, int]
     ] = "STOP"  # = Either(Enum('STOP', 'CONTINUE'), List('CONTINUE', Int))
-    pattern: Union[int, Pattern, None] = 1.0
+    pattern: Union[float, Pattern, None] = 1.0
     tolerance: float = 0.01
     map: Optional[str] = None
     demandmultiplier: float = 1.0
@@ -160,6 +160,6 @@ class Report:
         str, Link, list[Link]
     ] = "ALL"  # = Either(None, Enum('NONE', 'ALL'), Instance(Link), List(Instance(Link)))
     parameter: Union[
-        str, tuple[str, float]
+        str, tuple[str, float], None
     ] = None  # = Either(None, Enum('YES', 'NO', 'BELOW', 'ABOVE', 'PRECISION'))
     value: Optional[float] = None  # = Either(None, Float)

@@ -83,12 +83,19 @@ class Action:
 
 
 @dataclass
-class Rule:
+class Rule(NetworkComponent):
     """Defines rule-based controls that modify links based on a combination of conditions."""
 
     id: str
     condition: list[Condition] = field(default_factory=list)
     priority: float = None
+
+    @NetworkComponent.id.setter
+    def id(self, id: str):
+        """Sets ID of NetworkComponent and replaces key in network hash"""
+        if self._network:
+            self._rename(id=id, hashtable=self._network._rules)
+        self._id = id
 
 
 @dataclass

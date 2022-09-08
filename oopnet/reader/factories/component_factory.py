@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional, Union
 
 from oopnet.elements.base import NetworkComponent
 from oopnet.elements.network_components import Node
@@ -17,7 +17,7 @@ class ComponentFactory(ReadFactory):
     """Base Factory for creating NetworkComponents and adding them to a Network."""
 
     @staticmethod
-    def _read_comment(values: dict) -> str:
+    def _read_comment(values: dict) -> Optional[str]:
         """Reads comment from values."""
         return values["comments"] or None
 
@@ -34,7 +34,7 @@ class ComponentFactory(ReadFactory):
     @staticmethod
     def _create_attr_dict(
         attrs: list[str], values: list[str], cls_list: list, network: Network
-    ) -> dict:
+    ) -> dict[str, Union[Pattern, Curve, Node]]:
         """Creates a dictionary for instantiating a NetworkComponent object.
 
         Creates a dictionary that can then be unpacked when instantiating a NetworkComponent object. The function casts
@@ -49,19 +49,16 @@ class ComponentFactory(ReadFactory):
         Returns:
             dictionary with attribute names as keys and attribute values as values
         """
-        attr_dict = {}
+        attr_dict: dict[str, Union[Pattern, Curve, Node]] = {}
         for attr, value, attr_cls in zip(attrs, values, cls_list):
             if value is None or attr_cls is None:
                 continue
             if attr_cls == Pattern:
-                value = get_pattern(network, value)
-                attr_dict[attr] = value
+                attr_dict[attr] = get_pattern(network, value)
             elif attr_cls == Curve:
-                value = get_curve(network, value)
-                attr_dict[attr] = value
+                attr_dict[attr] = get_curve(network, value)
             elif attr_cls == Node:
-                value = get_node(network, value)
-                attr_dict[attr] = value
+                attr_dict[attr] = get_node(network, value)
             elif attr_cls == str and attr != "id":
                 attr_dict[attr] = attr_cls(value.upper())
             else:

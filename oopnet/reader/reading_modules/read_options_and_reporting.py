@@ -62,7 +62,7 @@ def precision2report(vals: list) -> int:
     return int(vals[2])
 
 
-def parameter2report(vals: list) -> Union[str, list[str, float]]:
+def parameter2report(vals: list) -> Union[str, list[Union[str, float]]]:
     """
 
     Args:

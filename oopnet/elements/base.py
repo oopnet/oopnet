@@ -29,11 +29,11 @@ class NetworkComponent(ABC):
         default=None, init=False, compare=False, hash=False, repr=False
     )
 
-    @property
+    @property  # type: ignore
     def id(self) -> str:
         return self._id
 
-    @id.setter
+    @id.setter  # type: ignore
     @abstractmethod
     def id(self, value):
         """Abstract method for setting a component's ID"""

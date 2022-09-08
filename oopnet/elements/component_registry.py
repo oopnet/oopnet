@@ -1,8 +1,9 @@
 from __future__ import annotations
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING, Type
 
 if TYPE_CHECKING:
-    from oopnet.elements.base import NetworkComponent
+    from oopnet.elements.base import NetworkComponent, Node, Link
+    from oopnet.elements.system_operation import Rule, Curve, Pattern
 
 
 class ComponentRegistry(dict):
@@ -28,11 +29,26 @@ class ComponentRegistry(dict):
         else:
             super().__setitem__(key, value)
 
-    def __getitem__(self, item) -> NetworkComponent:
+    def __getitem__(self, item):
         if item not in self:
             raise ComponentNotExistingError(item)
         else:
             return super().__getitem__(item)
+
+
+class RuleRegistry(ComponentRegistry):
+    def __getitem__(self, item) -> Rule:
+        return super().__getitem__(item)
+
+
+class PatternRegistry(ComponentRegistry):
+    def __getitem__(self, item) -> Pattern:
+        return super().__getitem__(item)
+
+
+class CurveRegistry(ComponentRegistry):
+    def __getitem__(self, item) -> Curve:
+        return super().__getitem__(item)
 
 
 class SuperComponentRegistry(dict):
@@ -41,7 +57,6 @@ class SuperComponentRegistry(dict):
     Components are stored in ComponentRegistries for the individual subclasses (junctions, pipes, tanks, ...).
 
     """
-
     def __init__(self, classes: list):
         """SuperComponentRegistry init method.
 
@@ -89,14 +104,19 @@ class NodeRegistry:
     """SuperComponentRegistry factory for Node components."""
 
     def __new__(cls, *args, **kwargs):
-        return SuperComponentRegistry(["junctions", "tanks", "reservoirs"])
+        return SuperComponentRegistry(classes=["junctions", "tanks", "reservoirs"])
 
+    def get_by_id(self, id) -> Node:
+        ...
 
 class LinkRegistry:
     """SuperComponentRegistry factory for Link components."""
 
     def __new__(cls, *args, **kwargs):
         return SuperComponentRegistry(["pipes", "pumps", "valves"])
+
+    def get_by_id(self, id) -> Link:
+        ...
 
 
 class IdenticalIDError(Exception):

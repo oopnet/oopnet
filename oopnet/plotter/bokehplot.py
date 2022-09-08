@@ -20,7 +20,7 @@ from oopnet.utils.getters import (
     get_valves,
 )
 if TYPE_CHECKING:
-    from oopnet.elements.network import Pipe
+    from oopnet.elements.network_components import Pipe
 
 # todo: refactor
 def convert_to_hex(rgba_color):

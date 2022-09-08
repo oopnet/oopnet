@@ -23,7 +23,9 @@ from oopnet.elements.options_and_reporting import (
     Reportprecision,
 )
 from oopnet.elements.component_registry import (
-    ComponentRegistry,
+    PatternRegistry,
+    CurveRegistry,
+    RuleRegistry,
     SuperComponentRegistry,
     NodeRegistry,
     LinkRegistry,
@@ -78,9 +80,9 @@ class Network:
 
     _nodes: SuperComponentRegistry = field(default_factory=NodeRegistry)
     _links: SuperComponentRegistry = field(default_factory=LinkRegistry)
-    _curves: ComponentRegistry = field(default_factory=ComponentRegistry)
-    _patterns: ComponentRegistry = field(default_factory=ComponentRegistry)
-    _rules: ComponentRegistry = field(default_factory=ComponentRegistry)
+    _curves: CurveRegistry = field(default_factory=CurveRegistry)
+    _patterns: PatternRegistry = field(default_factory=PatternRegistry)
+    _rules: RuleRegistry = field(default_factory=RuleRegistry)
 
     @classmethod
     def read(cls, filename=Optional[str], content=Optional[str]):

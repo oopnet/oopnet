@@ -6,7 +6,7 @@ import pandas as pd
 from xarray import DataArray
 
 from oopnet.simulator.binaryfile_reader import BinaryFileReader
-from oopnet.simulator.reportfile_reader import ReportFileReader
+from oopnet.simulator.reportfile_reader import read_report_file
 
 logger = logging.getLogger(__name__)
 
@@ -27,9 +27,7 @@ class SimulationReport:
         self,
         filename: str,
         startdatetime: Optional[datetime.datetime] = None,
-        reader: Union[
-            Type[BinaryFileReader], Type[ReportFileReader]
-        ] = ReportFileReader,
+        reader: Callable = read_report_file,
     ):
         """SimulationReport init method.
 
