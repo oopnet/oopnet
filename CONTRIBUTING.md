@@ -46,12 +46,20 @@ please add this to the issue as well.
 ## Security issues
 If you find a security vulnerability, do NOT open an issue. Email oopnet.contact@gmail.com instead.
 
+## Development Tools
+To install all dependencies needed for running OOPNET's test suite, install the packages listed in `requirements-dev.txt`:
+
+```shell
+pip install -r requirements-dev.txt
+```
+
+We used pre-commit-hooks to autoformat the code and lint it. See the [Coding Style section](#coding-style) below.
+
 ## Style and standards
 OOPNET uses a few standards to simplify its development. Please adhere to them.
 
 ### Coding Style
-Codes will be linted by [black](https://github.com/psf/black) as part of the CI pipeline. This means, that in general 
-you don't have to concern yourself with linting.
+Codes will be linted by [Pylint](https://pylint.pycqa.org/en/latest/) as part of the CI pipeline to make sure that the code adheres to . 
 
 ### Github issue labels
 [StandardIssueLabels](https://github.com/wagenet/StandardIssueLabels#standardissuelabels) are used for labeling issues. 
