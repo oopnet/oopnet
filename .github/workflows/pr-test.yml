@@ -7,6 +7,8 @@ on:
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - "docs"
 
 jobs:
   code-test:
@@ -18,23 +20,52 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+
     - name: Checkout linux_epanet_2.2
       uses: actions/checkout@v2
       with:
         token: ${{ secrets.OOPNET_TOKEN }}
         repository: oopnet/linux_epanet_2.2
         path: linux_epanet_2.2
+
     - name: Setup EPANET
       run: ./linux_epanet_2.2/setup.sh
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install pytest
-        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+        python -m pip install -r requirements-dev.txt
+
     - name: Test with pytest
       run: |
         pytest
+
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Black Formatting
+      uses: psf/black@stable
+
+    - name: Check for modified files
+      id: git-check
+      run: echo ::set-output name=modified::$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)
+
+    - name: Push changes
+      if: steps.git-check.outputs.modified == 'true'
+      run: |
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git remote set-url origin https://x-access-token:${{ secrets.OOPNET_TOKEN }}@github.com/${{ github.repository }}
+        git commit -am "Automated changes"
+        git push
