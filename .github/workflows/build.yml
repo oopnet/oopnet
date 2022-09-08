@@ -11,7 +11,7 @@ on:
 jobs:
   code-test:
     runs-on: ubuntu-latest
-    if: $GITLAB_USER_LOGIN != "OOPNET-bot"
+    if: ${{ github.actor != 'OOPNET-bot'}}
     strategy:
       matrix:
         python-version: [ 3.9, "3.10"]
@@ -48,6 +48,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
+        token: ${{ secrets.OOPNET_TOKEN }}
     - name: Black Code Formatter
       uses: lgeiger/black-action@v1.0.1
       with:
@@ -64,8 +65,8 @@ jobs:
     - name: Push changes
       if: steps.git-check.outputs.modified == 'true'
       run: |
-        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
+        git config --local user.email "oopnet.contact@gmail.com"
+        git config --local user.name "OOPNET-bot"
         git remote set-url origin https://x-access-token:${{ secrets.OOPNET_TOKEN }}@github.com/${{ github.repository }}
         git commit -am "Automated changes"
         git push

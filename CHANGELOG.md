@@ -2,6 +2,26 @@
 
 <!--next-version-placeholder-->
 
+## v0.4.0 (2022-09-01)
+### Feature
+* Added vertex plotting to Bokeh plot ([`4ebe022`](https://github.com/oopnet/oopnet/commit/4ebe02261672f06268f9d666f869e62ffcb5b73c))
+
+### Fix
+* Switched condition attribute default of Rules from None to an empty list ([`aad8f00`](https://github.com/oopnet/oopnet/commit/aad8f00bb9095cee65967e5f6ba52a03c0e15273))
+* Fixed reading time options in hh:mm:ss format ([`fa2abef`](https://github.com/oopnet/oopnet/commit/fa2abef883af201a91924b4396a7221ca2389caa))
+
+### Documentation
+* Updated information in setup.cfg for PyPI ([`e6f23b5`](https://github.com/oopnet/oopnet/commit/e6f23b52a28b0b10475179221a91c550d6e9064b))
+* Added badges to README.md ([`d131b8a`](https://github.com/oopnet/oopnet/commit/d131b8adbac0e361ca12809c2ee856cf7b834bee))
+
+## v0.3.2 (2022-08-26)
+### Fix
+* Fixed concatenated large number parsing error in report file reader ([`1685835`](https://github.com/oopnet/oopnet/commit/1685835e1d16bf7eaa605e829486ddde07e4d5de))
+* Moved parts of report module to simulator module for better consistency ([`41ca790`](https://github.com/oopnet/oopnet/commit/41ca7907043fd718c40fc0c5bf060bdba37be7e9))
+
+### Documentation
+* Corrected Network attribute documentation ([`3a71dd9`](https://github.com/oopnet/oopnet/commit/3a71dd9c26ee3aae277b80cc524dc313d662dd8c))
+
 ## v0.3.1 (2022-04-14)
 ### Fix
 * Fixed a bug where networkx get_edge_data returning a dict instead of a list breaks nxedge2onlink_id ([`8377d16`](https://github.com/oopnet/oopnet/commit/8377d16a09b0e9a23820db2af7820fa627242a1f))
