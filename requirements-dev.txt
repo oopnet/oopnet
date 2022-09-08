@@ -7,6 +7,8 @@ xarray
 seaborn
 scoop
 openpyxl
+pre-commit
+pytest
 
 # doc building
 sphinx
