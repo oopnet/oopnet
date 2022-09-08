@@ -1,0 +1,19 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: stable
+    hooks:
+    - id: black
+      language_version: python3.9
+
+  - repo: https://github.com/pre-commit/mirrors-pylint
+    rev: stable
+    hooks:
+      - id: pylint
+        args: [--disable=all, --enable=unused-import]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: stable
+    hooks:
+      - id: mypy
+        exclude: ^tests/
+        args: [--strict]
