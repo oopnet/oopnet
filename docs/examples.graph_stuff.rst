@@ -2,29 +2,33 @@
 Graph Stuff
 -----------
 
-.. note::
+A graph theoretic example of what you can do together with OOPNET and NetworkX.
 
-	Graph theoretic example of what you can do together with OOPNET and NetworkX
-
-If you load an EPANET input file into OOPNET with the `Read` function, automatically a `NetworkX` graph object is generated from the connection of the links and nodes in the Input file and stored in the `network.graph` attribute in OOPNET.
-
-First steps load OOPNET package and Epanet input file into OOPNET
+As always, we first specify our imports. In this example, we will use :mod:`networkx` for calculating graph metrics,
+:mod:`matplotlib.pyplot` and :mod:`seaborn` for plotting, :mod:`pandas` for some shortcuts with our data and, of course,  :mod:`oopnet`.
 
 .. literalinclude:: /../examples/graph_stuff.py
 	:language: python
-	:lines: 1-11
+	:lines: 1-7
 
-Then save the network NetworkX graph object to variable ``G``:
+We now load the "Anytown" model and create a :class:`networkx.MultiGraph` object from the model.
+
+.. warning::
+    You can also create :class:`networkx.Graph`, :class:`networkx.DiGraph` or :class:`networkx.MultiDiGraph` objects from
+    a network but keep in mind, that :class:`networkx.Graph` and :class:`networkx.DiGraph` objects have a limitation:
+    They only keep one connection between two nodes. If you have several pipes connecting two nodes, only one of the will
+    be kept. OOPNET warns you, if you create a :class:`networkx.Graph` or :class:`networkx.DiGraph` object.
+
+.. literalinclude:: /../examples/graph_stuff.py
+	:language: python
+	:lines: 12
+
+The package NetworkX offers various possibilities regarding graph theoretical algorithms, matrices etc. Here, we
+calculate different graph measurements like computing the graph theoretical `Center <https://en.wikipedia.org/wiki/Graph_center>`_, `Diameter <https://en.wikipedia.org/wiki/Distance_(graph_theory)>`_ or `Radius <https://en.wikipedia.org/wiki/Distance_(graph_theory)>`_ of the graph:
 
 .. literalinclude:: /../examples/graph_stuff.py
 	:language: python
 	:lines: 14
-
-The package NetworkX offers various possibilities like for example calculate different graph measurements like computing the graph theoretical `Center <https://en.wikipedia.org/wiki/Graph_center>`_, `Diameter <https://en.wikipedia.org/wiki/Distance_(graph_theory)>`_ or `Radius <https://en.wikipedia.org/wiki/Distance_(graph_theory)>`_ of the graph:
-
-.. literalinclude:: /../examples/graph_stuff.py
-	:language: python
-	:lines: 17
 	
 ::
 
@@ -32,7 +36,7 @@ The package NetworkX offers various possibilities like for example calculate dif
 
 .. literalinclude:: /../examples/graph_stuff.py
 	:language: python
-	:lines: 18
+	:lines: 15
 
 ::
 
@@ -40,59 +44,60 @@ The package NetworkX offers various possibilities like for example calculate dif
 
 .. literalinclude:: /../examples/graph_stuff.py
 	:language: python
-	:lines: 19
+	:lines: 16
 
 ::
 
 	Radius: 4
 
-Use Google's page rank algorithm on the network
+Next, we apply Google's page rank algorithm on the network:
 
 .. literalinclude:: /../examples/graph_stuff.py
 	:language: python
-	:lines: 22
+	:lines: 18
 
-Make a pandas series out of the results for better data handling, sort this series descending by values and give this series a name attribute, which will serve as a label for the colorbar in OOPNET's network plot.
+We create a :class:`pandas.Series` out of the results for better data handling, sort this series in descending order and give this series a name attribute, which will serve as a label for the color bar in OOPNET's network plot.
 
 .. literalinclude:: /../examples/graph_stuff.py
 	:language: python
-	:lines: 23-25
+	:lines: 19-21
 
-First we plot the results as a barplot
+First, we plot the results as a bar plot:
+
+.. literalinclude:: /../examples/graph_stuff.py
+	:language: python
+	:lines: 23-24
+
+.. image:: figures/examples/graph_page_rank_bar.png
+
+We can also plot the page rank series directly on the network nodes with OOPNET's plot function:
+
+.. literalinclude:: /../examples/graph_stuff.py
+	:language: python
+	:lines: 26
+
+.. image:: figures/examples/graph_page_rank_network.png
+
+We can calculate the degree of every node in the network and save it as a :class:`pandas.Series`:
 
 .. literalinclude:: /../examples/graph_stuff.py
 	:language: python
 	:lines: 28-29
 
-.. image:: figures/examples/graph_page_rank_bar.png
-
-We can also plot the page rank series directly on the network nodes with OOPNET's Plot function
+Of course, we can plot this again as a bar plot
 
 .. literalinclude:: /../examples/graph_stuff.py
 	:language: python
-	:lines: 32
-
-.. image:: figures/examples/graph_page_rank_network.png
-
-We can also calculate the degree of every node in the network and save it as a Pandas series
-
-.. literalinclude:: /../examples/graph_stuff.py
-	:language: python
-	:lines: 35-36
-
-Of course, we can plot this again as a barplot
-
-.. literalinclude:: /../examples/graph_stuff.py
-	:language: python
-	:lines: 38 - 41
+	:lines: 31-34
 
 .. image:: figures/examples/graph_degrees.png
 
-And we can calculate all shortest paths in the network, save the as a Pandas Dataframe and plot them as a heatmap
+And we can calculate all shortest paths in the network, save them as a :class:`pandas.DataFrame` and plot them as a heatmap.
+Here, we use :mod:`seaborn`, a library based on matplotlib that creates nice heatmaps.
 
 .. literalinclude:: /../examples/graph_stuff.py
 	:language: python
-	:lines: 44-45, 48-51
+	:lines: 31-36, 38-40
 
 .. image:: figures/examples/graph_distances.png
 

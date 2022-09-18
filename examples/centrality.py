@@ -9,7 +9,7 @@ filename = os.path.join('data', 'C-town.inp')
 
 net = on.Network.read(filename)
 
-G = on.Graph(net)
+G = on.MultiGraph(net)
 
 plt.figure()
 
