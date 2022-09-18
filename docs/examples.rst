@@ -17,3 +17,4 @@ Examples
     examples.mc_stereo.rst
     examples.read_and_run.rst
     examples.run_and_plot.rst
+    examples.run_and_animate.rst
