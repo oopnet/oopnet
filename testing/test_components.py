@@ -3,6 +3,7 @@ from copy import deepcopy
 
 import numpy as np
 
+from oopnet.elements.network_map_tags import Vertex
 from oopnet.utils.getters.get_by_id import get_link, get_pipe
 from oopnet.utils.getters.element_lists import get_link_ids, get_junction_ids, get_pipe_ids
 
@@ -58,6 +59,18 @@ class TestLink(unittest.TestCase):
         for ratio in [np.inf, 2, 1]:
             with self.assertRaises(ValueError):
                 self._test_pipe.split(split_ratio=ratio)
+
+    def test_center_simple(self):
+        center = self._test_pipe.center
+        self.assertListEqual([2.0, 2.0], center.tolist())
+
+    def test_center_vertices(self):
+        vert_1 = Vertex(xcoordinate=2, ycoordinate=1)
+        vert_2 = Vertex(xcoordinate=2, ycoordinate=3)
+        self._test_pipe.vertices.extend([vert_1, vert_2])
+        center = self._test_pipe.center
+        print(self._test_pipe.coordinates_2d)
+        self.assertListEqual([2.0, 2.0], center.tolist())
 
 
 if __name__ == '__main__':
