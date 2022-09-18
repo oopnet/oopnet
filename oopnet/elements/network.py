@@ -180,7 +180,7 @@ class Network:
             colormap=colormap,
             markersize=markersize,
             robust=robust,
-            truncate_nodes=truncate_nodes
+            truncate_nodes=truncate_nodes,
         )
         return plotter.plot(
             network=self,
@@ -190,7 +190,7 @@ class Network:
             link_width=linkwidth,
             ax=ax,
             nodes_vlim=nodes_vlim,
-            links_vlim=links_vlim
+            links_vlim=links_vlim,
         )
 
     def animate(
@@ -210,8 +210,7 @@ class Network:
         links_vlim: Optional[tuple[float, float]] = None,
         truncate_nodes=None,
         interval: int = 500,
-        repeat: bool = False
-
+        repeat: bool = False,
     ) -> FuncAnimation:
         """Animates the Network with simulation results as a network plot with Matplotlib.
 
@@ -242,7 +241,7 @@ class Network:
             colormap=colormap,
             markersize=markersize,
             robust=robust,
-            truncate_nodes=truncate_nodes
+            truncate_nodes=truncate_nodes,
         )
         return plotter.animate(
             network=self,

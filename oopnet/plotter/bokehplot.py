@@ -19,6 +19,7 @@ from oopnet.utils.getters import (
     get_pumps,
     get_valves,
 )
+
 if TYPE_CHECKING:
     from oopnet.elements.network import Pipe
 
@@ -147,7 +148,9 @@ def plotpipe(f, elements: list[Pipe], colors):
             ye_list.append(ye)
             c = convert_to_hex(outsidelist(pipe.id, colors))
             color_list.append(c)
-    f.segment(x0=xs_list, x1=xe_list, y0=ys_list, y1=ye_list, color=color_list, line_width=2.0)
+    f.segment(
+        x0=xs_list, x1=xe_list, y0=ys_list, y1=ye_list, color=color_list, line_width=2.0
+    )
 
 
 class Plotsimulation:
