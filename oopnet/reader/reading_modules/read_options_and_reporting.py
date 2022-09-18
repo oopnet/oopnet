@@ -222,14 +222,10 @@ def read_times(network: Network, block: list):
             clock = vals[2]
             if ":" in clock:
                 if len(clock.split(":")) == 2:
-                    h, m = list(
-                        map(int, clock.split(":"))
-                    )
+                    h, m = list(map(int, clock.split(":")))
                     s = 0
                 else:
-                    h, m, s = list(
-                        map(int, clock.split(":"))
-                    )
+                    h, m, s = list(map(int, clock.split(":")))
                 h = h if h != 12 or len(vals) == 4 and vals[3].upper() != "AM" else 0
                 if len(vals) > 3 and vals[3].upper() == "PM":
                     h += 12

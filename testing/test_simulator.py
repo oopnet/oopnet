@@ -21,10 +21,10 @@ class SimulatorTest(unittest.TestCase):
             return df.replace('#N\/A\s+', np.nan, regex=True)
 
         set_dir_testing()
-        node_results = pd.read_excel(filename, sheet_name='nodes', engine='openpyxl', index_col=0).sort_index()
+        node_results = pd.read_excel(filename, sheet_name='nodes', engine='openpyxl', index_col=0)
         node_results = replace_invalid_vals(node_results)
         self.node_results = strip_index_columns(node_results)
-        link_results = pd.read_excel(filename, sheet_name='links', engine='openpyxl', index_col=0).sort_index()
+        link_results = pd.read_excel(filename, sheet_name='links', engine='openpyxl', index_col=0)
         link_results = replace_invalid_vals(link_results)
         self.link_results = strip_index_columns(link_results)
 
@@ -32,30 +32,30 @@ class SimulatorTest(unittest.TestCase):
         self.assertTrue(all(self.node_results['Elevation'].sort_index() == self.rpt.elevation))
 
     def compare_demand(self):
-        self.assertTrue(all(self.node_results['Demand'] == self.rpt.demand))
+        self.assertTrue(all(self.node_results['Demand'].sort_index() == self.rpt.demand))
 
     def compare_head(self):
-        self.assertTrue(all(self.node_results['Head'] == self.rpt.head))
+        self.assertTrue(all(self.node_results['Head'].sort_index() == self.rpt.head))
 
     def compare_pressure(self):
-        self.assertTrue(all(self.node_results['Pressure'] == self.rpt.pressure))
+        self.assertTrue(all(self.node_results['Pressure'].sort_index() == self.rpt.pressure))
 
     def compare_length(self):
-        length = self.link_results['Length'].fillna(0)
+        length = self.link_results['Length'].sort_index().fillna(0)
         self.assertTrue(all(length == self.rpt.length))
 
     def compare_flow(self):
-        self.assertTrue(all(self.link_results['Flow'] == self.rpt.flow))
+        self.assertTrue(all(self.link_results['Flow'].sort_index() == self.rpt.flow))
 
     def compare_velocity(self):
-        self.assertTrue(all(self.link_results['Velocity'] == self.rpt.velocity))
+        self.assertTrue(all(self.link_results['Velocity'].sort_index() == self.rpt.velocity))
 
     def compare_headloss(self):
-        headloss = self.link_results['Unit Headloss'].fillna(0)
+        headloss = self.link_results['Unit Headloss'].sort_index().fillna(0)
         self.assertTrue(all(headloss == self.rpt.headlossper1000m))
 
     def compare_ffactor(self):
-        ffactor = self.link_results['Friction Factor'].fillna(0)
+        ffactor = self.link_results['Friction Factor'].sort_index().fillna(0)
         ffactor = ffactor.round(2)
         self.assertTrue(all(ffactor == self.rpt.ffactor))
 

@@ -71,11 +71,17 @@ def lst2xray(lst: list) -> xr.DataArray:
     Returns:
 
     """
+
     def split_item(item):
         new_entries = []
         new_entry = ""
         for index, char in enumerate(item):
-            if char in ['+', '-'] and new_entry and index != 0 and item[index - 1] != 'e':
+            if (
+                char in ["+", "-"]
+                and new_entry
+                and index != 0
+                and item[index - 1] != "e"
+            ):
                 new_entries.append(new_entry)
                 new_entry = ""
             new_entry += char
@@ -91,11 +97,16 @@ def lst2xray(lst: list) -> xr.DataArray:
         # otherwise look for faulty entries
         for index, item in enumerate(entry):
             c = Counter(item)
-            if '+' in c and '-' in c or \
-                '+' in c and c['+'] > 1 or \
-                '-' in c and c['-'] > 1:
+            if (
+                "+" in c
+                and "-" in c
+                or "+" in c
+                and c["+"] > 1
+                or "-" in c
+                and c["-"] > 1
+            ):
                 new_items = split_item(item)
-                new_entry = entry[:index] + new_items + entry[index + 1:]
+                new_entry = entry[:index] + new_items + entry[index + 1 :]
                 lst[entry_index] = new_entry
 
     lst[2:] = [x[: len(lst[0]) + 1] for x in lst[2:]]

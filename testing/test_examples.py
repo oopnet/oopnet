@@ -15,7 +15,7 @@ class ExampleTest(unittest.TestCase):
         set_dir_examples()
 
     def tearDown(self) -> None:
-        to_delete = ['bokehexample.html', 'oopnet.log']
+        to_delete = ['bokehexample.html', 'oopnet.log', 'simple_animation.gif']
         for file in to_delete:
             if os.path.isfile(file):
                 os.remove(file)
@@ -70,6 +70,9 @@ class ExampleTest(unittest.TestCase):
 
     def test_run_and_plot(self, mock_show):
         import examples.run_and_plot
+
+    def test_run_and_animate(self, mock_show):
+        import examples.run_and_animate
 
     def test_test(self, mock_show):
         import examples.test
