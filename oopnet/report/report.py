@@ -62,7 +62,7 @@ class SimulationReport:
         return data
 
     @property
-    def elevation(self) -> pd.Series:
+    def elevation(self) -> Union[pd.Series, pd.DataFrame]:
         """Elevations from the simulation report object.
 
         Returns:
@@ -72,7 +72,7 @@ class SimulationReport:
         return self._get(self.nodes, "Elevation", "m")
 
     @property
-    def demand(self) -> pd.Series:
+    def demand(self) -> Union[pd.Series, pd.DataFrame]:
         """Demands from the simulation report object.
 
         Returns:
@@ -82,7 +82,7 @@ class SimulationReport:
         return self._get(self.nodes, "Demand", "l/s")
 
     @property
-    def head(self) -> pd.Series:
+    def head(self) -> Union[pd.Series, pd.DataFrame]:
         """Heads from the simulation report object.
 
         Returns:
@@ -92,7 +92,7 @@ class SimulationReport:
         return self._get(self.nodes, "Head", "m")
 
     @property
-    def pressure(self) -> pd.Series:
+    def pressure(self) -> Union[pd.Series, pd.DataFrame]:
         """Pressures from the simulation report object.
 
         Returns:
@@ -102,7 +102,7 @@ class SimulationReport:
         return self._get(self.nodes, "Pressure", "m")
 
     @property
-    def quality(self) -> pd.Series:
+    def quality(self) -> Union[pd.Series, pd.DataFrame]:
         """Qualities from the simulation report object.
 
         Returns:
@@ -112,7 +112,7 @@ class SimulationReport:
         return self._get(self.nodes, "Quality")
 
     @property
-    def length(self) -> pd.Series:
+    def length(self) -> Union[pd.Series, pd.DataFrame]:
         """Lengths from the simulation report object.
 
         Returns:
@@ -122,7 +122,7 @@ class SimulationReport:
         return self._get(self.links, "Length", "m")
 
     @property
-    def diameter(self) -> pd.Series:
+    def diameter(self) -> Union[pd.Series, pd.DataFrame]:
         """Diameters from the simulation report object.
 
         Returns:
@@ -132,7 +132,7 @@ class SimulationReport:
         return self._get(self.links, "Diameter", "m")
 
     @property
-    def flow(self) -> pd.Series:
+    def flow(self) -> Union[pd.Series, pd.DataFrame]:
         """Flows from the simulation report object.
 
         Returns:
@@ -142,7 +142,7 @@ class SimulationReport:
         return self._get(self.links, "Flow", "l/s")
 
     @property
-    def velocity(self) -> pd.Series:
+    def velocity(self) -> Union[pd.Series, pd.DataFrame]:
         """Velocities from the simulation report object.
 
         Returns:
@@ -152,7 +152,7 @@ class SimulationReport:
         return self._get(self.links, "Velocity", "m/s")
 
     @property
-    def headlossper1000m(self) -> pd.Series:
+    def headlossper1000m(self) -> Union[pd.Series, pd.DataFrame]:
         """Headlosses from the simulation report object as it is in the report (units in headloss per 1000m)
 
         Returns:
@@ -162,7 +162,7 @@ class SimulationReport:
         return self._get(self.links, "Headloss", "/1000m")
 
     @property
-    def headloss(self) -> pd.Series:
+    def headloss(self) -> Union[pd.Series, pd.DataFrame]:
         """Headlosses from the simulation report object.
 
         WARNING: If one wants to work with headloss, then the length reportparameter has to be set to 'YES' in the Network's Reportparameter settings.
@@ -180,7 +180,7 @@ class SimulationReport:
         return self._get(self.links, "Headloss", "m", convert)
 
     @property
-    def position(self) -> pd.Series:
+    def position(self) -> Union[pd.Series, pd.DataFrame]:
         """Positions from the simulation report object.
 
         Returns:
@@ -200,7 +200,7 @@ class SimulationReport:
         return self._get(self.links, "Setting")
 
     @property
-    def reaction(self) -> pd.Series:
+    def reaction(self) -> Union[pd.Series, pd.DataFrame]:
         """Reactions from the simulation report object.
 
         Returns:
@@ -210,7 +210,7 @@ class SimulationReport:
         return self._get(self.links, "Reaction", "mass/L/day")
 
     @property
-    def ffactor(self) -> pd.Series:
+    def ffactor(self) -> Union[pd.Series, pd.DataFrame]:
         """Ffactors from the simulation report object.
 
         Returns:
