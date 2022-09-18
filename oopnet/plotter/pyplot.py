@@ -134,8 +134,8 @@ class NetworkPlotter:
         scalar_map._A = []
         return scalar_map
 
-    def _add_colorbar(self, name: str, scalar_map, extend: str):
-        cb = plt.colorbar(scalar_map, extend=extend)
+    def _add_colorbar(self, name: str, scalar_map, extend: str, ax: matplotlib.axes.Axes):
+        cb = plt.colorbar(scalar_map, extend=extend, ax=ax)
         cb.set_label(name, size=22)
         cb.ax.tick_params(labelsize=20)
         return matplotlib_colors
@@ -314,7 +314,7 @@ class NetworkPlotter:
                 and links is not None
         )
         if link_colorbar:
-            self._add_colorbar(links.name, link_scalar_map, links_vlim[2])
+            self._add_colorbar(links.name, link_scalar_map, links_vlim[2], ax=ax)
 
         # get Node colors
         nodes_vlim = self._get_colorbar_limit(nodes, nodes_vlim)
@@ -334,7 +334,7 @@ class NetworkPlotter:
                 and nodes is not None
         )
         if node_colorbar:
-            self._add_colorbar(nodes.name, node_scalar_map, nodes_vlim[2])
+            self._add_colorbar(nodes.name, node_scalar_map, nodes_vlim[2], ax=ax)
 
         self._plot_nodes(network=network, ax=ax, colors=node_colors)
         self._plot_links(network=network, ax=ax, colors=link_colors, link_width=link_width)
@@ -404,7 +404,7 @@ class NetworkPlotter:
                          and links is not None
                          )
         if link_colorbar:
-            self._add_colorbar(link_label, link_scalar_map, links_vlim[2])
+            self._add_colorbar(link_label, link_scalar_map, links_vlim[2], ax=ax)
 
         # get Node colors
         nodes_vlim = self._get_colorbar_limit(nodes, nodes_vlim)
@@ -424,7 +424,7 @@ class NetworkPlotter:
                          and nodes is not None
                          )
         if node_colorbar:
-            self._add_colorbar(node_label, node_scalar_map, nodes_vlim[2])
+            self._add_colorbar(node_label, node_scalar_map, nodes_vlim[2], ax=ax)
 
         if isinstance(nodes, pd.DataFrame):
             times = nodes.index
