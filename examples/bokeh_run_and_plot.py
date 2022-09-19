@@ -4,10 +4,9 @@ from bokeh.plotting import output_file, show
 import oopnet as on
 
 filename = os.path.join('data', 'C-town.inp')
-
 net = on.Network.read(filename)
-rpt = net.run()
 
+rpt = net.run()
 p = rpt.pressure
 f = rpt.flow
 

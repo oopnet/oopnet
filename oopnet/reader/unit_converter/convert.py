@@ -1,16 +1,16 @@
 """
 Convert all units which are possible in the EPANET-Input file to LPS
 Possible: (This are the flow units)
-    CFS ... cubic feet per second
-    GPM ... gallons per minute
-    MGD ... million gallons per day
-    IMGD ... Imperial MGD
-    AFD ... acre-feet per day
-    LPS ... liters per second
-    LPM ... liters per minute
-    MLD ... million liters per day
-    CMH ... cubic meters per hour
-    CMD ... cubic meters per day
+- CFS ... cubic feet per second
+- GPM ... gallons per minute
+- MGD ... million gallons per day
+- IMGD ... Imperial MGD
+- AFD ... acre-feet per day
+- LPS ... liters per second
+- LPM ... liters per minute
+- MLD ... million liters per day
+- CMH ... cubic meters per hour
+- CMD ... cubic meters per day
 
 The Input of OOPNET is possible in all units, but OOPNET uses and returns SI-Units (LPS).
 """

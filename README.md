@@ -1,7 +1,8 @@
 # OOPNET
 [![PyPI](https://img.shields.io/pypi/v/oopnet.svg)](https://pypi.python.org/pypi/oopnet)
 [![OOPNET build](https://github.com/oopnet/oopnet/actions/workflows/build.yml/badge.svg)](https://github.com/oopnet/oopnet/actions/workflows/build.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/oopnet/oopnet/blob/main/LICENSE.md)
+[![Documentation Status](https://readthedocs.org/projects/oopnet/badge/?version=latest)](https://oopnet.readthedocs.io/en/latest/?badge=latest)
 
 OOPNET (object-oriented EPANET) is a Python package for modelling and simulating hydraulic water distribution system models based on the modelling software EPANET.
 

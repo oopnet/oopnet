@@ -22,11 +22,10 @@ So far the object-oriented structure of OOPNET is similar to CWSNET [4], OOTEN [
 being as easy as possible to handle for end-users.
 EPANET input files can be translated into this structure and are manipulated and simulated with EPANET’s command-line
 interface through Python.
-The reports are translated in Pandas [7], a python data analysis library, to enable fast and easy to use data
+The reports are translated in Pandas [7], a Python data analysis library, to enable fast and easy-to-use data
 analysis of the results.
 Plotting the water distribution network as well as the results is performed either with MatplotLib [9], a plotting
 package similar to MATLAB, or directly in the user’s browser or web with Bokeh [10].
-
 
 Why Python?
 -----------
@@ -54,8 +53,8 @@ user group is still growing (see Fig. 1), potentially replacing e.g. MATLAB, in 
 
 Furthermore, one of the main strengths of Python is that it has a large standard library providing tools suited to
 various tasks.
-This is described as its “batteries included” philosophy. By January 2015, the Python Package Index contained more
-than 54.000 Python packages offering a wide range of functionality.
+This is described as its “batteries included” philosophy. By September 2022, the Python Package Index contained more
+than 400.000 Python projects offering a wide range of functionality.
 
 
 Program Design
@@ -63,7 +62,7 @@ Program Design
 
 The design philosophy of OOPNET consists of two main objectives, usability and collaboration.
 
-First, the usability should be as easy as possible, enabling water engineers implementing their ideas throughout easy
+First, usability should be as good as possible, enabling water engineers to implement their ideas through
 readable and writeable code.
 Moreover, OOPNET should warn users, if they make programming mistakes.
 Mistakes, which may be hard to find later on if OOPNET is getting more complex due to further development, have to be
@@ -111,15 +110,15 @@ Here is a code snippet of a simple example is presented, to make the use of OOPN
 
 .. code-block:: python
 
-    network = Read(filename)
+    network = on.Network.read(filename)
 
     for p in network.pipes:
         if p.diameter > 500:
             p.roughness = 2.0
 
-    report = Run(network)
+    report = network.run()
 
-    print Pressure(report).mean()
+    print(report.pressure.mean())
 
 
 .. note::
@@ -136,15 +135,6 @@ The object-oriented structure implemented in the elements package is represented
 object-oriented design paradigm with inheritance of classes and properties.
 Inheritance is depicted as a black arrow, e.g. the class Junction is a child of class Node, which is again the child
 of the class Network Component.
-Underlying all classes is an abstract ``HasStrictTraits`` class from the Python package ``Traits`` [14].
-Traits circumvents the drawback of Python that all class objects and all class properties can be overwritten at
-runtime of the program.
-Furthermore, Traits enables fixed types of properties in Python.
-For example, the roughness coefficient of a pipe always has to be a floating point number and not a string.
-If the user accidentally defines the roughness of a pipe as a string, this will lead to an error and the user will be
-led to the wrong line in the code.
-This prevents from the aforementioned propagation of errors in larger, more complex programs, which would be hard to
-find in a later stage of programming
 
 Additionally, Fig. 4 shows, that if a class has another class as one of its properties, it is depicted as dotted arrow.
 For example, a Link has always a start-node and an end-node.
@@ -176,17 +166,14 @@ of a class, namely Pattern, which has again properties.
     :scale: 75 %
     :align: center
 
-    Properties of the Network class object conataining all the information from an EPANET Input file
+    Properties of the Network class object containing all the information from an EPANET input file
 
 On top of the elements class structure is the network object, which is again a class with properties consisting of
 Python lists of the classes of elements, describing the whole network and its physical properties respectively the
 simulation parameters (Fig. 6).
-Additionally, the graph property contains the NetworkX graph object and networkhash is a property containing a Python
-dictionary linking all id’s of the elements of the network to their memory location, allowing faster connection of
-the elements respectively faster searching through the network’s elements.
 An example of a bokeh plot of a network and its simulation results is shown in Fig. 7. The node pressures and the
 pipe flows are depicted in different colors.
 On top of the figure the bokeh’s menu with different tools, like panning, zooming, refreshing or exporting, can be seen.
 
 ..
-    bokeh-plot:: bokeh_run_and_plot.py
+    bokeh-plot::  /../examples/bokeh_run_and_plot.py

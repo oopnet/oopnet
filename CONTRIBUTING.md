@@ -50,8 +50,7 @@ If you find a security vulnerability, do NOT open an issue. Email oopnet.contact
 OOPNET uses a few standards to simplify its development. Please adhere to them.
 
 ### Coding Style
-Codes will be linted by [black](https://github.com/psf/black) as part of the CI pipeline. This means, that in general 
-you don't have to concern yourself with linting.
+Codes will be formatted by [black](https://github.com/psf/black) as part of the CI pipeline and check by [Pylint](https://pylint.pycqa.org/en/latest/).
 
 ### Github issue labels
 [StandardIssueLabels](https://github.com/wagenet/StandardIssueLabels#standardissuelabels) are used for labeling issues. 
