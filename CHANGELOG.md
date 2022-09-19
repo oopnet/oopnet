@@ -2,6 +2,17 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.0 (2022-09-18)
+### Feature
+* Added a new NetworkPlotter class that enables static plots and animations ([`3a3a028`](https://github.com/oopnet/oopnet/commit/3a3a02840443009cffb2d9d271402bb4c7123855))
+* Added `center` method to Link components to calculate a Link's geometric center in 2D ([`d3f5dbf`](https://github.com/oopnet/oopnet/commit/d3f5dbff5f5e7f2e175206fa7a6b2d7fb020711f))
+
+### Fix
+* Switched SimulationReport property type hints to Union[pd.Series, pd.DataFrame] to take extended period simulations into account ([`2ffcccc`](https://github.com/oopnet/oopnet/commit/2ffcccc635849a9528fb76e46f7a64dacef4e99f))
+
+### Documentation
+* Renamed LICENSE to LICENSE.md to use markdown ([`08a1e69`](https://github.com/oopnet/oopnet/commit/08a1e6958e4ff9444ba9d9f209893cd6630bc932))
+
 ## v0.4.1 (2022-09-02)
 ### Fix
 * Added sort_index() call to pandas results ([`53545ca`](https://github.com/oopnet/oopnet/commit/53545ca621afce3b6f36663100e9228e306c788f))
