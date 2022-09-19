@@ -27,11 +27,16 @@ We can now plot the model as-is:
 	:language: python
 	:lines: 10
 
-We can also run a simulation and plot the pressure and flow results:
+.. image:: figures/examples/userguide_plotting_1.png
+
+We can also run a simulation and plot the pressure and flow (or any other :class:`pandas.Series` with link or node IDs
+as index) by passing them to the ``nodes`` and ``links`` arguments.
 
 .. literalinclude:: /../examples/userguide_plotting.py
 	:language: python
 	:lines: 12-16
+
+.. image:: figures/examples/userguide_plotting_2.png
 
 There is also the possibility to limit the color bar to values between the 2nd and 98th percentile using the ``robust``
 parameter. If it is set to ``True``,  the colors in the plot will be more finely graduated because the minima and maxima
@@ -40,6 +45,8 @@ values will not be used for the calculating the value range of the color bar.
 .. literalinclude:: /../examples/userguide_plotting.py
 	:language: python
 	:lines: 17
+
+.. image:: figures/examples/userguide_plotting_3.png
 
 But what if you don't want to plot all junctions? For instance, if you calculate the difference in pressure between
 measurement and simulation data, you might not have a value to plot for every junction. By default, if a junction
@@ -53,12 +60,16 @@ passing the ``truncate_nodes`` argument to the plotting function:
 	:language: python
 	:lines: 19-20
 
+.. image:: figures/examples/userguide_plotting_4.png
+
 You can also pass values for the link width in the plot. Here, we use this to show the diameters in the network while
 hiding all the nodes.
 
 .. literalinclude:: /../examples/userguide_plotting.py
 	:language: python
 	:lines: 22-23
+
+.. image:: figures/examples/userguide_plotting_5.png
 
 Don't forget to show the plots:
 
@@ -157,6 +168,9 @@ Finally, we create and show the plot:
 .. literalinclude:: /../examples/bokeh_run_and_plot.py
 	:language: python
 	:lines: 14-15
+
+.. bokeh-plot:: bokehplot_userguide.py
+    :source-position: None
 
 Summary
 -------

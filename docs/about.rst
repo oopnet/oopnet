@@ -175,5 +175,3 @@ An example of a bokeh plot of a network and its simulation results is shown in F
 pipe flows are depicted in different colors.
 On top of the figure the bokeh’s menu with different tools, like panning, zooming, refreshing or exporting, can be seen.
 
-..
-    bokeh-plot::  /../examples/bokeh_run_and_plot.py
