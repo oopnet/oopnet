@@ -86,7 +86,7 @@ network.plot()
 
 ## License
 
-OOPNET is available under a [MIT License](https://github.com/oopnet/oopnet/blob/main/LICENSE).
+OOPNET is available under a [MIT License](https://github.com/oopnet/oopnet/blob/main/LICENSE.md).
 
 ## Contributing
 If you want to contribute, please check out our [Code of Conduct](https://github.com/oopnet/oopnet/blob/main/CODE_OF_CONDUCT.md) and our [Contribution Guide](https://github.com/oopnet/oopnet/blob/main/CONTRIBUTING.md). Looking forward to your pull request or issue!
