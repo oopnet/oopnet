@@ -7,7 +7,7 @@ build:
   tools:
     python: "3.9"
   jobs:
-    pre_install:
+    pre_build:
       - bash ./docs/setup_environment.sh  # install EPANET2 in the environment
 
 # Build documentation in the docs/ directory with Sphinx
