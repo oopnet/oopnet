@@ -1,5 +1,6 @@
 import os
 from datetime import timedelta
+from datetime import datetime
 import oopnet as on
 
 filename = os.path.join('data', 'Poulakis.inp')
@@ -27,3 +28,7 @@ print(eps_report.links)
 
 eps_p = eps_report.pressure
 print(eps_p)
+
+new_start = datetime(year=2022, month=3, day=1)
+new_eps_report = eps_network.run(startdatetime=new_start)
+print(new_eps_report.pressure)
