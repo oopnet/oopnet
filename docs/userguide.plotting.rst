@@ -169,8 +169,10 @@ Finally, we create and show the plot:
 	:language: python
 	:lines: 14-15
 
-.. bokeh-plot:: bokehplot_userguide.py
-    :source-position: None
+.. only:: html
+
+    .. bokeh-plot:: bokehplot_userguide.py
+        :source-position: None
 
 Summary
 -------
