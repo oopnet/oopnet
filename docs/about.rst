@@ -6,26 +6,26 @@ Why OOPNET?
 -----------
 
 Since the WDSA2010 conference, the water related community is waiting for EPANET3.
-Different attempts have been made in the past to convert EPANET into an open-source project maintained by a bigger
-community instead of a single developer [2, 3].
+Different attempts have been made in the past to convert EPANET [#]_ into an open-source project maintained by a bigger
+community instead of a single developer.
 To obtain this goal, the whole (or parts of the) software has to be rewritten in an object-oriented way, enabling
 many geographically separated programmers to contribute.
 
 So far the provided solutions were often written in programming languages with a steep learning curve (e.g. C++, C#, Java).
 In contrary, Python is an easy to learn open-source language with a wide range of additional packages for multiple
 tasks.
-In 2022, Python was the fastest growing programming language referring to the PYPL (PopularitY of Programming
-Language; http://pypl.github.io/PYPL.html) index with a nowadays share of 28.38 % worldwide and still growing.
+In 2022, Python was the most popular programming language referring to the PYPL (PopularitY of Programming
+Language; http://pypl.github.io/PYPL.html) index with a share of 28.38 % worldwide.
 Therefore, we chose Python as programming language to rewrite EPANET to an object-oriented EPANET (OOPNET).
 
-So far the object-oriented structure of OOPNET is similar to CWSNET [4], OOTEN [5] or PORTEAU [6] with the focus on
+So far the object-oriented structure of OOPNET is similar to CWSNET [#]_, OOTEN [#]_ or PORTEAU [#]_ with the focus on
 being as easy as possible to handle for end-users.
 EPANET input files can be translated into this structure and are manipulated and simulated with EPANET’s command-line
 interface through Python.
-The reports are translated in Pandas [7], a Python data analysis library, to enable fast and easy-to-use data
+The reports are translated in Pandas [#]_, a Python data analysis library, to enable fast and easy-to-use data
 analysis of the results.
-Plotting the water distribution network as well as the results is performed either with MatplotLib [9], a plotting
-package similar to MATLAB, or directly in the user’s browser or web with Bokeh [10].
+Plotting the water distribution network as well as the results is performed either with MatplotLib [#]_, a plotting
+package similar to MATLAB, or directly in the user’s browser or web with Bokeh [#]_.
 
 Why Python?
 -----------
@@ -33,7 +33,7 @@ Why Python?
 Python is a widely used high level programming language, with a design philosophy that emphasizes code readability
 and is easy to learn compared to other programming languages with the same capabilities, like Java or C++.
 
-The core philosophy of Python is summarized in the PEP 20 document, called the Zen of Python [11]. Here are the first
+The core philosophy of Python is summarized in the PEP 20 document, called the Zen of Python [#]_. Here are the first
 lines of this document, to get an idea of the core philosophy:
 
 * Beautiful is better than ugly
@@ -43,7 +43,7 @@ lines of this document, to get an idea of the core philosophy:
 * Readability counts
 
 .. figure:: figures/PYPL.png
-    :scale: 40 %
+    :scale: 60 %
     :align: center
 
     PYPL (PopularitY of Programming Language) Index showing the growing popularity of Python worldwide. Taken from http://pypl.github.io/PYPL.html.
@@ -84,7 +84,7 @@ The Read function makes use of the three packages reader, elements and graph. Pa
 which are necessary to translate arbitrary EPANET Input files in an object-oriented structure, which is implemented
 in the elements package.
 
-Moreover, the graph package translates the water distribution network in a Python NetworkX graph object [13], enabling
+Moreover, the graph package translates the water distribution network in a Python NetworkX graph object [#]_, enabling
 the application of advanced algorithms from graph theory.
 The output of the Read function is an OOPNET network object, which can be manipulated by the user in a simple Python
 syntax.
@@ -96,14 +96,14 @@ Therefore, from the manipulated network object a new EPANET Input file has to be
 This is done using the package writer.
 Afterwards, command line EPANET is called with the simulator package and the results of the simulation from EPANET’s
 report file are read in by the package report.
-This translates the report file in a Python Pandas Dataframe [7].
+This translates the report file in a Python Pandas Dataframe.
 Pandas is a Python data analysis library enabling the user to get all information out of the report file with an easy
 to use syntax, containing fast statistical data analysis algorithms.
 Furthermore, the network respectively the simulation results can be plotted by the function Plot, which contains the
 packages pyplot and bokeh.
-The package pyplot makes use of Python’s plotting library MatplotLib [10], which produces publication quality figures
+The package pyplot makes use of Python’s plotting library MatplotLib, which produces publication quality figures
 in an easy to use syntax similar to the programming language MATLAB.
-On the other hand, bokeh uses Python’s library Bokeh [11], an interactive visualization library that targets modern
+On the other hand, bokeh uses Python’s library Bokeh, an interactive visualization library that targets modern
 web browsers for presentation.
 
 Here is a code snippet of a simple example is presented, to make the use of OOPNET less abstract.
@@ -143,7 +143,7 @@ Therefore the Link class has an instance of the class Node as one of its propert
 The elements package is subdivided in several Python modules, to guarantee a higher level of modularity in the code.
 This increases the possibility of collaboration for more programmers, since the programmers are able to work on
 different files.
-The files are named according to the EPANET manual Input file structure [1] (Network Components, System Operation,
+The files are named according to the EPANET manual Input file structure (Network Components, System Operation,
 Water Quality, ...) and are shown in different colors in Fig. 4.
 This structure assists collaborators, which are new to OOPNET but used to EPANET, to quickly get familiar with
 OOPNET.
@@ -175,3 +175,14 @@ An example of a bokeh plot of a network and its simulation results is shown in F
 pipe flows are depicted in different colors.
 On top of the figure the bokeh’s menu with different tools, like panning, zooming, refreshing or exporting, can be seen.
 
+.. rubric:: Footnotes
+
+.. [#] Rossman L., Woo H., Tryby M., Shang F., Janke R. Haxton T., "EPANET 2.2 User Manual" (Washington, D.C: U.S. Environmental Protection Agency, 2020).
+.. [#] Guidolin M., Burovskiy P., Kapelan Z. Savić D., “CWSNET: An Object-Oriented Toolkit for Water Distribution System Simulations,” in Water Distribution Systems Analysis 2010 (Tucson, Arizona, United States: American Society of Civil Engineers, 2011), pp.1–13.
+.. [#] Van Zyl, J. E., Borthwick, J., Hardy, A., OOTEN: An object-oriented programmers toolkit for epanet.  Advances in water supply management (CCWI 2003), CCWI, Sep 2003, London, United Kingdom. pp.1-8.
+.. [#] Piller O., Gilbert D., Haddane K., Sabatié S., Porteau: An Object-Oriented programming hydraulic toolkit for water distribution system analysis. Eleventh International Conference on Computing and Control for the Water Industry (CCWI 2011), CCWI, Sep 2011, Exeter, United Kingdom. pp.27-32.
+.. [#] `Pandas <https://pandas.pydata.org/>`_, an open source data analysis and manipulation tool.
+.. [#] `Matplotlib <https://matplotlib.org/>`_, a visualization library for static, animated and interactive graphics.
+.. [#] `Bokeh <http://bokeh.org/>`_, a library for interactive visualizations in web browsers.
+.. [#] `PEP 20 - The Zen of Python <https://peps.python.org/pep-0020/>`_.
+.. [#] `NetworkX <https://networkx.org/>`_, a library for studying graphs and networks.

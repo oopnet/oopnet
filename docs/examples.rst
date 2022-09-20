@@ -1,6 +1,8 @@
 Examples
 ==========
 
+Here are some further examples of what you can do with OOPNET.
+
 .. toctree::
     :maxdepth: 1
     :caption: Examples

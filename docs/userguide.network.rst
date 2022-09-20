@@ -20,7 +20,7 @@ can create a new, empty model:
 
 Alternatively, you can read an EPANET input file and create a network from it. OOPNET supports both EPANET 2.0 and
 2.2 models. For instance, we can read a saved model - in this example the model by Poulakis et al. - using the network's
-:meth:`~oopnet.elements.Network.read` method. We recommend using the :mod:`os` library for specifying the file path:
+:meth:`~oopnet.elements.network.Network.read` method. We recommend using the :mod:`os` library for specifying the file path:
 
 .. literalinclude:: /../examples/userguide_network.py
     :language: python
@@ -31,7 +31,7 @@ Alternatively, you can read an EPANET input file and create a network from it. O
 Writing an Input File
 ---------------------
 
-Writing a network object to an EPANET input file is very easy. Just use the network's :meth:`~oopnet.elements.Network.write`
+Writing a network object to an EPANET input file is very easy. Just use the network's :meth:`~oopnet.elements.network.Network.write`
 method:
 
 .. literalinclude:: /../examples/userguide_network.py
@@ -66,7 +66,7 @@ To access the individual components in the model, OOPNET provides utility functi
 by its ID, while functions like :func:`~oopnet.utils.getters.element_lists.get_pumps` returns a list of all
 :class:`~oopnet.elements.network_components.Pump` objects.
 If you want a list of all IDs of objects of a certain type stored in a network, you can use functions like
-:func:`~oopnet.utils.getters.element_lists.get_node_ids`. Take a look at :mod:`~oopnet.utils.getters` for a complete
+:func:`~oopnet.utils.getters.element_lists.get_node_ids`. Take a look at the :mod:`~oopnet.utils.getters` module for a complete
 list of all available getter functions.
 
 As an example, we can iterate over all junctions in the network and print their demands and elevations in the console:
@@ -90,7 +90,7 @@ This results in an output like this:
 Adding Components
 ~~~~~~~~~~~~~~~~~
 
-If you want to add a new component, you can use the utility functions provided in :mod:`~oopnet.utils.adders`.
+If you want to add a new component, you can use the utility functions provided in the :mod:`~oopnet.utils.adders` module.
 Here, we create a new junction and a new pipe to the system:
 
 .. literalinclude:: /../examples/userguide_network.py
@@ -110,7 +110,7 @@ list of all links connected to the junction:
     :language: python
     :lines: 20-22
 
-Now, we can make use of the removing functions in :mod:`~oopnet.utils.removers`. We first remove the links and then
+Now, we can make use of the removing functions in the :mod:`~oopnet.utils.removers` module. We first remove the links and then
 the junction from the model:
 
 .. literalinclude:: /../examples/userguide_network.py

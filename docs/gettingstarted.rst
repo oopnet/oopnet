@@ -6,7 +6,7 @@ Getting started
 Installation
 ------------
 
-OOPNET used features only available in the newer Python version, which is why Python >= 3.9 is needed along with
+OOPNET uses features only available in newer Python versions, which is why Python >= 3.9 is needed along with
 several Python package dependencies.
 
 .. note::

@@ -27,7 +27,7 @@ Choose a graph type that is suitable for the analysis you want to do. OOPNET pro
 .. warning::
     :class:`networkx.Graph` and :class:`networkx.DiGraph` do not support multiple connections between two vertices!
     This means, that if you have several pipes in parallel connecting two junctions, only one of those pipes will be
-    kept in graph! If you want to keep all connections, use :class:`networkx.MultiGraph` or
+    kept in graph. If you want to keep all connections, use :class:`networkx.MultiGraph` or
     :class:`networkx.MultiDiGraph` instead.
 
 To convert a network into a graph object, use one of the factory classes available:
@@ -97,7 +97,7 @@ We can also plot the page rank series directly on the network nodes with OOPNET'
 
 .. image:: figures/examples/graph_page_rank_network.png
 
-We can also calculate the degree of every node in the network and save it as a :class:`pandas.Series`
+We can also calculate the degree of every node in the network and save it as a :class:`pandas.Series`:
 
 .. literalinclude:: /../examples/userguide_graphs.py
 	:language: python

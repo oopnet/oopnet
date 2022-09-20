@@ -1,7 +1,7 @@
 Options
 =======
 
-In this tutorial we will take a look at the different modelling settings that users can modify.
+In this tutorial, we will take a look at the different modelling settings that users can modify.
 
 Network objects have several attributes related to settings:
 

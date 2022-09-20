@@ -3,7 +3,7 @@ Network Simulation
 
 OOPNET's network objects come with a simulation method :meth:`~oopnet.elements.network.Network.run` that returns a
 :class:`~oopnet.report.report.SimulationReport` object. This report object contains all simulation results as well as
-any errors raised by EPANET during the simulation. We will do both a steady state and a extended period simulation
+any errors raised by EPANET during the simulation. We will do both a steady state and an extended period simulation
 and take a look at handling simulations errors.
 
 Steady State Analysis
@@ -13,13 +13,13 @@ For demonstrating a steady state analysis, we will once more use the Poulakis mo
 
 .. literalinclude:: /../examples/userguide_simulating.py
     :language: python
-    :lines: 1, 3-6
+    :lines: 1, 4-7
 
 Let's run a simulation and look at the node and link results which are stored as :class:`xarray.DataArray` objects:
 
 .. literalinclude:: /../examples/userguide_simulating.py
     :language: python
-    :lines: 8-9
+    :lines: 9-10
 
 ::
 
@@ -35,7 +35,7 @@ Let's run a simulation and look at the node and link results which are stored as
 
 .. literalinclude:: /../examples/userguide_simulating.py
     :language: python
-    :lines: 10
+    :lines: 11
 
 ::
 
@@ -56,13 +56,13 @@ Let's run a simulation and look at the node and link results which are stored as
 
 There is another way of accessing the results, that is based on the data analysis and manipulation library
 :mod:`pandas`. You can get the simulation results as :class:`pandas.Series` objects (for steady state analysis) or
-:class:`pandas.DataFrame` (for extended period simulations) by accessing the different attributes of the simulation report.
+:class:`pandas.DataFrame` (for extended period simulations) by accessing the different properties of the simulation report.
 
 For instance, we can get the pressure data from the simulation report like this:
 
 .. literalinclude:: /../examples/userguide_simulating.py
     :language: python
-    :lines: 12-13
+    :lines: 13-14
 
 ::
 
@@ -79,7 +79,7 @@ data from the pressure results:
 
 .. literalinclude:: /../examples/userguide_simulating.py
     :language: python
-    :lines: 14
+    :lines: 15
 
 ::
 
@@ -101,7 +101,7 @@ reporting time step:
 
 .. literalinclude:: /../examples/userguide_simulating.py
     :language: python
-    :lines: 16-19
+    :lines: 17-20
 
 ::
 
@@ -113,13 +113,13 @@ simulation duration to one day and the reporting time step to 10 minutes. For th
 
 .. literalinclude:: /../examples/userguide_simulating.py
     :language: python
-    :lines: 2, 21-22
+    :lines: 2, 22-23
 
 Next, we will display the node and link results:
 
 .. literalinclude:: /../examples/userguide_simulating.py
     :language: python
-    :lines: 24-25
+    :lines: 25-26
 
 ::
 
@@ -139,7 +139,7 @@ Next, we will display the node and link results:
 
 .. literalinclude:: /../examples/userguide_simulating.py
     :language: python
-    :lines: 26
+    :lines: 27
 
 ::
 
@@ -168,7 +168,7 @@ If we access the pressure property of the simulation result, we now get a :class
 
 .. literalinclude:: /../examples/userguide_simulating.py
     :language: python
-    :lines: 28-29
+    :lines: 29-30
 
 ::
 
@@ -188,11 +188,41 @@ If we access the pressure property of the simulation result, we now get a :class
 
     [145 rows x 1577 columns]
 
+As you can see, the index of this DataFrame are :class:`datetime.datetime` objects, starting with 01-01-2016. You can
+pass a custom ``starttdateime`` to your simulation to change this. This can come in handy when comparing simulation results
+with measurement data from a certain day. Here, we set the start time of our simulation to 03-01-2022:
+
+.. literalinclude:: /../examples/userguide_simulating.py
+    :language: python
+    :lines: 32-34
+
+::
+
+    id                      IN0     TN1     IN2  ...  Aquifer  SurfaceResrvr   Tank
+    time                                         ...
+    2022-03-01 00:00:00   35.94   35.94   35.14  ...      0.0            0.0  35.05
+    2022-03-01 00:10:00   35.91   35.91   35.11  ...      0.0            0.0  35.03
+    2022-03-01 00:20:00   35.88   35.88   35.09  ...      0.0            0.0  35.00
+    2022-03-01 00:30:00   35.86   35.86   35.06  ...      0.0            0.0  34.97
+    2022-03-01 00:40:00   35.83   35.83   35.03  ...      0.0            0.0  34.95
+    ...                     ...     ...     ...  ...      ...            ...    ...
+    2022-03-01 23:20:00 -290.15 -290.15 -290.90  ...      0.0            0.0  27.43
+    2022-03-01 23:30:00 -290.15 -290.15 -290.90  ...      0.0            0.0  27.43
+    2022-03-01 23:40:00 -290.15 -290.15 -290.90  ...      0.0            0.0  27.43
+    2022-03-01 23:50:00 -290.15 -290.15 -290.90  ...      0.0            0.0  27.43
+    2022-03-02 00:00:00 -205.97 -205.97 -206.71  ...      0.0            0.0  27.43
+
+    [145 rows x 1577 columns]
+
 Handling errors
 ---------------
 
-Now we will take a look at handling simulation errors. We will again use the Poulakis model for this.
-To cause an error, we will add a Junction without connecting it to the rest of the model. This will lead to an error during the
+Now, we will take a look at handling simulation errors. You can find a list of all simulation errors that EPANET provides
+in the `EPANET docs <https://epanet22.readthedocs.io/en/latest/back_matter.html#error-messages>`_. OOPNET implements
+dedicated Exceptions for all of these errors in the :mod:`~oopnet.simulator.simulation_errors` module.
+
+We will again use the Poulakis model for this. To cause an error, we will add a Junction without connecting it to the
+rest of the model. This will lead to an error during the
 simulation.
 
 .. literalinclude:: /../examples/error_handling.py
@@ -211,7 +241,7 @@ We first try to simulate the model and wait for the exception. When it is caught
 	[UnconnectedNodeError('Error 233 - Error  Error 200: one or more errors in input file'), InputDataError('Error 200 - one or more errors in input file')]
 
 Since an :class:`~oopnet.simulator.simulation_errors.EPANETSimulationError` is a container, we can check for specific
-errors using :meth:`~oopnet.simulator.simulation_errors.EPANETSimulationError.check:_contained_errors`. You can check either be providing
+errors using its :meth:`~oopnet.simulator.simulation_errors.EPANETSimulationError.check_contained_errors` method. You can check either be providing
 a single Exception class
 
 .. literalinclude:: /../examples/error_handling.py
@@ -233,7 +263,9 @@ Let's test this by rereading the model and setting a Pipe's diameter to a negati
 	:language: python
 	:lines: 23-33
 
-Here, outputting ``e`` results in this::
+Here, outputting ``e`` results in this:
+
+::
 
 	[IllegalLinkPropertyError('Error 211 - illegal link property value -100.0 in [PIPES] section: P-01 J-01 J-02 -100.0 600.0 0.26 0.0'), InputDataError('Error 200 - one or more errors in input file')]
 

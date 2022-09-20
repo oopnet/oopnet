@@ -14,7 +14,7 @@ We will use the "Anytown" model in this example, so we read it:
 
 .. literalinclude:: /../examples/graph_weight.py
 	:language: python
-	:lines: 9-10
+	:lines: 8
 
 When we create a :class:`networkx.Graph` (or :class:`networkx.DiGraph`, :class:`networkx.MultiGraph` or :class:`networkx.MultiDiGraph`) object using the corresponding factories in :mod:`oopnet.graph`, the pipe lengths are used as
 weights in the graph. We will use Dijkstra's shortest path to compare the different graphs.

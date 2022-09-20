@@ -40,7 +40,7 @@ as index) by passing them to the ``nodes`` and ``links`` arguments.
 
 There is also the possibility to limit the color bar to values between the 2nd and 98th percentile using the ``robust``
 parameter. If it is set to ``True``,  the colors in the plot will be more finely graduated because the minima and maxima
-values will not be used for the calculating the value range of the color bar.
+values will not be used for calculating the value range of the color bar.
 
 .. literalinclude:: /../examples/userguide_plotting.py
 	:language: python
@@ -85,10 +85,10 @@ extended period simulation.
 
 For this, we first have to import the packages we require:
 
-- `os` for specifying the path to the EPANET input file
-- `matplotlib.pyplot` for creating an animation of a certain size
-- `matplotlib.animation.PillowWriter` for writing the animation to a file
-- and of course `oopnet` itself
+- :mod:`os` for specifying the path to the EPANET input file
+- :mod:`matplotlib.pyplot` for creating an animation of a certain size
+- :mod:`matplotlib.animation.PillowWriter` for writing the animation to a file
+- and of course :mod:`oopnet` itself
 
 In this example we read a part of the `L-Town` network (Area C) with slight modifications. This model
 already comes with included patterns and can be used for extended period simulations.
@@ -144,7 +144,7 @@ and file size:
 -------------------------------------
 
 Now, we will create an interactive plot using :mod:`bokeh`. Let's start with our imports and model reading (we will
-use the "C-Town" model once again):
+use the "C-Town" model):
 
 .. literalinclude:: /../examples/bokeh_run_and_plot.py
 	:language: python
@@ -156,8 +156,8 @@ Next, we simulate the model and get the pressure and flow results for our plot:
 	:language: python
 	:lines: 9-11
 
-Bokeh creates the plot in a HTML file that will be locally stored on your device. We can set the file name using
-:func:`bokeh.plotting.output_file`:
+Bokeh creates a HTML file that will be locally stored on your device. This file will contain our plot.
+We can set the file name using :func:`bokeh.plotting.output_file`:
 
 .. literalinclude:: /../examples/bokeh_run_and_plot.py
 	:language: python
