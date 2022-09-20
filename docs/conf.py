@@ -26,7 +26,9 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.napoleon',
     'sphinx_autodoc_typehints',
-    'sphinx_mdinclude'
+    'sphinx_mdinclude',
+    'bokeh.sphinxext.bokeh_plot'
+
 ]
 
 templates_path = ['_templates']

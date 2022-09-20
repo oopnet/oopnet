@@ -9,7 +9,7 @@ class EPANETError(Exception):
 
     This exception is not meant to be called manually but is only a super class for the specific EPANET errors listed
     in the 'EPANET manual appendix concerning error messages
-     <https://epanet22.readthedocs.io/en/latest/back_matter.html#error-messages>'.
+    <https://epanet22.readthedocs.io/en/latest/back_matter.html#error-messages>'.
 
     Attributes:
         code: error code as listed in the 'EPANET manual appendix concerning error messages
