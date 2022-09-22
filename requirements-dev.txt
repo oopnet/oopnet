@@ -8,6 +8,7 @@ seaborn
 scoop
 openpyxl
 scipy
+scikit-umfpack
 
 # doc building
 sphinx

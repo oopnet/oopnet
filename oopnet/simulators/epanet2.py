@@ -9,8 +9,8 @@ import re
 from typing import Union, Optional, TYPE_CHECKING
 import logging
 
-from oopnet.simulator.reportfile_reader import ReportFileReader
-from oopnet.simulator.binaryfile_reader import BinaryFileReader
+from oopnet.simulators.reportfile_reader import ReportFileReader
+from oopnet.simulators.binaryfile_reader import BinaryFileReader
 from oopnet.utils import utils
 from oopnet.report.report import SimulationReport
 from oopnet.utils.oopnet_logging import logging_decorator

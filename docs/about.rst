@@ -91,11 +91,11 @@ The output of the Read function is an OOPNET network object, which can be manipu
 syntax.
 
 After the manipulation of the network by the user, the simulation of the network is started with the function Run.
-Run consists of three Python packages as well, namely writer, simulator and report.
+Run consists of three Python packages as well, namely writer, simulators and report.
 OOPNET makes use of the command line EPANET as no hydraulic solver has been implemented so far.
 Therefore, from the manipulated network object a new EPANET Input file has to be generated.
 This is done using the package writer.
-Afterwards, command line EPANET is called with the simulator package and the results of the simulation from EPANET’s
+Afterwards, command line EPANET is called with the simulators package and the results of the simulation from EPANET’s
 report file are read in by the package report.
 This translates the report file in a Python Pandas Dataframe [7].
 Pandas is a Python data analysis library enabling the user to get all information out of the report file with an easy

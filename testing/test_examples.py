@@ -77,6 +77,9 @@ class ExampleTest(unittest.TestCase):
     def test_test(self, mock_show):
         import examples.test
 
+    def test_pdm(self, mock_show):
+        import examples.pdm
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -16,6 +16,6 @@ Subpackages
    oopnet.plotter
    oopnet.reader
    oopnet.report
-   oopnet.simulator
+   oopnet.simulators
    oopnet.utils
    oopnet.writer

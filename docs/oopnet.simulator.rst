@@ -1,45 +1,45 @@
-oopnet.simulator package
+oopnet.simulators package
 ========================
 
 Submodules
 ----------
 
-oopnet.simulator.binaryfile\_reader module
+oopnet.simulators.binaryfile\_reader module
 ------------------------------------------
 
-.. automodule:: oopnet.simulator.binaryfile_reader
+.. automodule:: oopnet.simulators.binaryfile_reader
    :members:
    :undoc-members:
    :show-inheritance:
 
-oopnet.simulator.epanet2 module
+oopnet.simulators.epanet2 module
 -------------------------------
 
-.. automodule:: oopnet.simulator.epanet2
+.. automodule:: oopnet.simulators.epanet2
    :members:
    :undoc-members:
    :show-inheritance:
 
-oopnet.simulator.error\_manager module
+oopnet.simulators.error\_manager module
 --------------------------------------
 
-.. automodule:: oopnet.simulator.error_manager
+.. automodule:: oopnet.simulators.error_manager
    :members:
    :undoc-members:
    :show-inheritance:
 
-oopnet.simulator.reportfile\_reader module
+oopnet.simulators.reportfile\_reader module
 ------------------------------------------
 
-.. automodule:: oopnet.simulator.reportfile_reader
+.. automodule:: oopnet.simulators.reportfile_reader
    :members:
    :undoc-members:
    :show-inheritance:
 
-oopnet.simulator.simulation\_errors module
+oopnet.simulators.simulation\_errors module
 ------------------------------------------
 
-.. automodule:: oopnet.simulator.simulation_errors
+.. automodule:: oopnet.simulators.simulation_errors
    :members:
    :undoc-members:
    :show-inheritance:
@@ -47,7 +47,7 @@ oopnet.simulator.simulation\_errors module
 Module contents
 ---------------
 
-.. automodule:: oopnet.simulator
+.. automodule:: oopnet.simulators
    :members:
    :undoc-members:
    :show-inheritance:

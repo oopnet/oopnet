@@ -14,7 +14,8 @@ from oopnet.writer.write import write
 from oopnet.reader.read import read
 from oopnet.plotter.pyplot import NetworkPlotter
 from oopnet.plotter.bokehplot import Plotsimulation as BokehPlot
-from oopnet.simulator.epanet2 import ModelSimulator
+from oopnet.simulators.epanet2 import ModelSimulator as Epanet2Simulator
+from oopnet.simulators.python import ModelSimulator as PythonPDMSimulator
 from oopnet.elements.water_quality import Reaction
 from oopnet.elements.options_and_reporting import (
     Options,
@@ -113,28 +114,43 @@ class Network:
         path: Optional[str] = None,
         startdatetime: Optional[datetime] = None,
         output: bool = False,
+        simulator: str = 'EPANET',
     ) -> SimulationReport:
-        """Runs an EPANET simulation by calling command line EPANET
+        """Runs a simulation by calling either command line EPANET or the Python simulator
 
         Attributes:
           filename: if thing is an OOPNET network, filename is an option to perform command line EPANET simulations with a specific filename. If filename is a Python None object then a file with a random UUID (universally unique identifier) is generated
           delete: if delete is True the EPANET Input and SimulationReport file is deleted, if False then the simulation results won't be deleted and are stored in a folder named path
           path: Path were to perform the simulations. If path is a Python None object then a tmp-folder is generated
           output: If True, stdout and strerr will be printed to console and logged.
+          simulator: if 'EPANET', then runs the simulation by calling command line EPANET ; if 'PYTHON_PDM', then runs the simulation by calling the Python PDM simulator ; else, raise an exception.
 
         Returns:
           OOPNET report object
 
         """
-        sim = ModelSimulator(
-            thing=self,
-            filename=filename,
-            delete=delete,
-            path=path,
-            startdatetime=startdatetime,
-            output=output,
-        )
-        return sim.run()
+        if simulator == 'EPANET':
+            sim = Epanet2Simulator(
+                thing=self,
+                filename=filename,
+                delete=delete,
+                path=path,
+                startdatetime=startdatetime,
+                output=output,
+            )
+        elif simulator == 'PYTHON_PDM':
+            sim = PythonPDMSimulator(
+                thing=self,
+                filename=filename,
+                delete=delete,
+                path=path,
+                startdatetime=startdatetime,
+                output=output,
+            )
+        else:
+            raise UnexistingSimulatorError(simulator)
+        rpt = sim.run()
+        return rpt
 
     def plot(
         self,
@@ -278,3 +294,11 @@ class Network:
 
         """
         return BokehPlot(self, tools=tools, links=links, nodes=nodes, colormap=colormap)
+
+
+class UnexistingSimulatorError(Exception):
+    """Raised when the user asks for the run of an unexisting simulator."""
+
+    def __init__(self, simulator):
+        self.message = f"No simulator {simulator}."
+        super().__init__(self.message)

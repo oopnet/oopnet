@@ -8,7 +8,7 @@ import pandas as pd
 import xarray as xr
 from xarray import DataArray, Dataset
 
-from oopnet.simulator.error_manager import ErrorManager
+from oopnet.simulators.error_manager import ErrorManager
 from oopnet.utils.oopnet_logging import logging_decorator
 
 logger = logging.getLogger(__name__)
