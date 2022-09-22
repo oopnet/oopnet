@@ -340,13 +340,21 @@ def get_inflow_nodes(network: Network) -> list[Node]:
       network: OOPNET network object
 
     Returns:
-      list of Tanks, Reservoirs and Junctions with a base demand < 0
+      list of Tanks, Reservoirs and Junctions with either a base demand < 0 or if any demand category is < 0 if demand
+      categories are used as demand.
 
     """
+    inflow_nodes = []
+    for junction in get_junctions(network):
+        if isinstance(junction.demand, list):
+            if any(demand < 0 for demand in junction.demand):
+                inflow_nodes.append(junction)
+        elif junction.demand < 0:
+            inflow_nodes.append(junction)
     return (
         get_tanks(network)
         + get_reservoirs(network)
-        + [x for x in get_junctions(network) if x.demand < 0]
+        + inflow_nodes
     )
 
 
