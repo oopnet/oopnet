@@ -15,7 +15,7 @@ from oopnet.reader.read import read
 from oopnet.plotter.pyplot import NetworkPlotter
 from oopnet.plotter.bokehplot import Plotsimulation as BokehPlot
 from oopnet.simulators.epanet2 import ModelSimulator as Epanet2Simulator
-from oopnet.simulators.python import ModelSimulator as PythonPDMSimulator
+from oopnet.simulators.python_PDM import ModelSimulator as PythonPDMSimulator
 from oopnet.elements.water_quality import Reaction
 from oopnet.elements.options_and_reporting import (
     Options,
@@ -116,7 +116,7 @@ class Network:
         output: bool = False,
         simulator: str = 'EPANET',
     ) -> SimulationReport:
-        """Runs a simulation by calling either command line EPANET or the Python simulator
+        """Runs a simulation by calling either command line EPANET or the Python PDM simulator
 
         Attributes:
           filename: if thing is an OOPNET network, filename is an option to perform command line EPANET simulations with a specific filename. If filename is a Python None object then a file with a random UUID (universally unique identifier) is generated

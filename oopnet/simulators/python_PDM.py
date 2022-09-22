@@ -63,7 +63,7 @@ logger = logging.getLogger(__name__)
 
 @logging_decorator(logger)
 class ModelSimulator:
-    """Runs a simulation by calling the Python simulator
+    """Runs a simulation by calling the Python PDM simulator
 
     Attributes:
       thing: either an OOPNET network object or the filename of an EPANET input file
@@ -126,7 +126,7 @@ class ModelSimulator:
 
     def run(self):
 
-        """Simulates a hydraulic model using the Python simulator."""
+        """Simulates a hydraulic model using the Python PDM simulator."""
         logging.info("Simulating model")
 
         self._setup_report()
