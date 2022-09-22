@@ -28,8 +28,7 @@ from oopnet.utils.oopnet_logging import logging_decorator
 if TYPE_CHECKING:
     from oopnet.elements.network import Network
 
-from ..utils.getters.vectors import v_demand, v_demandpattern, v_roughness, v_length, v_tankdiameter, \
-    v_elevation
+from ..utils.getters.vectors import v_demand, v_demandpattern, v_roughness, v_length, v_tankdiameter
 from ..utils.getters.element_lists import get_node_ids, get_pipe_ids, get_junctions, get_tanks, get_reservoirs, \
     get_junction_ids, get_pipes
 from ..utils.getters.get_by_id import get_pattern
@@ -203,6 +202,7 @@ class Run(HasStrictTraits):
         cls.junction_ids = get_junction_ids(network)
         cls.number_of_junctions = len(junctions)
         cls.junction_elevations = np.array([junction.elevation for junction in junctions])
+        cls.node_elevations = [cls.junction_elevations]
         default_demand_pattern = network.options.pattern
         try:
             default_demand_pattern = get_pattern(network, default_demand_pattern)
@@ -216,18 +216,6 @@ class Run(HasStrictTraits):
             global_demand_multiplier = 1.0
         nominal_demands = v_demand(network)
 
-        # reservoirs
-        reservoirs = get_reservoirs(network)
-        cls.number_of_reservoirs = len(reservoirs)
-        if cls.number_of_reservoirs == 0:
-            cls.with_reservoir = False
-            cls.heads_at_reservoirs = None
-            cls.max_head_at_reservoirs = None
-        else:
-            cls.heads_at_reservoirs = np.array([reservoir.head for reservoir in reservoirs])
-            cls.max_head_at_reservoirs = cls.heads_at_reservoirs.max()
-            cls.with_reservoir = True
-
         # tanks
         tanks = get_tanks(network)
         number_of_tanks = len(tanks)
@@ -239,12 +227,26 @@ class Run(HasStrictTraits):
         else:
             cls.with_tank = True
             cls.tank_elevations = np.array([tank.elevation for tank in tanks])
+            cls.node_elevations.append(cls.tank_elevations)
             tank_initial_levels = np.array([tank.initlevel for tank in tanks])
             tank_diameters = v_tankdiameter(network)
 
+        # reservoirs
+        reservoirs = get_reservoirs(network)
+        cls.number_of_reservoirs = len(reservoirs)
+        if cls.number_of_reservoirs == 0:
+            cls.with_reservoir = False
+            cls.heads_at_reservoirs = None
+            cls.max_head_at_reservoirs = None
+        else:
+            cls.heads_at_reservoirs = np.array([reservoir.head for reservoir in reservoirs])
+            cls.node_elevations.append(cls.heads_at_reservoirs)
+            cls.max_head_at_reservoirs = cls.heads_at_reservoirs.max()
+            cls.with_reservoir = True
+
         # all nodes
         cls.node_ids = get_node_ids(network)
-        cls.node_elevations = v_elevation(network)
+        cls.node_elevations = np.concatenate(cls.node_elevations)
 
         # all nodes except reservoirs
         cls.number_of_junctions_and_tanks = cls.number_of_junctions + number_of_tanks

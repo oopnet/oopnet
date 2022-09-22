@@ -120,7 +120,6 @@ class ReservoirFactory(ComponentFactory):
         attr_names = ["id", "head", "headpattern"]
         attr_cls = [str, float, Pattern]
         attr_dict = cls._create_attr_dict(attr_names, attr_values, attr_cls, network)
-        attr_dict['elevation'] = attr_dict['head']
         return Reservoir(**attr_dict, comment=comment)
 
 
