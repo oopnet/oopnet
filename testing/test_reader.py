@@ -42,8 +42,13 @@ class PoulakisEnhancedReaderTest(unittest.TestCase):
         self.assertEqual(self.model.n_junctions, len(self.model.network._nodes['junctions']))
         for j in self.model.network._nodes['junctions'].values():
             self.assertIsInstance(j, Junction)
-            self.assertEqual(50, j.demand)
             self.assertTrue('J' in j.id)
+            if j.id != 'J-02':
+                self.assertEqual(50, j.demand)
+            else:
+                self.assertIsInstance(j.demand, list)
+                self.assertEqual(3, len(j.demand))
+                self.assertListEqual([50, 20, 1], j.demand)
 
     def test_tanks(self):
         self.assertEqual(self.model.n_tanks, len(self.model.network._nodes['tanks']))

@@ -15,7 +15,7 @@ class ExampleTest(unittest.TestCase):
         set_dir_examples()
 
     def tearDown(self) -> None:
-        to_delete = ['bokehexample.html', 'oopnet.log', 'simple_animation.gif']
+        to_delete = ['bokehexample.html', 'oopnet.log', 'simple_animation.gif', 'new_model.inp']
         for file in to_delete:
             if os.path.isfile(file):
                 os.remove(file)
@@ -27,9 +27,6 @@ class ExampleTest(unittest.TestCase):
             plt.close('all')
         except:
             pass
-
-    def test_adders_and_removers(self, mock_show):
-        import examples.adders_and_removers
 
     def test_adjacency_matrix(self, mock_show):
         import examples.adjacency_matrix
@@ -47,8 +44,17 @@ class ExampleTest(unittest.TestCase):
     def test_extended_period(self, mock_show):
         import examples.extended_period
 
-    def test_graph_stuff(self, mock_show):
-        import examples.graph_stuff
+    def test_error_handling(self, mock_show):
+        import examples.error_handling
+
+    def test_graph_weight(self, mock_show):
+        import examples.graph_weight
+
+    # def test_logs(self, mock_show):
+    #     try:
+    #         import examples.logs
+    #     except TypeError:
+    #         pass
 
     def test_mc_make_some_noise(self, mock_show):
         import examples.mc_make_some_noise
@@ -62,20 +68,30 @@ class ExampleTest(unittest.TestCase):
     def test_miscellaneous(self, mock_show):
         import examples.miscellaneous
 
-    def test_read_and_run(self, mock_show):
-        import examples.read_and_run
-
-    def test_report_settings(self, mock_show):
-        import examples.report_settings
-
-    def test_run_and_plot(self, mock_show):
-        import examples.run_and_plot
-
     def test_run_and_animate(self, mock_show):
         import examples.run_and_animate
 
     def test_test(self, mock_show):
         import examples.test
+        
+    def test_userguide_network(self, mock_show):
+        import examples.userguide_network
+
+    def test_userguide_graphs(self, mock_show):
+        import examples.userguide_graphs
+
+    def test_userguide_plotting(self, mock_show):
+        import examples.userguide_plotting
+
+    def test_userguide_settings(self, mock_show):
+        import examples.userguide_settings
+
+    def test_userguide_simulations(self, mock_show):
+        import examples.userguide_simulating
+
+    def test_run_and_animate(self, mock_show):
+        import examples.run_and_animate
+
 
     def test_pdm(self, mock_show):
         import examples.pdm

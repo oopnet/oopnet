@@ -6,12 +6,10 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 import oopnet as on
 
-# Read file into OOPNET
 filename = os.path.join('data', 'anytown.inp')
 network = on.Network.read(filename)
 
-# Save graph to variable G
-G = on.Graph(network)
+G = on.MultiGraph(network)
 
 # Some graph theoretic measurements:
 print(f'Center: {nx.center(G)}')

@@ -3,7 +3,7 @@ import os
 from bokeh.plotting import output_file, show
 import oopnet as on
 
-filename = os.path.join('data', 'C-town.inp')
+filename = os.path.join('..', 'examples', 'data', 'C-town.inp')
 net = on.Network.read(filename)
 
 rpt = net.run()
