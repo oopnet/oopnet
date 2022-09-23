@@ -5,8 +5,8 @@ import logging
 import pandas as pd
 from xarray import DataArray
 
-from oopnet.simulator.binaryfile_reader import BinaryFileReader
-from oopnet.simulator.reportfile_reader import ReportFileReader
+from oopnet.simulators.binaryfile_reader import BinaryFileReader
+from oopnet.simulators.reportfile_reader import ReportFileReader
 
 logger = logging.getLogger(__name__)
 
@@ -25,11 +25,12 @@ class SimulationReport:
 
     def __init__(
         self,
-        filename: str,
+        filename: Union[str, None] = None,
         startdatetime: Optional[datetime.datetime] = None,
         reader: Union[
-            Type[BinaryFileReader], Type[ReportFileReader]
+            Type[BinaryFileReader], Type[ReportFileReader], None
         ] = ReportFileReader,
+        report: Union[tuple[Type[DataArray]], None] = None,
     ):
         """SimulationReport init method.
 
@@ -39,8 +40,11 @@ class SimulationReport:
             reader: specifies whether the report or the binary file created by EPANET are read
 
         """
-        logger.debug("Creating report.")
-        self.nodes, self.links = reader(filename, startdatetime)
+        if report is None:
+            logger.debug("Creating report.")
+            self.nodes, self.links = reader(filename, startdatetime)
+        else:
+            self.nodes, self.links = report
 
     @staticmethod
     def _get(
@@ -80,6 +84,22 @@ class SimulationReport:
 
         """
         return self._get(self.nodes, "Demand", "l/s")
+
+    @property
+    def consumption(self) -> Union[pd.Series, pd.DataFrame]:
+        """Consumptions from the simulation report object.
+
+        Returns:
+          Pandas Series containing the consumptions at the Nodes
+
+        """
+        var, unit = "Consumption", "l/s"
+        try:
+            c = self._get(self.nodes, var, unit)
+        except KeyError:
+            c = self.demand
+            c.name = f"{var} ({unit})" if unit else var
+        return c
 
     @property
     def head(self) -> Union[pd.Series, pd.DataFrame]:

@@ -184,6 +184,15 @@ def v_minvolume(network: Network) -> np.array:
     return np.asarray([x.minvolume for x in get_tanks(network)])
 
 
+def v_demandpattern(network):
+    """
+    Get all demand patterns of all junctions in the network as a numpy array
+    :param network: OOPNET network object
+    :return: demand patterns as a numpy.ndarray
+    """
+    return np.asarray([x.demandpattern for x in get_junctions(network)], dtype=object)
+
+
 # todo: remove
 # if __name__ == '__main__':
 #

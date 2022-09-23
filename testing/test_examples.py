@@ -93,6 +93,9 @@ class ExampleTest(unittest.TestCase):
         import examples.run_and_animate
 
 
+    def test_pdm(self, mock_show):
+        import examples.pdm
+
 
 if __name__ == '__main__':
     unittest.main()

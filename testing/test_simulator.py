@@ -34,6 +34,9 @@ class SimulatorTest(unittest.TestCase):
     def compare_demand(self):
         self.assertTrue(all(self.node_results['Demand'].sort_index() == self.rpt.demand))
 
+    def compare_consumption(self):
+        self.assertTrue(all(self.node_results['Consumption'].sort_index() == self.rpt.consumption))
+
     def compare_head(self):
         self.assertTrue(all(self.node_results['Head'].sort_index() == self.rpt.head))
 
@@ -78,6 +81,31 @@ class CTownSimulatorTest(SimulatorTest):
         self.compare_headloss()
         # self.compare_ffactor()
         # self.compare_status()
+
+
+class CTownPythonPDMSimulatorTest(SimulatorTest):
+    def setUp(self) -> None:
+        self.model = CTownModel()
+        activate_all_report_parameters(self.model.network)
+        self.rpt = self.model.network.run(simulator='PYTHON_PDM')
+        # self.rpt = self.model.network.run(simulator='PYTHON_PDM', delete=False, path='Ouputs', output=True)
+        for comp_rpt, comp_vars in \
+                ((self.rpt.nodes, ('Elevation', 'Pressure', 'Demand', 'Consumption', 'Head')),
+                 (self.rpt.links, ('Length', 'Flow', 'Velocity', 'Headloss'))):
+            for var_name in comp_vars:
+                comp_rpt.loc[dict(vars=var_name)] = comp_rpt.loc[dict(vars=var_name)].round(2)
+        self.read_data(os.path.join('networks', 'C-town_PDM.xlsx'))
+
+    def test_data(self):
+        self.compare_elevation()
+        self.compare_pressure()
+        self.compare_demand()
+        self.compare_consumption()
+        self.compare_head()
+        self.compare_length()
+        self.compare_flow()
+        self.compare_velocity()
+        self.compare_headloss()
 
 
 class MicropolisSimulatorTest(SimulatorTest):
