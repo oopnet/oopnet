@@ -91,9 +91,6 @@ def lst2xray(lst: list) -> xr.DataArray:
 
     # check for invalid values
     for entry_index, entry in enumerate(lst):
-        # skip if list length is correct
-        if len(entry) == len(lst[0]):
-            continue
         # otherwise look for faulty entries
         for index, item in enumerate(entry):
             c = Counter(item)
