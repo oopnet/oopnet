@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.2 (2022-09-26)
+### Fix
+* ReportFileReader bugfix ([`127f1ce`](https://github.com/oopnet/oopnet/commit/127f1cec0a47a7ab1b6932a5701085be961f0a86))
+
 ## v0.5.1 (2022-09-22)
 ### Fix
 * Fixed demand category bug ([`e150b00`](https://github.com/oopnet/oopnet/commit/e150b00c63e3c1e159a089731a2b77566befa380))
