@@ -93,6 +93,7 @@ def lst2xray(lst: list) -> xr.DataArray:
     for entry_index, entry in enumerate(lst):
         # otherwise look for faulty entries
         for index, item in enumerate(entry):
+            # print(item)
             c = Counter(item)
             if (
                 "+" in c
@@ -100,10 +101,10 @@ def lst2xray(lst: list) -> xr.DataArray:
                 or "+" in c
                 and c["+"] > 1
                 or "-" in c
-                and c["-"] > 1
+                and (c["-"] > 1 or item[0] != "-" and item[0].isnumeric())
             ):
                 new_items = split_item(item)
-                new_entry = entry[:index] + new_items + entry[index + 1 :]
+                new_entry = entry[:index] + new_items + entry[index + 1:]
                 lst[entry_index] = new_entry
 
     lst[2:] = [x[: len(lst[0]) + 1] for x in lst[2:]]
