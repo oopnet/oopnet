@@ -470,12 +470,16 @@ class NetworkPlotter:
         Args:
           network: OOPNET network object one wants to plot
           fignum: figure number, where to plot the network
-          nodes: Values related to the nodes as Pandas Series generated e.g. by one of OOPNET's SimulationReport functions (e.g. Pressure(rpt)). If nodes is None or specific nodes do not have  values, then the nodes are drawn as black circles
-          nodes_vlim:
-          links: Values related to the links as Pandas Series generated e.g. by one of OOPNET's SimulationReport functions (e.g. Flow(rpt)). If links is None or specific links do not have  values, then the links are drawn as black lines
-          links_vlim:
-          link_width: Values describing the link width as Pandas Series generated e.g. by one of OOPNET's SimulationReport functions (e.g. Flow(rpt)).
           ax: Matplotlib Axes object
+          nodes: Values related to the nodes as Pandas Series generated e.g. by one of OOPNET's SimulationReport properties (e.g. rpt.pressure). If nodes is None or specific nodes do not have values, then the nodes are drawn as black circles
+          node_label: label for the Node values colorbar
+          nodes_vlim: limits for the Node values colorbar as tuple (min, max)
+          links: Values related to the links as Pandas Series generated e.g. by one of OOPNET's SimulationReport properties (e.g. rpt.flow). If links is None or specific links do not have values, then the links are drawn as black lines
+          link_label: label for the Link values colorbar
+          links_vlim: limits for the Link values colorbar as tuple (min, max)
+          link_width: Values describing the link width as Pandas Series generated e.g. by one of OOPNET's SimulationReport functions (e.g. Flow(rpt)).
+          interval: interval between the individual frames
+          repeat: if True, the animation will be created as a recurring loop
 
         Returns:
           Matplotlib's figure handle
@@ -534,7 +538,7 @@ class NetworkPlotter:
             times = link_width.index
         else:
             raise ValueError(
-                "A pandas DataFrame must be provided for at least one of these arguments: nodes, links, linkwidth"
+                "A pandas DataFrame must be provided for at least one of these arguments: nodes, links, link_width"
             )
         fun = partial(
             self._render_animation_frame,
@@ -546,17 +550,18 @@ class NetworkPlotter:
         )
         anim = FuncAnimation(fig, fun, frames=times, interval=interval, repeat=repeat)
 
+        self._resize_colorbar(fig=fig)
+
         # remove border around plot
         ax.set_frame_on(False)
 
         # remove ticks on x- and y-axis
-        plt.tick_params(
-            axis="both",  # changes apply to the x-axis
-            which="both",  # both major and minor ticks are affected
-            bottom=False,  # ticks along the bottom edge are off
-            left=False,  # ticks along the top edge are off
+        ax.tick_params(
+            axis="both",        # changes apply to the x-axis
+            which="both",       # both major and minor ticks are affected
+            bottom=False,       # ticks along the bottom edge are off
+            left=False,         # ticks along the top edge are off
             labelbottom=False,  # labels along the bottom edge are off
-            labelleft=False,
-        )  # labels along the left edge are off
-        self._resize_colorbar(fig=fig)
+            labelleft=False,    # labels along the left edge are off
+        )
         return anim
