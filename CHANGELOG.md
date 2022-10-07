@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.6.0 (2022-10-07)
+### Feature
+* Matplotlib colorbars are now stacked if both `nodes` and `links` arguments are passed  ([`6523fd8`](https://github.com/oopnet/oopnet/commit/6523fd806ea849a1382f8829529069fcbfccf676))
+
+### Documentation
+* Recreated plots with new, stacked color bars and added example for ax argument ([`60bc691`](https://github.com/oopnet/oopnet/commit/60bc69179ab0cdee4614464a0192a1d1f288cab7))
+* Added missing argument documentation to pyplot NetworkPlotter.animate() ([`6b29827`](https://github.com/oopnet/oopnet/commit/6b298270d8b1fe2850e1ab5b99f00b37a3d6c5d9))
+
 ## v0.5.3 (2022-10-05)
 ### Fix
 * Bugfix in ReportFileReader ([`2dad842`](https://github.com/oopnet/oopnet/commit/2dad8422c260974d81b9da04a60e21475ae3c6fd))
