@@ -8,18 +8,9 @@ import matplotlib.colors as matplotlib_colors
 import matplotlib.cm as cmx
 from matplotlib.collections import LineCollection
 from matplotlib.animation import FuncAnimation
-import networkx as nx
 import numpy as np
 import pandas as pd
 
-from oopnet.elements.network_components import (
-    Junction,
-    Reservoir,
-    Tank,
-    Pipe,
-    Pump,
-    Valve,
-)
 from oopnet.utils.getters.element_lists import (
     get_link_ids,
     get_node_ids,
@@ -57,7 +48,7 @@ class NetworkPlotter:
         colormap: Union[str, dict] = "viridis",
         truncate_nodes: bool = False,
         robust: bool = False,
-        markersize: float = 8.0,
+        markersize: float = 5.0,
     ):
         self.colorbar = colorbar
         self.colormap = colormap
@@ -143,7 +134,7 @@ class NetworkPlotter:
 
     def _get_scalar_colormap(
         self, vlim: tuple[float, float, str], colormap
-    ) -> pd.Series:
+    ) -> cmx.ScalarMappable:
         import matplotlib.colors as colors
 
         normalized_colors = colors.Normalize(vmin=vlim[0], vmax=vlim[1])
@@ -152,12 +143,20 @@ class NetworkPlotter:
         return scalar_map
 
     def _add_colorbar(
-        self, name: str, scalar_map, extend: str, ax: matplotlib.axes.Axes
+        self, name: str, scalar_map, extend: str, ax: matplotlib.axes.Axes, fig
     ):
-        cb = plt.colorbar(scalar_map, extend=extend, ax=ax)
-        cb.set_label(name, size=22)
-        cb.ax.tick_params(labelsize=20)
-        return matplotlib_colors
+        plot_loc = ax.get_position().bounds
+        #ax.set_position([plot_loc[0], 0.08, plot_loc[2], 0.84])
+        y_pos = 0.1 if len(fig.axes) == 1 else 0.5
+        cb = plt.colorbar(scalar_map, extend=extend, cax=fig.add_axes([0.80, y_pos, 0.03, 0.35]))
+        cb.set_label(name)
+        cb.ax.tick_params()
+
+    @staticmethod
+    def _resize_colorbar(fig):
+        if len(fig.axes) == 2:
+            cb = fig.axes[1]
+            cb.set_position([0.8, 0.1, 0.03, 0.8])
 
     # todo: refactor
     @staticmethod
@@ -267,7 +266,7 @@ class NetworkPlotter:
             links=get_pipes(network),
             marker=None,
             colors=colors,
-            ms=4 * self.markersize,
+            ms=self.markersize,
             zorder=3,
             line_width=link_width,
         )
@@ -277,7 +276,7 @@ class NetworkPlotter:
             links=get_pumps(network),
             marker="p",
             colors=colors,
-            ms=4 * self.markersize,
+            ms=self.markersize,
             zorder=3,
             line_width=link_width,
         )
@@ -287,7 +286,7 @@ class NetworkPlotter:
             links=get_valves(network),
             marker="v",
             colors=colors,
-            ms=4 * self.markersize,
+            ms=self.markersize,
             zorder=3,
             line_width=link_width,
         )
@@ -297,7 +296,7 @@ class NetworkPlotter:
         if ax:
             fig = ax.get_figure()
         else:
-            fig = plt.figure(fignum)
+            fig = plt.figure(fignum, dpi=200)
             ax = fig.add_subplot(111)
         plt.grid(False)
         plt.axis("equal")
@@ -313,7 +312,7 @@ class NetworkPlotter:
             nodes=get_junctions(network),
             marker="o",
             colors=colors,
-            ms=4 * self.markersize,
+            ms=self.markersize,
             zorder=3,
             truncate_nodes=self.truncate_nodes,
         )
@@ -323,7 +322,7 @@ class NetworkPlotter:
             nodes=get_tanks(network),
             marker="D",
             colors=colors,
-            ms=4 * self.markersize,
+            ms=self.markersize,
             zorder=4,
             truncate_nodes=False,
         )
@@ -333,7 +332,7 @@ class NetworkPlotter:
             nodes=get_reservoirs(network),
             marker="s",
             colors=colors,
-            ms=4 * self.markersize,
+            ms=self.markersize,
             zorder=5,
             truncate_nodes=False,
         )
@@ -384,14 +383,13 @@ class NetworkPlotter:
             )
             link_colors = links.apply(link_scalar_map.to_rgba)
 
-        link_colorbar = (
+        if (
             isinstance(self.colorbar, dict)
             and self.colorbar["link"] is True
             or isinstance(self.colorbar, bool)
             and self.colorbar
-        ) and links is not None
-        if link_colorbar:
-            self._add_colorbar(links.name, link_scalar_map, links_vlim[2], ax=ax)
+        ) and links is not None:
+            self._add_colorbar(str(links.name), link_scalar_map, links_vlim[2], ax=ax, fig=fig)
 
         # get Node colors
         nodes_vlim = self._get_colorbar_limit(nodes, nodes_vlim)
@@ -405,19 +403,19 @@ class NetworkPlotter:
             )
             node_colors = nodes.apply(node_scalar_map.to_rgba)
 
-        node_colorbar = (
+        if (
             isinstance(self.colorbar, dict)
             and self.colorbar["node"] is True
             or isinstance(self.colorbar, bool)
             and self.colorbar
-        ) and nodes is not None
-        if node_colorbar:
-            self._add_colorbar(nodes.name, node_scalar_map, nodes_vlim[2], ax=ax)
+        ) and nodes is not None:
+            self._add_colorbar(str(nodes.name), node_scalar_map, nodes_vlim[2], ax=ax, fig=fig)
 
         self._plot_nodes(network=network, ax=ax, colors=node_colors)
         self._plot_links(
             network=network, ax=ax, colors=link_colors, link_width=link_width
         )
+        self._resize_colorbar(fig=fig)
         return fig
 
     def _render_animation_frame(
@@ -472,12 +470,16 @@ class NetworkPlotter:
         Args:
           network: OOPNET network object one wants to plot
           fignum: figure number, where to plot the network
-          nodes: Values related to the nodes as Pandas Series generated e.g. by one of OOPNET's SimulationReport functions (e.g. Pressure(rpt)). If nodes is None or specific nodes do not have  values, then the nodes are drawn as black circles
-          nodes_vlim:
-          links: Values related to the links as Pandas Series generated e.g. by one of OOPNET's SimulationReport functions (e.g. Flow(rpt)). If links is None or specific links do not have  values, then the links are drawn as black lines
-          links_vlim:
-          link_width: Values describing the link width as Pandas Series generated e.g. by one of OOPNET's SimulationReport functions (e.g. Flow(rpt)).
           ax: Matplotlib Axes object
+          nodes: Values related to the nodes as Pandas Series generated e.g. by one of OOPNET's SimulationReport properties (e.g. rpt.pressure). If nodes is None or specific nodes do not have values, then the nodes are drawn as black circles
+          node_label: label for the Node values colorbar
+          nodes_vlim: limits for the Node values colorbar as tuple (min, max)
+          links: Values related to the links as Pandas Series generated e.g. by one of OOPNET's SimulationReport properties (e.g. rpt.flow). If links is None or specific links do not have values, then the links are drawn as black lines
+          link_label: label for the Link values colorbar
+          links_vlim: limits for the Link values colorbar as tuple (min, max)
+          link_width: Values describing the link width as Pandas Series generated e.g. by one of OOPNET's SimulationReport functions (e.g. Flow(rpt)).
+          interval: interval between the individual frames
+          repeat: if True, the animation will be created as a recurring loop
 
         Returns:
           Matplotlib's figure handle
@@ -505,7 +507,7 @@ class NetworkPlotter:
             and self.colorbar
         ) and links is not None
         if link_colorbar:
-            self._add_colorbar(link_label, link_scalar_map, links_vlim[2], ax=ax)
+            self._add_colorbar(link_label, link_scalar_map, links_vlim[2], ax=ax, fig=fig)
 
         # get Node colors
         nodes_vlim = self._get_colorbar_limit(nodes, nodes_vlim)
@@ -526,7 +528,7 @@ class NetworkPlotter:
             and self.colorbar
         ) and nodes is not None
         if node_colorbar:
-            self._add_colorbar(node_label, node_scalar_map, nodes_vlim[2], ax=ax)
+            self._add_colorbar(node_label, node_scalar_map, nodes_vlim[2], ax=ax, fig=fig)
 
         if isinstance(nodes, pd.DataFrame):
             times = nodes.index
@@ -536,7 +538,7 @@ class NetworkPlotter:
             times = link_width.index
         else:
             raise ValueError(
-                "A pandas DataFrame must be provided for at least one of these arguments: nodes, links, linkwidth"
+                "A pandas DataFrame must be provided for at least one of these arguments: nodes, links, link_width"
             )
         fun = partial(
             self._render_animation_frame,
@@ -548,16 +550,18 @@ class NetworkPlotter:
         )
         anim = FuncAnimation(fig, fun, frames=times, interval=interval, repeat=repeat)
 
+        self._resize_colorbar(fig=fig)
+
         # remove border around plot
         ax.set_frame_on(False)
 
         # remove ticks on x- and y-axis
-        plt.tick_params(
-            axis="both",  # changes apply to the x-axis
-            which="both",  # both major and minor ticks are affected
-            bottom=False,  # ticks along the bottom edge are off
-            left=False,  # ticks along the top edge are off
+        ax.tick_params(
+            axis="both",        # changes apply to the x-axis
+            which="both",       # both major and minor ticks are affected
+            bottom=False,       # ticks along the bottom edge are off
+            left=False,         # ticks along the top edge are off
             labelbottom=False,  # labels along the bottom edge are off
-            labelleft=False,
-        )  # labels along the left edge are off
+            labelleft=False,    # labels along the left edge are off
+        )
         return anim
