@@ -7,7 +7,7 @@
 Introduction
 ============
 
-OOPNET (Object-oriented EPANET in Python) is an easy-to-use programming interface of EPANET to
+OOPNET (Object-Oriented Pipe Network Analyzer) is an easy-to-use programming interface of EPANET to
 students, researchers and scientists who are not blessed with sophisticated programming skills.
 It enables people to easily prototype Python code for different water distribution related tasks.
 Right now it is in an alpha stage, meaning that it is nothing more than a wrapper around EPANET's command line interface
