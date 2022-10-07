@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.3 (2022-10-05)
+### Fix
+* Bugfix in ReportFileReader ([`2dad842`](https://github.com/oopnet/oopnet/commit/2dad8422c260974d81b9da04a60e21475ae3c6fd))
+
 ## v0.5.2 (2022-09-26)
 ### Fix
 * ReportFileReader bugfix ([`127f1ce`](https://github.com/oopnet/oopnet/commit/127f1cec0a47a7ab1b6932a5701085be961f0a86))
