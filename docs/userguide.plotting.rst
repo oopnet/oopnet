@@ -77,7 +77,7 @@ The figure can also be customized by using the ``ax`` argument. For instance, he
 	:language: python
 	:lines: 25-26
 
-.. image:: figures/examples/userguide_plotting_5.png
+.. image:: figures/examples/userguide_plotting_6.png
 
 Don't forget to show the plots:
 
