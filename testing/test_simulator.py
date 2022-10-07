@@ -94,7 +94,7 @@ class PoulakisEnhancedPDASimulatorTest(SimulatorTest):
 
     def test_pump_headloss(self):
         p_pump = self.rpt.headloss['P-1']
-        self.assertEqual(-5.30, p_pump)
+        self.assertEqual(-5.28, p_pump)
 
     def test_data(self):
         self.compare_elevation()

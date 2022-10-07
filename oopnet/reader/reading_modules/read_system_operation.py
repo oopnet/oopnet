@@ -328,17 +328,17 @@ def read_demands(network: Network, block: list):
         vals = vals["values"]
         j = get_junction(network, vals[0])
         if len(vals) > 1:
-            if not j.demand and isinstance(j.demand, float) and abs(j.demand) > 0.0:
-                j.demand = [j.demand, float(vals[1])]
-            elif not j.demand and isinstance(j.demand, float) or j.demand:
+            if not j.demand:
                 j.demand = float(vals[1])
+            elif isinstance(j.demand, float):
+                j.demand = [float(vals[1])]
             elif isinstance(j.demand, list):
                 j.demand.append(float(vals[1]))
         if len(vals) > 2:
             p = get_pattern(network, vals[2])
-            if j.demandpattern is None:
+            if not j.demandpattern:
                 j.demandpattern = p
             elif isinstance(j.demandpattern, Pattern):
-                j.demandpattern = [j.demandpattern, p]
+                j.demandpattern = [p]
             else:
                 j.demandpattern.append(p)
