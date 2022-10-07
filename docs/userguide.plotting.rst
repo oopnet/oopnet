@@ -71,11 +71,19 @@ hiding all the nodes.
 
 .. image:: figures/examples/userguide_plotting_5.png
 
+The figure can also be customized by using the ``ax`` argument. For instance, here we create a plot with a certain size and DPI count:
+
+.. literalinclude:: /../examples/userguide_plotting.py
+	:language: python
+	:lines: 25-26
+
+.. image:: figures/examples/userguide_plotting_5.png
+
 Don't forget to show the plots:
 
 .. literalinclude:: /../examples/userguide_plotting.py
 	:language: python
-	:lines: 25
+	:lines: 28
 
 Plotting Animations
 ^^^^^^^^^^^^^^^^^^^
