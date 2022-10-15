@@ -5,6 +5,7 @@ from io import TextIOWrapper
 import logging
 
 from oopnet.elements.base import NetworkComponent
+from oopnet.elements.network_components import Valve
 from oopnet.elements.system_operation import Curve, Pattern
 from oopnet.utils.getters.element_lists import (
     get_curves,
@@ -163,7 +164,8 @@ def write_rules(network: Network, fid: TextIOWrapper):
         print("RULE", r.id, file=fid)
         for c in r.condition:
             if isinstance(c.object, NetworkComponent):
-                object_type = c.object.__class__.__name__
+                object_type = "Valve" if isinstance(c.object, Valve) else c.object.__class__.__name__
+
                 print(
                     c.logical,
                     object_type,

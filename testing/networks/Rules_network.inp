@@ -4,6 +4,7 @@
 [JUNCTIONS]
 ;ID              	Elev        	Demand      	Pattern         
  J-1             	0           	100         	                	;
+ 1               	0           	0           	                	;
 
 [RESERVOIRS]
 ;ID              	Head        	Pattern         
@@ -16,6 +17,7 @@
 [PIPES]
 ;ID              	Node1           	Node2           	Length      	Diameter    	Roughness   	MinorLoss   	Status
  2               	J-1             	T-1             	1000        	300         	100         	0           	Open  	;
+ 3               	1               	T-1             	1000        	200         	0.1         	0           	Open  	;
 
 [PUMPS]
 ;ID              	Node1           	Node2           	Parameters
@@ -23,6 +25,7 @@
 
 [VALVES]
 ;ID              	Node1           	Node2           	Diameter    	Type	Setting     	MinorLoss   
+ V-1             	J-1             	1               	250         	FCV 	5           	0           	;
 
 [TAGS]
 
@@ -37,10 +40,11 @@
 
 [CURVES]
 ;ID              	X-Value     	Y-Value
-;PUMP: 
+;PUMP: PUMP: 
  1               	100         	100         
 
 [CONTROLS]
+
 
 [RULES]
 RULE 1
@@ -55,6 +59,9 @@ AND  SYSTEM CLOCKTIME < 8 PM
 AND  TANK T-1 LEVEL ABOVE 19
 THEN PUMP PU-1 STATUS IS CLOSED
 
+RULE 3
+IF VALVE V-1 STATUS IS CLOSED
+THEN PUMP PU-1 STATUS IS OPEN
 
 [ENERGY]
  Global Efficiency  	75
@@ -87,15 +94,15 @@ THEN PUMP PU-1 STATUS IS CLOSED
 ;Tank            	Model
 
 [TIMES]
- Duration           	48
- Hydraulic Timestep 	1:00
- Quality Timestep   	0:05
- Pattern Timestep   	1:00
- Pattern Start      	0:00
- Report Timestep    	1:00
- Report Start       	0:00
+ Duration           	48:00 
+ Hydraulic Timestep 	1:00 
+ Quality Timestep   	0:05 
+ Pattern Timestep   	1:00 
+ Pattern Start      	0:00 
+ Report Timestep    	1:00 
+ Report Start       	0:00 
  Start ClockTime    	12 am
- Statistic          	None
+ Statistic          	NONE
 
 [REPORT]
  Status             	No
@@ -123,6 +130,7 @@ THEN PUMP PU-1 STATUS IS CLOSED
 [COORDINATES]
 ;Node            	X-Coord           	Y-Coord
 J-1             	1177.407          	7303.103          
+1               	717.523           	7809.668          
 R-1             	2553.699          	7199.682          
 T-1             	23.866            	7414.479          
 

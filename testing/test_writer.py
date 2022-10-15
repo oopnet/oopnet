@@ -10,6 +10,7 @@ def write_read(network: Network) -> Network:
     filename = os.path.join('tmp', 'test.inp')
     network.write(filename)
     new_network = Network.read(filename)
+    new_network.run()
     os.remove(filename)
     return new_network
 

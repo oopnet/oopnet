@@ -158,7 +158,7 @@ class RulesModel(TestModel):
     n_valves = 0
     n_controls = 0
     n_pumps = 1
-    n_rules = 2
+    n_rules = 3
     n_curves = 1
     n_patterns = 0
 
