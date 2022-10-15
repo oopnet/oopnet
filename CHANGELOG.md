@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.6.1 (2022-10-15)
+### Fix
+* Fixed a bug where Valves in controls resulted in an invalid EPANET model ([`1c20957`](https://github.com/oopnet/oopnet/commit/1c20957cb8a665997f7379a9af561e6ea46222e7))
+
 ## v0.6.0 (2022-10-07)
 ### Feature
 * Matplotlib colorbars are now stacked if both `nodes` and `links` arguments are passed  ([`6523fd8`](https://github.com/oopnet/oopnet/commit/6523fd806ea849a1382f8829529069fcbfccf676))
