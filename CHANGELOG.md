@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.6.2 (2022-10-22)
+### Fix
+* Fixed minor bug in ReportFileReader ([`43a8fca`](https://github.com/oopnet/oopnet/commit/43a8fcafb3024d25604343d26c79a36e869092bc))
+
 ## v0.6.1 (2022-10-15)
 ### Fix
 * Fixed a bug where Valves in controls resulted in an invalid EPANET model ([`1c20957`](https://github.com/oopnet/oopnet/commit/1c20957cb8a665997f7379a9af561e6ea46222e7))
