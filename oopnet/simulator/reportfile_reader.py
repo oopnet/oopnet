@@ -91,21 +91,22 @@ def lst2xray(lst: list) -> xr.DataArray:
 
     # check for invalid values
     for entry_index, entry in enumerate(lst):
-        # otherwise look for faulty entries
+        new_entry = []
         for index, item in enumerate(entry):
-            # print(item)
             c = Counter(item)
             if (
-                "+" in c
-                and "-" in c
-                or "+" in c
-                and c["+"] > 1
-                or "-" in c
-                and (c["-"] > 1 or item[0] != "-" and item[0].isnumeric())
+                    "+" in c
+                    and "-" in c
+                    or "+" in c
+                    and c["+"] > 1
+                    or "-" in c
+                    and (c["-"] > 1 or item[0] != "-" and item[0].isnumeric())
             ):
                 new_items = split_item(item)
-                new_entry = entry[:index] + new_items + entry[index + 1:]
-                lst[entry_index] = new_entry
+                new_entry.extend(new_items)
+            else:
+                new_entry.append(item)
+            lst[entry_index] = new_entry
 
     lst[2:] = [x[: len(lst[0]) + 1] for x in lst[2:]]
     frame = pd.DataFrame.from_dict(lst[2:])
