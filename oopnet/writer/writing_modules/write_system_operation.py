@@ -210,12 +210,10 @@ def write_demands(network: Network, fid: TextIOWrapper):
     print("[DEMANDS]", file=fid)
     print(";id demand pattern category", file=fid)
     for j in get_junctions(network):
-        if j.demand is None or isinstance(j.demand, float) or isinstance(j.demand, int):
+        if j.demand is None or isinstance(j.demand, (float, int)):
             pass
         elif isinstance(j.demand, list):
             for i, d in enumerate(j.demand):
-                if i == 0:  # skip first line
-                    continue
                 print(j.id, end=" ", file=fid)
                 print(d, end=" ", file=fid)
                 # todo: replace try except

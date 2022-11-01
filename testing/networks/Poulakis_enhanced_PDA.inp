@@ -113,6 +113,9 @@
 
 [DEMANDS]
 ;Junction        	Demand      	Pattern         	Category
+ J-02            	50          	                	; 
+ J-02            	20          	                	; 
+ J-02            	1           	                	; 
 
 [STATUS]
 ;ID              	Status/Setting
@@ -122,12 +125,12 @@
 
 [CURVES]
 ;ID              	X-Value     	Y-Value
-;PUMP: PUMP: HEADLOSS: 
+;PUMP: PUMP: PUMP: HEADLOSS: 
  1               	50          	5           
  1               	100         	10          
-;PUMP: PUMP: PUMP: 
+;PUMP: PUMP: PUMP: PUMP: 
  2               	50          	50          
-;PUMP: PUMP: VOLUME: 
+;PUMP: PUMP: PUMP: VOLUME: 
  3               	2           	20          
  3               	5           	50          
 
@@ -138,7 +141,9 @@
 
 
 
+
 [RULES]
+
 
 
 

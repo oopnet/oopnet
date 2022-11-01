@@ -60,13 +60,8 @@ class MicropolisModelTownModelAnimationTest(unittest.TestCase):
         self.rpt = self.model.network.run()
 
     def test_animation_links(self):
-        anim = NetworkPlotter().animate(self.model.network, links=self.rpt.flow)
-
-    def test_animation_nodes(self):
-        anim = NetworkPlotter().animate(self.model.network, nodes=self.rpt.pressure)
-
-    def test_animation_linkwidth(self):
-        anim = NetworkPlotter().animate(self.model.network, link_width=self.rpt.flow)
+        anim = NetworkPlotter().animate(self.model.network, links=self.rpt.flow, nodes=self.rpt.pressure,
+                                        link_width=self.rpt.flow)
 
 
 if __name__ == '__main__':

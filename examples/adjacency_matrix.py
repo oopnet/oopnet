@@ -5,11 +5,9 @@ from matplotlib import pyplot as plt
 import oopnet as on
 
 filename = os.path.join('data', 'anytown.inp')
-
 net = on.Network.read(filename)
 
 G = on.Graph(net)
-
 nodes = on.get_node_ids(net)
 links = on.onlinks2nxlinks(net)
 
@@ -22,12 +20,11 @@ print('Incidence matrix - oriented')
 print(B)
 
 
-G = on.Graph(net, weight='length', default=0.0)
 C = nx.adjacency_matrix(G, nodelist=nodes)
 print('Adjacency matrix; undirected graph')
 print(C)
 
-G = on.DiGraph(net, weight='length', default=0.0)
+G = on.DiGraph(net)
 D = nx.adjacency_matrix(G, nodelist=nodes)
 print('Adjacency matrix; directed graph')
 print(D)

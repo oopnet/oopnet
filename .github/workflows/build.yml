@@ -49,27 +49,12 @@ jobs:
       with:
         fetch-depth: 0
         token: ${{ secrets.OOPNET_TOKEN }}
-    - name: Black Code Formatter
-      uses: lgeiger/black-action@v1.0.1
-      with:
-        args: "oopnet"
     - name: Python Semantic Release
       uses: relekang/python-semantic-release@master
       with:
         github_token: ${{ secrets.OOPNET_TOKEN }}
         repository_username: __token__
         repository_password: ${{ secrets.PyPI_TOKEN }}
-    - name: Check for modified files
-      id: git-check
-      run: echo ::set-output name=modified::$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)
-    - name: Push changes
-      if: steps.git-check.outputs.modified == 'true'
-      run: |
-        git config --local user.email "oopnet.contact@gmail.com"
-        git config --local user.name "OOPNET-bot"
-        git remote set-url origin https://x-access-token:${{ secrets.OOPNET_TOKEN }}@github.com/${{ github.repository }}
-        git commit -am "Automated changes"
-        git push
 
   package-test:
     runs-on: ubuntu-latest
