@@ -10,7 +10,7 @@ from ..solvers import compute_headlosses_from_source_nodes, compute_energy_resid
 
 import numpy as np
 from scipy import sparse
-from scipy.sparse import linalg
+from sksparse.cholmod import cholesky
 
 import warnings
 import math
@@ -287,8 +287,7 @@ def _compute_next_newton_iterates(
         rhs_to_compute_descents_of_heads_at_junctions = \
             - previous_mass_residuals - incidence_matrix_reduced_to_junctions \
             @ inverse_of_friction_headloss_derivatives_diagonal_matrix @ previous_energy_residuals
-        descents_of_heads_at_junctions = linalg.spsolve(
-            jacobian_schur_complement_matrix, rhs_to_compute_descents_of_heads_at_junctions, use_umfpack=True)
+        descents_of_heads_at_junctions = cholesky(- jacobian_schur_complement_matrix)(- rhs_to_compute_descents_of_heads_at_junctions)
         descents_of_flows = \
             inverse_of_friction_headloss_derivatives_diagonal_matrix \
             @ (- previous_energy_residuals + incidence_matrix_reduced_to_junctions.T
