@@ -11,7 +11,7 @@ MINIMUM_PRESSURE_HEAD_AT_JUNCTIONS = 0
 SERVICE_PRESSURE_HEAD_AT_JUNCTIONS = 20
 """Service pressure head at junctions (mH2O)"""
 
-PRESSURE_FRACTION_EPSILON_FOR_REGULARIZATION_OF_UNITARY_CONSUMPTIONS_AT_JUNCTIONS = 1e-2
+PRESSURE_FRACTION_EPSILON_FOR_REGULARIZATION_OF_UNITARY_CONSUMPTIONS_AT_JUNCTIONS = 1e-3
 """Small (unitless) value used to define the intervals {z | abs(z) <= eps} and {z | abs(z - 1) <= eps} into 
 which unitary consumptions and their derivatives will be regularized by respectively cubic and quadratic polynomials, as 
 in Piller et al. (2003)"""

@@ -11,7 +11,7 @@ ALPHA_HW = 1.852
 ALPHA_HW_MINUS_1 = ALPHA_HW - 1
 """Convenience coefficient often used"""
 
-FLOW_EPSILON_FOR_REGULARIZATION_OF_FRICTION_HEADLOSSES = 1e-2
+FLOW_EPSILON_FOR_REGULARIZATION_OF_FRICTION_HEADLOSSES = 1e-3
 """Small value of |q| (l/s) under which use cubic regularization of unitary friction headlosses and quadratic 
 regularization of their derivatives, as in Piller (1995)"""
 
