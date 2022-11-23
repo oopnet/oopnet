@@ -16,7 +16,7 @@ import warnings
 import math
 
 
-ABSOLUTE_TOLERANCE_ON_NULL_RESIDUAL = 1e-3
+ABSOLUTE_TOLERANCE_ON_RESIDUALS = 1e-3
 """Absolute tolerance on null residuals, under which we consider a hydraulic solution may have been reached"""
 
 RELATIVE_TOLERANCE_BETWEEN_TWO_NEWTON_STEPS = 1e-6
@@ -137,12 +137,12 @@ def solve_balance_equations(
         eres, mres = itervars['energy_residuals'], itervars['mass_residuals']
         allres = np.concatenate([eres, mres])
         res_norm_inf = np.linalg.norm(allres, ord=np.inf)
-        is_residuals_stop_criterion_satisfied = res_norm_inf < ABSOLUTE_TOLERANCE_ON_NULL_RESIDUAL
+        is_residuals_stop_criterion_satisfied = res_norm_inf < ABSOLUTE_TOLERANCE_ON_RESIDUALS
         is_iterates_stop_criterion_satisfied = True
         for prev_iter, new_iter in ((q0, q), (h0, h)):
             is_iterates_stop_criterion_satisfied &= is_gradients_stop_criterion_satisfied(prev_iter, new_iter)
         # test for convergence from computed criteria
-        if is_residuals_stop_criterion_satisfied & is_iterates_stop_criterion_satisfied:
+        if is_residuals_stop_criterion_satisfied and is_iterates_stop_criterion_satisfied:
             # it converged ; then...
             # ... set success flag to True ...
             did_succeed = True
@@ -323,11 +323,11 @@ def is_gradients_stop_criterion_satisfied(x0, x):
     :param x: current step values
     :return: True if the criterion is satisfied, False otherwise
     """
-    x_or_res_norm_inf = np.linalg.norm(x, ord=np.inf)
-    if x_or_res_norm_inf == 0:
-        x_or_res_norm_inf = 1
+    x_norm_inf = np.linalg.norm(x, ord=np.inf)
+    if x_norm_inf == 0:
+        x_norm_inf = 1
     is_gradients_global_stop_criterion_satisfied = \
-        np.linalg.norm(x - x0, ord=np.inf) / x_or_res_norm_inf < RELATIVE_TOLERANCE_BETWEEN_TWO_NEWTON_STEPS
+        np.linalg.norm(x - x0, ord=np.inf) / x_norm_inf < RELATIVE_TOLERANCE_BETWEEN_TWO_NEWTON_STEPS
     return is_gradients_global_stop_criterion_satisfied
 
 

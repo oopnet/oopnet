@@ -41,7 +41,7 @@ from ..hydraulics.demands import compute_interpolators_of_the_demands_at_junctio
 from ..hydraulics.friction_headlosses import compute_friction_coefficients, \
     compute_regularized_friction_headlosses_until_x, compute_friction_headlosses_per_1000m, \
     compute_cubic_polynomial_approximation_residuals_for_flows_close_to_zero
-from ..hydraulics.velocities import compute_velocities
+from ..hydraulics.velocities import compute_velocities_from_flows, compute_flows_from_velocities
 from ..hydraulics.heads import compute_heads_from_pressure_heads, compute_pressure_heads_from_heads
 from ..hydraulics.consumptions import MINIMUM_PRESSURE_HEAD_AT_JUNCTIONS, SERVICE_PRESSURE_HEAD_AT_JUNCTIONS, \
     compute_cubic_polynomial_approximation_residuals_for_pressure_fractions_close_to_zero, \
@@ -52,7 +52,7 @@ from ..elements.system_operation import Pattern
 
 from ..solvers import compute_headlosses_from_source_nodes, compute_energy_residuals_in_pipes, \
     compute_mass_residuals_at_junctions
-from ..solvers.newton import solve_balance_equations, compute_jacobian_schur_complement_matrix_condition_number
+from ..solvers.newton import solve_balance_equations
 from ..solvers.ode import compute_approx_new_heads_at_tanks_with_forward_euler_method, \
     compute_new_heads_at_tanks_with_trapezoidal_rule_method
 
@@ -169,10 +169,6 @@ class EPSWarning(Warning):
 
 class Run(HasStrictTraits):
     """Class to run an EPS with PDM consumptions."""
-
-    ABSOLUTE_TOLERANCE_ON_HYDRAULIC_OUTPUTS_RESIDUALS = 1e-2
-    """Absolute tolerance on residuals obtained at the end of Newton's algorithm, under which we consider the hydraulic  
-    solution found is accurate enough"""
 
     ABSOLUTE_TOLERANCE_ON_REPORTING_OUTPUTS_RESIDUALS = 1e-2
     """Absolute tolerance on the residuals of reporting outputs (obtained after possible interpolation of hydraulic 
@@ -393,7 +389,7 @@ class Run(HasStrictTraits):
             cls.heads_at_tanks_at_start_time = compute_heads_from_pressure_heads(
                 tank_initial_levels, cls.tank_elevations)
 
-        cls.flows_at_start_time = np.full(cls.number_of_pipes, 0.5, dtype=float)
+        cls.flows_at_start_time = compute_flows_from_velocities(0.5, cls.pipe_cross_sectional_areas)
 
         cls.heads_at_junctions_at_start_time = \
             MINIMUM_PRESSURE_HEAD_AT_JUNCTIONS + cls.junction_elevations \
@@ -671,7 +667,7 @@ class Run(HasStrictTraits):
             headlosses_per_1000m_abs = np.abs(headlosses_per_1000m)
 
             # velocities
-            velocities = compute_velocities(flows, cls.pipe_cross_sectional_areas)
+            velocities = compute_velocities_from_flows(flows, cls.pipe_cross_sectional_areas)
 
             # energy and mass residuals (for last check and for the run info to return)
             headlosses_from_source_nodes = compute_headlosses_from_source_nodes(
@@ -684,7 +680,7 @@ class Run(HasStrictTraits):
             mass_residuals = compute_mass_residuals_at_junctions(
                 flows, outflows_at_junctions, cls.incidence_matrix_reduced_to_junctions)
             all_residuals = np.concatenate([energy_residuals, mass_residuals])
-            # check that residuals from outputs to report are low enough
+            # check that residuals from (interpolated) outputs to report are low enough
             inf_norm_of_residuals = np.linalg.norm(all_residuals, ord=np.inf)
             res_norms = None
             if inf_norm_of_residuals > cls.ABSOLUTE_TOLERANCE_ON_REPORTING_OUTPUTS_RESIDUALS:
@@ -728,12 +724,12 @@ class Run(HasStrictTraits):
 
         # then concat all sub-reports of the reporting time grid ...
         if length_of_reporting_time_grid > 1:
-            nodes_report_xarray = xr.concat(nodes_reports_over_reporting_time_grid_list, dim='time')
-            pipes_report_xarray = xr.concat(pipes_reports_over_reporting_time_grid_list, dim='time')
+            nodes_report_xarray = xr.concat(nodes_reports_over_reporting_time_grid_list, dim='time').sortby(['time', 'id'])
+            pipes_report_xarray = xr.concat(pipes_reports_over_reporting_time_grid_list, dim='time').sortby(['time', 'id'])
         else:
-            nodes_report_xarray = nodes_reports_over_reporting_time_grid_list[-1].drop_vars('time')
-            pipes_report_xarray = pipes_reports_over_reporting_time_grid_list[-1].drop_vars('time')
-        for component_type_name, report_xarray in (('Node', nodes_report_xarray), ('pipe', pipes_report_xarray)):
+            nodes_report_xarray = nodes_reports_over_reporting_time_grid_list[-1].drop_vars('time').sortby('id')
+            pipes_report_xarray = pipes_reports_over_reporting_time_grid_list[-1].drop_vars('time').sortby('id')
+        for component_type_name, report_xarray in (('Node', nodes_report_xarray), ('Pipe', pipes_report_xarray)):
             report_xarray.name = '{}Report'.format(component_type_name)
         # ... and create the full OOPNet report (i.e. the report over the full reporting time grid)
         oopnet_report = (nodes_report_xarray, pipes_report_xarray)
@@ -818,24 +814,6 @@ class Run(HasStrictTraits):
         (residuals, number_of_iterations, res_diffs_per_iteration, number_of_damping_corrections) = \
             (raw_metrics[key] for key in
              ['residuals', 'number_of_iterations', 'res_diffs_per_iteration', 'number_of_damping_corrections'])
-        # ... then check residuals against cls.ABSOLUTE_TOLERANCE_ON_HYDRAULIC_OUTPUTS_RESIDUALS ...
-        res_inf_norm = np.linalg.norm(residuals, ord=np.inf)
-        res_norms = None
-        if res_inf_norm > cls.ABSOLUTE_TOLERANCE_ON_HYDRAULIC_OUTPUTS_RESIDUALS:
-            res_norms = {}
-            for ord_ in (1, 2):
-                res_norms[ord_] = np.linalg.norm(residuals, ord=ord_)
-            error_message = \
-                'Inf. norm on residuals from outputs after convergence ({}) greater than permitted absolute ' \
-                'tolerance ({}). Other computed norms are: {}.'.format(
-                    res_inf_norm, cls.ABSOLUTE_TOLERANCE_ON_HYDRAULIC_OUTPUTS_RESIDUALS, res_norms)
-            condition_number = compute_jacobian_schur_complement_matrix_condition_number(
-                previous_flows, previous_heads_at_junctions, demands_at_junctions,
-                cls.fixed_parameters_needed_by_solver)
-            error_message += ' Jacobian condition number is {}.'.format(condition_number)
-            warnings.warn(error_message, EPSWarning)
-            error_messages.append(error_message)
-            status = False
         # ... then update global flag cls.never_failed from local `status` ...
         cls.never_failed &= status
         # ... then extend global container cls.hydraulic_errors from local `error_messages` ...
@@ -850,11 +828,9 @@ class Run(HasStrictTraits):
         # ... then compute elapsed time...
         process_time = time.process_time() - start_time
         # ... then compute norms 1 and 2 on residuals (if not computed yet)
-        if res_norms is None:
-            res_norms = {}
-            for ord_ in (1, 2):
-                res_norms[ord_] = np.linalg.norm(residuals, ord=ord_)
-        res_norms[np.inf] = res_inf_norm
+        res_norms = {}
+        for ord_ in (1, 2, np.inf):
+            res_norms[ord_] = np.linalg.norm(residuals, ord=ord_)
         # ... then set dictionary of all local metrics to return
         metrics_to_return = {'status': status, 'number_of_iterations': number_of_iterations,
                              'number_of_damping_corrections': number_of_damping_corrections,
