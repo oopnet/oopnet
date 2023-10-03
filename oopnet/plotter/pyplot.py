@@ -498,7 +498,7 @@ class NetworkPlotter:
             link_scalar_map = self._get_scalar_colormap(
                 vlim=links_vlim, colormap=self._node_colormap
             )
-            link_colors = links.applymap(link_scalar_map.to_rgba)
+            link_colors = links.map(link_scalar_map.to_rgba)
 
         link_colorbar = (
             isinstance(self.colorbar, dict)
@@ -519,7 +519,7 @@ class NetworkPlotter:
             node_scalar_map = self._get_scalar_colormap(
                 vlim=nodes_vlim, colormap=self._node_colormap
             )
-            node_colors = nodes.applymap(node_scalar_map.to_rgba)
+            node_colors = nodes.map(node_scalar_map.to_rgba)
 
         node_colorbar = (
             isinstance(self.colorbar, dict)

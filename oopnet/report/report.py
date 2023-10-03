@@ -5,6 +5,7 @@ import logging
 import pandas as pd
 from xarray import DataArray
 
+from oopnet.elements.options_and_reporting import Reportprecision
 from oopnet.simulator.binaryfile_reader import BinaryFileReader
 from oopnet.simulator.reportfile_reader import ReportFileReader
 
@@ -26,6 +27,7 @@ class SimulationReport:
     def __init__(
         self,
         filename: str,
+        precision: Reportprecision,
         startdatetime: Optional[datetime.datetime] = None,
         reader: Union[
             Type[BinaryFileReader], Type[ReportFileReader]
@@ -40,7 +42,7 @@ class SimulationReport:
 
         """
         logger.debug("Creating report.")
-        self.nodes, self.links = reader(filename, startdatetime)
+        self.nodes, self.links = reader(filename, precision, startdatetime)
 
     @staticmethod
     def _get(

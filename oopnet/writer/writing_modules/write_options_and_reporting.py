@@ -68,9 +68,6 @@ def reportprecision2str(rp: int) -> str:
     Returns:
 
     """
-    if rp > 3:
-        logger.debug(f"Limiting report parameter precision from {rp} to 3")
-        rp = 3
     return f"PRECISION {rp}"
 
 
