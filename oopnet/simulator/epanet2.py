@@ -148,6 +148,7 @@ class ModelSimulator:
                 self.filename.replace(".inp", ".rpt"),
                 startdatetime=self.startdatetime,
                 reader=ReportFileReader,
+                precision=self.thing.reportprecision
             )
         finally:
             if self.delete:
