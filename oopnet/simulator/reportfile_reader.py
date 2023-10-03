@@ -111,7 +111,7 @@ def lst2xray(lst: list) -> xr.DataArray:
     lst[2:] = [x[: len(lst[0]) + 1] for x in lst[2:]]
     frame = pd.DataFrame.from_dict(lst[2:])
     frame.columns = ["id"] + lst[0]
-    frame[lst[0]] = frame[lst[0]].applymap(float)
+    frame[lst[0]] = frame[lst[0]].map(float)
     frame.set_index("id", inplace=True)
     return xr.DataArray(frame)
 

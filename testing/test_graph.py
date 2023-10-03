@@ -49,7 +49,7 @@ class CTownModelGraphTest(unittest.TestCase):
         self.assertEqual(self.model.n_links, len(g.edges))
 
         weights = nx.get_edge_attributes(g, 'weight')
-        for link_id, link_hl in headloss.iteritems():
+        for link_id, link_hl in headloss.items():
             l = get_link(self.model.network, link_id)
             try:
                 link_weight = weights[(l.endnode.id, l.startnode.id, 0)]
