@@ -119,6 +119,19 @@ class PoulakisEnhancedPDAModel(TestModel):
         self.network = Network.read(os.path.join('networks', 'Poulakis_enhanced_PDA.inp'))
 
 
+class PoulakisReducedModel(TestModel):
+    n_junctions = 11
+    n_tanks = 1
+    n_reservoirs = 2
+    n_pipes = 16
+    n_valves = 1
+    n_pumps = 1
+
+    def __init__(self):
+        super().__init__()
+        self.network = Network.read(os.path.join('networks', 'Poulakis_reduced.inp'))
+
+
 class CTownModel(TestModel):
     n_junctions = 388
     n_tanks = 7
@@ -130,7 +143,6 @@ class CTownModel(TestModel):
     def __init__(self):
         super().__init__()
         self.network = Network.read(os.path.join('..', 'examples', 'data', 'C-town.inp'))
-        print()
 
 
 class MicropolisModel(TestModel):
@@ -212,13 +224,3 @@ def set_dir_testing():
 def activate_all_report_parameters(network: Network):
     for param in network.reportparameter.__dict__.keys():
         setattr(network.reportparameter, param, 'YES')
-
-
-if __name__ == '__main__':
-    network = PoulakisEnhancedPDAModel().network
-    from oopnet.plotter.pyplot import Plotsimulation as Plot
-    from matplotlib import pyplot as plt
-    fig, ax = plt.subplots(figsize=(15, 15))
-    rpt = network.run()
-    Plot(network, ax=ax, links=rpt.flow)
-    plt.show()

@@ -105,45 +105,23 @@ def lst2xray(lst: list, precision: Reportprecision) -> xr.DataArray:
             ):
                 new_items = split_item(item)
                 new_entry.extend(new_items)
+            elif '.' in c and c['.'] > 1:
+                header = lst[0][index - 1]  # ID is the first header but not present in list
+                val_precision = getattr(precision, header.lower().replace('-', ''))
+                first_comma = item.find('.')
+                first_value = item[:first_comma + val_precision + 1]
+                second_value = item[first_comma + val_precision + 1:]
+                new_entry.append(first_value)
+                new_entry.append(second_value)
             else:
                 new_entry.append(item)
-            lst[entry_index] = new_entry
+            lst[entry_index] = new_entry[:len(lst[0]) + 1]
 
-    lst[2:] = [x[: len(lst[0]) + 1] for x in lst[2:]]
-    corrected_values = [correct_values(lst[0], x, precision) for x in lst[2:]]
-    frame = pd.DataFrame.from_dict(corrected_values)
+    frame = pd.DataFrame.from_dict(lst[2:])
     frame.columns = ["id"] + lst[0]
     frame[lst[0]] = frame[lst[0]].map(float)
     frame.set_index("id", inplace=True)
     return xr.DataArray(frame)
-
-
-def correct_values(headers: list[str], values: list[str], precision) -> list[str]:
-    """
-    Split merged values from report file (e.g. 600.002083.333) when using high precision
-
-    Args:
-        headers:
-        values:
-        precision:
-
-    Returns:
-
-    """
-    for index, value in enumerate(values):
-        c = Counter(value)
-        if '.' in c and c['.'] > 1:
-            new_values = values[:index]
-            header = headers[index - 1]  # ID is the first header but not present in list
-            val_precision = getattr(precision, header.lower().replace('-', ''))
-            first_comma = value.find('.')
-            first_value = value[:first_comma+val_precision+1]
-            second_value = value[first_comma+val_precision+1:]
-            new_values.append(first_value)
-            new_values.append(second_value)
-            new_values.extend(values[index + 1:])
-            values = new_values
-    return values
 
 
 # todo: refactor
