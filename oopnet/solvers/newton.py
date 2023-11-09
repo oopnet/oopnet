@@ -564,7 +564,7 @@ def _compute_jacobian_schur_complement_matrix(
     jacobian_schur_complement_matrix = \
         - incidence_matrix_reduced_to_junctions @ inverse_of_friction_headloss_derivatives_diagonal_matrix \
         @ incidence_matrix_reduced_to_junctions.T - consumption_derivatives_diagonal_matrix
-    return jacobian_schur_complement_matrix
+    return sparse.csc_matrix(jacobian_schur_complement_matrix)
 
 
 def _compute_goldstein_index(
